@@ -62,13 +62,6 @@ cc_test(
 )
 
 cc_binary(
-    name = "run",
-    srcs = ["pso/PSO.cpp"],
-    deps = [":pso"],
-    copts = BENCHMARK_COPTS
-)
-
-cc_binary(
     name = "bench_move_finder",
     srcs = ["shared/bench/benchmark.cpp"],
     deps = [":shared", ":common", ":board"],
