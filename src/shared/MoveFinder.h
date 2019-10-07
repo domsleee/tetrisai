@@ -15,7 +15,7 @@ namespace std {
   template<>
   struct hash<KeyStatus> {
     std::size_t operator()(const KeyStatus& k) {
-      return k;
+      return std::hash<int>{}(k);
     }
   };
 };
