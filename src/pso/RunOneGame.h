@@ -1,5 +1,5 @@
 #pragma once
-#include "src/common/Weighting.hpp"
+#include "src/pso/EvaluateWeightings.h"
 #include "src/common/BlockType.hpp"
 #include "src/board/bitboard/BitBoard.h"
 #include "src/board/bitboard/BitBoardPre.h"

@@ -12,3 +12,6 @@ Bot interface:
 
 OK so:
 + Evaluate weightings
+
+
+1.5 ==> 2:30 on amazon

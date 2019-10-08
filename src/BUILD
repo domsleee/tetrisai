@@ -17,7 +17,7 @@ cc_library(
 
 cc_library(
     name = "shared",
-    hdrs = glob(["shared/*.h", "shared/*.hpp"]),
+    hdrs = glob(["shared/*.h", "shared/*.hpp", "shared/*.tpp"]),
     srcs = glob(["shared/*.cpp"]),
     deps = [":common", ":board"]
 )
@@ -59,6 +59,19 @@ cc_test(
     name = "test_move_finder",
     srcs = ["shared/test/TestMoveFinder.cpp"],
     deps = [":shared", "//:catch"]
+)
+
+cc_test(
+    name = "test_all_move_finder",
+    srcs = ["shared/test/TestAllMoveFinder.cpp"],
+    deps = [":shared", "//:catch"]
+)
+
+cc_binary(
+    name = "ew",
+    srcs = ["pso/main.cpp"],
+    deps = [":pso"],
+    copts = BENCHMARK_COPTS
 )
 
 cc_binary(

@@ -1,6 +1,9 @@
 #pragma once
-#include "src/common/Weighting.hpp"
 #include "src/common/BlockType.hpp"
+#include <vector>
+
+const int NUM_FACTORS = 17;
+using Weighting = std::vector<double>;
 
 class EvaluateWeightings {
  public:

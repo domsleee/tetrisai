@@ -1,0 +1,19 @@
+#include "src/pso/EvaluateWeightings.h"
+#include <sstream>
+#include <iostream>
+#include <stdlib.h>
+#include <string.h>
+
+int main(int argc, char ** argv) {
+  if (argc != NUM_FACTORS+1) {
+    printf("Expected %d arguments, given %d\n", NUM_FACTORS+1, argc);
+    exit(1);
+  }
+  Weighting weightings(NUM_FACTORS);
+  for (int i = 0; i < NUM_FACTORS; i++) {
+    weightings[i] = atof(argv[i+1]);
+  }
+  EvaluateWeightings ew;
+  auto rankings = ew.rankWeightings({weightings});
+  std::cout << rankings[0].first << '\n';
+}

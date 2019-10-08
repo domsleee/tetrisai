@@ -19,9 +19,9 @@ namespace BitBoardPre {
 
   int getMove(int id, MoveDirection moveDirection);
 
-  std::bitset<200> idToBitset(int id);
+  const std::bitset<200>& idToBitset(int id);
 
-  Move idToMove(int id);
+  const Move& idToMove(int id);
 
   int moveToId(const Move& move); 
 }

@@ -118,11 +118,11 @@ namespace BitBoardPre {
     return moveIndex_[id][moveDirection];
   }
 
-  std::bitset<200> idToBitset(int id) {
+  const std::bitset<200>& idToBitset(int id) {
     return idToBitset_[id];
   }
 
-  Move idToMove(int id) {
+  const Move& idToMove(int id) {
     return idToMove_[id];
   }
 

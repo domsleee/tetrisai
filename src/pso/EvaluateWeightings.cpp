@@ -4,11 +4,12 @@
 #include <numeric>
 #include "src/pso/EvaluateWeightings.h"
 #include "src/pso/RunOneGame.h"
+#include <stdlib.h>     /* srand, rand */
 
-static const int NUM_GAMES = 200;
+static const int NUM_GAMES = 100;
 // 50 to complete the board
-// 58 to fill 230 lines
-static const int NUM_BLOCKS_PER_GAME = 50 + 58;
+// 575 to fill 230 lines
+static const int NUM_BLOCKS_PER_GAME = 50 + 575;
 
 
 template<typename T>
@@ -37,9 +38,13 @@ std::vector<std::pair<double, Weighting>> EvaluateWeightings::rankWeightings(con
 
 std::vector<std::vector<BlockType>> EvaluateWeightings::getPieceSets(int numSets) {
   std::vector<std::vector<BlockType>> res(NUM_GAMES);
+  const int seed = 88;
+  srand(seed);
+  int numBlocks = allBlockTypes.size();
   for (auto &game: res) {
     for (int i = 0; i < NUM_BLOCKS_PER_GAME; i++) {
-      game.push_back(allBlockTypes[allBlockTypes.size()-1]);
+      int block = rand() % numBlocks;
+      game.push_back(allBlockTypes[block]);
     }
   }
   return res;
