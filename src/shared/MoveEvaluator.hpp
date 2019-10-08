@@ -2,10 +2,9 @@
 #include "src/board/bitboard/BitBoard.h"
 #include "src/common/Move.hpp"
 #include "src/shared/ScoreManager.hpp"
+#include "src/common/Weighting.hpp"
 #include <algorithm>
 #include <numeric>
-
-using Weighting = std::vector<double>; //todo: move somewhere else?
 
 class MoveEvaluator {
   const int INF = 30; // clearly not infinitely lmao

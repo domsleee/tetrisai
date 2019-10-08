@@ -2,8 +2,7 @@
 #include "src/board/bitboard/BitBoard.h"
 #include "src/common/BlockType.hpp"
 #include "src/shared/ScoreManager.hpp"
-
-using Weighting = std::vector<double>;
+#include "src/common/Weighting.hpp"
 
 class GetNextMove {
  public:
