@@ -1,7 +1,6 @@
 #pragma once
 #include <unordered_set>
 #include "src/common/Move.hpp"
-#include "src/common/Board.hpp"
 #include "src/board/bitboard/BitBoard.h"
 
 

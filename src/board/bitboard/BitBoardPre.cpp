@@ -1,5 +1,6 @@
 #include "src/common/BlockType.hpp"
 #include "src/board/bitboard/BitBoardPre.h"
+#include "src/board/SimpleBoard.h"
 #include <bitset>
 #include <queue>
 #include <vector>

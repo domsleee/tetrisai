@@ -1,5 +1,6 @@
 #pragma once
-#include "src/board/SimpleBoard.h"
+#include "src/common/RotateDirection.hpp"
+#include "src/common/MoveDirection.hpp"
 #include "src/common/BlockType.hpp"
 #include "src/common/Move.hpp"
 #include <bitset>

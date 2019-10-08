@@ -6,8 +6,6 @@
 #include <iostream>
 
 
-
-
 Coord getMoveDirectionVector(MoveDirection m) {
   switch(m) {
     case MoveDirection::LEFT: return {0,-1};

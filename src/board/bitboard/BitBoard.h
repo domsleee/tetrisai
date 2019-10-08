@@ -2,7 +2,9 @@
 #include "src/common/BlockType.hpp"
 #include "src/common/Move.hpp"
 #include "src/common/PositionPieceGetter.hpp"
-#include "src/board/SimpleBoard.h"
+#include "src/common/RotateDirection.hpp"
+#include "src/common/MoveDirection.hpp"
+#include "src/common/common.hpp"
 #include "src/board/bitboard/BitBoardPre.h"
 #include <bitset>
 #include <iostream>

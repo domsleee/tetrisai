@@ -1,5 +1,3 @@
-#include "src/common/Board.hpp"
-#include "src/common/Board.hpp"
 #include "src/shared/GetNextMove.h"
 #include "src/pso/RunOneGame.h"
 #include "src/common/PositionPieceGetter.hpp"

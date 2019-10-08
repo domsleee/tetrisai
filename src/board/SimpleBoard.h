@@ -2,36 +2,12 @@
 #include "src/common/BlockType.hpp"
 #include "src/common/Move.hpp"
 #include "src/common/PositionPieceGetter.hpp"
-
-enum MoveDirection {
-  LEFT=0,
-  RIGHT,
-  UP,
-  DOWN
-};
-
-static std::vector<MoveDirection> allMoveDirections = {
-  MoveDirection::DOWN,
-  MoveDirection::UP,
-  MoveDirection::LEFT,
-  MoveDirection::RIGHT
-};
-
-enum RotateDirection {
-  ROTATE_AC=0,
-  ROTATE_C,
-};
-
-static std::vector<RotateDirection> allRotateDirections = {
-  RotateDirection::ROTATE_AC,
-  RotateDirection::ROTATE_C
-};
+#include "src/common/RotateDirection.hpp"
+#include "src/common/MoveDirection.hpp"
+#include "src/common/common.hpp"
 
 
 Coord getMoveDirectionVector(MoveDirection m);
-
-const int NUM_ROWS = 20;
-const int NUM_COLUMNS = 10;
 
 
 class SimplePieceInfo;
