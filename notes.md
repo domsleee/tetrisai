@@ -15,3 +15,6 @@ OK so:
 
 
 1.5 ==> 2:30 on amazon
+
+docker run --rm -v $(pwd):/project --cap-add=SYS_PTRACE --security-opt seccomp=unconfined -it domslee/bazel:ubuntu-18.04-gdb bash
+
