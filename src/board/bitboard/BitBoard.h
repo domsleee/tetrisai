@@ -22,6 +22,7 @@ class BitBoard {
   // convenience
   BitBoard(const std::vector<std::vector<int>>&);
   int applyMove(const Move&move);
+  BitPieceInfo getPiece(const Move& position) const;
   BitPieceInfo getPiece(BlockType blockType, const Move& position) const;
   bool vacant(const Move&) const;
   bool vacant(const Coord&) const;
@@ -29,6 +30,9 @@ class BitBoard {
   friend bool operator==(const BitBoard &b1, const BitBoard &b2) {
     return b1.bitset_ == b2.bitset_;
   }
+
+  // hmmm.
+  BitPieceInfo getEmptyPiece() const;
 
  private:
   std::bitset<NUM_ROWS*NUM_COLUMNS> bitset_;

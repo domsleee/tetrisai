@@ -8,53 +8,51 @@
 
 class MoveEvaluator {
   const int INF = 30; // clearly not infinitely lmao
-  const int TOTAL_LINES_CLEARED = 0;
-  const int TOTAL_LOCK_HEIGHT   = 1;
-  const int TOTAL_WELL_CELLS    = 2;
-  const int TOTAL_DEEP_WELLS    = 3;
-  const int TOTAL_COLUMN_HOLES  = 4;
-  const int TOTAL_WEIGHTED_COLUMN_HOLES = 5;
-  const int TOTAL_COLUMN_HOLE_DEPTH = 6;
-  const int MIN_COLUMN_HOLE_DEPTH = 7;
-  const int MAX_COLUMN_HOLE_DEPTH = 8;
-  const int TOTAL_COLUMN_TRANSITIONS = 9;
-  const int TOTAL_ROW_TRANSITIONS = 10;
-  const int TOTAL_COLUMN_HEIGHTS = 11;
-  const int PILE_HEIGHT = 12;
-  const int COLUMN_HEIGHT_SPREAD = 13;
-  const int TOTAL_SOLID_CELLS = 14;
-  const int TOTAL_WEIGHTED_SOLID_CELLS = 15;
-  const int COLUMN_HEIGHT_VARIANCE = 16;
+
 
  public:
+  static const int TOTAL_LINES_CLEARED = 0;
+  static const int TOTAL_LOCK_HEIGHT   = 1;
+  static const int TOTAL_WELL_CELLS    = 2;
+  static const int TOTAL_DEEP_WELLS    = 3;
+  static const int TOTAL_COLUMN_HOLES  = 4;
+  static const int TOTAL_WEIGHTED_COLUMN_HOLES = 5;
+  static const int TOTAL_COLUMN_HOLE_DEPTH = 6;
+  static const int MIN_COLUMN_HOLE_DEPTH = 7;
+  static const int MAX_COLUMN_HOLE_DEPTH = 8;
+  static const int TOTAL_COLUMN_TRANSITIONS = 9;
+  static const int TOTAL_ROW_TRANSITIONS = 10;
+  static const int TOTAL_COLUMN_HEIGHTS = 11;
+  static const int PILE_HEIGHT = 12;
+  static const int COLUMN_HEIGHT_SPREAD = 13;
+  static const int TOTAL_SOLID_CELLS = 14;
+  static const int TOTAL_WEIGHTED_SOLID_CELLS = 15;
+  static const int COLUMN_HEIGHT_VARIANCE = 16;
+
   double evaluate(const BitBoard& b, const BitPieceInfo& p, const Weighting &w, const ScoreManager &m) {
     auto nxBoard = b;
     auto deltaLines = nxBoard.applyPieceInfo(p);
 
-    // printf("==========\n");
-    // for (int i = 0; i < w.size(); i++) {
-    //   printf("%0.8f\n", w[i]);
-    // }
-
     double eval = 0;
     eval += w[TOTAL_LINES_CLEARED] * (m.totalLines_ + deltaLines);
-
+    eval += w[TOTAL_LOCK_HEIGHT] * (NUM_ROWS - p.getPosition().maxR - 1);
 
     int lockHeights[NUM_COLUMNS];
+    int minR = NUM_ROWS;
     for (int c = 0; c < NUM_COLUMNS; c++) {
       bool broken = false;
       for (int r = 0; r < NUM_ROWS; r++) {
         if (!b.vacant({r, c})) {
           lockHeights[c] = r;
+          minR = std::min(minR, r);
           broken = true;
           break;
         }
       }
-      if (broken) lockHeights[c] = NUM_ROWS;
+      if (!broken) lockHeights[c] = NUM_ROWS;
     }
     int lockHeight = std::accumulate(lockHeights, lockHeights + NUM_COLUMNS, 0);
     //eval += w[TOTAL_LOCK_HEIGHT] * lockHeight;
-
 
     int totalWellCells = 0, totalDeepWells = 0, totalWeightedColumnHoles = 0, totalColumnHeights = 0;
     for (int c = 0; c < NUM_COLUMNS; c++) {
@@ -63,7 +61,7 @@ class MoveEvaluator {
       int wellCells = std::min(l, r);
       if (wellCells > 0) totalWellCells += wellCells;
       if (wellCells >= 3) totalDeepWells++;
-      totalColumnHeights += lockHeights[c];
+      totalColumnHeights += NUM_ROWS - lockHeights[c];
     }
     eval += w[TOTAL_COLUMN_HEIGHTS] * totalColumnHeights;
     eval += w[TOTAL_WELL_CELLS] * totalWellCells;
@@ -74,30 +72,26 @@ class MoveEvaluator {
     int totalSolidCells = 0, totalWeightedSolidCells = 0;
     for (int r = 0; r < NUM_ROWS; r++) {
       for (int c = 0; c < NUM_COLUMNS; c++) {
-        bool takenLeft = c == 0 || !b.vacant({r, c-1});
-        bool takenRight = c == NUM_COLUMNS-1 || !b.vacant({r, c+1});
         bool takenUp = r == 0 || !b.vacant({r-1, c});
-        bool takenDown = r == NUM_ROWS-1 || !b.vacant({r+1, c});
-        if (takenLeft && takenRight && takenUp && takenDown) {
+        if (r > 0 && takenUp && b.vacant({r,c})) {
           totalColumnHoles++;
-          totalWeightedColumnHoles += r;
+          totalWeightedColumnHoles += r+1;
           int holeDepth = r - lockHeights[c];
           totalColumnHolesDepth += holeDepth;
           minColumnHoleDepth = std::min(minColumnHoleDepth, holeDepth);
-          maxColumnHoleDepth = std::min(maxColumnHoleDepth, holeDepth);
+          maxColumnHoleDepth = std::max(maxColumnHoleDepth, holeDepth);
         }
-        if (takenUp && takenDown) {
-          totalColumnTransitions++;
-        }
-        if ((takenLeft && takenRight) || (c == 0 && !b.vacant({r,c})) || (c == NUM_COLUMNS-1 && !b.vacant({r,c}))) {
-          totalRowTransitions++;
+        if (r > 0 && r != lockHeights[c]) {
+          totalColumnTransitions += b.vacant({r,c}) != b.vacant({r-1,c});
         }
         if (!b.vacant({r, c})) {
           totalSolidCells++;
-          totalWeightedSolidCells += (NUM_ROWS-r+1);
+          totalWeightedSolidCells += (NUM_ROWS-r);
         }
       }
     }
+    totalRowTransitions = calculateRowTransitions(b, minR);
+
     eval += w[TOTAL_WEIGHTED_COLUMN_HOLES] * totalWeightedColumnHoles;
     eval += w[TOTAL_COLUMN_HOLES] * totalColumnHoles;
     eval += w[TOTAL_COLUMN_HOLE_DEPTH] * totalColumnHolesDepth;
@@ -108,23 +102,35 @@ class MoveEvaluator {
     eval += w[TOTAL_SOLID_CELLS] * totalSolidCells;
     eval += w[TOTAL_WEIGHTED_SOLID_CELLS] * totalWeightedSolidCells;
 
-
     int columnHeightVariance = 0;
     int mColumnHeight = lockHeights[0], MColumnHeight = lockHeights[0];
     for (int c = 0; c < NUM_COLUMNS; c++) {
       if (c < NUM_COLUMNS-1) {
-        columnHeightVariance = std::max(columnHeightVariance, abs(lockHeights[c]-lockHeights[c+1]));
+        columnHeightVariance += abs(lockHeights[c]-lockHeights[c+1]);
       }
       mColumnHeight = std::min(mColumnHeight, lockHeights[c]);
       MColumnHeight = std::max(MColumnHeight, lockHeights[c]);
     }
     int columnHeightSpread = MColumnHeight-mColumnHeight;
-    int pileHeight = MColumnHeight;
+    int pileHeight = (NUM_ROWS - mColumnHeight);
     eval += w[COLUMN_HEIGHT_VARIANCE] * columnHeightVariance;
     eval += w[PILE_HEIGHT] * pileHeight;
     eval += w[COLUMN_HEIGHT_SPREAD] * columnHeightSpread;
 
     return eval;
+  }
+
+  int calculateRowTransitions(const BitBoard &b, int minR) {
+    int res = 0;
+    for (int r = minR; r < NUM_ROWS; r++) {
+      if (b.vacant(Coord{r, 0})) res++;
+      if (b.vacant({r, NUM_COLUMNS-1})) res++;
+      for (int c = 0; c < NUM_COLUMNS-1; c++) {
+        if (b.vacant({r,c}) != b.vacant({r, c+1})) res++;
+      }
+    }
+    return res;
+
   }
 };
 

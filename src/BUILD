@@ -67,6 +67,12 @@ cc_test(
     deps = [":shared", "//:catch"]
 )
 
+cc_test(
+    name = "test_move_evaluator",
+    srcs = ["shared/test/TestMoveEvaluator.cpp"],
+    deps = [":shared", "//:catch"]
+)
+
 cc_binary(
     name = "ew",
     srcs = ["pso/main.cpp"],

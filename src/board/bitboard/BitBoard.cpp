@@ -63,7 +63,15 @@ int BitBoard::applyMove(const Move& move) {
 }
 
 BitPieceInfo BitBoard::getPiece(BlockType blockType, const Move& position) const {
-  return {BitBoardPre::moveToId(position), this};
+  return {BitBoardPre::getMoveFromId(position), this};
+}
+
+BitPieceInfo BitBoard::getPiece(const Move& position) const {
+  return getPiece(BlockType::I_PIECE, position);
+}
+
+BitPieceInfo BitBoard::getEmptyPiece() const {
+  return {BitBoardPre::getEmptyMoveId(), this};
 }
 
 

@@ -21,6 +21,10 @@ namespace BitBoardPre {
   inline void addRotate(int id, int nxId, RotateDirection rotateDirection);
   inline void addMove(int id, int nxId, MoveDirection moveDirection);
   std::bitset<200> pieceInfoToBitset(const SimplePieceInfo &p);
+  std::bitset<200> moveToBitset(const Move &move);
+  void addEmptyPiece();
+  inline int moveToId(const Move& move);
+  void fixMoves();
 
   int rotateIndex_[MAX_IND][NUM_ROTATIONS];
   int moveIndex_[MAX_IND][NUM_MOVES];
@@ -28,7 +32,7 @@ namespace BitBoardPre {
   std::vector<Move> idToMove_(MAX_IND);
   std::unordered_map<Move, int> moveToId_;
   std::bitset<200> idToBitset_[MAX_IND];
-
+  int emptyMoveId_ = -1;
 
   void precompute() {
     static int done = 0;
@@ -49,6 +53,8 @@ namespace BitBoardPre {
       startingPieceId_[blockType] = pieceInfoToId(piece);
       bfs(piece);
     }
+    addEmptyPiece();
+    //fixMoves();
   }
 
   void bfs(const SimplePieceInfo &p) {
@@ -87,15 +93,25 @@ namespace BitBoardPre {
     }
   }
 
+  void addEmptyPiece() {
+    Move move;
+    move.coords_ = {};
+    emptyMoveId_ = moveToId(move);
+  }
+
   inline int pieceInfoToId(const SimplePieceInfo &p) {
     const auto &move = p.getPosition();
+    return moveToId(move);
+  }
+
+  inline int moveToId(const Move& move) {
     if (moveToId_.count(move)) {
       return moveToId_[move];
     }
     int newId = moveToId_.size();
-    idToBitset_[newId] = pieceInfoToBitset(p);
-    idToMove_[newId] = p.getPosition();
-    moveToId_[p.getPosition()] = newId;
+    idToBitset_[newId] = moveToBitset(move);
+    idToMove_[newId] = move;
+    moveToId_[move] = newId;
     return newId;
   }
 
@@ -119,6 +135,10 @@ namespace BitBoardPre {
     return moveIndex_[id][moveDirection];
   }
 
+  int getEmptyMoveId() {
+    return emptyMoveId_;
+  }
+
   const std::bitset<200>& idToBitset(int id) {
     return idToBitset_[id];
   }
@@ -127,7 +147,7 @@ namespace BitBoardPre {
     return idToMove_[id];
   }
 
-  int moveToId(const Move& move) {
+  int getMoveFromId(const Move& move) {
     if (!moveToId_.count(move)) {
       move.print();
       throw new std::runtime_error{"move not found!"};
@@ -135,13 +155,21 @@ namespace BitBoardPre {
     return moveToId_[move];
   }
 
-  std::bitset<200> pieceInfoToBitset(const SimplePieceInfo &p) {
+  std::bitset<200> moveToBitset(const Move &move) {
     std::bitset<200> b;
-    auto move = p.getPosition();
     for (const auto &coord: move.coords_) {
       b.set(coord.r*NUM_COLUMNS+coord.c);
     }
     return b;
+  }
+
+  // oof...
+  void fixMoves() {
+    for (auto move: idToMove_) {
+      for (auto coord: move.coords_) {
+        move.maxR = std::max(move.maxR, coord.r);
+      }
+    }
   }
 }
 

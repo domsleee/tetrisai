@@ -5,17 +5,23 @@
 #include "src/common/Coord.hpp"
 
 struct Move {
+  int maxR = 0;
   std::vector<Coord> coords_;
   Move(const std::vector<Coord>& coords) {
     if (coords.size() != 4) {
       throw new std::runtime_error{"require vector of size 4"};
     }
+    for (auto coord: coords) {
+      maxR = std::max(maxR, coord.r);
+    }
     coords_ = coords;
   }
   Move() {}
+  
   Move& operator+=(Coord c) {
     for (auto& coord: coords_) {
       coord += c;
+      maxR = std::max(maxR, coord.r);
     }
     return *this;
   }
