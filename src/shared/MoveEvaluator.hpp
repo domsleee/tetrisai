@@ -117,6 +117,10 @@ class MoveEvaluator {
     eval += w[PILE_HEIGHT] * pileHeight;
     eval += w[COLUMN_HEIGHT_SPREAD] * columnHeightSpread;
 
+    if (deltaLines == 4) {
+      return -1e9;
+    }
+
     return eval;
   }
 

@@ -6,7 +6,7 @@
 
 Move GetNextMove::getNextMove(const BitBoard& board, BlockType blockType, const Weighting &w, const ScoreManager &sm) {
   // todo: fix this to compile everywhere
-  AllMoveFinder f;
+  AllMoveFinder<> f;
   auto allMoves = f.findAllMoves(board, blockType);
   auto bestPiece = allMoves[0];
   double bestScore = 6e60;
