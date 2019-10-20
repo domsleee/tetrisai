@@ -19,7 +19,7 @@ int RunOneGame::runGame(const std::vector<BlockType> &pieceSet, const Weighting 
     sm.addLineClears(lineClears);
     moves++;
   }
-  dprintf("moves: %d, score: %d\n", moves, sm.getScore());
+  dprintf("moves: %d, score: %d, lineClears: %d\n", moves, sm.getScore(), sm.getTotalLines());
   return sm.getScore();
 };
  

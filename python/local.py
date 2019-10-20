@@ -6,8 +6,13 @@ import pyswarms as ps
 from random import randint
 import asyncio
 import logging
+import multiprocessing
+NUM_THREADS = multiprocessing.cpu_count()
 
-NUM_PARTICLES = 200
+print("NUM_THREADS:", NUM_THREADS)
+
+LOCAL = False
+NUM_PARTICLES = 1000
 NUM_NEIGHBOURS = 2
 NUM_ITERATIONS = 1000
 
@@ -22,9 +27,14 @@ class MyRunner:
     self._seen = {}
 
   def run(self):
-    global NUM_NEIGHBOURS, NUM_PARTICLES, NUM_ITERATIONS
+    global LOCAL, NUM_NEIGHBOURS, NUM_PARTICLES, NUM_ITERATIONS
     options = {'c1': 0.5, 'c2': 0.3, 'w': 0.9}
-    optimizer = ps.single.GlobalBestPSO(n_particles=NUM_PARTICLES, dimensions=17, options=options, velocity_clamp=(-5,5))
+    if LOCAL:
+      options['k'] = NUM_NEIGHBOURS
+      options['p'] = 2
+      optimizer = ps.single.LocalBestPSO(n_particles=NUM_PARTICLES, dimensions=17, options=options, velocity_clamp=(-5,5))
+    else:
+      optimizer = ps.single.GlobalBestPSO(n_particles=NUM_PARTICLES, dimensions=17, options=options)
     cost, pos = optimizer.optimize(self.run_particle, iters=NUM_ITERATIONS)
     print(cost, pos)
 
@@ -47,9 +57,9 @@ class MyRunner:
         pass
 
     async def wait_all():
+      global NUM_THREADS
       workers = []
-      NUM_CORES = 4
-      sem = asyncio.Semaphore(NUM_CORES)
+      sem = asyncio.Semaphore(NUM_THREADS)
       for i, vs in enumerate(particle_vs):
         workers.append(my_worker(i, vs, sem))
       await asyncio.wait(workers)

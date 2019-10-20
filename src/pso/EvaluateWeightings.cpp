@@ -9,7 +9,7 @@
 static const int NUM_GAMES = 100;
 // 50 to complete the board
 // 575 to fill 230 lines
-static const int NUM_BLOCKS_PER_GAME = 50 + 575;
+static const int NUM_BLOCKS_PER_GAME = 50 + 575 + 1200;
 
 
 template<typename T>

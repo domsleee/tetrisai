@@ -1,9 +1,6 @@
 #pragma once
 
 struct ScoreManager {
-  int level_ = 19;
-  int score_ = 0;
-  int totalLines_ = 0;
   void addLineClears(int lineClears) {
     switch(lineClears) {
       case 0: break;
@@ -17,7 +14,14 @@ struct ScoreManager {
       level_ = 19 + (totalLines_ - 130)/10;
     }
   }
-  int getScore() {
+  int getScore() const {
     return score_;
   }
+  int getTotalLines() const {
+    return totalLines_;
+  }
+ private:
+  int level_ = 19;
+  int score_ = 0;
+  int totalLines_ = 0;
 };

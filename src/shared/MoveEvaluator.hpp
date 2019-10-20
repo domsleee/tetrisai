@@ -34,7 +34,7 @@ class MoveEvaluator {
     auto deltaLines = nxBoard.applyPieceInfo(p);
 
     double eval = 0;
-    eval += w[TOTAL_LINES_CLEARED] * (m.totalLines_ + deltaLines);
+    eval += w[TOTAL_LINES_CLEARED] * (m.getTotalLines() + deltaLines);
     eval += w[TOTAL_LOCK_HEIGHT] * (NUM_ROWS - p.getPosition().maxR - 1);
 
     int lockHeights[NUM_COLUMNS];
