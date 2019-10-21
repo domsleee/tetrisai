@@ -12,6 +12,7 @@ import matplotlib.pyplot as plt
 from pyswarms.utils.plotters import (plot_cost_history, plot_contour, plot_surface)
 
 
+glob_best = 0.0
 NUM_THREADS = multiprocessing.cpu_count()
 
 print("NUM_THREADS:", NUM_THREADS)
@@ -55,6 +56,7 @@ class MyRunner:
   def run_particle(self, particle_vs):
     result = np.zeros(len(particle_vs))
     async def my_worker(i, vs, sem):
+      global glob_best
       await sem.acquire()
 
       async def try_release():
@@ -71,6 +73,10 @@ class MyRunner:
         await try_release()
         return
       val = await self.run_one(vs)
+      if val > glob_best:
+        glob_best = val
+        self._logger.info("new glob best! %0.8f" % glob_best)
+        self._logger.info(vs)
       result[i] = -val
       self._seen[tup] = -val
       self._logger.debug(vs)
