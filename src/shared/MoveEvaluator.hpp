@@ -51,7 +51,7 @@ class MoveEvaluator {
       }
       if (!broken) lockHeights[c] = NUM_ROWS;
     }
-    int lockHeight = std::accumulate(lockHeights, lockHeights + NUM_COLUMNS, 0);
+    //int lockHeight = std::accumulate(lockHeights, lockHeights + NUM_COLUMNS, 0);
     //eval += w[TOTAL_LOCK_HEIGHT] * lockHeight;
 
     int totalWellCells = 0, totalDeepWells = 0, totalWeightedColumnHoles = 0, totalColumnHeights = 0;
@@ -67,7 +67,7 @@ class MoveEvaluator {
     eval += w[TOTAL_WELL_CELLS] * totalWellCells;
     eval += w[TOTAL_DEEP_WELLS] * totalDeepWells;
   
-    int totalColumnHoles = 0, totalColumnHolesDepth = 0, minColumnHoleDepth = 20, maxColumnHoleDepth = 0;
+    int totalColumnHoles = 0, totalColumnHolesDepth = 0, minColumnHoleDepth = NUM_ROWS, maxColumnHoleDepth = 0;
     int totalColumnTransitions = 0, totalRowTransitions = 0;
     int totalSolidCells = 0, totalWeightedSolidCells = 0;
     for (int r = 0; r < NUM_ROWS; r++) {

@@ -15,7 +15,7 @@ class AllMoveFinder {
   }
 
   void dp(const MyBoardPieceInfo &p) {
-    for (auto moveDirection: allMoveDirections) {
+    for (auto moveDirection: validMoveDirections) {
       if (p.canMove(moveDirection)) {
         auto nxPiece = p.move(moveDirection);
         if (!seen_.count(nxPiece)) {

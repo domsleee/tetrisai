@@ -1,4 +1,5 @@
 BENCHMARK_COPTS = ["-O2", "-DNDEBUG"]
+EXEC_COPTS = ["-O2"]
 
 cc_binary(
     name = "tetrisai",
@@ -77,7 +78,7 @@ cc_binary(
     name = "ew",
     srcs = ["pso/main.cpp"],
     deps = [":pso"],
-    copts = BENCHMARK_COPTS
+    copts = EXEC_COPTS
 )
 
 cc_binary(

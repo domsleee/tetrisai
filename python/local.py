@@ -7,14 +7,19 @@ from random import randint
 import asyncio
 import logging
 import multiprocessing
+
+import matplotlib.pyplot as plt
+from pyswarms.utils.plotters import (plot_cost_history, plot_contour, plot_surface)
+
+
 NUM_THREADS = multiprocessing.cpu_count()
 
 print("NUM_THREADS:", NUM_THREADS)
 
-LOCAL = False
-NUM_PARTICLES = 1000
-NUM_NEIGHBOURS = 2
-NUM_ITERATIONS = 1000
+LOCAL = True
+NUM_PARTICLES = 16
+NUM_NEIGHBOURS = 8
+NUM_ITERATIONS = 10
 
 logging.basicConfig()
 
@@ -32,29 +37,45 @@ class MyRunner:
     if LOCAL:
       options['k'] = NUM_NEIGHBOURS
       options['p'] = 2
-      optimizer = ps.single.LocalBestPSO(n_particles=NUM_PARTICLES, dimensions=17, options=options, velocity_clamp=(-5,5))
+      optimizer = ps.single.LocalBestPSO(n_particles=NUM_PARTICLES, dimensions=17, options=options, velocity_clamp=(0,5))
     else:
       optimizer = ps.single.GlobalBestPSO(n_particles=NUM_PARTICLES, dimensions=17, options=options)
+    
+    
     cost, pos = optimizer.optimize(self.run_particle, iters=NUM_ITERATIONS)
+    self._show_plot(optimizer)
     print(cost, pos)
+
+
+  def _show_plot(self, optimizer):
+    plot_cost_history(cost_history=optimizer.cost_history)
+    plt.show()
+
 
   def run_particle(self, particle_vs):
     result = np.zeros(len(particle_vs))
     async def my_worker(i, vs, sem):
       await sem.acquire()
+
+      async def try_release():
+        try:
+          await sem.release()
+        except Exception:
+          pass
+
       tup = tuple(vs)
       if tup in self._seen:
-        self._logger.warning("seen before!")
-        return self._seen[tup]
+        val = self._seen[tup]
+        self._logger.warning("seen before! result[%d] = %0.8f" % (i, val))
+        result[i] = val
+        await try_release()
+        return
       val = await self.run_one(vs)
       result[i] = -val
       self._seen[tup] = -val
       self._logger.debug(vs)
       self._logger.info("result[%d] = %0.8f\n" % (i, result[i]))
-      try:
-        await sem.release()
-      except Exception:
-        pass
+      await try_release()
 
     async def wait_all():
       global NUM_THREADS
