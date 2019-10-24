@@ -103,7 +103,6 @@ BitPieceInfo BitPieceInfo::move(MoveDirection md) const {
   return {BitBoardPre::getMove(id_, md), b_};
 }
 
-
 Move BitPieceInfo::getPosition() const {
   return BitBoardPre::idToMove(id_);
 }

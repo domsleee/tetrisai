@@ -14,6 +14,7 @@ class BitPieceInfo;
 class BitBoard {
  friend BitPieceInfo;
  public:
+  using B = std::bitset<NUM_ROWS*NUM_COLUMNS>;
   BitBoard(){ BitBoardPre::precompute(); };
   int applyPieceInfo(const BitPieceInfo&);
   BitPieceInfo getPiece(BlockType blockType) const;
@@ -33,9 +34,21 @@ class BitBoard {
 
   // hmmm.
   BitPieceInfo getEmptyPiece() const;
+  int getPileHeight() const { 
+    static const int maskInt = (2 << (NUM_COLUMNS-1))-1;
+    B b(maskInt); // 1111111111
+    B zero;
+    int h = 20;
+    while (h > 0) {
+      if ((bitset_ & b) != zero) return h;
+      b <<= NUM_COLUMNS;
+      h--;
+    }
+    return h;
+  };
 
  private:
-  std::bitset<NUM_ROWS*NUM_COLUMNS> bitset_;
+  B bitset_;
 };
 
 template<>

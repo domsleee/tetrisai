@@ -9,6 +9,15 @@ class AllMoveFinder {
   AllMoveFinder() {}
   std::vector<BitPieceInfo> findAllMoves(const MyBoard& board, BlockType blockType) {
     auto pieceInfo = board.getPiece(blockType);
+
+    auto height = board.getPileHeight();
+    int canMoveDown = NUM_ROWS - height - 3;
+    //printf("canMoveDown: %d\n", canMoveDown);
+    while (canMoveDown > 0) {
+      pieceInfo = pieceInfo.move(MoveDirection::DOWN);
+      canMoveDown--;
+    }
+
     seen_.insert(pieceInfo);
     dp(pieceInfo);
     return {moves_.begin(), moves_.end()};

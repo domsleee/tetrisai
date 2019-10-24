@@ -122,3 +122,42 @@ SCENARIO("line clears... top 4 rows") {
   }
 }
 
+SCENARIO("Getting height") {
+  std::vector<std::vector<int>> vs(20, std::vector<int>(10, 0));
+  GIVEN("the bottom row only") {
+    vs[19][0] = 1;
+    BitBoard b(vs);
+    THEN("the pile height is 1") {
+      REQUIRE(b.getPileHeight() == 1);
+    }
+  }
+  AND_GIVEN("an empty board") {
+    BitBoard b(vs);
+    WHEN("we check the height") {
+      THEN("it is zero") {
+        REQUIRE(b.getPileHeight() == 0);
+      }
+    }
+  }
+  AND_GIVEN("a board") {
+    vs[5][0] = 1;
+    vs[8][0] = 1;
+    BitBoard b(vs);
+    WHEN("we check the height") {
+      THEN("it is correct") {
+        REQUIRE(b.getPileHeight() == 15);
+      }
+    }
+  }
+  AND_GIVEN("a different board") {
+    vs[9][0] = 1;
+    vs[12][0] = 1;
+    BitBoard b(vs);
+    WHEN("we check the height") {
+      THEN("it is correct" ){
+        REQUIRE(b.getPileHeight() == 11);
+      }
+    }
+  }
+}
+
