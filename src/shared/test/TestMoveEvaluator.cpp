@@ -35,7 +35,6 @@ Weighting getExpectedWeights(const std::string &filepath) {
 }
 
 Weighting getWeights(const BitBoard &b, const BitPieceInfo &piece) {
-  printf("NUM_FACTORS: %d\n", NUM_FACTORS);
   Weighting w(NUM_FACTORS, 0);
   Weighting res(NUM_FACTORS, 0);
   for (int i = 0; i < NUM_FACTORS; i++) {
@@ -47,7 +46,6 @@ Weighting getWeights(const BitBoard &b, const BitPieceInfo &piece) {
   
     res[i] = me.evaluate(b, piece, w, sm);
   }
-  printf("%lu\n", res.size());
   return res;
 }
 
@@ -89,13 +87,45 @@ SCENARIO("Metrics line up") {
 
 }
 
+
+
+
+SCENARIO("Metrics 2 line up") {
+  const auto testFile = TEST_FOLDER + "/test2.in";
+  const auto weightFile = TEST_FOLDER + "/test2.exp";
+  auto b = readBoard(testFile);
+  auto w = getWeightsFromEmptyPiece(b);
+  auto wExp = getExpectedWeights(weightFile);
+
+
+  REQ_IND(w, wExp, MoveEvaluator::TOTAL_LINES_CLEARED);
+  //REQ_IND(w, wExp, MoveEvaluator::TOTAL_LOCK_HEIGHT);
+  REQ_IND(w, wExp, MoveEvaluator::TOTAL_WELL_CELLS);
+  REQ_IND(w, wExp, MoveEvaluator::TOTAL_DEEP_WELLS);
+  REQ_IND(w, wExp, MoveEvaluator::TOTAL_COLUMN_HOLES);
+  REQ_IND(w, wExp, MoveEvaluator::TOTAL_WEIGHTED_COLUMN_HOLES);
+  REQ_IND(w, wExp, MoveEvaluator::TOTAL_COLUMN_HOLE_DEPTH);
+  REQ_IND(w, wExp, MoveEvaluator::MIN_COLUMN_HOLE_DEPTH);
+  REQ_IND(w, wExp, MoveEvaluator::MAX_COLUMN_HOLE_DEPTH);
+  REQ_IND(w, wExp, MoveEvaluator::TOTAL_COLUMN_TRANSITIONS);
+  REQ_IND(w, wExp, MoveEvaluator::TOTAL_ROW_TRANSITIONS);
+  REQ_IND(w, wExp, MoveEvaluator::TOTAL_COLUMN_HEIGHTS);
+  REQ_IND(w, wExp, MoveEvaluator::PILE_HEIGHT);
+  REQ_IND(w, wExp, MoveEvaluator::COLUMN_HEIGHT_SPREAD);
+  REQ_IND(w, wExp, MoveEvaluator::TOTAL_SOLID_CELLS);
+  REQ_IND(w, wExp, MoveEvaluator::TOTAL_WEIGHTED_SOLID_CELLS);
+  REQ_IND(w, wExp, MoveEvaluator::COLUMN_HEIGHT_VARIANCE);
+  
+  //REQUIRE(w == wExp);
+
+}
+
 SCENARIO("lock height") {
   auto b = BitBoard();
   Move m = Move({{5, 5}, {5, 6}, {5, 7}, {6,5}});
   auto piece = b.getPiece(m);
   // 19 ==> 0
   // 6 ==> 13
-  printf("maxR: %d\n", piece.getPosition().maxR);
   auto w = getWeights(b, piece);
   REQUIRE(w[MoveEvaluator::TOTAL_LOCK_HEIGHT] == 13);
 
