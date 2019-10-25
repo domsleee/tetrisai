@@ -27,4 +27,6 @@ namespace BitBoardPre {
   int getMoveFromId(const Move& move); 
 
   int getEmptyMoveId();
+
+  int getMoveHeight(int id);
 }

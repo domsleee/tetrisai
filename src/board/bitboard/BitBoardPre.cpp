@@ -25,11 +25,13 @@ namespace BitBoardPre {
   void addEmptyPiece();
   inline int moveToId(const Move& move);
   void fixMoves();
+  void setupHeights();
 
   int rotateIndex_[MAX_IND][NUM_ROTATIONS];
   int moveIndex_[MAX_IND][NUM_MOVES];
   int startingPieceId_[NUM_BLOCKS];
   std::vector<Move> idToMove_(MAX_IND);
+  std::vector<int> idToHeight_(MAX_IND);
   std::unordered_map<Move, int> moveToId_;
   std::bitset<200> idToBitset_[MAX_IND];
   int emptyMoveId_ = -1;
@@ -54,6 +56,7 @@ namespace BitBoardPre {
       bfs(piece);
     }
     addEmptyPiece();
+    setupHeights();
     //fixMoves();
   }
 
@@ -80,7 +83,7 @@ namespace BitBoardPre {
           q.push(nxP);
         }
       }
-      for (auto moveDirection: allMoveDirections) {
+      for (auto moveDirection: validMoveDirections) {
         if (!tp.canMove(moveDirection)) continue;
         const auto &nxP = tp.move(moveDirection);
         int nxId = pieceInfoToId(nxP);
@@ -168,6 +171,20 @@ namespace BitBoardPre {
     for (auto move: idToMove_) {
       for (auto coord: move.coords_) {
         move.maxR = std::max(move.maxR, coord.r);
+      }
+    }
+  }
+
+  int getMoveHeight(int moveId) {
+    return idToHeight_[moveId];
+  }
+
+  void setupHeights() {
+    for (int i = 0; i < moveToId_.size(); ++i) {
+      auto piece = idToMove(i);
+      idToHeight_[i] = 0;
+      for (auto coord: piece.coords_) {
+        idToHeight_[i] = std::max(idToHeight_[i], NUM_ROWS-coord.r);
       }
     }
   }

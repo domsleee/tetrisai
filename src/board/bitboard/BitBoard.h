@@ -27,28 +27,18 @@ class BitBoard {
   BitPieceInfo getPiece(BlockType blockType, const Move& position) const;
   bool vacant(const Move&) const;
   bool vacant(const Coord&) const;
-  void print() { std::cout << "BOARD: " << bitset_ << "\n\n"; return; } // todo
+  void print() const { std::cout << "BOARD: " << bitset_ << "\n\n"; return; } // todo
   friend bool operator==(const BitBoard &b1, const BitBoard &b2) {
     return b1.bitset_ == b2.bitset_;
   }
 
   // hmmm.
   BitPieceInfo getEmptyPiece() const;
-  int getPileHeight() const { 
-    static const int maskInt = (2 << (NUM_COLUMNS-1))-1;
-    B b(maskInt); // 1111111111
-    B zero;
-    int h = 20;
-    while (h > 0) {
-      if ((bitset_ & b) != zero) return h;
-      b <<= NUM_COLUMNS;
-      h--;
-    }
-    return h;
-  };
+  int getPileHeight() const;
 
  private:
   B bitset_;
+  int height_ = 0;
 };
 
 template<>
