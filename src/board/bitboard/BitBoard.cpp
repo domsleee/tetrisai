@@ -57,7 +57,10 @@ bool BitBoard::vacant(const BitPieceInfo& p) const {
   return (bitset_ & pieceBitset).none();
 }
 
-bool BitBoard::vacant(const Move& move) const { 
+
+// slower checks
+bool BitBoard::vacant(const Move& move) const {
+  //int id = BitBoardPre::getMoveFromId(move);
   for (const auto& coord: move.coords_) {
     if (!vacant(coord)) return false;
   }

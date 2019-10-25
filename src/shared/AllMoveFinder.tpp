@@ -36,7 +36,7 @@ class AllMoveFinder {
     }
     for (auto rotateDirection: allRotateDirections) {
       if (p.canRotate(rotateDirection)) {
-        const auto &nxPiece = p.rotate(rotateDirection);
+        auto nxPiece = p.rotate(rotateDirection);
         if (!seen_.count(nxPiece)) {
           seen_.insert(nxPiece);
           dp(nxPiece);

@@ -22,8 +22,6 @@ std::vector<BitPieceInfo> MoveFinder::findAllMoves(const BitBoard& b, BlockType 
   dp(pieceInfo, KeyStatus::LEFT_DOWN);
   dp(pieceInfo, KeyStatus::RIGHT_DOWN);
 
-
-  
   //printf("solution space: %lu\n", seen_.size());
   return {moves_.begin(), moves_.end()};
 }

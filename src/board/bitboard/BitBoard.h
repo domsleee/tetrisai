@@ -27,6 +27,7 @@ class BitBoard {
   BitPieceInfo getPiece(BlockType blockType, const Move& position) const;
   bool vacant(const Move&) const;
   bool vacant(const Coord&) const;
+  bool vacant(int id) const;
   void print() const { std::cout << "BOARD: " << bitset_ << "\n\n"; return; } // todo
   friend bool operator==(const BitBoard &b1, const BitBoard &b2) {
     return b1.bitset_ == b2.bitset_;
