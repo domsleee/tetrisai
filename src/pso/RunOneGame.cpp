@@ -18,6 +18,7 @@ int RunOneGame::runGame(const std::vector<BlockType> &pieceSet, const Weighting 
     int lineClears = b.applyPieceInfo(pieceInfo);
     sm.addLineClears(lineClears);
     moves++;
+    if (sm.getTotalLines() >= 230) break;
   }
   dprintf("moves: %d, score: %d, lineClears: %d\n", moves, sm.getScore(), sm.getTotalLines());
   return sm.getScore();
