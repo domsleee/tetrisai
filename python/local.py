@@ -13,14 +13,14 @@ from pyswarms.utils.plotters import (plot_cost_history, plot_contour, plot_surfa
 
 
 glob_best = 0.0
-NUM_THREADS = multiprocessing.cpu_count()
+NUM_THREADS = multiprocessing.cpu_count() - 1
 
 print("NUM_THREADS:", NUM_THREADS)
 
-LOCAL = True
-NUM_PARTICLES = 16
-NUM_NEIGHBOURS = 8
-NUM_ITERATIONS = 10
+LOCAL = False
+NUM_PARTICLES = 100
+NUM_NEIGHBOURS = 100
+NUM_ITERATIONS = 6900
 
 logging.basicConfig()
 
@@ -34,8 +34,9 @@ class MyRunner:
 
   def run(self):
     global LOCAL, NUM_NEIGHBOURS, NUM_PARTICLES, NUM_ITERATIONS
-    options = {'c1': 0.5, 'c2': 0.3, 'w': 0.9}
+    options = {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
     if LOCAL:
+      options = {'c1': 2, 'c2': 2, 'w': 0.728}
       options['k'] = NUM_NEIGHBOURS
       options['p'] = 2
       optimizer = ps.single.LocalBestPSO(n_particles=NUM_PARTICLES, dimensions=17, options=options, velocity_clamp=(0,5))
@@ -80,7 +81,7 @@ class MyRunner:
       result[i] = -val
       self._seen[tup] = -val
       self._logger.debug(vs)
-      self._logger.info("result[%d] = %0.8f\n" % (i, result[i]))
+      self._logger.debug("result[%d] = %0.8f\n" % (i, result[i]))
       await try_release()
 
     async def wait_all():
@@ -91,7 +92,7 @@ class MyRunner:
         workers.append(my_worker(i, vs, sem))
       await asyncio.wait(workers)
     
-    print(particle_vs.shape)
+    #print(particle_vs.shape)
     asyncio.run(wait_all())
     return result
   
