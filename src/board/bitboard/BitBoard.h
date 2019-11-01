@@ -14,6 +14,7 @@ class BitPieceInfo;
 class BitBoard {
  friend BitPieceInfo;
  public:
+  using B = std::bitset<NUM_ROWS*NUM_COLUMNS>;
   BitBoard(){ BitBoardPre::precompute(); };
   int applyPieceInfo(const BitPieceInfo&);
   BitPieceInfo getPiece(BlockType blockType) const;
@@ -26,16 +27,19 @@ class BitBoard {
   BitPieceInfo getPiece(BlockType blockType, const Move& position) const;
   bool vacant(const Move&) const;
   bool vacant(const Coord&) const;
-  void print() { std::cout << "BOARD: " << bitset_ << "\n\n"; return; } // todo
+  bool vacant(int id) const;
+  void print() const { std::cout << "BOARD: " << bitset_ << "\n\n"; return; } // todo
   friend bool operator==(const BitBoard &b1, const BitBoard &b2) {
     return b1.bitset_ == b2.bitset_;
   }
 
   // hmmm.
   BitPieceInfo getEmptyPiece() const;
+  int getPileHeight() const;
 
  private:
-  std::bitset<NUM_ROWS*NUM_COLUMNS> bitset_;
+  B bitset_;
+  int height_ = 0;
 };
 
 template<>

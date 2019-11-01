@@ -7,61 +7,17 @@
 #include "src/shared/AllMoveFinder.tpp"
 #include "src/shared/MoveEvaluator.hpp"
 #include "src/shared/ScoreManager.hpp"
+#include "src/shared/test/MoveEvaluatorUtility.hpp"
 #include <vector>
 #include <iostream>
 #include <algorithm>
 
-const std::string TEST_FOLDER = "/Users/dom/Documents/git/tetrisAI/src/shared/test/data";
-
-BitBoard readBoard(const std::string &filePath) {
-  std::ifstream fin{filePath};
-  auto vs = std::vector<std::vector<int>>(NUM_ROWS, std::vector<int>(NUM_COLUMNS, 0));
-  char t;
-  for (int r = 0; r < NUM_ROWS; r++) {
-    for (int c = 0; c < NUM_COLUMNS; c++) {
-      fin >> t;
-      vs[r][c] = t-'0'; 
-    }
-  }
-  return {vs};
-}
-
-Weighting getExpectedWeights(const std::string &filepath) {
-  std::ifstream fin{filepath};
-  Weighting w;
-  double d;
-  while (fin >> d) w.push_back(d);
-  return w;
-}
-
-Weighting getWeights(const BitBoard &b, const BitPieceInfo &piece) {
-  Weighting w(NUM_FACTORS, 0);
-  Weighting res(NUM_FACTORS, 0);
-  for (int i = 0; i < NUM_FACTORS; i++) {
-    if (i > 0) w[i-1] = 0;
-    w[i] = 1;
-    // todo: move this spaghet to a convenience
-    MoveEvaluator me;
-    ScoreManager sm;
-  
-    res[i] = me.evaluate(b, piece, w, sm);
-  }
-  return res;
-}
-
-Weighting getWeightsFromEmptyPiece(const BitBoard &b) {
-  const auto m = BitBoardPre::idToMove(BitBoardPre::getEmptyMoveId());
-  auto piece = b.getPiece(m);
-  return getWeights(b, piece);
-}
-
-#define REQ_IND(w, wExp, ind) REQUIRE(w[ind] == wExp[ind])
 
 SCENARIO("Metrics line up") {
   const auto testFile = TEST_FOLDER + "/test1.in";
   const auto weightFile = TEST_FOLDER + "/test1.exp";
   auto b = readBoard(testFile);
-  auto w = getWeightsFromEmptyPiece(b);
+  auto w = getWeightsFromEmptyPiece(b, MoveEvaluator());
   auto wExp = getExpectedWeights(weightFile);
 
 
@@ -94,7 +50,7 @@ SCENARIO("Metrics 2 line up") {
   const auto testFile = TEST_FOLDER + "/test2.in";
   const auto weightFile = TEST_FOLDER + "/test2.exp";
   auto b = readBoard(testFile);
-  auto w = getWeightsFromEmptyPiece(b);
+  auto w = getWeightsFromEmptyPiece(b, MoveEvaluator());
   auto wExp = getExpectedWeights(weightFile);
 
 
@@ -126,7 +82,7 @@ SCENARIO("lock height") {
   auto piece = b.getPiece(m);
   // 19 ==> 0
   // 6 ==> 13
-  auto w = getWeights(b, piece);
+  auto w = getWeights(b, piece, MoveEvaluator());
   REQUIRE(w[MoveEvaluator::TOTAL_LOCK_HEIGHT] == 13);
 
 }

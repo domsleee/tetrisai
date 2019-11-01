@@ -9,6 +9,16 @@ class AllMoveFinder {
   AllMoveFinder() {}
   std::vector<BitPieceInfo> findAllMoves(const MyBoard& board, BlockType blockType) {
     auto pieceInfo = board.getPiece(blockType);
+    auto height = board.getPileHeight();
+    //printf("finding all moves... (%d)\n", height);
+    //board.print();
+    int canMoveDown = NUM_ROWS - height - 3;
+    //printf("canMoveDown: %d\n", canMoveDown);
+    while (canMoveDown > 0) {
+      pieceInfo = pieceInfo.move(MoveDirection::DOWN);
+      canMoveDown--;
+    }
+
     seen_.insert(pieceInfo);
     dp(pieceInfo);
     return {moves_.begin(), moves_.end()};
@@ -26,7 +36,7 @@ class AllMoveFinder {
     }
     for (auto rotateDirection: allRotateDirections) {
       if (p.canRotate(rotateDirection)) {
-        const auto &nxPiece = p.rotate(rotateDirection);
+        auto nxPiece = p.rotate(rotateDirection);
         if (!seen_.count(nxPiece)) {
           seen_.insert(nxPiece);
           dp(nxPiece);

@@ -70,7 +70,13 @@ cc_test(
 
 cc_test(
     name = "test_move_evaluator",
-    srcs = ["shared/test/TestMoveEvaluator.cpp"],
+    srcs = glob(["shared/test/TestMoveEvaluator.cpp", "shared/test/*.hpp"]),
+    deps = [":shared", "//:catch"]
+)
+
+cc_test(
+    name = "test_move_evaluator_simple",
+    srcs = glob(["shared/test/TestMoveEvaluatorSimple.cpp", "shared/test/*.hpp"]),
     deps = [":shared", "//:catch"]
 )
 

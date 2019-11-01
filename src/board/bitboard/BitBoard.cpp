@@ -8,16 +8,25 @@
 BitBoard::BitBoard(const std::vector<std::vector<int>>& v) {
   BitBoardPre::precompute();
   int ind = 0;
+  int h = NUM_ROWS;
   for (const auto &row: v) {
     for (const auto t: row) {
-      if (t) bitset_.set(ind);
+      if (t) {
+        height_ = std::max(height_, h);
+        bitset_.set(ind);
+      }
       ind++;
     }
+    h--;
   }
 }
 
 int BitBoard::applyPieceInfo(const BitPieceInfo& p) {
   const auto& pieceBitset = BitBoardPre::idToBitset(p.id_);
+
+  int h = BitBoardPre::getMoveHeight(p.id_);
+  height_ = std::max(height_, h);
+
   assert(vacant(p));
   bitset_ |= pieceBitset;
   static const int maskInt = (2 << (NUM_COLUMNS-1))-1;
@@ -35,7 +44,7 @@ int BitBoard::applyPieceInfo(const BitPieceInfo& p) {
     b <<= NUM_COLUMNS;
   }
 
-  return lineClears; // todo: number of line clears
+  return lineClears;
 }
 
 BitPieceInfo BitBoard::getPiece(BlockType blockType) const {
@@ -48,7 +57,10 @@ bool BitBoard::vacant(const BitPieceInfo& p) const {
   return (bitset_ & pieceBitset).none();
 }
 
-bool BitBoard::vacant(const Move& move) const { 
+
+// slower checks
+bool BitBoard::vacant(const Move& move) const {
+  //int id = BitBoardPre::getMoveFromId(move);
   for (const auto& coord: move.coords_) {
     if (!vacant(coord)) return false;
   }
@@ -74,6 +86,28 @@ BitPieceInfo BitBoard::getEmptyPiece() const {
   return {BitBoardPre::getEmptyMoveId(), this};
 }
 
+int BitBoard::getPileHeight() const {
+  return height_;
+
+  // old method...
+  int my_height = height_;
+  static const int maskInt = (2 << (NUM_COLUMNS-1))-1;
+  B b(maskInt); // 1111111111
+  B zero;
+  int h = 20;
+  while (h > 0) {
+    if ((bitset_ & b) != zero) {
+      if (my_height != h) {
+        printf("my_height:%d, h:%d\n", my_height, h);
+        exit(1);
+      }
+      return h;
+    }
+    b <<= NUM_COLUMNS;
+    h--;
+  }
+  return h;
+};
 
 
 // BitPieceInfo
@@ -102,7 +136,6 @@ BitPieceInfo BitPieceInfo::move(MoveDirection md) const {
   assert(canMove(md));
   return {BitBoardPre::getMove(id_, md), b_};
 }
-
 
 Move BitPieceInfo::getPosition() const {
   return BitBoardPre::idToMove(id_);
