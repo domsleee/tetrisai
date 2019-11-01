@@ -9,7 +9,6 @@
 class MoveEvaluator {
   const int INF = 30; // clearly not infinitely lmao
 
-
  public:
   static const int TOTAL_LINES_CLEARED = 0;
   static const int TOTAL_LOCK_HEIGHT   = 1;
@@ -32,7 +31,10 @@ class MoveEvaluator {
   double evaluate(const BitBoard& b, const BitPieceInfo& p, const Weighting &w, const ScoreManager &m) {
     auto nxBoard = b;
     auto deltaLines = nxBoard.applyPieceInfo(p);
-
+    return my_evaluate(nxBoard, p, w, m, deltaLines);
+  }
+  
+  double my_evaluate(const BitBoard &b, const BitPieceInfo& p, const Weighting &w, const ScoreManager &m, int deltaLines) {
     double eval = 0;
     eval += w[TOTAL_LINES_CLEARED] * (m.getTotalLines() + deltaLines);
     eval += w[TOTAL_LOCK_HEIGHT] * (NUM_ROWS - p.getPosition().maxR - 1);
@@ -124,6 +126,7 @@ class MoveEvaluator {
     return eval;
   }
 
+ private:
   int calculateRowTransitions(const BitBoard &b, int minR) {
     int res = 0;
     for (int r = minR; r < NUM_ROWS; r++) {
