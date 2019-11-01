@@ -1,0 +1,27 @@
+canMoveDown: 3
+canMoveDown: 3
+canMoveDown: 3
+canMoveDown: 3
+canMoveDown: 3
+canMoveDown: 3
+canMoveDown: 3
+canMoveDown: 3
+canMoveDown: 3
+canMoveDown: 3
+canMoveDown: 3
+canMoveDown: 3
+canMoveDown: 3
+canMoveDown: 3
+canMoveDown: 3
+canMoveDown: 3
+canMoveDown: 3
+canMoveDown: 3
+canMoveDown: 3
+canMoveDown: 3
+canMoveDown: 3
+canMoveDown: 3
+canMoveDown: 3
+canMoveDown: 3
+canMoveDown: 3
+25 runs in 0.238317s
+average: 0.00953269s
