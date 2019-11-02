@@ -38,8 +38,7 @@ std::vector<std::pair<double, Weighting>> EvaluateWeightings::rankWeightings(con
 
 std::vector<std::vector<BlockType>> EvaluateWeightings::getPieceSets(int numSets) {
   std::vector<std::vector<BlockType>> res(NUM_GAMES);
-  const int seed = 88;
-  srand(seed);
+  srand(seed_);
   int numBlocks = allBlockTypes.size();
   for (auto &game: res) {
     for (int i = 0; i < NUM_BLOCKS_PER_GAME; i++) {
@@ -48,4 +47,8 @@ std::vector<std::vector<BlockType>> EvaluateWeightings::getPieceSets(int numSets
     }
   }
   return res;
+}
+
+void EvaluateWeightings::setSeed(int seed) {
+  seed_ = seed;
 }
