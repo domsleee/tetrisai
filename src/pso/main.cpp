@@ -5,8 +5,8 @@
 #include <string.h>
 
 int main(int argc, char ** argv) {
-  if (argc != NUM_FACTORS+1) {
-    printf("Expected %d arguments, given %d\n", NUM_FACTORS+1, argc);
+  if (argc < NUM_FACTORS+1) {
+    printf("Expected at least %d arguments, given %d\n", NUM_FACTORS+1, argc);
     exit(1);
   }
   Weighting weightings(NUM_FACTORS);
@@ -14,6 +14,12 @@ int main(int argc, char ** argv) {
     weightings[i] = atof(argv[i+1]);
   }
   EvaluateWeightings ew;
+  if (argc > NUM_FACTORS+1) {
+    int seed = atoi(argv[NUM_FACTORS+1]);
+    ew.setSeed(seed);
+  }
+  // todo: consider using cin
+
   auto rankings = ew.rankWeightings({weightings});
   std::cout << rankings[0].first << '\n';
 }

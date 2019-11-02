@@ -1,2 +1,7 @@
-- test metrics
-- upload to aws
+CPP
++ seed
+
+PYTHON
++ aws batch jobs
+
+

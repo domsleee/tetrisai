@@ -12,6 +12,8 @@ class RunEvaluator(IRunEvaluator):
   
   async def run(self, vs: typing.List[float], seed: int = None):
     args = [self._binary] + [str(v) for v in vs]
+    if seed:
+      args += [str(seed)]
     exec_str = ' '.join(args)
     return await self._run_cmd(exec_str)
 
