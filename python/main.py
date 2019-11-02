@@ -10,7 +10,7 @@ DIR = os.path.dirname(os.path.realpath(__file__))
 DEFAULT_BINARY = os.path.join(DIR, '..', 'bazel-bin', 'src', 'ew')
 
 def main(args):
-  runner_settings = RunnerSettings(num_particles=2)
+  runner_settings = RunnerSettings()
   print(runner_settings)
   runner.MyRunner(args.binary, runner_settings).run()
 
