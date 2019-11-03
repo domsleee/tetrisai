@@ -9,7 +9,6 @@
 static const int NUM_GAMES = 100;
 // 50 to complete the board
 // 575 to fill 230 lines
-static const int NUM_BLOCKS_PER_GAME = 50 + 575 + 1200;
 
 
 template<typename T>
@@ -20,7 +19,7 @@ double average(T it1, T it2) {
 std::vector<std::pair<double, Weighting>> EvaluateWeightings::rankWeightings(const std::vector<Weighting> &weightings) {
   // get 
   RunOneGame rog;
-  auto pieceSets = getPieceSets(NUM_GAMES);
+  auto pieceSets = ps_.getPieceSets(NUM_GAMES);
   std::vector<std::pair<double, Weighting>> res;
   for (const auto weighting: weightings) {
     // run games with weightings
@@ -36,19 +35,6 @@ std::vector<std::pair<double, Weighting>> EvaluateWeightings::rankWeightings(con
   return res;
 }
 
-std::vector<std::vector<BlockType>> EvaluateWeightings::getPieceSets(int numSets) {
-  std::vector<std::vector<BlockType>> res(NUM_GAMES);
-  srand(seed_);
-  int numBlocks = allBlockTypes.size();
-  for (auto &game: res) {
-    for (int i = 0; i < NUM_BLOCKS_PER_GAME; i++) {
-      int block = rand() % numBlocks;
-      game.push_back(allBlockTypes[block]);
-    }
-  }
-  return res;
-}
-
 void EvaluateWeightings::setSeed(int seed) {
-  seed_ = seed;
+  ps_.setSeed(seed);
 }

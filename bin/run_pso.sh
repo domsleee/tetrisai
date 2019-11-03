@@ -3,4 +3,4 @@ ROOT="$( cd ${DIR}; cd ..; pwd )";
 
 echo "${ROOT}"
 cd "${ROOT}"
-python3 ./python/local.py ./bazel-bin/src/ew
+python3 ./python/main.py
