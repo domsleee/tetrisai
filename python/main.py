@@ -1,19 +1,17 @@
+#!/usr/bin/env python3
 from tetrisai import runner
 from tetrisai.runner_settings import RunnerSettings
+from common.common import DEFAULT_BINARY
 import argparse
 import logging
 import os
 
 logging.basicConfig()
 
-DIR = os.path.dirname(os.path.realpath(__file__))
-DEFAULT_BINARY = os.path.join(DIR, '..', 'bazel-bin', 'src', 'ew')
-
 def main(args):
   runner_settings = RunnerSettings()
   print(runner_settings)
   runner.MyRunner(args.binary, runner_settings).run()
-
 
 if __name__ == "__main__":
   parser = argparse.ArgumentParser()

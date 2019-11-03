@@ -1,7 +1,10 @@
-CPP
-+ seed
+performance
++ create benchmark + run on ec2 node
++ Run each particle as an aws batch job
 
-PYTHON
-+ aws batch jobs
+
+
+next thing to try
++ run current code on other move finder
 
 

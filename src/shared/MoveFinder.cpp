@@ -13,7 +13,6 @@ std::vector<BitPieceInfo> MoveFinder::findAllMoves(const BitBoard& b, BlockType 
   
   auto height = b.getPileHeight();
   int canMoveDown = NUM_COLUMNS - height - 3;
-  printf("canMoveDown: %d\n", canMoveDown);
   while (canMoveDown > 0) {
     pieceInfo = pieceInfo.move(MoveDirection::DOWN);
     canMoveDown--;
