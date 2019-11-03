@@ -2,6 +2,7 @@
 #define PIECE_SET_GETTER_H
 
 #include <vector>
+#include <stdlib.h> 
 #include "src/common/BlockType.hpp"
 #include "src/common/common.hpp"
 
