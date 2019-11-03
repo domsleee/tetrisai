@@ -21,4 +21,4 @@ static const std::vector<BlockType> allBlockTypes = {
   BlockType::O_PIECE
 };
 
-static const int NUM_BLOCKS_TYPES = allBlockTypes.size();
+static const int NUM_BLOCK_TYPES = allBlockTypes.size();
