@@ -5,20 +5,21 @@
 #include <stdlib.h> 
 #include "src/common/BlockType.hpp"
 #include "src/common/common.hpp"
+#include <random>
 
 static const int NUM_BLOCKS_PER_GAME = 50 + 575 + 1200;
 
 struct PieceSetGetter {
-  int seed_;
-  void setSeed(int seed) { seed_ = seed; }
+  std::mt19937 rd_;
+  std::uniform_int_distribution<> dis_{0, NUM_BLOCKS_TYPES};
+  void setSeed(int seed) { rd_.seed(seed); }
 
   std::vector<std::vector<BlockType>> getPieceSets(int numSets) {
     std::vector<std::vector<BlockType>> res(numSets);
-    srand(seed_);
     int numBlocks = allBlockTypes.size();
     for (auto &game: res) {
       for (int i = 0; i < NUM_BLOCKS_PER_GAME; i++) {
-        int block = rand() % numBlocks;
+        int block = dis_(rd_);
         game.push_back(allBlockTypes[block]);
       }
     }

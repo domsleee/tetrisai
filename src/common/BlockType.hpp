@@ -11,7 +11,7 @@ enum BlockType {
   O_PIECE
 };
 
-static std::vector<BlockType> allBlockTypes = {
+static const std::vector<BlockType> allBlockTypes = {
   BlockType::I_PIECE,
   BlockType::L_PIECE,
   BlockType::J_PIECE,
@@ -20,3 +20,5 @@ static std::vector<BlockType> allBlockTypes = {
   BlockType::S_PIECE,
   BlockType::O_PIECE
 };
+
+static const int NUM_BLOCKS_TYPES = allBlockTypes.size();

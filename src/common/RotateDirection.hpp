@@ -1,4 +1,5 @@
 #pragma once
+#include <vector>
 
 enum RotateDirection {
   ROTATE_AC=0,
