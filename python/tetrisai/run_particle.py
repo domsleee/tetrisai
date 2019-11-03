@@ -2,11 +2,11 @@ import asyncio
 import os
 import typing
 
-from tetrisai.interfaces.i_run_evaluator import IRunEvaluator
+from tetrisai.interfaces.i_run_particle import IRunParticle
 from common.common import Particle
 
 
-class RunEvaluator(IRunEvaluator):
+class RunParticle(IRunParticle):
   def __init__(self, binary: str):
     self._binary = binary
     if not os.access(binary, os.X_OK):

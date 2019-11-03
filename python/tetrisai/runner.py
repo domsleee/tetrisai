@@ -7,7 +7,7 @@ import logging
 import multiprocessing
 from tetrisai.runner_settings import RunnerSettings
 from tetrisai.performance_logger import PerformanceLogger
-from tetrisai.run_evaluator import RunEvaluator
+from tetrisai.run_particle import RunParticle
 
 from tetrisai.async_particle_group_runner import ParticleGroup, AsyncParticleGroupRunner
 
@@ -21,9 +21,9 @@ class MyRunner:
     self._glob_best = 0.0
     self._best_particle = []
     self._runner_settings = runner_settings
-    self._run_evaluator = RunEvaluator(binary)
-    self._performance_logger = PerformanceLogger(self._run_evaluator)
-    self._particle_group_runner = AsyncParticleGroupRunner(self._run_evaluator)
+    self._run_particle = RunParticle(binary)
+    self._performance_logger = PerformanceLogger(self._run_particle)
+    self._particle_group_runner = AsyncParticleGroupRunner(self._run_particle)
     self._iteration = 0
 
     if self._runner_settings.local:

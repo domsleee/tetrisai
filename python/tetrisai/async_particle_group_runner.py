@@ -2,7 +2,7 @@ import asyncio
 import typing
 
 from tetrisai.interfaces.i_run_particle_group import IRunParticleGroup, ParticleGroup
-from tetrisai.interfaces.i_run_evaluator import IRunEvaluator
+from tetrisai.interfaces.i_run_particle import IRunParticle
 from common.common import Particle
 
 import numpy as np
@@ -11,7 +11,7 @@ import multiprocessing
 NUM_THREADS = multiprocessing.cpu_count() - 1
 
 class AsyncParticleGroupRunner(IRunParticleGroup):
-  def __init__(self, run_evaluator: IRunEvaluator):
+  def __init__(self, run_evaluator: IRunParticle):
     self._seen = {}
     self._run_evaluator = run_evaluator
 

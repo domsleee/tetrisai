@@ -3,7 +3,7 @@ import typing
 
 from common.common import Particle
 
-class IRunEvaluator:
+class IRunParticle:
   @abc.abstractmethod
   def run_sync(self, vs: Particle, seed: int = None) -> float:
     """

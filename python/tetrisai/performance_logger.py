@@ -1,13 +1,13 @@
 
-from tetrisai.interfaces.i_run_evaluator import IRunEvaluator
+from tetrisai.interfaces.i_run_particle import IRunParticle
 from tetrisai.runner_settings import RunnerSettings
 import datetime
 import logging
 import os
 
 class PerformanceLogger:
-  def __init__(self, run_evaluator: IRunEvaluator):
-    self._run_evaluator = run_evaluator
+  def __init__(self, run_particle: IRunParticle):
+    self._run_particle = run_particle
     self._logger = logging.getLogger('performance_logger')
 
     now = datetime.datetime.now()
@@ -28,7 +28,7 @@ class PerformanceLogger:
       self._logger.debug("iteration,time_taken,train_score,eval_score,vector")
     now = datetime.datetime.now()
     time_taken = (now - self._last_time).total_seconds()
-    eval_score = self._run_evaluator.run_sync(best_particle, seed=99)
+    eval_score = self._run_particle.run_sync(best_particle, seed=99)
     van_list = [str(x) for x in best_particle]
     self._logger.debug("%d,%0.3f,%0.3f,%0.3f,[%s]" % (iteration, time_taken, train_score, eval_score, ' '.join(van_list)))
     self._last_time = now
