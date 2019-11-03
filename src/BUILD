@@ -4,8 +4,7 @@ EXEC_COPTS = ["-O2"]
 cc_binary(
     name = "tetrisai",
     srcs = glob(["*.cpp", "*.hpp", "interfaces/*"]),
-    deps = [
-        ":common",
+    deps = [ ":common",
         ":shared"
     ],
 )
@@ -34,7 +33,7 @@ cc_library(
     name = "pso",
     hdrs = glob(["pso/*.h", "pso/*.hpp", "pso/random/*.hpp"]),
     srcs = glob(["pso/*.cpp"]),
-    deps = [":common", ":board", ":shared", "//third_party:optim"]
+    deps = [":common", ":board", ":shared", "//third_party:optim", "@boost//:random"]
 )
 
 cc_test(
