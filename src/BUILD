@@ -103,7 +103,7 @@ cc_binary(
 
 cc_binary(
     name = "output_piece_sets",
-    srcs = ["pso/bench/OutputPieceSets.cpp"],
+    srcs = ["pso/bench/outputPieceSets.cpp"],
     deps = [":pso"],
     copts = BENCHMARK_COPTS
 )
