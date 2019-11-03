@@ -10,7 +10,7 @@ class RunParticle(IRunParticle):
   def __init__(self, binary: str):
     self._binary = binary
     if not os.access(binary, os.X_OK):
-      raise ValueError("Binary must be executable")
+      raise ValueError("Binary '%s' must be executable" % binary)
   
   async def run(self, vs: Particle, seed: int = None):
     args = [self._binary] + [str(v) for v in vs]
@@ -20,6 +20,7 @@ class RunParticle(IRunParticle):
     return await self._run_cmd(exec_str)
 
   async def _run_cmd(self, cmd: str):
+    print(cmd)
     proc = await asyncio.create_subprocess_shell(
       cmd,
       stdout=asyncio.subprocess.PIPE,

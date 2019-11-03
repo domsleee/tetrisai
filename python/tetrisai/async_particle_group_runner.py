@@ -30,7 +30,7 @@ class AsyncParticleGroupRunner(IRunParticleGroup):
         except Exception:
           pass
 
-      tup = tuple(vs)
+      tup = tuple([v for v in vs] + [seed])
       if tup in self._seen:
         val = self._seen[tup]
         self._logger.warning("seen before! result[%d] = %0.8f" % (i, val))

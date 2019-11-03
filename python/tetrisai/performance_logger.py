@@ -28,7 +28,8 @@ class PerformanceLogger:
       self._logger.debug("iteration,time_taken,train_score,eval_score,vector")
     now = datetime.datetime.now()
     time_taken = (now - self._last_time).total_seconds()
-    eval_score = self._run_particle.run_sync(best_particle, seed=99)
+    # todo: too slow, can be done in post
+    eval_score = 0.00 #self._run_particle.run_sync(best_particle, seed=99)
     van_list = [str(x) for x in best_particle]
     self._logger.debug("%d,%0.3f,%0.3f,%0.3f,[%s]" % (iteration, time_taken, train_score, eval_score, ' '.join(van_list)))
     self._last_time = now
