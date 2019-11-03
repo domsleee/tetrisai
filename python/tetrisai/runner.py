@@ -8,8 +8,8 @@ import multiprocessing
 from tetrisai.runner_settings import RunnerSettings
 from tetrisai.performance_logger import PerformanceLogger
 from tetrisai.run_evaluator import RunEvaluator
-NUM_THREADS = multiprocessing.cpu_count() - 1
 
+from tetrisai.async_particle_group_runner import ParticleGroup, AsyncParticleGroupRunner
 
 class MyRunner:
   def __init__(self, binary: str, runner_settings: RunnerSettings):
@@ -23,6 +23,7 @@ class MyRunner:
     self._runner_settings = runner_settings
     self._run_evaluator = RunEvaluator(binary)
     self._performance_logger = PerformanceLogger(self._run_evaluator)
+    self._particle_group_runner = AsyncParticleGroupRunner(self._run_evaluator)
     self._iteration = 0
 
     if self._runner_settings.local:
@@ -36,47 +37,16 @@ class MyRunner:
     cost, pos = self._optimizer.optimize(self.run_particle_group, iters=self._runner_settings.iterations)
     #self._show_plot(optimizer)
     return self._optimizer
-
-  def run_particle_group(self, particle_vs):
+  
+  def run_particle_group(self, particle_vs: ParticleGroup):
     self._iteration += 1
-    result = np.zeros(len(particle_vs))
-    async def particle_worker(i, vs, sem):
-      await sem.acquire()
-
-      async def try_release():
-        try:
-          await sem.release()
-        except Exception:
-          pass
-
-      tup = tuple(vs)
-      if tup in self._seen:
-        val = self._seen[tup]
-        self._logger.warning("seen before! result[%d] = %0.8f" % (i, val))
-        result[i] = val
-        await try_release()
-        return
-      val = await self._run_evaluator.run(vs)
-      if val > self._glob_best:
-        self._glob_best = val
-        self._best_particle = vs
+    result_arr = self._particle_group_runner.run_sync(particle_vs)
+    for i, score in enumerate(result_arr):
+      my_score = -score
+      if my_score > self._glob_best:
+        self._glob_best = my_score
+        self._best_particle = particle_vs[i]
         self._logger.info("new glob best! %0.8f" % self._glob_best)
-        self._logger.info(vs)
-      result[i] = -val
-      self._seen[tup] = -val
-      self._logger.debug(vs)
-      self._logger.debug("result[%d] = %0.8f\n" % (i, result[i]))
-      await try_release()
-
-    async def wait_all():
-      global NUM_THREADS
-      workers = []
-      sem = asyncio.Semaphore(NUM_THREADS)
-      for i, vs in enumerate(particle_vs):
-        workers.append(particle_worker(i, vs, sem))
-      await asyncio.wait(workers)
-    
-    #print(particle_vs.shape)
-    asyncio.run(wait_all())
+        self._logger.info(self._best_particle)
     self._performance_logger.log(iteration=self._iteration, train_score=self._glob_best, best_particle=self._best_particle)
-    return result
+    return result_arr
