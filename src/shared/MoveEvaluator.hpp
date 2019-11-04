@@ -77,7 +77,7 @@ class MoveEvaluator {
       int l = c == 0 ? INF : lockHeights[c]-lockHeights[c-1];
       int r = c == NUM_COLUMNS-1 ? INF : lockHeights[c]-lockHeights[c+1];
       int wellCells = std::min(l, r);
-      totalWellCells += wellCells;
+      if (wellCells > 0) totalWellCells += wellCells;
       if (wellCells >= 3) totalDeepWells++;
       totalColumnHeights += NUM_ROWS - lockHeights[c];
     }
