@@ -20,7 +20,6 @@ class RunParticle(IRunParticle):
     return await self._run_cmd(exec_str)
 
   async def _run_cmd(self, cmd: str):
-    print(cmd)
     proc = await asyncio.create_subprocess_shell(
       cmd,
       stdout=asyncio.subprocess.PIPE,
