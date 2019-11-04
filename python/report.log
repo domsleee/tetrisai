@@ -1030,3 +1030,148 @@
  0.80550965 0.40052004 0.79396621 0.99978175 0.55032836 0.66406497
  0.83248036 0.16902544 0.28622211 0.80737679 0.1619212 ]
 2019-11-03 19:15:27,376 - pyswarms.single.global_best - INFO - Optimize for 6900 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-03 21:27:39,088 - pyswarms.single.global_best - INFO - Optimize for 6900 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-03 21:27:48,468 - pyswarms.single.global_best - INFO - Optimize for 6900 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-03 21:28:03,150 - pyswarms.single.global_best - INFO - Optimize for 6900 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-03 21:31:43,482 - pyswarms.single.global_best - INFO - Optimize for 6900 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-03 21:31:56,547 - pyswarms.single.global_best - INFO - Optimize for 6900 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-03 23:01:05,245 - pyswarms.single.global_best - INFO - Optimize for 6900 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-03 23:01:21,428 - pyswarms.single.global_best - INFO - Optimize for 6900 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-03 23:02:09,569 - pyswarms.single.global_best - INFO - Optimize for 6900 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-03 23:03:59,575 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished coro=<AsyncParticleGroupRunner.run.<locals>.particle_worker() done, defined at /Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py:21> exception=UnboundLocalError("local variable 'best_score' referenced before assignment")>
+Traceback (most recent call last):
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 44, in particle_worker
+    await try_release()
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 25, in update_best
+    result['best_score'] = score
+UnboundLocalError: local variable 'best_score' referenced before assignment
+2019-11-03 23:03:59,577 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished coro=<AsyncParticleGroupRunner.run.<locals>.particle_worker() done, defined at /Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py:21> exception=UnboundLocalError("local variable 'best_score' referenced before assignment")>
+Traceback (most recent call last):
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 44, in particle_worker
+    await try_release()
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 25, in update_best
+    result['best_score'] = score
+UnboundLocalError: local variable 'best_score' referenced before assignment
+2019-11-03 23:03:59,578 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished coro=<AsyncParticleGroupRunner.run.<locals>.particle_worker() done, defined at /Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py:21> exception=UnboundLocalError("local variable 'best_score' referenced before assignment")>
+Traceback (most recent call last):
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 44, in particle_worker
+    await try_release()
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 25, in update_best
+    result['best_score'] = score
+UnboundLocalError: local variable 'best_score' referenced before assignment
+2019-11-03 23:04:00,298 - pyswarms.single.global_best - INFO - Optimize for 6900 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-03 23:07:00,441 - pyswarms.single.global_best - INFO - Optimize for 6900 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-03 23:07:56,031 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished coro=<AsyncParticleGroupRunner.run.<locals>.particle_worker() done, defined at /Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py:20> exception=NameError("name 'i' is not defined")>
+Traceback (most recent call last):
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 45, in particle_worker
+    self._seen[tup] = val
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 25, in update_best
+    # todo: optimizer tries to minimize score, smh
+NameError: name 'i' is not defined
+2019-11-03 23:07:56,864 - pyswarms.single.global_best - INFO - Optimize for 6900 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-03 23:08:11,214 - pyswarms.single.global_best - INFO - Optimize for 6900 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-03 23:09:20,472 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished coro=<AsyncParticleGroupRunner.run.<locals>.particle_worker() done, defined at /Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py:20> exception=NameError("name 'i' is not defined")>
+Traceback (most recent call last):
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 46, in particle_worker
+    update_best(vs, self._seen[tup])
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 26, in update_best
+    result['result_arr'][i] = -score
+NameError: name 'i' is not defined
+2019-11-03 23:09:20,475 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished coro=<AsyncParticleGroupRunner.run.<locals>.particle_worker() done, defined at /Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py:20> exception=NameError("name 'i' is not defined")>
+Traceback (most recent call last):
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 46, in particle_worker
+    update_best(vs, self._seen[tup])
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 26, in update_best
+    result['result_arr'][i] = -score
+NameError: name 'i' is not defined
+2019-11-03 23:09:44,915 - pyswarms.single.global_best - INFO - Optimize for 6900 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-03 23:10:13,586 - pyswarms.single.global_best - INFO - Optimize for 6900 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-03 23:10:28,688 - pyswarms.single.global_best - INFO - Optimize for 6900 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-03 23:10:50,558 - pyswarms.single.global_best - INFO - Optimize for 6900 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-03 23:10:50,564 - tetrisai - INFO - new glob best! 5.00000000
+2019-11-03 23:10:50,564 - tetrisai - INFO - [0.2991417  0.04445598 0.4283345  0.36295178 0.96243457 0.21087262
+ 0.52671647 0.59759404 0.37373359 0.64273991 0.56980342 0.3344484
+ 0.70890181 0.72972947 0.37723059 0.41162666 0.80249012]
+2019-11-03 23:10:58,016 - pyswarms.single.global_best - INFO - Optimize for 6900 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-03 23:10:58,026 - tetrisai - INFO - new glob best! 5.00000000
+2019-11-03 23:10:58,026 - tetrisai - INFO - [0.24522585 0.01697916 0.79976209 0.08890073 0.41146556 0.55673411
+ 0.98140969 0.76301686 0.51647004 0.05848235 0.34768326 0.83881448
+ 0.31191339 0.70537815 0.54182992 0.0394104  0.20743282]
+2019-11-03 23:11:07,115 - pyswarms.single.global_best - INFO - Optimize for 6900 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-03 23:11:07,121 - tetrisai - INFO - new glob best! 5.00000000
+2019-11-03 23:11:07,121 - tetrisai - INFO - [0.0049792  0.35529502 0.49887832 0.38476474 0.28062608 0.04258927
+ 0.01958769 0.45965174 0.54453149 0.39397787 0.42145615 0.99778518
+ 0.71039781 0.76277153 0.02347442 0.47659891 0.45346302]
+2019-11-03 23:11:12,429 - pyswarms.single.global_best - INFO - Optimize for 6900 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-03 23:11:12,437 - tetrisai - INFO - new glob best! 5.00000000
+2019-11-03 23:11:12,437 - tetrisai - INFO - [0.67317305 0.01342747 0.95903108 0.34929383 0.75315619 0.71966642
+ 0.26814082 0.36932568 0.90934212 0.26260988 0.51319308 0.32732242
+ 0.1901041  0.21073428 0.94670573 0.07921242 0.58085177]
+2019-11-03 23:11:36,308 - pyswarms.single.global_best - INFO - Optimize for 6900 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-03 23:12:14,578 - pyswarms.single.global_best - INFO - Optimize for 6900 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-03 23:12:20,414 - pyswarms.single.global_best - INFO - Optimize for 6900 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-03 23:13:17,962 - pyswarms.single.global_best - INFO - Optimize for 6900 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-03 23:13:49,554 - pyswarms.single.global_best - INFO - Optimize for 6900 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-03 23:17:01,635 - pyswarms.single.global_best - INFO - Optimize for 6900 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-03 23:17:48,963 - pyswarms.single.global_best - INFO - Optimize for 6900 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-03 23:17:57,802 - pyswarms.single.global_best - INFO - Optimize for 6900 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-03 23:18:04,503 - pyswarms.single.global_best - INFO - Optimize for 6900 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-03 23:18:36,409 - pyswarms.single.global_best - INFO - Optimize for 6900 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-03 23:18:36,417 - tetrisai - INFO - new glob best! 5.00000000
+2019-11-03 23:18:36,418 - tetrisai - INFO - [0.31620016 0.59210606 0.45154024 0.05780903 0.59598253 0.141496
+ 0.05441691 0.7637011  0.21099499 0.23036503 0.30792091 0.75010483
+ 0.01530259 0.48559303 0.69932121 0.94050107 0.89949618]
+2019-11-03 23:19:12,145 - pyswarms.single.global_best - INFO - Optimize for 6900 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-03 23:19:12,154 - tetrisai - INFO - new glob best! 5.00000000
+2019-11-03 23:19:12,154 - tetrisai - INFO - [0.08013009 0.5827127  0.44558981 0.80672971 0.47901106 0.93288701
+ 0.2118964  0.56650317 0.42407852 0.34370812 0.76023419 0.68665342
+ 0.07934139 0.72678274 0.72101859 0.34283154 0.68469658]
+2019-11-03 23:19:33,308 - pyswarms.single.global_best - INFO - Optimize for 6900 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-03 23:19:42,910 - pyswarms.single.global_best - INFO - Optimize for 6900 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-03 23:21:42,019 - tetrisai - INFO - new glob best! 270107.00000000
+2019-11-03 23:21:42,019 - tetrisai - INFO - [0.40830666 0.80563163 0.3351241  0.84989481 0.30376085 0.89452174
+ 0.74195036 0.55845937 0.87970073 0.15523651 0.31542632 0.62448024
+ 0.52895179 0.44991407 0.41792217 0.24257663 0.82632976]
+2019-11-03 23:30:43,087 - pyswarms.single.global_best - INFO - Optimize for 6900 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-03 23:30:55,385 - pyswarms.single.global_best - INFO - Optimize for 6900 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-03 23:30:55,392 - tetrisai - INFO - new glob best! 5.00000000
+2019-11-03 23:30:55,392 - tetrisai - INFO - [0.10722451 0.8458348  0.46584536 0.91260914 0.79896246 0.19011276
+ 0.4431444  0.86711368 0.13585665 0.56017704 0.70576109 0.5789466
+ 0.37129057 0.03315359 0.12203469 0.43558334 0.67628977]
+2019-11-03 23:30:59,899 - pyswarms.single.global_best - INFO - Optimize for 6900 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-03 23:31:41,201 - pyswarms.single.global_best - INFO - Optimize for 6900 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-03 23:32:00,557 - pyswarms.single.global_best - INFO - Optimize for 6900 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-03 23:32:00,565 - tetrisai - INFO - new glob best! 5.00000000
+2019-11-03 23:32:00,566 - tetrisai - INFO - [0.54500238 0.19301341 0.09372924 0.71409742 0.54102408 0.78879042
+ 0.74937748 0.44973149 0.30009524 0.63898834 0.84606225 0.67836683
+ 0.84413573 0.29302489 0.00419449 0.6654837  0.8415867 ]
+2019-11-04 01:43:52,654 - pyswarms.single.global_best - INFO - Optimize for 6900 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-04 01:44:05,538 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished coro=<AsyncParticleGroupRunner.run.<locals>.particle_worker() done, defined at /Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py:20> exception=TypeError("unsupported operand type(s) for +: 'float' and 'NoneType'")>
+Traceback (most recent call last):
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 33, in particle_worker
+    tup = tuple(vs + [seed])
+TypeError: unsupported operand type(s) for +: 'float' and 'NoneType'
+2019-11-04 01:44:05,539 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished coro=<AsyncParticleGroupRunner.run.<locals>.particle_worker() done, defined at /Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py:20> exception=TypeError("unsupported operand type(s) for +: 'float' and 'NoneType'")>
+Traceback (most recent call last):
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 33, in particle_worker
+    tup = tuple(vs + [seed])
+TypeError: unsupported operand type(s) for +: 'float' and 'NoneType'
+2019-11-04 01:44:05,539 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished coro=<AsyncParticleGroupRunner.run.<locals>.particle_worker() done, defined at /Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py:20> exception=TypeError("unsupported operand type(s) for +: 'float' and 'NoneType'")>
+Traceback (most recent call last):
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 33, in particle_worker
+    tup = tuple(vs + [seed])
+TypeError: unsupported operand type(s) for +: 'float' and 'NoneType'
+2019-11-04 01:45:07,460 - pyswarms.single.global_best - INFO - Optimize for 6900 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-04 01:45:07,470 - tetrisai - INFO - new glob best! 5.00000000
+2019-11-04 01:45:07,470 - tetrisai - INFO - [0.10830517 0.80642883 0.63030138 0.53676527 0.25324346 0.45936664
+ 0.88991204 0.61509206 0.24917411 0.28165229 0.06824426 0.96445231
+ 0.41720508 0.32454438 0.61849026 0.59690927 0.62837569]

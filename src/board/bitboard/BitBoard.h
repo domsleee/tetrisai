@@ -9,7 +9,14 @@
 #include <bitset>
 #include <iostream>
 
+class BitBoard;
 class BitPieceInfo;
+
+
+template<>
+struct std::hash<BitBoard> {
+  std::size_t operator()(const BitBoard&) const;
+};
 
 class BitBoard {
  friend BitPieceInfo;
@@ -19,6 +26,9 @@ class BitBoard {
   int applyPieceInfo(const BitPieceInfo&);
   BitPieceInfo getPiece(BlockType blockType) const;
   bool vacant(const BitPieceInfo&) const;
+
+  // probably shouldn't use
+  BitPieceInfo getPieceFromId(int id) const;
 
   // convenience
   BitBoard(const std::vector<std::vector<int>>&);
@@ -37,10 +47,15 @@ class BitBoard {
   BitPieceInfo getEmptyPiece() const;
   int getPileHeight() const;
 
+  friend size_t std::hash<BitBoard>::operator ()(const BitBoard&) const;
+
+
  private:
   B bitset_;
   int height_ = 0;
 };
+
+
 
 template<>
 struct std::hash<BitPieceInfo> {
@@ -56,6 +71,7 @@ class BitPieceInfo {
   bool canMove(MoveDirection) const;
   BitPieceInfo move(MoveDirection) const;
   Move getPosition() const;
+  int getId() const { return id_; }
   void print() const;
 
   friend bool operator==(const BitPieceInfo& p1, const BitPieceInfo& p2) {

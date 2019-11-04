@@ -5,6 +5,10 @@
 #include <iostream>
 
 
+std::size_t std::hash<BitBoard>::operator()(const BitBoard& b) const {
+  return std::hash<decltype(b.bitset_)>{}(b.bitset_);
+}
+
 BitBoard::BitBoard(const std::vector<std::vector<int>>& v) {
   BitBoardPre::precompute();
   int ind = 0;
@@ -80,6 +84,10 @@ BitPieceInfo BitBoard::getPiece(BlockType blockType, const Move& position) const
 
 BitPieceInfo BitBoard::getPiece(const Move& position) const {
   return getPiece(BlockType::I_PIECE, position);
+}
+
+BitPieceInfo BitBoard::getPieceFromId(int id) const {
+  return BitPieceInfo(id, this);
 }
 
 BitPieceInfo BitBoard::getEmptyPiece() const {
