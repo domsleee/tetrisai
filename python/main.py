@@ -9,7 +9,7 @@ import os
 logging.basicConfig()
 
 def main(args):
-  runner_settings = RunnerSettings(num_particles=4)
+  runner_settings = RunnerSettings()
   print(runner_settings)
   runner.MyRunner(args.binary, runner_settings).run()
 
