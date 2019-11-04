@@ -9,7 +9,14 @@
 #include <bitset>
 #include <iostream>
 
+class BitBoard;
 class BitPieceInfo;
+
+
+template<>
+struct std::hash<BitBoard> {
+  std::size_t operator()(const BitBoard&) const;
+};
 
 class BitBoard {
  friend BitPieceInfo;
@@ -40,10 +47,15 @@ class BitBoard {
   BitPieceInfo getEmptyPiece() const;
   int getPileHeight() const;
 
+  friend size_t std::hash<BitBoard>::operator ()(const BitBoard&) const;
+
+
  private:
   B bitset_;
   int height_ = 0;
 };
+
+
 
 template<>
 struct std::hash<BitPieceInfo> {

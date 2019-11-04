@@ -5,6 +5,10 @@
 #include <iostream>
 
 
+std::size_t std::hash<BitBoard>::operator()(const BitBoard& b) const {
+  return std::hash<decltype(b.bitset_)>{}(b.bitset_);
+}
+
 BitBoard::BitBoard(const std::vector<std::vector<int>>& v) {
   BitBoardPre::precompute();
   int ind = 0;
