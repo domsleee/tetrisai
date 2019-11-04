@@ -4,7 +4,6 @@
 #include "src/common/BlockType.hpp"
 #include "src/common/common.hpp"
 #include "src/common/Weighting.hpp"
-#include "src/shared/AllMoveFinder.tpp"
 #include "src/shared/MoveEvaluator.hpp"
 #include "src/shared/ScoreManager.hpp"
 #include "src/shared/test/MoveEvaluatorUtility.hpp"

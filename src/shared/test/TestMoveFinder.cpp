@@ -2,7 +2,7 @@
 #include "catch.h"
 #include "src/board/bitboard/BitBoard.h"
 #include "src/common/BlockType.hpp"
-#include "src/shared/MoveFinder.h"
+#include "src/shared/MoveFinder/MoveFinder.h"
 #include <vector>
 #include <iostream>
 #include <algorithm>

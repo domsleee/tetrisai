@@ -17,8 +17,8 @@ cc_library(
 
 cc_library(
     name = "shared",
-    hdrs = glob(["shared/*.h", "shared/*.hpp", "shared/*.tpp"]),
-    srcs = glob(["shared/*.cpp"]),
+    hdrs = glob(["shared/*.h", "shared/*.hpp", "shared/*.tpp", "shared/MoveFinder/*.h", "shared/MoveFinder/*.hpp", "shared/MoveFinder/*.tpp"]),
+    srcs = glob(["shared/*.cpp", "shared/MoveFinder/*.cpp"]),
     deps = [":common", ":board"]
 )
 

@@ -1,4 +1,4 @@
-#include "src/shared/MoveFinder.h"
+#include "src/shared/MoveFinder/MoveFinder.h"
 #include "src/common/PositionPieceGetter.hpp"
 #include "src/board/bitboard/BitBoard.h"
 #include "src/board/SimpleBoard.h"
