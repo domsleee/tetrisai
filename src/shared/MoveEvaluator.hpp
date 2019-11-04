@@ -54,7 +54,7 @@ class MoveEvaluator {
     }
     double eval = 0;
     VacancyChecker vac(b);
-    eval += w[TOTAL_LINES_CLEARED] * (m.getTotalLines() + deltaLines);
+    eval += w[TOTAL_LINES_CLEARED] * deltaLines;
     eval += w[TOTAL_LOCK_HEIGHT] * (NUM_ROWS - p.getPosition().maxR - 1);
 
     int lockHeights[NUM_COLUMNS];
