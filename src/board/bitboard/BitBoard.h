@@ -20,6 +20,9 @@ class BitBoard {
   BitPieceInfo getPiece(BlockType blockType) const;
   bool vacant(const BitPieceInfo&) const;
 
+  // probably shouldn't use
+  BitPieceInfo getPieceFromId(int id) const;
+
   // convenience
   BitBoard(const std::vector<std::vector<int>>&);
   int applyMove(const Move&move);
@@ -56,6 +59,7 @@ class BitPieceInfo {
   bool canMove(MoveDirection) const;
   BitPieceInfo move(MoveDirection) const;
   Move getPosition() const;
+  int getId() const { return id_; }
   void print() const;
 
   friend bool operator==(const BitPieceInfo& p1, const BitPieceInfo& p2) {

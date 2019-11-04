@@ -6,6 +6,20 @@
 #include <algorithm>
 #include <numeric>
 
+class VacancyChecker {
+ public:
+  VacancyChecker(const BitBoard &b): b_(b) {};
+  bool is_vacant(const Coord &coord) {
+    int ind = coord.r * NUM_COLUMNS + coord.c;
+    if (vacant_[ind] == UNDEF_) vacant_[ind] = b_.vacant(coord);
+    return vacant_[ind];
+  }
+ private:
+  const char UNDEF_ = 'c';
+  const BitBoard &b_;
+  std::vector<char> vacant_ = decltype(vacant_)(NUM_ROWS * NUM_COLUMNS, UNDEF_);
+};
+
 class MoveEvaluator {
   const int INF = 30; // clearly not infinitely lmao
 
@@ -35,23 +49,25 @@ class MoveEvaluator {
   }
   
   double my_evaluate(const BitBoard &b, const BitPieceInfo& p, const Weighting &w, const ScoreManager &m, int deltaLines) {
+    if (deltaLines == 4) {
+      return -1e9;
+    }
     double eval = 0;
+    VacancyChecker vac(b);
     eval += w[TOTAL_LINES_CLEARED] * (m.getTotalLines() + deltaLines);
     eval += w[TOTAL_LOCK_HEIGHT] * (NUM_ROWS - p.getPosition().maxR - 1);
 
     int lockHeights[NUM_COLUMNS];
     int minR = NUM_ROWS;
     for (int c = 0; c < NUM_COLUMNS; c++) {
-      bool broken = false;
+      lockHeights[c] = NUM_ROWS;
       for (int r = 0; r < NUM_ROWS; r++) {
-        if (!b.vacant({r, c})) {
+        if (!vac.is_vacant({r, c})) {
           lockHeights[c] = r;
           minR = std::min(minR, r);
-          broken = true;
           break;
         }
       }
-      if (!broken) lockHeights[c] = NUM_ROWS;
     }
     //int lockHeight = std::accumulate(lockHeights, lockHeights + NUM_COLUMNS, 0);
     //eval += w[TOTAL_LOCK_HEIGHT] * lockHeight;
@@ -61,7 +77,7 @@ class MoveEvaluator {
       int l = c == 0 ? INF : lockHeights[c]-lockHeights[c-1];
       int r = c == NUM_COLUMNS-1 ? INF : lockHeights[c]-lockHeights[c+1];
       int wellCells = std::min(l, r);
-      if (wellCells > 0) totalWellCells += wellCells;
+      totalWellCells += wellCells;
       if (wellCells >= 3) totalDeepWells++;
       totalColumnHeights += NUM_ROWS - lockHeights[c];
     }
@@ -72,10 +88,10 @@ class MoveEvaluator {
     int totalColumnHoles = 0, totalColumnHolesDepth = 0, minColumnHoleDepth = NUM_ROWS, maxColumnHoleDepth = 0;
     int totalColumnTransitions = 0, totalRowTransitions = 0;
     int totalSolidCells = 0, totalWeightedSolidCells = 0;
-    for (int r = 0; r < NUM_ROWS; r++) {
-      for (int c = 0; c < NUM_COLUMNS; c++) {
-        bool takenUp = r == 0 || !b.vacant({r-1, c});
-        if (r > 0 && takenUp && b.vacant({r,c})) {
+    for (int r = 0; r < NUM_ROWS; ++r) {
+      for (int c = 0; c < NUM_COLUMNS; ++c) {
+        bool takenUp = r == 0 || !vac.is_vacant({r-1, c});
+        if (r > 0 && takenUp && vac.is_vacant({r,c})) {
           totalColumnHoles++;
           totalWeightedColumnHoles += r+1;
           int holeDepth = r - lockHeights[c];
@@ -84,15 +100,15 @@ class MoveEvaluator {
           maxColumnHoleDepth = std::max(maxColumnHoleDepth, holeDepth);
         }
         if (r > 0 && r != lockHeights[c]) {
-          totalColumnTransitions += b.vacant({r,c}) != b.vacant({r-1,c});
+          totalColumnTransitions += vac.is_vacant({r,c}) != vac.is_vacant({r-1,c});
         }
-        if (!b.vacant({r, c})) {
+        if (!vac.is_vacant({r, c})) {
           totalSolidCells++;
           totalWeightedSolidCells += (NUM_ROWS-r);
         }
       }
     }
-    totalRowTransitions = calculateRowTransitions(b, minR);
+    totalRowTransitions = calculateRowTransitions(vac, minR);
 
     eval += w[TOTAL_WEIGHTED_COLUMN_HOLES] * totalWeightedColumnHoles;
     eval += w[TOTAL_COLUMN_HOLES] * totalColumnHoles;
@@ -119,24 +135,19 @@ class MoveEvaluator {
     eval += w[PILE_HEIGHT] * pileHeight;
     eval += w[COLUMN_HEIGHT_SPREAD] * columnHeightSpread;
 
-    if (deltaLines == 4) {
-      return -1e9;
-    }
-
     return eval;
   }
 
  private:
-  int calculateRowTransitions(const BitBoard &b, int minR) {
+  int calculateRowTransitions(VacancyChecker &vac, int minR) {
     int res = 0;
     for (int r = minR; r < NUM_ROWS; r++) {
-      if (b.vacant(Coord{r, 0})) res++;
-      if (b.vacant({r, NUM_COLUMNS-1})) res++;
+      if (vac.is_vacant(Coord{r, 0})) res++;
+      if (vac.is_vacant({r, NUM_COLUMNS-1})) res++;
       for (int c = 0; c < NUM_COLUMNS-1; c++) {
-        if (b.vacant({r,c}) != b.vacant({r, c+1})) res++;
+        if (vac.is_vacant({r,c}) != vac.is_vacant({r, c+1})) res++;
       }
-    }
-    return res;
+    }    return res;
 
   }
 };

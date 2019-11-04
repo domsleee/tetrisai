@@ -82,6 +82,10 @@ BitPieceInfo BitBoard::getPiece(const Move& position) const {
   return getPiece(BlockType::I_PIECE, position);
 }
 
+BitPieceInfo BitBoard::getPieceFromId(int id) const {
+  return BitPieceInfo(id, this);
+}
+
 BitPieceInfo BitBoard::getEmptyPiece() const {
   return {BitBoardPre::getEmptyMoveId(), this};
 }
