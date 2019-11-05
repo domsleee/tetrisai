@@ -51,7 +51,7 @@ class RunParticleWithData(IRunParticle):
           raise ValueError("fatal. Error in your C program")
         self._ct[(board, blockType)] += 1
       i += 3
-    _stdouts.append(my_s)
+    self._stdouts.append(my_s)
     return float(spl[-2])
     
   def run_sync(self, vs: Particle, seed: int = None):
