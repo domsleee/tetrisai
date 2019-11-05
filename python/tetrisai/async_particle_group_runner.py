@@ -48,7 +48,7 @@ class AsyncParticleGroupRunner(IRunParticleGroup):
     sem = asyncio.Semaphore(NUM_THREADS)
     for i, vs in enumerate(particle_vs):
       workers.append(particle_worker(i, vs, sem, result))
-    await asyncio.wait(workers)
+    await asyncio.gather(workers)
     return result['result_arr']
 
   def run_sync(self, particle_vs: ParticleGroup, seed:int = None) -> typing.List[float]:

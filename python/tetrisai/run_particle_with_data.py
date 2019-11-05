@@ -8,8 +8,6 @@ import logging
 
 
 class RunParticleWithData(IRunParticle):
-
-
   def __init__(self, binary: str):
     self._glob = {}
     self._ct = {}
