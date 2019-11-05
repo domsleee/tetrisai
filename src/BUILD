@@ -1,5 +1,6 @@
 BENCHMARK_COPTS = ["-O2", "-DNDEBUG"]
 EXEC_COPTS = ["-O2"]
+EW_MOVE_FINDER_CACHE_COPTS = ["-O2", "-DMOVE_FINDER_CACHE"]
 
 cc_binary(
     name = "tetrisai",
@@ -84,6 +85,13 @@ cc_binary(
     srcs = ["pso/main.cpp"],
     deps = [":pso"],
     copts = EXEC_COPTS
+)
+
+cc_binary(
+    name = "ew_move_finder_cache",
+    srcs = ["pso/main.cpp", "shared/MoveFinder/debug/debug.cpp"],
+    deps = [":pso"],
+    copts = BENCHMARK_COPTS
 )
 
 cc_binary(

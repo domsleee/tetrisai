@@ -1,0 +1,5 @@
+plan
++ build runner for purposes of collecting data
+  - 10 iterations
+  - aggregate all data
+  - run with this data

@@ -20,7 +20,16 @@ class CacheMoveFinder {
     if (glob_map_[blockType].count(board)) {
       return glob_map_[blockType][board];
     }
+
+#ifdef MOVE_FINDER_CACHE
+    auto res = move_finder_.findAllMoves(board, blockType);
+    std::cout << board << '\n';
+    std::cout << blockType << '\n';
+    for (auto r: res) std::cout << r << ' '; std::cout << '\n';
+    return glob_map_[blockType][board] = res;
+#else
     return glob_map_[blockType][board] = move_finder_.findAllMoves(board, blockType);
+#endif
   }
 };
 

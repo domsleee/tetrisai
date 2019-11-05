@@ -7,38 +7,33 @@ import logging
 import multiprocessing
 from tetrisai.runner_settings import RunnerSettings
 from tetrisai.performance_logger import PerformanceLogger
-from tetrisai.run_particle import RunParticle
+from tetrisai.interfaces.i_run_particle import IRunParticle
 
 from tetrisai.async_particle_group_runner import ParticleGroup, AsyncParticleGroupRunner
 
 class MyRunner:
-  def __init__(self, binary: str, runner_settings: RunnerSettings):
-    self._binary = binary
-    if not os.access(binary, os.X_OK):
-      raise ValueError("Binary must be executable")
+  def __init__(self, runner_settings: RunnerSettings, run_particle: IRunParticle):
     self._logger = logging.getLogger(__package__)
     self._seen = {}
     self._glob_best = 0.0
     self._best_particle = []
     self._runner_settings = runner_settings
-    self._run_particle = RunParticle(binary)
-    self._performance_logger = PerformanceLogger(self._run_particle)
-    self._particle_group_runner = AsyncParticleGroupRunner(self._run_particle)
+    self._performance_logger = PerformanceLogger(run_particle)
+    self._particle_group_runner = AsyncParticleGroupRunner(run_particle)
     self._iteration = 0
-
-    if self._runner_settings.local:
-      self._optimizer = ps.single.LocalBestPSO(**self._runner_settings.get_optimizer_options())
-    else:
-      self._optimizer = ps.single.GlobalBestPSO(**self._runner_settings.get_optimizer_options())
     self._performance_logger.log_settings(self._runner_settings)
 
   def run(self):
     self._iteration = 0
-    cost, pos = self._optimizer.optimize(self.run_particle_group, iters=self._runner_settings.iterations)
+    if self._runner_settings.local:
+      optimizer = ps.single.LocalBestPSO(**self._runner_settings.get_optimizer_options())
+    else:
+      optimizer = ps.single.GlobalBestPSO(**self._runner_settings.get_optimizer_options())
+    cost, pos = optimizer.optimize(self._run_particle_group, iters=self._runner_settings.iterations)
     #self._show_plot(optimizer)
-    return self._optimizer
+    return optimizer
   
-  def run_particle_group(self, particle_vs: ParticleGroup):
+  def _run_particle_group(self, particle_vs: ParticleGroup):
     self._iteration += 1
     result_arr = self._particle_group_runner.run_sync(particle_vs)
     for i, score in enumerate(result_arr):

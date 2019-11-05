@@ -1175,3 +1175,763 @@ TypeError: unsupported operand type(s) for +: 'float' and 'NoneType'
 2019-11-04 01:45:07,470 - tetrisai - INFO - [0.10830517 0.80642883 0.63030138 0.53676527 0.25324346 0.45936664
  0.88991204 0.61509206 0.24917411 0.28165229 0.06824426 0.96445231
  0.41720508 0.32454438 0.61849026 0.59690927 0.62837569]
+2019-11-05 19:43:16,954 - pyswarms.single.global_best - INFO - Optimize for 2 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-05 19:44:12,432 - pyswarms.single.global_best - INFO - Optimize for 2 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-05 19:44:26,062 - pyswarms.single.global_best - INFO - Optimize for 2 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-05 19:45:37,520 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished coro=<AsyncParticleGroupRunner.run.<locals>.particle_worker() done, defined at /Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py:20> exception=IndexError('list index out of range')>
+Traceback (most recent call last):
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 40, in particle_worker
+    val = await self._run_evaluator.run(vs, seed=seed)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 23, in run
+    return await self._run_cmd(exec_str)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 39, in _run_cmd
+    moves = spl[i+2]
+IndexError: list index out of range
+2019-11-05 19:45:37,524 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished coro=<AsyncParticleGroupRunner.run.<locals>.particle_worker() done, defined at /Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py:20> exception=IndexError('list index out of range')>
+Traceback (most recent call last):
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 40, in particle_worker
+    val = await self._run_evaluator.run(vs, seed=seed)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 23, in run
+    return await self._run_cmd(exec_str)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 39, in _run_cmd
+    moves = spl[i+2]
+IndexError: list index out of range
+2019-11-05 19:45:40,347 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished coro=<AsyncParticleGroupRunner.run.<locals>.particle_worker() done, defined at /Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py:20> exception=IndexError('list index out of range')>
+Traceback (most recent call last):
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 40, in particle_worker
+    val = await self._run_evaluator.run(vs, seed=seed)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 23, in run
+    return await self._run_cmd(exec_str)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 39, in _run_cmd
+    moves = spl[i+2]
+IndexError: list index out of range
+2019-11-05 19:45:40,348 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished coro=<AsyncParticleGroupRunner.run.<locals>.particle_worker() done, defined at /Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py:20> exception=IndexError('list index out of range')>
+Traceback (most recent call last):
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 40, in particle_worker
+    val = await self._run_evaluator.run(vs, seed=seed)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 23, in run
+    return await self._run_cmd(exec_str)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 39, in _run_cmd
+    moves = spl[i+2]
+IndexError: list index out of range
+2019-11-05 19:45:40,353 - pyswarms.single.global_best - INFO - Optimization finished | best cost: 0.0, best pos: [0.21945843 0.50749893 0.24208331 0.00119747 0.7107626  0.66443393
+ 0.50815821 0.00400269 0.83271343 0.02079741 0.3081744  0.75167166
+ 0.08008785 0.51174659 0.63576541 0.50211363 0.50838235]
+2019-11-05 19:46:28,596 - pyswarms.single.global_best - INFO - Optimize for 2 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-05 19:46:55,318 - pyswarms.single.global_best - INFO - Optimize for 2 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-05 19:47:03,084 - pyswarms.single.global_best - INFO - Optimize for 2 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-05 19:47:26,737 - pyswarms.single.global_best - INFO - Optimize for 2 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-05 19:47:26,749 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished coro=<AsyncParticleGroupRunner.run.<locals>.particle_worker() done, defined at /Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py:20> exception=OSError(9, 'Bad file descriptor', None)>
+Traceback (most recent call last):
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 40, in particle_worker
+    val = await self._run_evaluator.run(vs, seed=seed)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 23, in run
+    return await self._run_cmd(exec_str)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 29, in _run_cmd
+    stderr=asyncio.subprocess.PIPE)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/subprocess.py", line 202, in create_subprocess_shell
+    stderr=stderr, **kwds)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/base_events.py", line 1499, in subprocess_shell
+    protocol, cmd, True, stdin, stdout, stderr, bufsize, **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/unix_events.py", line 190, in _make_subprocess_transport
+    **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/base_subprocess.py", line 37, in __init__
+    stderr=stderr, bufsize=bufsize, **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/unix_events.py", line 775, in _start
+    universal_newlines=False, bufsize=bufsize, **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/subprocess.py", line 800, in __init__
+    restore_signals, start_new_session)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/subprocess.py", line 1551, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+OSError: [Errno 9] Bad file descriptor
+2019-11-05 19:47:26,755 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished coro=<AsyncParticleGroupRunner.run.<locals>.particle_worker() done, defined at /Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py:20> exception=OSError(9, 'Bad file descriptor', None)>
+Traceback (most recent call last):
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 40, in particle_worker
+    val = await self._run_evaluator.run(vs, seed=seed)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 23, in run
+    return await self._run_cmd(exec_str)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 29, in _run_cmd
+    stderr=asyncio.subprocess.PIPE)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/subprocess.py", line 202, in create_subprocess_shell
+    stderr=stderr, **kwds)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/base_events.py", line 1499, in subprocess_shell
+    protocol, cmd, True, stdin, stdout, stderr, bufsize, **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/unix_events.py", line 190, in _make_subprocess_transport
+    **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/base_subprocess.py", line 37, in __init__
+    stderr=stderr, bufsize=bufsize, **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/unix_events.py", line 775, in _start
+    universal_newlines=False, bufsize=bufsize, **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/subprocess.py", line 800, in __init__
+    restore_signals, start_new_session)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/subprocess.py", line 1551, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+OSError: [Errno 9] Bad file descriptor
+2019-11-05 19:47:26,766 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished coro=<AsyncParticleGroupRunner.run.<locals>.particle_worker() done, defined at /Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py:20> exception=OSError(9, 'Bad file descriptor', None)>
+Traceback (most recent call last):
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 40, in particle_worker
+    val = await self._run_evaluator.run(vs, seed=seed)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 23, in run
+    return await self._run_cmd(exec_str)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 29, in _run_cmd
+    stderr=asyncio.subprocess.PIPE)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/subprocess.py", line 202, in create_subprocess_shell
+    stderr=stderr, **kwds)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/base_events.py", line 1499, in subprocess_shell
+    protocol, cmd, True, stdin, stdout, stderr, bufsize, **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/unix_events.py", line 190, in _make_subprocess_transport
+    **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/base_subprocess.py", line 37, in __init__
+    stderr=stderr, bufsize=bufsize, **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/unix_events.py", line 775, in _start
+    universal_newlines=False, bufsize=bufsize, **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/subprocess.py", line 800, in __init__
+    restore_signals, start_new_session)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/subprocess.py", line 1551, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+OSError: [Errno 9] Bad file descriptor
+2019-11-05 19:47:26,768 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished coro=<AsyncParticleGroupRunner.run.<locals>.particle_worker() done, defined at /Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py:20> exception=OSError(9, 'Bad file descriptor', None)>
+Traceback (most recent call last):
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 40, in particle_worker
+    val = await self._run_evaluator.run(vs, seed=seed)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 23, in run
+    return await self._run_cmd(exec_str)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 29, in _run_cmd
+    stderr=asyncio.subprocess.PIPE)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/subprocess.py", line 202, in create_subprocess_shell
+    stderr=stderr, **kwds)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/base_events.py", line 1499, in subprocess_shell
+    protocol, cmd, True, stdin, stdout, stderr, bufsize, **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/unix_events.py", line 190, in _make_subprocess_transport
+    **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/base_subprocess.py", line 37, in __init__
+    stderr=stderr, bufsize=bufsize, **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/unix_events.py", line 775, in _start
+    universal_newlines=False, bufsize=bufsize, **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/subprocess.py", line 800, in __init__
+    restore_signals, start_new_session)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/subprocess.py", line 1551, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+OSError: [Errno 9] Bad file descriptor
+2019-11-05 19:47:26,772 - pyswarms.single.global_best - INFO - Optimization finished | best cost: 0.0, best pos: [0.74699054 0.96458431 0.60024226 0.80525433 0.87553607 0.61527652
+ 0.19831302 0.94463154 0.57358102 0.71017376 0.06713604 0.03393706
+ 0.6590853  0.42225993 0.1009272  0.61068597 0.58860457]
+2019-11-05 19:47:29,815 - pyswarms.single.global_best - INFO - Optimize for 2 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-05 19:47:29,826 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished coro=<AsyncParticleGroupRunner.run.<locals>.particle_worker() done, defined at /Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py:20> exception=OSError(9, 'Bad file descriptor', None)>
+Traceback (most recent call last):
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 40, in particle_worker
+    val = await self._run_evaluator.run(vs, seed=seed)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 23, in run
+    return await self._run_cmd(exec_str)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 29, in _run_cmd
+    stderr=asyncio.subprocess.PIPE)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/subprocess.py", line 202, in create_subprocess_shell
+    stderr=stderr, **kwds)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/base_events.py", line 1499, in subprocess_shell
+    protocol, cmd, True, stdin, stdout, stderr, bufsize, **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/unix_events.py", line 190, in _make_subprocess_transport
+    **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/base_subprocess.py", line 37, in __init__
+    stderr=stderr, bufsize=bufsize, **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/unix_events.py", line 775, in _start
+    universal_newlines=False, bufsize=bufsize, **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/subprocess.py", line 800, in __init__
+    restore_signals, start_new_session)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/subprocess.py", line 1551, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+OSError: [Errno 9] Bad file descriptor
+2019-11-05 19:47:29,829 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished coro=<AsyncParticleGroupRunner.run.<locals>.particle_worker() done, defined at /Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py:20> exception=OSError(9, 'Bad file descriptor', None)>
+Traceback (most recent call last):
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 40, in particle_worker
+    val = await self._run_evaluator.run(vs, seed=seed)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 23, in run
+    return await self._run_cmd(exec_str)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 29, in _run_cmd
+    stderr=asyncio.subprocess.PIPE)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/subprocess.py", line 202, in create_subprocess_shell
+    stderr=stderr, **kwds)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/base_events.py", line 1499, in subprocess_shell
+    protocol, cmd, True, stdin, stdout, stderr, bufsize, **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/unix_events.py", line 190, in _make_subprocess_transport
+    **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/base_subprocess.py", line 37, in __init__
+    stderr=stderr, bufsize=bufsize, **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/unix_events.py", line 775, in _start
+    universal_newlines=False, bufsize=bufsize, **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/subprocess.py", line 800, in __init__
+    restore_signals, start_new_session)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/subprocess.py", line 1551, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+OSError: [Errno 9] Bad file descriptor
+2019-11-05 19:47:29,837 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished coro=<AsyncParticleGroupRunner.run.<locals>.particle_worker() done, defined at /Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py:20> exception=OSError(9, 'Bad file descriptor', None)>
+Traceback (most recent call last):
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 40, in particle_worker
+    val = await self._run_evaluator.run(vs, seed=seed)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 23, in run
+    return await self._run_cmd(exec_str)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 29, in _run_cmd
+    stderr=asyncio.subprocess.PIPE)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/subprocess.py", line 202, in create_subprocess_shell
+    stderr=stderr, **kwds)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/base_events.py", line 1499, in subprocess_shell
+    protocol, cmd, True, stdin, stdout, stderr, bufsize, **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/unix_events.py", line 190, in _make_subprocess_transport
+    **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/base_subprocess.py", line 37, in __init__
+    stderr=stderr, bufsize=bufsize, **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/unix_events.py", line 775, in _start
+    universal_newlines=False, bufsize=bufsize, **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/subprocess.py", line 800, in __init__
+    restore_signals, start_new_session)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/subprocess.py", line 1551, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+OSError: [Errno 9] Bad file descriptor
+2019-11-05 19:47:29,839 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished coro=<AsyncParticleGroupRunner.run.<locals>.particle_worker() done, defined at /Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py:20> exception=OSError(9, 'Bad file descriptor', None)>
+Traceback (most recent call last):
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 40, in particle_worker
+    val = await self._run_evaluator.run(vs, seed=seed)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 23, in run
+    return await self._run_cmd(exec_str)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 29, in _run_cmd
+    stderr=asyncio.subprocess.PIPE)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/subprocess.py", line 202, in create_subprocess_shell
+    stderr=stderr, **kwds)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/base_events.py", line 1499, in subprocess_shell
+    protocol, cmd, True, stdin, stdout, stderr, bufsize, **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/unix_events.py", line 190, in _make_subprocess_transport
+    **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/base_subprocess.py", line 37, in __init__
+    stderr=stderr, bufsize=bufsize, **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/unix_events.py", line 775, in _start
+    universal_newlines=False, bufsize=bufsize, **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/subprocess.py", line 800, in __init__
+    restore_signals, start_new_session)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/subprocess.py", line 1551, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+OSError: [Errno 9] Bad file descriptor
+2019-11-05 19:47:29,842 - pyswarms.single.global_best - INFO - Optimization finished | best cost: 0.0, best pos: [0.34379986 0.99429855 0.12678323 0.47069158 0.46026508 0.4306881
+ 0.99106796 0.68692039 0.69244179 0.44558914 0.94980821 0.87322436
+ 0.10318311 0.21437472 0.31719082 0.5203935  0.01902278]
+2019-11-05 19:47:51,370 - pyswarms.single.global_best - INFO - Optimize for 2 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-05 19:47:51,375 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished coro=<AsyncParticleGroupRunner.run.<locals>.particle_worker() done, defined at /Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py:20> exception=NameError("name 'sys' is not defined")>
+Traceback (most recent call last):
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 40, in particle_worker
+    val = await self._run_evaluator.run(vs, seed=seed)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 23, in run
+    return await self._run_cmd(exec_str)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 29, in _run_cmd
+    stdout=sys.stdout,
+NameError: name 'sys' is not defined
+2019-11-05 19:47:51,375 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished coro=<AsyncParticleGroupRunner.run.<locals>.particle_worker() done, defined at /Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py:20> exception=NameError("name 'sys' is not defined")>
+Traceback (most recent call last):
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 40, in particle_worker
+    val = await self._run_evaluator.run(vs, seed=seed)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 23, in run
+    return await self._run_cmd(exec_str)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 29, in _run_cmd
+    stdout=sys.stdout,
+NameError: name 'sys' is not defined
+2019-11-05 19:47:51,377 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished coro=<AsyncParticleGroupRunner.run.<locals>.particle_worker() done, defined at /Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py:20> exception=NameError("name 'sys' is not defined")>
+Traceback (most recent call last):
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 40, in particle_worker
+    val = await self._run_evaluator.run(vs, seed=seed)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 23, in run
+    return await self._run_cmd(exec_str)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 29, in _run_cmd
+    stdout=sys.stdout,
+NameError: name 'sys' is not defined
+2019-11-05 19:47:51,377 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished coro=<AsyncParticleGroupRunner.run.<locals>.particle_worker() done, defined at /Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py:20> exception=NameError("name 'sys' is not defined")>
+Traceback (most recent call last):
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 40, in particle_worker
+    val = await self._run_evaluator.run(vs, seed=seed)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 23, in run
+    return await self._run_cmd(exec_str)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 29, in _run_cmd
+    stdout=sys.stdout,
+NameError: name 'sys' is not defined
+2019-11-05 19:47:51,379 - pyswarms.single.global_best - INFO - Optimization finished | best cost: 0.0, best pos: [0.6000003  0.9885028  0.48171615 0.47637226 0.26762101 0.52666606
+ 0.68874384 0.22585052 0.51466153 0.96314235 0.97603577 0.07953671
+ 0.55471003 0.57596175 0.51661945 0.06969003 0.23158882]
+2019-11-05 19:47:58,188 - pyswarms.single.global_best - INFO - Optimize for 2 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-05 19:47:58,195 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished coro=<AsyncParticleGroupRunner.run.<locals>.particle_worker() done, defined at /Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py:20> exception=NameError("name 'sys' is not defined")>
+Traceback (most recent call last):
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 40, in particle_worker
+    val = await self._run_evaluator.run(vs, seed=seed)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 23, in run
+    return await self._run_cmd(exec_str)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 29, in _run_cmd
+    stdout=sys.STDOUT,
+NameError: name 'sys' is not defined
+2019-11-05 19:47:58,196 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished coro=<AsyncParticleGroupRunner.run.<locals>.particle_worker() done, defined at /Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py:20> exception=NameError("name 'sys' is not defined")>
+Traceback (most recent call last):
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 40, in particle_worker
+    val = await self._run_evaluator.run(vs, seed=seed)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 23, in run
+    return await self._run_cmd(exec_str)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 29, in _run_cmd
+    stdout=sys.STDOUT,
+NameError: name 'sys' is not defined
+2019-11-05 19:47:58,198 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished coro=<AsyncParticleGroupRunner.run.<locals>.particle_worker() done, defined at /Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py:20> exception=NameError("name 'sys' is not defined")>
+Traceback (most recent call last):
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 40, in particle_worker
+    val = await self._run_evaluator.run(vs, seed=seed)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 23, in run
+    return await self._run_cmd(exec_str)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 29, in _run_cmd
+    stdout=sys.STDOUT,
+NameError: name 'sys' is not defined
+2019-11-05 19:47:58,198 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished coro=<AsyncParticleGroupRunner.run.<locals>.particle_worker() done, defined at /Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py:20> exception=NameError("name 'sys' is not defined")>
+Traceback (most recent call last):
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 40, in particle_worker
+    val = await self._run_evaluator.run(vs, seed=seed)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 23, in run
+    return await self._run_cmd(exec_str)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 29, in _run_cmd
+    stdout=sys.STDOUT,
+NameError: name 'sys' is not defined
+2019-11-05 19:47:58,200 - pyswarms.single.global_best - INFO - Optimization finished | best cost: 0.0, best pos: [0.17794297 0.08117283 0.65857576 0.67760741 0.32692131 0.77753088
+ 0.89446265 0.10641335 0.23052799 0.21039091 0.32067883 0.49009537
+ 0.97433993 0.34557896 0.06078426 0.9139517  0.8139772 ]
+2019-11-05 19:48:08,629 - pyswarms.single.global_best - INFO - Optimize for 2 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-05 19:49:17,741 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished coro=<AsyncParticleGroupRunner.run.<locals>.particle_worker() done, defined at /Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py:20> exception=AttributeError("'NoneType' object has no attribute 'decode'")>
+Traceback (most recent call last):
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 40, in particle_worker
+    val = await self._run_evaluator.run(vs, seed=seed)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 23, in run
+    return await self._run_cmd(exec_str)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 31, in _run_cmd
+    stdout, stderr = await proc.communicate()
+AttributeError: 'NoneType' object has no attribute 'decode'
+2019-11-05 19:49:17,742 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished coro=<AsyncParticleGroupRunner.run.<locals>.particle_worker() done, defined at /Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py:20> exception=AttributeError("'NoneType' object has no attribute 'decode'")>
+Traceback (most recent call last):
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 40, in particle_worker
+    val = await self._run_evaluator.run(vs, seed=seed)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 23, in run
+    return await self._run_cmd(exec_str)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 31, in _run_cmd
+    stdout, stderr = await proc.communicate()
+AttributeError: 'NoneType' object has no attribute 'decode'
+2019-11-05 19:49:21,634 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished coro=<AsyncParticleGroupRunner.run.<locals>.particle_worker() done, defined at /Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py:20> exception=AttributeError("'NoneType' object has no attribute 'decode'")>
+Traceback (most recent call last):
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 40, in particle_worker
+    val = await self._run_evaluator.run(vs, seed=seed)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 23, in run
+    return await self._run_cmd(exec_str)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 31, in _run_cmd
+    stdout, stderr = await proc.communicate()
+AttributeError: 'NoneType' object has no attribute 'decode'
+2019-11-05 19:49:21,635 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished coro=<AsyncParticleGroupRunner.run.<locals>.particle_worker() done, defined at /Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py:20> exception=AttributeError("'NoneType' object has no attribute 'decode'")>
+Traceback (most recent call last):
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 40, in particle_worker
+    val = await self._run_evaluator.run(vs, seed=seed)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 23, in run
+    return await self._run_cmd(exec_str)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 31, in _run_cmd
+    stdout, stderr = await proc.communicate()
+AttributeError: 'NoneType' object has no attribute 'decode'
+2019-11-05 19:49:21,638 - pyswarms.single.global_best - INFO - Optimization finished | best cost: 0.0, best pos: [0.21565022 0.29772434 0.33790281 0.64533989 0.44544016 0.2752858
+ 0.18964548 0.01773361 0.18768043 0.13365117 0.71550678 0.85563749
+ 0.28732487 0.17771362 0.80933477 0.0592696  0.33261421]
+2019-11-05 19:50:01,491 - pyswarms.single.global_best - INFO - Optimize for 2 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-05 19:50:40,528 - pyswarms.single.global_best - INFO - Optimize for 2 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-05 19:50:40,537 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished coro=<AsyncParticleGroupRunner.run.<locals>.particle_worker() done, defined at /Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py:20> exception=AttributeError("'StreamReader' object has no attribute 'fileno'")>
+Traceback (most recent call last):
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 40, in particle_worker
+    val = await self._run_evaluator.run(vs, seed=seed)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 23, in run
+    return await self._run_cmd(exec_str)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 30, in _run_cmd
+    stderr=asyncio.subprocess.PIPE)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/subprocess.py", line 202, in create_subprocess_shell
+    stderr=stderr, **kwds)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/base_events.py", line 1499, in subprocess_shell
+    protocol, cmd, True, stdin, stdout, stderr, bufsize, **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/unix_events.py", line 190, in _make_subprocess_transport
+    **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/base_subprocess.py", line 37, in __init__
+    stderr=stderr, bufsize=bufsize, **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/unix_events.py", line 775, in _start
+    universal_newlines=False, bufsize=bufsize, **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/subprocess.py", line 753, in __init__
+    errread, errwrite) = self._get_handles(stdin, stdout, stderr)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/subprocess.py", line 1388, in _get_handles
+    c2pwrite = stdout.fileno()
+AttributeError: 'StreamReader' object has no attribute 'fileno'
+2019-11-05 19:50:40,541 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished coro=<AsyncParticleGroupRunner.run.<locals>.particle_worker() done, defined at /Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py:20> exception=AttributeError("'StreamReader' object has no attribute 'fileno'")>
+Traceback (most recent call last):
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 40, in particle_worker
+    val = await self._run_evaluator.run(vs, seed=seed)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 23, in run
+    return await self._run_cmd(exec_str)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 30, in _run_cmd
+    stderr=asyncio.subprocess.PIPE)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/subprocess.py", line 202, in create_subprocess_shell
+    stderr=stderr, **kwds)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/base_events.py", line 1499, in subprocess_shell
+    protocol, cmd, True, stdin, stdout, stderr, bufsize, **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/unix_events.py", line 190, in _make_subprocess_transport
+    **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/base_subprocess.py", line 37, in __init__
+    stderr=stderr, bufsize=bufsize, **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/unix_events.py", line 775, in _start
+    universal_newlines=False, bufsize=bufsize, **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/subprocess.py", line 753, in __init__
+    errread, errwrite) = self._get_handles(stdin, stdout, stderr)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/subprocess.py", line 1388, in _get_handles
+    c2pwrite = stdout.fileno()
+AttributeError: 'StreamReader' object has no attribute 'fileno'
+2019-11-05 19:50:40,544 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished coro=<AsyncParticleGroupRunner.run.<locals>.particle_worker() done, defined at /Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py:20> exception=AttributeError("'StreamReader' object has no attribute 'fileno'")>
+Traceback (most recent call last):
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 40, in particle_worker
+    val = await self._run_evaluator.run(vs, seed=seed)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 23, in run
+    return await self._run_cmd(exec_str)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 30, in _run_cmd
+    stderr=asyncio.subprocess.PIPE)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/subprocess.py", line 202, in create_subprocess_shell
+    stderr=stderr, **kwds)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/base_events.py", line 1499, in subprocess_shell
+    protocol, cmd, True, stdin, stdout, stderr, bufsize, **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/unix_events.py", line 190, in _make_subprocess_transport
+    **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/base_subprocess.py", line 37, in __init__
+    stderr=stderr, bufsize=bufsize, **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/unix_events.py", line 775, in _start
+    universal_newlines=False, bufsize=bufsize, **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/subprocess.py", line 753, in __init__
+    errread, errwrite) = self._get_handles(stdin, stdout, stderr)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/subprocess.py", line 1388, in _get_handles
+    c2pwrite = stdout.fileno()
+AttributeError: 'StreamReader' object has no attribute 'fileno'
+2019-11-05 19:50:40,545 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished coro=<AsyncParticleGroupRunner.run.<locals>.particle_worker() done, defined at /Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py:20> exception=AttributeError("'StreamReader' object has no attribute 'fileno'")>
+Traceback (most recent call last):
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 40, in particle_worker
+    val = await self._run_evaluator.run(vs, seed=seed)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 23, in run
+    return await self._run_cmd(exec_str)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 30, in _run_cmd
+    stderr=asyncio.subprocess.PIPE)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/subprocess.py", line 202, in create_subprocess_shell
+    stderr=stderr, **kwds)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/base_events.py", line 1499, in subprocess_shell
+    protocol, cmd, True, stdin, stdout, stderr, bufsize, **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/unix_events.py", line 190, in _make_subprocess_transport
+    **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/base_subprocess.py", line 37, in __init__
+    stderr=stderr, bufsize=bufsize, **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/unix_events.py", line 775, in _start
+    universal_newlines=False, bufsize=bufsize, **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/subprocess.py", line 753, in __init__
+    errread, errwrite) = self._get_handles(stdin, stdout, stderr)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/subprocess.py", line 1388, in _get_handles
+    c2pwrite = stdout.fileno()
+AttributeError: 'StreamReader' object has no attribute 'fileno'
+2019-11-05 19:50:40,550 - pyswarms.single.global_best - INFO - Optimization finished | best cost: 0.0, best pos: [0.27876751 0.94265841 0.60849545 0.46936065 0.61457951 0.17728955
+ 0.16743669 0.82394132 0.84647555 0.8039195  0.67020969 0.18544824
+ 0.76591862 0.1403707  0.64432839 0.05588502 0.98680901]
+2019-11-05 19:51:39,826 - pyswarms.single.global_best - INFO - Optimize for 2 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-05 19:51:39,836 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished coro=<AsyncParticleGroupRunner.run.<locals>.particle_worker() done, defined at /Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py:20> exception=ValueError('host and port was not specified and no sock specified')>
+Traceback (most recent call last):
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 40, in particle_worker
+    val = await self._run_evaluator.run(vs, seed=seed)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 23, in run
+    return await self._run_cmd(exec_str)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 26, in _run_cmd
+    reader, writer = await asyncio.open_connection()
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/streams.py", line 77, in open_connection
+    lambda: protocol, host, port, **kwds)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/base_events.py", line 968, in create_connection
+    'host and port was not specified and no sock specified')
+ValueError: host and port was not specified and no sock specified
+2019-11-05 19:51:39,838 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished coro=<AsyncParticleGroupRunner.run.<locals>.particle_worker() done, defined at /Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py:20> exception=ValueError('host and port was not specified and no sock specified')>
+Traceback (most recent call last):
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 40, in particle_worker
+    val = await self._run_evaluator.run(vs, seed=seed)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 23, in run
+    return await self._run_cmd(exec_str)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 26, in _run_cmd
+    reader, writer = await asyncio.open_connection()
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/streams.py", line 77, in open_connection
+    lambda: protocol, host, port, **kwds)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/base_events.py", line 968, in create_connection
+    'host and port was not specified and no sock specified')
+ValueError: host and port was not specified and no sock specified
+2019-11-05 19:51:39,841 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished coro=<AsyncParticleGroupRunner.run.<locals>.particle_worker() done, defined at /Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py:20> exception=ValueError('host and port was not specified and no sock specified')>
+Traceback (most recent call last):
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 40, in particle_worker
+    val = await self._run_evaluator.run(vs, seed=seed)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 23, in run
+    return await self._run_cmd(exec_str)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 26, in _run_cmd
+    reader, writer = await asyncio.open_connection()
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/streams.py", line 77, in open_connection
+    lambda: protocol, host, port, **kwds)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/base_events.py", line 968, in create_connection
+    'host and port was not specified and no sock specified')
+ValueError: host and port was not specified and no sock specified
+2019-11-05 19:51:39,841 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished coro=<AsyncParticleGroupRunner.run.<locals>.particle_worker() done, defined at /Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py:20> exception=ValueError('host and port was not specified and no sock specified')>
+Traceback (most recent call last):
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 40, in particle_worker
+    val = await self._run_evaluator.run(vs, seed=seed)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 23, in run
+    return await self._run_cmd(exec_str)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 26, in _run_cmd
+    reader, writer = await asyncio.open_connection()
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/streams.py", line 77, in open_connection
+    lambda: protocol, host, port, **kwds)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/base_events.py", line 968, in create_connection
+    'host and port was not specified and no sock specified')
+ValueError: host and port was not specified and no sock specified
+2019-11-05 19:51:39,844 - pyswarms.single.global_best - INFO - Optimization finished | best cost: 0.0, best pos: [0.26135245 0.54381665 0.66170166 0.51195515 0.75514903 0.70468821
+ 0.39633686 0.22602097 0.1418271  0.3740388  0.9373832  0.73945106
+ 0.82258635 0.53240924 0.15978494 0.67079313 0.87322972]
+2019-11-05 19:52:31,294 - pyswarms.single.global_best - INFO - Optimize for 2 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-05 19:52:31,307 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished coro=<AsyncParticleGroupRunner.run.<locals>.particle_worker() done, defined at /Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py:20> exception=OSError(9, 'Bad file descriptor', None)>
+Traceback (most recent call last):
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 40, in particle_worker
+    val = await self._run_evaluator.run(vs, seed=seed)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 23, in run
+    return await self._run_cmd(exec_str)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 29, in _run_cmd
+    stderr=asyncio.subprocess.PIPE)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/subprocess.py", line 202, in create_subprocess_shell
+    stderr=stderr, **kwds)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/base_events.py", line 1499, in subprocess_shell
+    protocol, cmd, True, stdin, stdout, stderr, bufsize, **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/unix_events.py", line 190, in _make_subprocess_transport
+    **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/base_subprocess.py", line 37, in __init__
+    stderr=stderr, bufsize=bufsize, **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/unix_events.py", line 775, in _start
+    universal_newlines=False, bufsize=bufsize, **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/subprocess.py", line 800, in __init__
+    restore_signals, start_new_session)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/subprocess.py", line 1551, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+OSError: [Errno 9] Bad file descriptor
+2019-11-05 19:52:31,310 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished coro=<AsyncParticleGroupRunner.run.<locals>.particle_worker() done, defined at /Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py:20> exception=OSError(9, 'Bad file descriptor', None)>
+Traceback (most recent call last):
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 40, in particle_worker
+    val = await self._run_evaluator.run(vs, seed=seed)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 23, in run
+    return await self._run_cmd(exec_str)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 29, in _run_cmd
+    stderr=asyncio.subprocess.PIPE)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/subprocess.py", line 202, in create_subprocess_shell
+    stderr=stderr, **kwds)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/base_events.py", line 1499, in subprocess_shell
+    protocol, cmd, True, stdin, stdout, stderr, bufsize, **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/unix_events.py", line 190, in _make_subprocess_transport
+    **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/base_subprocess.py", line 37, in __init__
+    stderr=stderr, bufsize=bufsize, **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/unix_events.py", line 775, in _start
+    universal_newlines=False, bufsize=bufsize, **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/subprocess.py", line 800, in __init__
+    restore_signals, start_new_session)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/subprocess.py", line 1551, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+OSError: [Errno 9] Bad file descriptor
+2019-11-05 19:52:31,319 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished coro=<AsyncParticleGroupRunner.run.<locals>.particle_worker() done, defined at /Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py:20> exception=OSError(9, 'Bad file descriptor', None)>
+Traceback (most recent call last):
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 40, in particle_worker
+    val = await self._run_evaluator.run(vs, seed=seed)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 23, in run
+    return await self._run_cmd(exec_str)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 29, in _run_cmd
+    stderr=asyncio.subprocess.PIPE)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/subprocess.py", line 202, in create_subprocess_shell
+    stderr=stderr, **kwds)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/base_events.py", line 1499, in subprocess_shell
+    protocol, cmd, True, stdin, stdout, stderr, bufsize, **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/unix_events.py", line 190, in _make_subprocess_transport
+    **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/base_subprocess.py", line 37, in __init__
+    stderr=stderr, bufsize=bufsize, **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/unix_events.py", line 775, in _start
+    universal_newlines=False, bufsize=bufsize, **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/subprocess.py", line 800, in __init__
+    restore_signals, start_new_session)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/subprocess.py", line 1551, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+OSError: [Errno 9] Bad file descriptor
+2019-11-05 19:52:31,325 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished coro=<AsyncParticleGroupRunner.run.<locals>.particle_worker() done, defined at /Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py:20> exception=OSError(9, 'Bad file descriptor', None)>
+Traceback (most recent call last):
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 40, in particle_worker
+    val = await self._run_evaluator.run(vs, seed=seed)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 23, in run
+    return await self._run_cmd(exec_str)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 29, in _run_cmd
+    stderr=asyncio.subprocess.PIPE)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/subprocess.py", line 202, in create_subprocess_shell
+    stderr=stderr, **kwds)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/base_events.py", line 1499, in subprocess_shell
+    protocol, cmd, True, stdin, stdout, stderr, bufsize, **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/unix_events.py", line 190, in _make_subprocess_transport
+    **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/base_subprocess.py", line 37, in __init__
+    stderr=stderr, bufsize=bufsize, **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/asyncio/unix_events.py", line 775, in _start
+    universal_newlines=False, bufsize=bufsize, **kwargs)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/subprocess.py", line 800, in __init__
+    restore_signals, start_new_session)
+  File "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/lib/python3.7/subprocess.py", line 1551, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+OSError: [Errno 9] Bad file descriptor
+2019-11-05 19:52:31,329 - pyswarms.single.global_best - INFO - Optimization finished | best cost: 0.0, best pos: [0.44279854 0.46435723 0.59274067 0.89261818 0.98336824 0.72533809
+ 0.7565266  0.06605663 0.0678787  0.81672882 0.10827225 0.37744798
+ 0.46929663 0.63756606 0.62235031 0.93344007 0.59617392]
+2019-11-05 19:52:41,224 - pyswarms.single.global_best - INFO - Optimize for 2 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-05 19:53:20,528 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished coro=<AsyncParticleGroupRunner.run.<locals>.particle_worker() done, defined at /Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py:20> exception=IndexError('list index out of range')>
+Traceback (most recent call last):
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 40, in particle_worker
+    val = await self._run_evaluator.run(vs, seed=seed)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 23, in run
+    return await self._run_cmd(exec_str)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 41, in _run_cmd
+    moves = spl[i+2]
+IndexError: list index out of range
+2019-11-05 19:53:47,229 - pyswarms.single.global_best - INFO - Optimize for 2 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-05 19:53:47,266 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished coro=<AsyncParticleGroupRunner.run.<locals>.particle_worker() done, defined at /Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py:20> exception=IndexError('list index out of range')>
+Traceback (most recent call last):
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 40, in particle_worker
+    val = await self._run_evaluator.run(vs, seed=seed)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 23, in run
+    return await self._run_cmd(exec_str)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 41, in _run_cmd
+    moves = spl[i+2]
+IndexError: list index out of range
+2019-11-05 19:53:47,267 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished coro=<AsyncParticleGroupRunner.run.<locals>.particle_worker() done, defined at /Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py:20> exception=IndexError('list index out of range')>
+Traceback (most recent call last):
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 40, in particle_worker
+    val = await self._run_evaluator.run(vs, seed=seed)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 23, in run
+    return await self._run_cmd(exec_str)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 41, in _run_cmd
+    moves = spl[i+2]
+IndexError: list index out of range
+2019-11-05 19:53:47,309 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished coro=<AsyncParticleGroupRunner.run.<locals>.particle_worker() done, defined at /Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py:20> exception=IndexError('list index out of range')>
+Traceback (most recent call last):
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 40, in particle_worker
+    val = await self._run_evaluator.run(vs, seed=seed)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 23, in run
+    return await self._run_cmd(exec_str)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 41, in _run_cmd
+    moves = spl[i+2]
+IndexError: list index out of range
+2019-11-05 19:53:47,310 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished coro=<AsyncParticleGroupRunner.run.<locals>.particle_worker() done, defined at /Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py:20> exception=IndexError('list index out of range')>
+Traceback (most recent call last):
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 40, in particle_worker
+    val = await self._run_evaluator.run(vs, seed=seed)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 23, in run
+    return await self._run_cmd(exec_str)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle_with_data.py", line 41, in _run_cmd
+    moves = spl[i+2]
+IndexError: list index out of range
+2019-11-05 19:53:47,314 - pyswarms.single.global_best - INFO - Optimization finished | best cost: 0.0, best pos: [0.44797279 0.41421392 0.83596088 0.37109898 0.84752076 0.17103505
+ 0.7937916  0.88883657 0.26795474 0.7584174  0.76220649 0.11958093
+ 0.87244234 0.58646329 0.09378457 0.10821509 0.91827005]
+2019-11-05 19:54:41,385 - pyswarms.single.global_best - INFO - Optimize for 2 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-05 19:54:41,477 - tetrisai - INFO - new glob best! 0.08000000
+2019-11-05 19:54:41,478 - tetrisai - INFO - [0.93186257 0.50373109 0.1424744  0.5045931  0.18096983 0.29497048
+ 0.50445752 0.49649844 0.91781163 0.35028482 0.80368856 0.96349755
+ 0.55643052 0.65400587 0.46890051 0.45850554 0.61884653]
+2019-11-05 19:54:41,546 - pyswarms.single.global_best - INFO - Optimization finished | best cost: -0.08, best pos: [0.93186257 0.50373109 0.1424744  0.5045931  0.18096983 0.29497048
+ 0.50445752 0.49649844 0.91781163 0.35028482 0.80368856 0.96349755
+ 0.55643052 0.65400587 0.46890051 0.45850554 0.61884653]
+2019-11-05 19:54:47,489 - pyswarms.single.global_best - INFO - Optimize for 2 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-05 19:54:47,543 - tetrisai - INFO - new glob best! 0.08000000
+2019-11-05 19:54:47,544 - tetrisai - INFO - [0.24251909 0.68194833 0.21219683 0.86563295 0.39034494 0.70320768
+ 0.08428594 0.00977173 0.62307655 0.83704042 0.32336238 0.45426362
+ 0.67831115 0.55578667 0.58876037 0.01844257 0.37781682]
+2019-11-05 19:54:47,597 - pyswarms.single.global_best - INFO - Optimization finished | best cost: -0.08, best pos: [0.24251909 0.68194833 0.21219683 0.86563295 0.39034494 0.70320768
+ 0.08428594 0.00977173 0.62307655 0.83704042 0.32336238 0.45426362
+ 0.67831115 0.55578667 0.58876037 0.01844257 0.37781682]
+2019-11-05 19:54:57,082 - pyswarms.single.global_best - INFO - Optimize for 2 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-05 19:54:57,134 - tetrisai - INFO - new glob best! 0.08000000
+2019-11-05 19:54:57,135 - tetrisai - INFO - [0.10027069 0.71712542 0.54167754 0.63270393 0.17316521 0.42950248
+ 0.61041121 0.34919338 0.99607637 0.18628249 0.57782664 0.36460841
+ 0.99628834 0.68197514 0.7800915  0.09988224 0.20662475]
+2019-11-05 19:54:57,193 - pyswarms.single.global_best - INFO - Optimization finished | best cost: -0.08, best pos: [0.10027069 0.71712542 0.54167754 0.63270393 0.17316521 0.42950248
+ 0.61041121 0.34919338 0.99607637 0.18628249 0.57782664 0.36460841
+ 0.99628834 0.68197514 0.7800915  0.09988224 0.20662475]
+2019-11-05 21:21:28,704 - pyswarms.single.global_best - INFO - Optimize for 2 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-05 21:21:28,745 - tetrisai - INFO - new glob best! 0.08000000
+2019-11-05 21:21:28,746 - tetrisai - INFO - [0.05858186 0.94397026 0.28718113 0.47815881 0.93477236 0.29956748
+ 0.05557515 0.9069269  0.26405642 0.3779297  0.65309281 0.91183341
+ 0.33495469 0.90802332 0.59749465 0.565698   0.68402412]
+2019-11-05 21:21:28,781 - pyswarms.single.global_best - INFO - Optimization finished | best cost: -0.08, best pos: [0.05858186 0.94397026 0.28718113 0.47815881 0.93477236 0.29956748
+ 0.05557515 0.9069269  0.26405642 0.3779297  0.65309281 0.91183341
+ 0.33495469 0.90802332 0.59749465 0.565698   0.68402412]
+2019-11-05 21:21:40,184 - pyswarms.single.global_best - INFO - Optimize for 2 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-05 21:21:40,245 - tetrisai - INFO - new glob best! 0.08000000
+2019-11-05 21:21:40,245 - tetrisai - INFO - [0.46605031 0.64608064 0.59565799 0.02753064 0.48272449 0.73680426
+ 0.55857827 0.67814923 0.72061141 0.60027084 0.09074402 0.10953557
+ 0.37638469 0.49977667 0.15252746 0.31886252 0.18177334]
+2019-11-05 21:21:40,285 - pyswarms.single.global_best - INFO - Optimization finished | best cost: -0.08, best pos: [0.46605031 0.64608064 0.59565799 0.02753064 0.48272449 0.73680426
+ 0.55857827 0.67814923 0.72061141 0.60027084 0.09074402 0.10953557
+ 0.37638469 0.49977667 0.15252746 0.31886252 0.18177334]
+2019-11-05 21:22:02,216 - pyswarms.single.global_best - INFO - Optimize for 2 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-05 21:23:02,956 - tetrisai - INFO - new glob best! 249271.00000000
+2019-11-05 21:23:03,008 - tetrisai - INFO - [0.23020204 0.6999225  0.0317074  0.8375229  0.3933792  0.84983897
+ 0.3140284  0.73693974 0.04351332 0.49830946 0.53156273 0.3133328
+ 0.05556306 0.06134257 0.36979137 0.865392   0.7113816 ]
+2019-11-05 21:23:08,439 - pyswarms.single.global_best - INFO - Optimization finished | best cost: -249271.0, best pos: [0.23020204 0.6999225  0.0317074  0.8375229  0.3933792  0.84983897
+ 0.3140284  0.73693974 0.04351332 0.49830946 0.53156273 0.3133328
+ 0.05556306 0.06134257 0.36979137 0.865392   0.7113816 ]
+2019-11-05 21:23:55,015 - pyswarms.single.global_best - INFO - Optimize for 2 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-05 21:24:41,763 - tetrisai - INFO - new glob best! 215647.00000000
+2019-11-05 21:24:41,765 - tetrisai - INFO - [0.15513773 0.71787764 0.43753107 0.02875961 0.93896048 0.11048232
+ 0.64415408 0.62489784 0.77426113 0.60866228 0.72744982 0.46775317
+ 0.13499382 0.56008927 0.09397932 0.49349633 0.18453779]
+2019-11-05 21:24:41,766 - tetrisai - INFO - new glob best! 254863.00000000
+2019-11-05 21:24:41,766 - tetrisai - INFO - [0.4784083  0.59346549 0.07199536 0.63738963 0.98703741 0.69919868
+ 0.52179019 0.34962034 0.52377599 0.47102525 0.39949426 0.06601816
+ 0.4849718  0.83490063 0.56775995 0.72187836 0.12241475]
+2019-11-05 21:24:44,776 - pyswarms.single.global_best - INFO - Optimization finished | best cost: -254863.0, best pos: [0.4784083  0.59346549 0.07199536 0.63738963 0.98703741 0.69919868
+ 0.52179019 0.34962034 0.52377599 0.47102525 0.39949426 0.06601816
+ 0.4849718  0.83490063 0.56775995 0.72187836 0.12241475]
+2019-11-05 21:25:15,217 - pyswarms.single.global_best - INFO - Optimize for 2 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-05 21:25:15,224 - run_particle_with_data - INFO - /Users/dom/Documents/git/tetrisAI/python/common/../../bazel-bin/src/ew_move_finder_cache 0.07241737364407796 0.9354718515074885 0.24043324593443305 0.8633089512735622 0.5015278859382396 0.8795364680766696 0.7805947116136682 0.4224432562948507 0.1712236532711635 0.993597983239594 0.382935712994561 0.6182694206266058 0.7825315278081449 0.54833618600239 0.6908271096605493 0.8876928285750945 0.21350572496290365
+2019-11-05 21:25:15,229 - run_particle_with_data - INFO - /Users/dom/Documents/git/tetrisAI/python/common/../../bazel-bin/src/ew_move_finder_cache 0.46835503239696097 0.3328043231168125 0.278786434894048 0.7767427053225924 0.8130496579801871 0.0005441976949419614 0.12633570407328232 0.5614862316610484 0.9066854013677638 0.05541883262083469 0.3961696262065384 0.5936213143745196 0.21156696153123078 0.9751194517528358 0.06329244887540508 0.4212303096588592 0.7283366576882995
