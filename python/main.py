@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from tetrisai import runner
 from tetrisai.runner_settings import RunnerSettings
+from tetrisai.run_particle import RunParticle
 from common.common import DEFAULT_BINARY
 import argparse
 import logging
@@ -11,7 +12,8 @@ logging.basicConfig()
 def main(args):
   runner_settings = RunnerSettings()
   print(runner_settings)
-  runner.MyRunner(args.binary, runner_settings).run()
+  run_particle = RunParticle(args.binary)
+  runner.MyRunner(runner_settings, run_particle).run()
 
 if __name__ == "__main__":
   parser = argparse.ArgumentParser()
