@@ -42,13 +42,13 @@ class MoveEvaluator {
   static const int TOTAL_WEIGHTED_SOLID_CELLS = 15;
   static const int COLUMN_HEIGHT_VARIANCE = 16;
 
-  double evaluate(const BitBoard& b, const BitPieceInfo& p, const Weighting &w, const ScoreManager &m) {
+  double evaluate(const BitBoard& b, const BitPieceInfo& p, const Weighting &w) {
     auto nxBoard = b;
     auto deltaLines = nxBoard.applyPieceInfo(p);
-    return my_evaluate(nxBoard, p, w, m, deltaLines);
+    return my_evaluate(nxBoard, p, w, deltaLines);
   }
   
-  double my_evaluate(const BitBoard &b, const BitPieceInfo& p, const Weighting &w, const ScoreManager &m, int deltaLines) {
+  double my_evaluate(const BitBoard &b, const BitPieceInfo& p, const Weighting &w, int deltaLines) {
     if (deltaLines == 4) {
       return -1e9;
     }

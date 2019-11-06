@@ -41,9 +41,8 @@ Weighting getWeights(const BitBoard &b, const BitPieceInfo &piece, const MyMoveE
     if (i > 0) w[i-1] = 0;
     w[i] = 1;
     MyMoveEvaluator me;
-    ScoreManager sm;
   
-    res[i] = me.evaluate(b, piece, w, sm);
+    res[i] = me.evaluate(b, piece, w);
   }
   return res;
 }

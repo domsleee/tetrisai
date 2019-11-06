@@ -14,7 +14,7 @@ class MoveEvaluatorSimple {
   static const int HOLES = 2;
   static const int BUMPINESS = 3;
 
-  double evaluate(const BitBoard& b, const BitPieceInfo& p, const Weighting &w, const ScoreManager &m) {
+  double evaluate(const BitBoard& b, const BitPieceInfo& p, const Weighting &w) {
     auto nxBoard = b;
     auto deltaLines = nxBoard.applyPieceInfo(p);
     assert(w.size() >= 4);

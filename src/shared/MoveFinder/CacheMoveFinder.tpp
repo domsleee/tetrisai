@@ -9,10 +9,10 @@ namespace CacheMoveFinderNs {
   using MyT = std::vector<std::unordered_map<MyBoard, std::vector<MyBoardPieceInfo>>>;
 };
 
-template <template<typename, typename> class MyMoveFinder = AllMoveFinder, typename MyBoard=BitBoard, typename MyBoardPieceInfo=BitPieceInfo>
+template <typename MyMoveFinder=AllMoveFinder<BitBoard, BitPieceInfo>, typename MyBoard=BitBoard, typename MyBoardPieceInfo=BitPieceInfo>
 class CacheMoveFinder {
  private:
-  MyMoveFinder<MyBoard, MyBoardPieceInfo> move_finder_;
+  MyMoveFinder move_finder_;
   static CacheMoveFinderNs::MyT<MyBoard, MyBoardPieceInfo> glob_map_;
 
  public:
@@ -33,5 +33,5 @@ class CacheMoveFinder {
   }
 };
 
-template <template<typename, typename> class MyMoveFinder, typename MyBoard, typename MyBoardPieceInfo>
+template <typename MyMoveFinder, typename MyBoard, typename MyBoardPieceInfo>
 CacheMoveFinderNs::MyT<MyBoard, MyBoardPieceInfo> CacheMoveFinder<MyMoveFinder, MyBoard, MyBoardPieceInfo>::glob_map_(static_cast<size_t>(NUM_BLOCK_TYPES));
