@@ -11,13 +11,6 @@ std::vector<BitPieceInfo> MoveFinder::findAllMoves(const BitBoard& b, BlockType 
   // getStartingPosition
   auto pieceInfo = b.getPiece(blockType);
   b_ = &b;
-  
-  auto height = b.getPileHeight();
-  int canMoveDown = NUM_COLUMNS - height - 3;
-  while (canMoveDown > 0) {
-    //pieceInfo = pieceInfo.move(MoveDirection::DOWN);
-    canMoveDown--;
-  }
 
   dp(pieceInfo, KeyStatus::LEFT_DOWN);
   dp(pieceInfo, KeyStatus::RIGHT_DOWN);
