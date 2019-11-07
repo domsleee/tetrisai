@@ -1,7 +1,7 @@
 #include "src/shared/MoveFinder/MoveFinder.h"
 #include "src/common/PositionPieceGetter.hpp"
 #include "src/board/bitboard/BitBoard.h"
-#include "src/board/SimpleBoard.h"
+#include "src/board/BoardPrinter.tpp"
 #include <iostream>
 
 const int MAX_ROTATIONS = 5;
@@ -10,11 +10,12 @@ const int MAX_RELEASES = 1;
 std::vector<BitPieceInfo> MoveFinder::findAllMoves(const BitBoard& b, BlockType blockType) {
   // getStartingPosition
   auto pieceInfo = b.getPiece(blockType);
+  b_ = &b;
   
   auto height = b.getPileHeight();
   int canMoveDown = NUM_COLUMNS - height - 3;
   while (canMoveDown > 0) {
-    pieceInfo = pieceInfo.move(MoveDirection::DOWN);
+    //pieceInfo = pieceInfo.move(MoveDirection::DOWN);
     canMoveDown--;
   }
 
@@ -30,6 +31,8 @@ std::vector<BitPieceInfo> MoveFinder::findAllMoves(const BitBoard& b, BlockType 
 void MoveFinder::dp(BitPieceInfo currentPiece, KeyStatus keyStatus, int numReleases, int das, int numFrames, int numRotations) {
   if (seen_.count({currentPiece, keyStatus, numReleases, das, numFrames, numRotations})) return;
   seen_.insert({currentPiece, keyStatus, numReleases, das, numFrames, numRotations});
+
+  //printBoardWithPiece(*b_, currentPiece);
 
   if (numRotations != MAX_ROTATIONS) {
     for (auto rotateDirection: allRotateDirections) {
@@ -55,11 +58,13 @@ void MoveFinder::dp(BitPieceInfo currentPiece, KeyStatus keyStatus, int numRelea
   switch(keyStatus) {
     case KeyStatus::LEFT_DOWN: 
     case KeyStatus::RIGHT_DOWN: {
-      das++;
-      if (das >= 16) {
+      das = std::min(das+1, 16);
+      if (das == 16) {
         auto direction = keyStatus == KeyStatus::LEFT_DOWN ? MoveDirection::LEFT : MoveDirection::RIGHT;
-        if (!currentPiece.canMove(direction)) das = 15;
-        else { currentPiece = currentPiece.move(direction); das = 10; }
+        if (currentPiece.canMove(direction)) {
+          currentPiece = currentPiece.move(direction);
+          das = 10;
+        }
       }
     } break;
     default: break;
@@ -73,7 +78,7 @@ void MoveFinder::dp(BitPieceInfo currentPiece, KeyStatus keyStatus, int numRelea
     }
     //currentPiece = currentPiece.move(MoveDirection::DOWN);
     auto nxPiece = currentPiece.move(MoveDirection::DOWN);
-    return dp(nxPiece, keyStatus, numReleases, das + (keyStatus != KeyStatus::NEITHER), numFrames+1, numRotations);
+    return dp(nxPiece, keyStatus, numReleases, das, numFrames+1, numRotations);
   }
 
   dp(currentPiece, keyStatus, numReleases, das, numFrames+1, numRotations);

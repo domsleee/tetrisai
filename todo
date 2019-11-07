@@ -1,4 +1,11 @@
 performance
+
+
++ debug nondeterminism with movefinder
++ debug slow performance on first iteration
+
+
+
 + try building a starting set of move finder
 + carry movefinder cache between calls
 

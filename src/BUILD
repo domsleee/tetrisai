@@ -25,7 +25,7 @@ cc_library(
 
 cc_library(
     name = "board",
-    hdrs = glob(["board/*.h", "board/*.hpp", "board/bitboard/*.h"]),
+    hdrs = glob(["board/*.h", "board/*.hpp", "board/*.tpp", "board/bitboard/*.h"]),
     srcs = glob(["board/*.cpp", "board/bitboard/*.cpp"]),
     deps = [":common"]
 )

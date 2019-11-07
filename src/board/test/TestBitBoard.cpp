@@ -42,8 +42,6 @@ SCENARIO("O_PIECE check") {
   }
 }
 
-
-
 SCENARIO("simple rotation tests") {
   GIVEN("there is a piece") {
     BitBoard b;
@@ -53,8 +51,21 @@ SCENARIO("simple rotation tests") {
       REQUIRE(p1.canRotate(RotateDirection::ROTATE_AC));
       auto p2 = p1.rotate(RotateDirection::ROTATE_AC);
       THEN("it rotates as expected") {
-        std::vector<Coord> exp = {{0, 2}, {1, 2}, {2, 2}, {3, 2}};
-        REQUIRE(p2.getPosition().coords_ == exp);
+        auto expMove = Move{{{0, 2}, {1, 2}, {2, 2}, {3, 2}}};
+        REQUIRE(p2.getPosition() == expMove);
+      }
+    }
+  }
+  AND_GIVEN("a horizontal I-PIECE near the top") {
+    BitBoard b;
+    Move m1 = {{{2,3}, {2,4}, {2,5}, {2,6}}};
+    auto p1 = b.getPiece(BlockType::I_PIECE, m1);
+    WHEN("we rotate the piece") {
+      REQUIRE(p1.canRotate(RotateDirection::ROTATE_AC));
+      auto p2 = p1.rotate(RotateDirection::ROTATE_AC);
+      THEN("it rotates as expected") {
+        auto expMove = Move{{{0,5}, {1,5}, {2,5}, {3,5}}};
+        REQUIRE(p2.getPosition() == expMove);
       }
     }
   }

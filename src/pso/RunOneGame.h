@@ -8,10 +8,12 @@
 
 class RunOneGame {
  public:
-  RunOneGame(std::shared_ptr<GetNextMove> getNextMoveHandler = std::make_shared<GetNextMove>()): getNextMoveHandler_(getNextMoveHandler) {}
+  RunOneGame() {
+    getNextMoveHandler_ = std::make_unique<GetNextMove>();
+  }
   int runGame(const std::vector<BlockType> &pieceSet, const Weighting &weighting);
 
  private:
   bool hasNoMoves(const BitBoard &b, BlockType blockType) const;
-  std::shared_ptr<GetNextMove> getNextMoveHandler_ = std::make_unique<GetNextMove>();
+  std::unique_ptr<GetNextMove> getNextMoveHandler_;
 };

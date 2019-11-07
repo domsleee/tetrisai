@@ -35,6 +35,9 @@ struct Move {
     }
     printf("\n");
   }
+  bool hasCoord(const Coord &coord) const {
+    return std::find(coords_.begin(), coords_.end(), coord) != coords_.end();
+  }
 };
 
 namespace std {
