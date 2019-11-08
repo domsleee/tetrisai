@@ -30,23 +30,12 @@ Move NewGetNextMove<MyMoveFinder, MyMoveEvaluator>::getNextMove(const BitBoard &
   MoveFinder mf;
   auto allMoves = mf.findAllMoves(board, blockType);
   auto secMoves = mf_.findAllMoves(board, blockType);
-  if (allMoves.size() != secMoves.size()) {
-    //printf("hello\n");exit(1);
-  }
-  for (int i = 0; i < allMoves.size(); ++i) {
-    if (!(allMoves[i] == secMoves[i])) {
-      printf("i: %d\n", i);
-      allMoves[i].print();
-      secMoves[i].print();
-      printf("bye\n"); exit(1);
-    }
-  }
 
   auto bestPiece = allMoves[0];
   double bestScore = 6e60;
   for (const auto& piece: allMoves) {
     double score = me_.evaluate(board, piece);
-    if (score < bestScore) {
+    if (score < bestScore || (score == bestScore && piece < bestPiece)) {
       bestPiece = piece;
       bestScore = score;
     }

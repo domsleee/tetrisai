@@ -18,7 +18,7 @@ int main() {
   PlayBestDemo playBestDemo(playDemo);
 
   PieceSetGetter ps;
-  auto pieceSets = ps.getPieceSets(3);
+  auto pieceSets = ps.getPieceSets();
   playBestDemo.playBestDemo(pieceSets, w);
 
 }

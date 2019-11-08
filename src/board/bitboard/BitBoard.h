@@ -84,6 +84,9 @@ class BitPieceInfo {
     os << p.id_;
     return os;
   };
+  friend bool operator<(const BitPieceInfo& p1, const BitPieceInfo& p2) {
+    return p1.id_ < p2.id_;
+  }
 
   friend size_t std::hash<BitPieceInfo>::operator ()(const BitPieceInfo&) const;
 

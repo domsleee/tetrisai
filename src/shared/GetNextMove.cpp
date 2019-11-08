@@ -13,11 +13,11 @@ Move GetNextMove::getNextMove(const BitBoard& board, BlockType blockType, const 
   auto allMoves = f.findAllMoves(board, blockType);
   auto bestPiece = allMoves[0];
   double bestScore = 6e60;
-  for (const auto& piece: allMoves) {
+  for (const auto& pieceInfo: allMoves) {
     MoveEvaluator me;
-    double score = me.evaluate(board, piece, w);
-    if (score < bestScore) {
-      bestPiece = piece;
+    double score = me.evaluate(board, pieceInfo, w);
+    if (score < bestScore || (score == bestScore && pieceInfo < bestPiece)) {
+      bestPiece = pieceInfo;
       bestScore = score;
     }
   }
