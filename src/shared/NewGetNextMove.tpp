@@ -28,8 +28,8 @@ class NewGetNextMove {
 template<typename MyMoveFinder, typename MyMoveEvaluator>
 Move NewGetNextMove<MyMoveFinder, MyMoveEvaluator>::getNextMove(const BitBoard &board, const BlockType blockType) const {
   MoveFinder mf;
-  auto allMoves = mf.findAllMoves(board, blockType);
-  auto secMoves = mf_.findAllMoves(board, blockType);
+  auto allMoves = mf_.findAllMoves(board, blockType);
+  //auto secMoves = mf_.findAllMoves(board, blockType);
 
   auto bestPiece = allMoves[0];
   double bestScore = 6e60;
