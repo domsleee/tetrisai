@@ -1,8 +1,6 @@
 #include "src/pso/EvaluateWeightings.h"
-#include <sstream>
 #include <iostream>
 #include <stdlib.h>
-#include <string.h>
 
 int main(int argc, char ** argv) {
   if (argc < NUM_FACTORS+1) {

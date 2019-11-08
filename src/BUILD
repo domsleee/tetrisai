@@ -94,7 +94,14 @@ cc_test(
 
 cc_binary(
     name = "ew",
-    srcs = ["pso/main.cpp"],
+    srcs = ["pso/main/main.cpp"],
+    deps = [":pso"],
+    copts = EXEC_COPTS
+)
+
+cc_binary(
+    name = "ew_str",
+    srcs = ["pso/main/main_str.cpp"],
     deps = [":pso"],
     copts = EXEC_COPTS
 )
