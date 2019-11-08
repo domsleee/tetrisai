@@ -6,5 +6,5 @@
 
 class GetNextMove {
  public:
-  Move getNextMove(const BitBoard& board, BlockType blockType, const Weighting &w, const ScoreManager &sm);
+  Move getNextMove(const BitBoard& board, BlockType blockType, const Weighting &w, const ScoreManager &sm) const;
 };

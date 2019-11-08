@@ -42,13 +42,13 @@ class MoveEvaluator {
   static const int TOTAL_WEIGHTED_SOLID_CELLS = 15;
   static const int COLUMN_HEIGHT_VARIANCE = 16;
 
-  double evaluate(const BitBoard& b, const BitPieceInfo& p, const Weighting &w) {
+  double evaluate(const BitBoard& b, const BitPieceInfo& p, const Weighting &w) const {
     auto nxBoard = b;
     auto deltaLines = nxBoard.applyPieceInfo(p);
     return my_evaluate(nxBoard, p, w, deltaLines);
   }
   
-  double my_evaluate(const BitBoard &b, const BitPieceInfo& p, const Weighting &w, int deltaLines) {
+  double my_evaluate(const BitBoard &b, const BitPieceInfo& p, const Weighting &w, int deltaLines) const {
     if (deltaLines == 4) {
       return -1e9;
     }
@@ -139,7 +139,7 @@ class MoveEvaluator {
   }
 
  private:
-  int calculateRowTransitions(VacancyChecker &vac, int minR) {
+  int calculateRowTransitions(VacancyChecker &vac, int minR) const {
     int res = 0;
     for (int r = minR; r < NUM_ROWS; r++) {
       if (vac.is_vacant(Coord{r, 0})) res++;
@@ -147,8 +147,8 @@ class MoveEvaluator {
       for (int c = 0; c < NUM_COLUMNS-1; c++) {
         if (vac.is_vacant({r,c}) != vac.is_vacant({r, c+1})) res++;
       }
-    }    return res;
-
+    }
+    return res;
   }
 };
 

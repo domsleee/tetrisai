@@ -47,7 +47,6 @@ int BitBoard::applyPieceInfo(const BitPieceInfo& p) {
     }
     b <<= NUM_COLUMNS;
   }
-
   return lineClears;
 }
 

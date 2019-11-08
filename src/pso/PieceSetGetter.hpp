@@ -22,7 +22,7 @@ struct PieceSetGetter {
   }
   void setSeed(int seed) { gen_.seed(seed); }
 
-  std::vector<std::vector<BlockType>> getPieceSets(int numSets) {
+  std::vector<std::vector<BlockType>> getPieceSets(int numSets=NUM_GAMES) {
     std::vector<std::vector<BlockType>> res(numSets);
     for (auto &game: res) {
       for (int i = 0; i < NUM_BLOCKS_PER_GAME; i++) {

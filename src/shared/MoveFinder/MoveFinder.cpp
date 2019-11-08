@@ -7,8 +7,10 @@
 const int MAX_ROTATIONS = 5;
 const int MAX_RELEASES = 1;
 
-std::vector<BitPieceInfo> MoveFinder::findAllMoves(const BitBoard& b, BlockType blockType) {
+std::vector<BitPieceInfo> MoveFinder::findAllMoves(const BitBoard& b, BlockType blockType) const {
   // getStartingPosition
+  seen_.clear();
+  moves_.clear();
   auto pieceInfo = b.getPiece(blockType);
   b_ = &b;
 
@@ -21,7 +23,7 @@ std::vector<BitPieceInfo> MoveFinder::findAllMoves(const BitBoard& b, BlockType 
 
 // DP: coord(200), keyStatus(3), numKeyHits(2), das(16)
 // currentPos, rotation
-void MoveFinder::dp(BitPieceInfo currentPiece, KeyStatus keyStatus, int numReleases, int das, int numFrames, int numRotations) {
+void MoveFinder::dp(BitPieceInfo currentPiece, KeyStatus keyStatus, int numReleases, int das, int numFrames, int numRotations) const {
   if (seen_.count({currentPiece, keyStatus, numReleases, das, numFrames, numRotations})) return;
   seen_.insert({currentPiece, keyStatus, numReleases, das, numFrames, numRotations});
 

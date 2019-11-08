@@ -5,11 +5,7 @@
 #include "src/pso/EvaluateWeightings.h"
 #include "src/pso/RunOneGame.h"
 #include <stdlib.h>     /* srand, rand */
-
-static const int NUM_GAMES = 100;
-// 50 to complete the board
-// 575 to fill 230 lines
-
+#include "src/common/common.hpp"
 
 template<typename T>
 double average(T it1, T it2) {

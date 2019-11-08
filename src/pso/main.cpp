@@ -18,7 +18,6 @@ int main(int argc, char ** argv) {
     int seed = atoi(argv[NUM_FACTORS+1]);
     ew.setSeed(seed);
   }
-  // todo: consider using cin
 
   auto rankings = ew.rankWeightings({weightings});
   std::cout << rankings[0].first << '\n';

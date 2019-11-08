@@ -12,7 +12,7 @@ cc_binary(
 
 cc_library(
     name = "common",
-    srcs = glob(["common/*.hpp"]),
+    srcs = glob(["common/*.hpp", "common/*.cpp"]),
     deps = [],
 )
 
@@ -35,6 +35,18 @@ cc_library(
     hdrs = glob(["pso/*.h", "pso/*.hpp", "pso/random/*.hpp"]),
     srcs = glob(["pso/*.cpp"]),
     deps = [":common", ":board", ":shared", "//third_party:optim", "@boost//:random"]
+)
+
+cc_library(
+    name = "demo",
+    hdrs = glob(["demo/*.h", "demo/*.hpp", "demo/*.tpp"]),
+    srcs = glob(["demo/*.cpp"]),
+    deps = [":common", ":board", ":shared", ":pso"]
+)
+
+cc_binary(
+    name = "run_demo",
+    deps = [":demo"]
 )
 
 cc_test(
