@@ -6,6 +6,14 @@
 #include "src/shared/MoveEvaluator.hpp"
 #include "src/board/BoardPrinter.tpp"
 
+
+
+
+// debug
+#include "src/shared/MoveFinder/MoveFinder.h"
+
+
+
 template<typename MyMoveFinder, typename MyMoveEvaluator>
 class NewGetNextMove {
  public:
@@ -19,7 +27,21 @@ class NewGetNextMove {
 
 template<typename MyMoveFinder, typename MyMoveEvaluator>
 Move NewGetNextMove<MyMoveFinder, MyMoveEvaluator>::getNextMove(const BitBoard &board, const BlockType blockType) const {
-  auto allMoves = mf_.findAllMoves(board, blockType);
+  MoveFinder mf;
+  auto allMoves = mf.findAllMoves(board, blockType);
+  auto secMoves = mf_.findAllMoves(board, blockType);
+  if (allMoves.size() != secMoves.size()) {
+    //printf("hello\n");exit(1);
+  }
+  for (int i = 0; i < allMoves.size(); ++i) {
+    if (!(allMoves[i] == secMoves[i])) {
+      printf("i: %d\n", i);
+      allMoves[i].print();
+      secMoves[i].print();
+      printf("bye\n"); exit(1);
+    }
+  }
+
   auto bestPiece = allMoves[0];
   double bestScore = 6e60;
   for (const auto& piece: allMoves) {

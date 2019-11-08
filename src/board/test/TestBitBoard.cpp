@@ -123,9 +123,6 @@ SCENARIO("line clears... top 4 rows") {
         BitBoard b2;
         b2.applyMove(exp1);
         b2.applyMove(exp2);
-        printf("TESTING TIME\n");
-        b.print();
-        b2.print();
         REQUIRE(b == b2);
       }
     }

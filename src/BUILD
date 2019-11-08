@@ -108,7 +108,7 @@ cc_binary(
 
 cc_binary(
     name = "ew_move_finder_cache",
-    srcs = ["pso/main.cpp", "shared/MoveFinder/debug/debug.cpp"],
+    srcs = ["pso/main/main.cpp", "shared/MoveFinder/debug/debug.cpp"],
     deps = [":pso"],
     copts = BENCHMARK_COPTS
 )

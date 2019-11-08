@@ -11,14 +11,14 @@
 
 int main() {
   Weighting w = WeightingFn::readFromString(basic_weighting_best);
-  MoveFinder mf;
   auto moveEvaluator = MoveEvaluatorAdapter(MoveEvaluator(), w);
+  MoveFinder mf;
   NewGetNextMove getNextMove(moveEvaluator, mf);
   PlayDemo playDemo(getNextMove);
   PlayBestDemo playBestDemo(playDemo);
 
   PieceSetGetter ps;
-  auto pieceSets = ps.getPieceSets();
+  auto pieceSets = ps.getPieceSets(3);
   playBestDemo.playBestDemo(pieceSets, w);
 
 }

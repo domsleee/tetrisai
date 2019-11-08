@@ -11,9 +11,9 @@ std::vector<BitPieceInfo> MoveFinder::findAllMoves(const BitBoard& b, BlockType 
   // getStartingPosition
   seen_.clear();
   moves_.clear();
+  //b_ = &b;
   auto pieceInfo = b.getPiece(blockType);
-  b_ = &b;
-
+ 
   dp(pieceInfo, KeyStatus::LEFT_DOWN);
   dp(pieceInfo, KeyStatus::RIGHT_DOWN);
 

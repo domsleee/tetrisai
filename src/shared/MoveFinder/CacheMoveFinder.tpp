@@ -13,7 +13,7 @@ template <typename MyMoveFinder=AllMoveFinder<BitBoard, BitPieceInfo>, typename 
 class CacheMoveFinder {
  private:
   MyMoveFinder move_finder_;
-  static CacheMoveFinderNs::MyT<MyBoard, MyBoardPieceInfo> glob_map_;
+  static CacheMoveFinderNs::MyT<MyBoard, MyBoardPieceInfo> glob_map_; // todo: dont make this static
 
  public:
   std::vector<BitPieceInfo> findAllMoves(const MyBoard& board, BlockType blockType) const {
