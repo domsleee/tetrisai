@@ -2,6 +2,7 @@
 #include <vector>
 #include <memory>
 #include <stdexcept>
+#include <algorithm>
 #include "src/common/Coord.hpp"
 
 struct Move {
