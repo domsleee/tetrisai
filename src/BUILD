@@ -12,7 +12,8 @@ cc_binary(
 
 cc_library(
     name = "common",
-    srcs = glob(["common/*.hpp", "common/*.cpp"]),
+    srcs = glob(["common/*.cpp"]),
+    hdrs = glob(["common/*.hpp", "common/*.tpp"]),
     deps = [],
 )
 

@@ -1,6 +1,6 @@
-#include "src/pso/EvaluateWeightings.h"
 #include <iostream>
 #include <stdlib.h>
+#include "src/pso/ClientApi.hpp"
 
 int main(int argc, char ** argv) {
   if (argc < NUM_FACTORS+1) {
@@ -11,12 +11,12 @@ int main(int argc, char ** argv) {
   for (int i = 0; i < NUM_FACTORS; i++) {
     weightings[i] = atof(argv[i+1]);
   }
-  EvaluateWeightings ew;
+
+  int seed = -1;
   if (argc > NUM_FACTORS+1) {
     int seed = atoi(argv[NUM_FACTORS+1]);
-    ew.setSeed(seed);
   }
 
-  auto rankings = ew.rankWeightings({weightings});
-  std::cout << rankings[0].first << '\n';
+
+  std::cout << get_score_regular(weightings, seed) << '\n';
 }

@@ -1,10 +1,9 @@
 #include "src/common/Weighting.hpp"
-#include "src/pso/EvaluateWeightings.h"
+#include "src/pso/ClientApi.hpp"
+
 #include <iostream>
 
 int main() {
-  EvaluateWeightings ew;
   auto weighting = WeightingFn::readFromString(basic_weighting_best);
-  auto rankings = ew.rankWeightings({weighting});
-  std::cout << rankings[0].first << '\n';
+  std::cout << get_score_regular(weighting) << '\n';
 }
