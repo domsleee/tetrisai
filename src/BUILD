@@ -32,7 +32,7 @@ cc_library(
 
 cc_library(
     name = "pso",
-    hdrs = glob(["pso/*.h", "pso/*.hpp", "pso/random/*.hpp"]),
+    hdrs = glob(["pso/*.h", "pso/*.hpp", "pso/random/*.hpp", "pso/*.tpp"]),
     srcs = glob(["pso/*.cpp"]),
     deps = [":common", ":board", ":shared", "//third_party:optim", "@boost//:random"]
 )

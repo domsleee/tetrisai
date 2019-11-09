@@ -1,1 +1,1 @@
-bazel build src:test_bit_board --compilation_mode=dbg -s --spawn_strategy=standalone
+bazel build src:run_demo --compilation_mode=dbg -s --spawn_strategy=standalone

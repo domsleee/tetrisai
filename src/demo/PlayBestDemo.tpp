@@ -4,18 +4,22 @@
 #include "src/pso/RunOneGame.h"
 
 
-template<typename MyPlayDemo>
+template<typename MyPlayDemo, typename MyRunPieceSet>
 class PlayBestDemo {
  public:
-  PlayBestDemo(const MyPlayDemo &playDemo): playDemoHandler_(playDemo) {}
-  void playBestDemo(std::vector<std::vector<BlockType>> &pieceSets, const Weighting &weighting);
+  PlayBestDemo(const MyPlayDemo &playDemo, const MyRunPieceSet &runPieceSetHandler):
+    playDemoHandler_(playDemo),
+    runPieceSetHandler_(runPieceSetHandler)
+    {}
+  void playBestDemo(std::vector<std::vector<BlockType>> &pieceSets);
 
  private:
   const MyPlayDemo &playDemoHandler_;
+  const MyRunPieceSet &runPieceSetHandler_;
 };
 
-template<typename MyPlayDemo>
-void PlayBestDemo<MyPlayDemo>::playBestDemo(std::vector<std::vector<BlockType>> &pieceSets, const Weighting &weighting) {
+template<typename MyPlayDemo, typename MyRunPieceSet>
+void PlayBestDemo<MyPlayDemo, MyRunPieceSet>::playBestDemo(std::vector<std::vector<BlockType>> &pieceSets) {
   // weightings
   // seed
 
@@ -23,9 +27,8 @@ void PlayBestDemo<MyPlayDemo>::playBestDemo(std::vector<std::vector<BlockType>> 
   int bestScore = -1;
   int ct = 1;
   for (const auto &pieceSet: pieceSets) {
-    RunOneGame rog; // todo. replace with parameter (should be based on the same things as MyPlayDemo)
     printf("play best demo %d/%lu, bestScore: %d\n", ct, pieceSets.size(), bestScore);
-    int score = rog.runGame(pieceSet, weighting);
+    int score = runPieceSetHandler_.runGame(pieceSet);
     printf("score: %d\n", score);
     if (score > bestScore) {
       bestScore = score;

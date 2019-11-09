@@ -116,6 +116,10 @@ int BitBoard::getPileHeight() const {
   return h;
 };
 
+bool BitBoard::hasNoMoves(BlockType blockType) const {
+  return !vacant(getPiece(blockType));
+}
+
 
 // BitPieceInfo
 std::size_t std::hash<BitPieceInfo>::operator()(const BitPieceInfo& p) const {

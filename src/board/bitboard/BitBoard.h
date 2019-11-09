@@ -27,6 +27,8 @@ class BitBoard {
   BitPieceInfo getPiece(BlockType blockType) const;
   bool vacant(const BitPieceInfo&) const;
 
+  bool hasNoMoves(BlockType blockType) const;
+
   // probably shouldn't use
   BitPieceInfo getPieceFromId(int id) const;
 
