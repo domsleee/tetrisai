@@ -8,6 +8,19 @@
 #include "src/pso/NewEvaluateWeightingsContainer.tpp"
 
 
+// todo: use config
+// get_score_move_finder_all
+// get_score_level18_start_6frame_move
+// get_score_level19_start_6frame_move
+// get_score_level18_start_actual_das
+// get_score_level19_start_actual_das
+
+// later
+// get_score_level18_start_6frame_move_lookahead
+// get_score_level18_start_6frame_move_lookahead_quicktap
+// get_score_level18_start_actual_das_lookahead
+// get_score_level18_start_actual_das_lookahead_quicktap
+
 double get_score_regular(const Weighting &w, int seed=-1) {
   auto ew_container = NewEvaluateWeightingsContainer(
     MoveEvaluatorAdapter(MoveEvaluator(), w),
