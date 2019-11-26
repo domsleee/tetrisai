@@ -83,7 +83,7 @@ cc_test(
 
 cc_test(
     name = "test_move_evaluator",
-    srcs = glob(["shared/test/TestMoveEvaluator.cpp", "shared/test/*.hpp"]),
+    srcs = glob(["shared/test/TestMoveEvaluator.cpp", "shared/test/*.hpp", "shared/test/MoveEvaluatorUtility.cpp"]),
     deps = [":shared", "//:catch"]
 )
 

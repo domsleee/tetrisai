@@ -24,28 +24,6 @@ Weighting getExpectedWeights(const std::string &filepath) {
   return w;
 }
 
-template<typename MyMoveEvaluator>
-Weighting getWeights(const BitBoard &b, const BitPieceInfo &piece, const MyMoveEvaluator &me, int num_factors) {
-  Weighting w(num_factors, 0);
-  Weighting res(num_factors, 0);
-  for (int i = 0; i < num_factors; i++) {
-    if (i > 0) w[i-1] = 0;
-    w[i] = 1;
-    // todo: strange??
-    MyMoveEvaluator me;
-
-    res[i] = me.evaluate(b, piece, w);
-  }
-  return res;
-}
-
-template<typename MyMoveEvaluator>
-Weighting getWeightsFromEmptyPiece(const BitBoard &b, const MyMoveEvaluator &me) {
-  const auto m = BitBoardPre::idToMove(BitBoardPre::getEmptyMoveId());
-  auto piece = b.getPiece(m);
-  return getWeights(b, piece, me);
-}
-
 
 Weighting getWeights2(const BitBoard &b, const BitPieceInfo &piece) {
   int num_factors = MoveEvaluatorPenalty::getNumFactors();

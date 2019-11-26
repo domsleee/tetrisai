@@ -6,6 +6,7 @@
 #define TETRISAI_MOVEEVALUATORPENALTY_HPP
 #include "src/shared/MoveEvaluator/MoveEvaluatorAdapter.hpp"
 #include "src/common/common.hpp"
+#include <cassert>
 
 
 int reachableHeight(int c, int framesPerDrop=2);
