@@ -26,7 +26,13 @@ class RunParticle(IRunParticle):
       stderr=asyncio.subprocess.PIPE)
 
     stdout, stderr = await proc.communicate()
-    return float(stdout.decode("utf-8"))
+    try:
+      return float(stdout.decode("utf-8"))
+    except Exception as ex:
+      print(cmd)
+      print(stdout)
+      print(stdout.decode("utf-8"))
+      raise ex
   
   def run_sync(self, vs: Particle, seed: int = None):
     return asyncio.run(self.run(vs, seed))

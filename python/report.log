@@ -1937,3 +1937,41 @@ IndexError: list index out of range
 2019-11-05 21:25:15,229 - run_particle_with_data - INFO - /Users/dom/Documents/git/tetrisAI/python/common/../../bazel-bin/src/ew_move_finder_cache 0.46835503239696097 0.3328043231168125 0.278786434894048 0.7767427053225924 0.8130496579801871 0.0005441976949419614 0.12633570407328232 0.5614862316610484 0.9066854013677638 0.05541883262083469 0.3961696262065384 0.5936213143745196 0.21156696153123078 0.9751194517528358 0.06329244887540508 0.4212303096588592 0.7283366576882995
 2019-11-06 23:53:28,782 - pyswarms.single.global_best - INFO - Optimize for 6900 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
 2019-11-06 23:54:36,058 - pyswarms.single.global_best - INFO - Optimize for 6900 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-26 18:55:15,938 - pyswarms.single.global_best - INFO - Optimize for 6900 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-26 18:59:17,476 - pyswarms.single.global_best - INFO - Optimize for 6900 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2019-11-26 18:59:18,606 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished coro=<AsyncParticleGroupRunner.run.<locals>.particle_worker() done, defined at /Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py:20> exception=ValueError('could not convert string to float: ')>
+Traceback (most recent call last):
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 40, in particle_worker
+    val = await self._run_evaluator.run(vs, seed=seed)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle.py", line 20, in run
+    return await self._run_cmd(exec_str)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle.py", line 33, in _run_cmd
+    raise ex
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle.py", line 30, in _run_cmd
+    return float(stdout.decode("utf-8"))
+ValueError: could not convert string to float: 
+2019-11-26 18:59:18,609 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished coro=<AsyncParticleGroupRunner.run.<locals>.particle_worker() done, defined at /Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py:20> exception=ValueError('could not convert string to float: ')>
+Traceback (most recent call last):
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 40, in particle_worker
+    val = await self._run_evaluator.run(vs, seed=seed)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle.py", line 20, in run
+    return await self._run_cmd(exec_str)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle.py", line 33, in _run_cmd
+    raise ex
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle.py", line 30, in _run_cmd
+    return float(stdout.decode("utf-8"))
+ValueError: could not convert string to float: 
+2019-11-26 18:59:18,610 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished coro=<AsyncParticleGroupRunner.run.<locals>.particle_worker() done, defined at /Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py:20> exception=ValueError('could not convert string to float: ')>
+Traceback (most recent call last):
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 40, in particle_worker
+    val = await self._run_evaluator.run(vs, seed=seed)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle.py", line 20, in run
+    return await self._run_cmd(exec_str)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle.py", line 33, in _run_cmd
+    raise ex
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle.py", line 30, in _run_cmd
+    return float(stdout.decode("utf-8"))
+ValueError: could not convert string to float: 

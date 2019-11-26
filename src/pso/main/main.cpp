@@ -18,5 +18,5 @@ int main(int argc, char ** argv) {
   }
 
 
-  std::cout << get_score_regular(weightings, seed) << '\n';
+  std::cout << get_score_regular2(weightings, seed) << '\n';
 }
