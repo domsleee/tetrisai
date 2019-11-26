@@ -1,4 +1,4 @@
-#include "src/pso/EvaluateWeightings.h"
+#include "src/pso/NewEvaluateWeightings.tpp"
 #include "src/board/bitboard/BitBoardPre.h"
 #include <chrono>
 #include <iostream>

@@ -9,20 +9,18 @@ std::size_t std::hash<BitBoard>::operator()(const BitBoard& b) const {
   return std::hash<decltype(b.bitset_)>{}(b.bitset_);
 }
 
-BitBoard::BitBoard(const std::vector<std::vector<int>>& v) {
+BitBoard::BitBoard(const std::vector<std::vector<int>>& vs) {
   BitBoardPre::precompute();
-  int ind = 0;
-  int h = NUM_ROWS;
-  for (const auto &row: v) {
-    for (const auto t: row) {
-      if (t) {
-        height_ = std::max(height_, h);
+  for (int r = 0; r < NUM_ROWS; ++r) {
+    for (int c = 0; c < NUM_COLUMNS; ++c) {
+      if (vs[r][c]) {
+        height_ = std::max(height_, NUM_ROWS-r);
+        int ind = r * NUM_COLUMNS + c;
         bitset_.set(ind);
       }
-      ind++;
     }
-    h--;
   }
+
 }
 
 int BitBoard::applyPieceInfo(const BitPieceInfo& p) {

@@ -5,7 +5,7 @@
 #include "src/common/Weighting.hpp"
 #include <algorithm>
 #include <numeric>
-#include "src/shared/MoveEvaluator.hpp"
+#include "src/shared/MoveEvaluator/MoveEvaluator.hpp"
 
 class MoveEvaluatorAdapter {
  public:

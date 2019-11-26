@@ -2,7 +2,7 @@
 #include "src/common/Move.hpp"
 #include "src/common/BlockType.hpp"
 #include "src/board/bitboard/BitBoard.h"
-#include "src/shared/MoveEvaluator.hpp"
+#include "src/shared/MoveEvaluator/MoveEvaluator.hpp"
 #include "src/board/BoardPrinter.tpp"
 
 template<typename MyMoveFinder, typename MyMoveEvaluator>

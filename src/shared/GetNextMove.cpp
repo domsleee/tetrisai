@@ -1,5 +1,5 @@
 #include "src/shared/GetNextMove.h"
-#include "src/shared/MoveEvaluator.hpp"
+#include "src/shared/MoveEvaluator/MoveEvaluator.hpp"
 #include "src/shared/MoveFinder/AllMoveFinder.tpp"
 #include "src/shared/MoveFinder/MoveFinder.h"
 

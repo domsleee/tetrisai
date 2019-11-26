@@ -19,8 +19,8 @@ cc_library(
 
 cc_library(
     name = "shared",
-    hdrs = glob(["shared/*.h", "shared/*.hpp", "shared/*.tpp", "shared/MoveFinder/*.h", "shared/MoveFinder/*.hpp", "shared/MoveFinder/*.tpp"]),
-    srcs = glob(["shared/*.cpp", "shared/MoveFinder/*.cpp"]),
+    hdrs = glob(["shared/*.h", "shared/*.hpp", "shared/*.tpp", "shared/MoveEvaluator/*.hpp", "shared/MoveFinder/*.h", "shared/MoveFinder/*.hpp", "shared/MoveFinder/*.tpp"]),
+    srcs = glob(["shared/*.cpp", "shared/MoveFinder/*.cpp", "shared/MoveEvaluator/*.cpp"]),
     deps = [":common", ":board"]
 )
 
@@ -88,8 +88,8 @@ cc_test(
 )
 
 cc_test(
-    name = "test_move_evaluator_simple",
-    srcs = glob(["shared/test/TestMoveEvaluatorSimple.cpp", "shared/test/*.hpp"]),
+    name = "test_move_evaluator_penalty",
+    srcs = glob(["shared/test/TestMoveEvaluatorPenalty.cpp", "shared/test/*.hpp", "shared/test/*.h", "shared/test/MoveEvaluatorUtility.cpp"]),
     deps = [":shared", "//:catch"]
 )
 
@@ -118,13 +118,6 @@ cc_binary(
     name = "bench_move_finder",
     srcs = ["shared/bench/benchmark.cpp"],
     deps = [":shared", ":common", ":board"],
-    copts = BENCHMARK_COPTS
-)
-
-cc_binary(
-    name = "bench_evaluate_weightings",
-    srcs = ["pso/bench/benchEvaluateWeightings.cpp"],
-    deps = [":pso"],
     copts = BENCHMARK_COPTS
 )
 

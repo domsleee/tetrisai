@@ -1,7 +1,7 @@
 #pragma once
 #include "src/shared/NewGetNextMove.tpp"
-#include "src/shared/MoveEvaluatorAdapter.hpp"
-#include "src/shared/MoveEvaluator.hpp"
+#include "src/shared/MoveEvaluator/MoveEvaluatorAdapter.hpp"
+#include "src/shared/MoveEvaluator/MoveEvaluator.hpp"
 #include "src/demo/PlayDemo.tpp"
 #include "src/demo/PlayBestDemo.tpp"
 #include "src/pso/RunPieceSet.tpp"

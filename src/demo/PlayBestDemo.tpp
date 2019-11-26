@@ -1,7 +1,6 @@
 #pragma once
 #include "src/common/Weighting.hpp"
 #include "src/common/BlockType.hpp"
-#include "src/pso/RunOneGame.h"
 
 
 template<typename MyPlayDemo, typename MyRunPieceSet>

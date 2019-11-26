@@ -1,3 +1,4 @@
+#pragma once
 #include "src/board/SimpleBoard.h"
 #include "src/board/bitboard/BitBoard.h"
 #include "src/board/bitboard/BitBoardPre.h"

@@ -1,7 +1,8 @@
 
 #include "src/shared/MoveFinder/MoveFinder.h"
-#include "src/shared/MoveEvaluatorAdapter.hpp"
-#include "src/shared/MoveEvaluator.hpp"
+#include "src/shared/MoveEvaluator/MoveEvaluatorAdapter.hpp"
+#include "src/shared/MoveEvaluator/MoveEvaluator.hpp"
+#include "src/pso/PieceSetGetter.hpp"
 #include "src/common/common.hpp"
 #include "src/common/Weighting.hpp"
 #include "src/shared/MoveFinder/CacheMoveFinder.tpp"

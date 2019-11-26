@@ -2,8 +2,8 @@
 #include <iostream>
 #include <stdlib.h>
 #include "src/shared/MoveFinder/MoveFinder.h"
-#include "src/shared/MoveEvaluatorAdapter.hpp"
-#include "src/shared/MoveEvaluator.hpp"
+#include "src/shared/MoveEvaluator/MoveEvaluatorAdapter.hpp"
+#include "src/shared/MoveEvaluator/MoveEvaluator.hpp"
 #include "src/shared/MoveFinder/CacheMoveFinder.tpp"
 #include "src/pso/NewEvaluateWeightingsContainer.tpp"
 
