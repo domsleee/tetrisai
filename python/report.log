@@ -1975,3 +1975,4 @@ Traceback (most recent call last):
   File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle.py", line 30, in _run_cmd
     return float(stdout.decode("utf-8"))
 ValueError: could not convert string to float: 
+2019-11-26 20:16:23,722 - pyswarms.single.global_best - INFO - Optimize for 6900 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}

@@ -12,8 +12,9 @@ int reachableHeight(int c, int framesPerDrop=2);
 
 class MoveEvaluatorPenalty {
  public:
-  static const int NUM_FACTORS_ = 18;
+  static const int NUM_FACTORS_ = 19;
   static const int DAS_BLOCKED_LEFT = 17;
+  static const int DAS_BLOCKED_RIGHT = 18;
 
   static constexpr int getNumFactors() { return NUM_FACTORS_; }
 
@@ -42,6 +43,17 @@ class MoveEvaluatorPenalty {
         int m = *std::min_element(colHeights, colHeights+c);
         int r = colHeights[c] - m;
         eval += w_[DAS_BLOCKED_LEFT] * r;
+        break;
+      }
+    }
+
+    // number of blocked cells?
+    // starting at row index 5.
+    for (int c = 5; c < NUM_ROWS; ++c) {
+      if (colHeights[c] > reachableHeight(c)) {
+        int m = *std::min_element(colHeights+c, colHeights+NUM_ROWS);
+        int r = colHeights[c] - m;
+        eval += w_[DAS_BLOCKED_RIGHT] * r;
         break;
       }
     }
