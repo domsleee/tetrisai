@@ -1,17 +1,16 @@
+TODAY
++ setup level 18 AI & run
++ setup transitioning logic
+
+
+
 performance
++ use boost.python
 
+ideas
++ use 18/19 transition logic
++ move penalty logic to instant failure
 
-+ debug nondeterminism with movefinder
-+ debug slow performance on first iteration
-
-
-
-+ try building a starting set of move finder
-+ carry movefinder cache between calls
-
-next thing to try
-+ run current code on other move finder
-
-Sad days
-+ Run each particle as an aws batch job
-  - doesnt work well at all
+future features
++ micro-optimisation with next piece lookahead
++ quick-tap

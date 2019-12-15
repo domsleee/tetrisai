@@ -36,7 +36,7 @@ void PlayDemo<MyGetNextMove, MyBoard>::playDemo(const std::vector<BlockType> &pi
     printBoardWithPiece(b, pieceInfo);
     sm.addLineClears(b.applyPieceInfo(pieceInfo));
     moveNo++;
-    //printf("moves: %d, score: %d, lineClears: %d\n", moveNo, sm.getScore(), sm.getTotalLines());
+    printf("moves: %d, score: %d, lineClears: %d\n", moveNo, sm.getScore(), sm.getTotalLines());
     if (sm.getTotalLines() >= 230) break;
   }
   printf("score: %d\n", sm.getScore());

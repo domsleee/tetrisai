@@ -4,7 +4,7 @@
 #include <sstream>
 #include <vector>
 
-const int NUM_FACTORS = 19;
+const int NUM_FACTORS = 18;
 using Weighting = std::vector<double>;
 
 namespace WeightingFn {

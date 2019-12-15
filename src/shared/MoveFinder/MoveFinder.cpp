@@ -6,6 +6,7 @@
 
 const int MAX_ROTATIONS = 5;
 const int MAX_RELEASES = 1;
+const int NUM_FRAMES_DOWN = 3; // 19 ==> 2
 
 std::vector<BitPieceInfo> MoveFinder::findAllMoves(const BitBoard& b, BlockType blockType) const {
   // getStartingPosition
@@ -65,13 +66,11 @@ void MoveFinder::dp(BitPieceInfo currentPiece, KeyStatus keyStatus, int numRelea
     default: break;
   }
 
-  if ((numFrames & 2) == 0) {
-    // move down
+  if ((numFrames & NUM_FRAMES_DOWN) == 0) {
     if (!currentPiece.canMove(MoveDirection::DOWN)) {
       moves_.insert(currentPiece);
       return;
     }
-    //currentPiece = currentPiece.move(MoveDirection::DOWN);
     auto nxPiece = currentPiece.move(MoveDirection::DOWN);
     return dp(nxPiece, keyStatus, numReleases, das, numFrames+1, numRotations);
   }
