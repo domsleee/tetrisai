@@ -11,7 +11,7 @@
 #include <algorithm>
 
 
-const std::string TEST_FOLDER = "/home/dom/tetrisai/src/shared/test/data";
+const std::string TEST_FOLDER = "/Users/dom/Documents/git/tetrisAI/src/shared/test/data";
 
 BitBoard readBoard(const std::string &filePath);
 

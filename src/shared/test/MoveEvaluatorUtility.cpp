@@ -21,6 +21,7 @@ Weighting getExpectedWeights(const std::string &filepath) {
   Weighting w;
   double d;
   while (fin >> d) w.push_back(d);
+  assert(w.size() > 0);
   return w;
 }
 
