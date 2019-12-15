@@ -6,7 +6,7 @@ NUM_PARTICLES = 99
 NUM_NEIGHBOURS = 99
 NUM_ITERATIONS = 6900
 VELOCITY_CLAMP = (-5, 5)
-DIMENSIONS = 19
+DIMENSIONS = 17
 
 @dataclasses.dataclass
 class RunnerSettings:

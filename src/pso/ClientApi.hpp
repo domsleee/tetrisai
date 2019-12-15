@@ -23,6 +23,7 @@
 // get_score_level18_start_actual_das_lookahead
 // get_score_level18_start_actual_das_lookahead_quicktap
 
+// num dimensions: 17
 double get_score_regular(const Weighting &w, int seed=-1) {
   auto ew_container = NewEvaluateWeightingsContainer(
     MoveEvaluatorAdapter(MoveEvaluator(), w),
@@ -33,7 +34,7 @@ double get_score_regular(const Weighting &w, int seed=-1) {
   return ew.runAllPieceSets();
 }
 
-
+// num dimensions: 18
 double get_score_regular2(const Weighting &w, int seed=-1) {
   auto ew_container = NewEvaluateWeightingsContainer(
       MoveEvaluatorPenalty(w),
