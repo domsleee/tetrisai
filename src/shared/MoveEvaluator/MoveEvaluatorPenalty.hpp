@@ -13,7 +13,7 @@ int reachableHeight(int c, int framesPerDrop=2);
 
 class MoveEvaluatorPenalty {
  public:
-  static const int NUM_FACTORS_ = 19-1;
+  static const int NUM_FACTORS_ = 19-1; // it must be this
   static const int DAS_BLOCKED_LEFT = 17;
   static const int DAS_BLOCKED_RIGHT = 18;
 
