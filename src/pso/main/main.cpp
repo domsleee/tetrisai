@@ -17,6 +17,5 @@ int main(int argc, char ** argv) {
     int seed = atoi(argv[NUM_FACTORS+1]);
   }
 
-
   std::cout << get_score_regular(weightings, seed) << '\n';
 }

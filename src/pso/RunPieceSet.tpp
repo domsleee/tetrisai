@@ -29,7 +29,7 @@ int RunPieceSet<MyGetNextMove>::runGame(const std::vector<BlockType> &pieceSet) 
     int lineClears = b.applyPieceInfo(pieceInfo);
     sm.addLineClears(lineClears);
     moves++;
-    if (sm.getTotalLines() >= 230) break;
+    if (sm.getTotalLines() >= 150) break;
   }
   dprintf("moves: %d, score: %d, lineClears: %d\n", moves, sm.getScore(), sm.getTotalLines());
   return sm.getScore();

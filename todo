@@ -1,6 +1,9 @@
 TODAY
 + setup level 18 AI & run
-+ setup transitioning logic
+
+Blocked
++ level 18 takes 567 to run one particle (100 games @ 150)
++ 5 seconds for one game at 150 lines (crazy, expect 0.33)
 
 
 

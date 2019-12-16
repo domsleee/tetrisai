@@ -80,5 +80,6 @@ void MoveFinder::dp(BitPieceInfo currentPiece, KeyStatus keyStatus, int numRelea
     nxFrameCt = std::min(nxFrameCt, 16-das);
     //nxFrameCt = std::max(1, nxFrameCt);
   }
+  nxFrameCt = 1;
   dp(currentPiece, keyStatus, numReleases, das+(nxFrameCt-1), numFrames+nxFrameCt, numRotations);
 }

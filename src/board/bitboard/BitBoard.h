@@ -8,6 +8,7 @@
 #include "src/board/bitboard/BitBoardPre.h"
 #include <bitset>
 #include <iostream>
+#include <unordered_set>
 
 class BitBoard;
 class BitPieceInfo;
@@ -77,6 +78,20 @@ class BitPieceInfo {
   BitPieceInfo move(MoveDirection) const;
   Move getPosition() const;
   int getId() const { return id_; }
+  int getRepId() const { return BitBoardPre::getRepIdFromId(id_); }
+  std::vector<BitPieceInfo> getClosedRotN() const {
+    std::unordered_set<BitPieceInfo> v{*this};
+    for (auto rotD: {RotateDirection::ROTATE_AC, RotateDirection::ROTATE_C}) {
+      if (canRotate(rotD)) {
+        auto nx = rotate(rotD);
+        v.insert(nx);
+        if (nx.canRotate(rotD)) {
+          v.insert(nx.rotate(rotD));
+        }
+      }
+    }
+    return {v.begin(), v.end()};
+  }
   void print() const;
 
   friend bool operator==(const BitPieceInfo& p1, const BitPieceInfo& p2) {

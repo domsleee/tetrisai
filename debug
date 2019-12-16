@@ -1,1 +1,1 @@
-bazel build src:test_move_evaluator --compilation_mode=dbg -s --spawn_strategy=standalone
+bazel build src:ew_bench --compilation_mode=dbg -s --spawn_strategy=standalone

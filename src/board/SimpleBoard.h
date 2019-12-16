@@ -50,6 +50,7 @@ class SimplePieceInfo {
   bool canMove(MoveDirection) const;
   SimplePieceInfo move(MoveDirection) const;
   Move getPosition() const;
+  BlockType getBlockType() const { return blockType_; }
   void print() const;
 
   friend bool operator==(const SimplePieceInfo& p1, const SimplePieceInfo& p2) {

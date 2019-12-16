@@ -76,6 +76,12 @@ cc_test(
 )
 
 cc_test(
+    name = "test_move_finder_rewrite",
+    srcs = ["shared/test/TestMoveFinderRewrite.cpp"],
+    deps = [":shared", "//:catch"]
+)
+
+cc_test(
     name = "test_all_move_finder",
     srcs = ["shared/test/TestAllMoveFinder.cpp"],
     deps = [":shared", "//:catch"]
@@ -96,6 +102,13 @@ cc_test(
 cc_binary(
     name = "ew",
     srcs = ["pso/main/main.cpp"],
+    deps = [":pso"],
+    copts = EXEC_COPTS
+)
+
+cc_binary(
+    name = "ew_bench",
+    srcs = ["pso/main/main_bench.cpp"],
     deps = [":pso"],
     copts = EXEC_COPTS
 )

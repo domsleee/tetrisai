@@ -1,5 +1,6 @@
 #include "src/common/BlockType.hpp"
 #include "src/board/bitboard/BitBoardPre.h"
+#include "src/board/bitboard/BitBoard.h"
 #include "src/board/SimpleBoard.h"
 #include <bitset>
 #include <queue>
@@ -7,6 +8,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <stdexcept>
+#include <cassert>
 
 
 namespace BitBoardPre {
@@ -26,12 +28,15 @@ namespace BitBoardPre {
   inline int moveToId(const Move& move);
   void fixMoves();
   void setupHeights();
+  void setupRepIds();
 
   int rotateIndex_[MAX_IND][NUM_ROTATIONS];
   int moveIndex_[MAX_IND][NUM_MOVES];
   int startingPieceId_[NUM_BLOCKS];
   std::vector<Move> idToMove_(MAX_IND);
   std::vector<int> idToHeight_(MAX_IND);
+  std::vector<BlockType> idToBlockType_(MAX_IND, BlockType::I_PIECE);
+  std::vector<int> idToRep_(MAX_IND, UNDEFINED);
   std::unordered_map<Move, int> moveToId_;
   std::bitset<200> idToBitset_[MAX_IND];
   int emptyMoveId_ = -1;
@@ -57,6 +62,7 @@ namespace BitBoardPre {
     }
     addEmptyPiece();
     setupHeights();
+    setupRepIds();
     //fixMoves();
   }
 
@@ -104,7 +110,9 @@ namespace BitBoardPre {
 
   inline int pieceInfoToId(const SimplePieceInfo &p) {
     const auto &move = p.getPosition();
-    return moveToId(move);
+    int id = moveToId(move);
+    idToBlockType_[id] = p.getBlockType();
+    return id;
   }
 
   inline int moveToId(const Move& move) {
@@ -151,11 +159,13 @@ namespace BitBoardPre {
   }
 
   int getMoveFromId(const Move& move) {
-    if (!moveToId_.count(move)) {
-      move.print();
-      throw new std::runtime_error{"move not found!"};
-    }
+    assert(moveToId_.count(move));
     return moveToId_[move];
+  }
+
+  int getRepIdFromId(const int id) {
+    assert(id >= 0 && id < idToRep_.size());
+    return idToRep_[id];
   }
 
   std::bitset<200> moveToBitset(const Move &move) {
@@ -188,5 +198,39 @@ namespace BitBoardPre {
       }
     }
   }
+
+  void setupRepIds() {
+    auto b = BitBoard();
+    for (int i = 0; i < moveToId_.size(); ++i) {
+      auto piece = b.getPieceFromId(i);
+      auto blockType = idToBlockType_[i];
+      auto nxPiece = piece;
+      int repId = i;
+
+      auto rotDir = nxPiece.canRotate(RotateDirection::ROTATE_AC) ? RotateDirection::ROTATE_AC : RotateDirection::ROTATE_C;      
+      for (int i = 0; i < 4; ++i) {
+        if (idToRep_[nxPiece.getId()] != UNDEFINED) {
+          repId = idToRep_[nxPiece.getId()];
+          break;
+        }
+        if (nxPiece.canRotate(rotDir)) {
+          nxPiece = nxPiece.rotate(rotDir);
+        }
+      }
+      idToRep_[i] = repId;
+    }
+  }
+
+  /*
+  static const std::unordered_map<BlockType, int> numRotationsPerBlockType = {
+    {BlockType::I_PIECE, 1},
+    {BlockType::O_PIECE, 0},
+    {BlockType::Z_PIECE, 1},
+    {BlockType::S_PIECE, 1},
+    {BlockType::T_PIECE, 3},
+    {BlockType::L_PIECE, 1},
+    {BlockType::J_PIECE, 1}
+  };
+  */
 }
 
