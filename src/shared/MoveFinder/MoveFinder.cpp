@@ -6,7 +6,7 @@
 
 const int MAX_ROTATIONS = 5;
 const int MAX_RELEASES = 1;
-const int NUM_FRAMES_DOWN = 3; // 19 ==> 2
+const int NUM_FRAMES_DOWN = 3; // 19 ==> 2; TEST
 
 std::vector<BitPieceInfo> MoveFinder::findAllMoves(const BitBoard& b, BlockType blockType) const {
   // getStartingPosition

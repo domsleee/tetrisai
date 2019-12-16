@@ -47,7 +47,7 @@ void MoveFinderRewrite::runHolding(const BitPieceInfo &currentPiece, MoveDirecti
       if (nxPiece.canMove(MoveDirection::DOWN)) { canMove = true, movePiece = nxPiece.move(MoveDirection::DOWN); }
       else { moveSet_.insert(nxPiece); }
     }
-    if (canMove) runHolding(movePiece, md, dasRem, MAX_DROP_REM);
+    if (canMove) runHolding(movePiece, md, dasRem, maxDropRem_);
   }
   runReleased(currentPiece);
 }
