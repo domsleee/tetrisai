@@ -9,6 +9,7 @@
 #include <unordered_set>
 #include <stdexcept>
 #include <cassert>
+#include <iostream>
 
 
 namespace BitBoardPre {
@@ -29,6 +30,8 @@ namespace BitBoardPre {
   void fixMoves();
   void setupHeights();
   void setupRepIds();
+  void setupOpenRotN();
+  bool isValidId(int id);
 
   int rotateIndex_[MAX_IND][NUM_ROTATIONS];
   int moveIndex_[MAX_IND][NUM_MOVES];
@@ -39,6 +42,7 @@ namespace BitBoardPre {
   std::vector<int> idToRep_(MAX_IND, UNDEFINED);
   std::unordered_map<Move, int> moveToId_;
   std::bitset<200> idToBitset_[MAX_IND];
+  std::vector<std::vector<int>> idToOpenRotN_(MAX_IND);
   int emptyMoveId_ = -1;
 
   void precompute() {
@@ -63,6 +67,7 @@ namespace BitBoardPre {
     addEmptyPiece();
     setupHeights();
     setupRepIds();
+    setupOpenRotN();
     //fixMoves();
   }
 
@@ -164,8 +169,18 @@ namespace BitBoardPre {
   }
 
   int getRepIdFromId(const int id) {
-    assert(id >= 0 && id < idToRep_.size());
+    assert(isValidId(id));
     return idToRep_[id];
+  }
+
+  const std::vector<int>& getOpenRotN(int id) {
+    assert(isValidId(id));
+    return idToOpenRotN_[id];
+  }
+
+  bool isValidId(int id) {
+    //printf("id: %d [%d, %lu)\n", id, 0, moveToId_.size());
+    return id >= 0 && id < moveToId_.size();
   }
 
   std::bitset<200> moveToBitset(const Move &move) {
@@ -221,16 +236,40 @@ namespace BitBoardPre {
     }
   }
 
-  /*
-  static const std::unordered_map<BlockType, int> numRotationsPerBlockType = {
-    {BlockType::I_PIECE, 1},
-    {BlockType::O_PIECE, 0},
-    {BlockType::Z_PIECE, 1},
-    {BlockType::S_PIECE, 1},
-    {BlockType::T_PIECE, 3},
-    {BlockType::L_PIECE, 1},
-    {BlockType::J_PIECE, 1}
-  };
-  */
+  void setupOpenRotN() {
+    auto b = BitBoard();
+    for (int i = 0; i < moveToId_.size(); ++i) {
+      auto piece = b.getPieceFromId(i);
+      auto blockType = idToBlockType_[i];
+      printf("new...\n");
+      std::unordered_set<int> s;
+      static const std::vector<RotateDirection> rotDirs = {RotateDirection::ROTATE_C, RotateDirection::ROTATE_AC};      
+      for (auto rotDir: rotDirs) {
+        if (piece.canRotate(rotDir)) {
+          auto rotPiece = piece.rotate(rotDir);
+          s.insert(rotPiece.getId());
+          printf("consider1: %d\n", rotPiece.getId());
+          if (rotPiece.canRotate(rotDir)) { s.insert(rotPiece.rotate(rotDir).getId()); printf("consider2: %d\n", rotPiece.rotate(rotDir).getId()); }
+        }
+      }
+      
+      printf("before: %lu\n", s.size());
+      s.erase(piece.getId());
+      printf("after: %lu\n", s.size());
+
+      if (s.size() >= 4) {
+        //std::cout << piece.getPosition() << '\n';;
+        printf("ACTUAL\n");
+        piece.print();
+        for (int v: s) {
+          b.getPieceFromId(v).getPosition().print();
+        }
+        printf("id: %d\n", i);
+      }
+      //assert(s.size() < 4);      
+      idToOpenRotN_[i].clear();
+      for (auto id: s) idToOpenRotN_[i].push_back(id);
+    }
+  }
 }
 

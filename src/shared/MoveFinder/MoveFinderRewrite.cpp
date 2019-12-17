@@ -72,9 +72,7 @@ void MoveFinderRewrite::runReleased(const BitPieceInfo &currentPiece, bool lastH
 
   if (releasedSeen_[currentPiece.getRepId()]) return;
   releasedSeen_[currentPiece.getRepId()] = true;
-
-  // todo: consider valid rotations here.
-  std::vector<MoveDirection> consider = {MoveDirection::LEFT, MoveDirection::RIGHT};
+  static const std::vector<MoveDirection> consider = {MoveDirection::LEFT, MoveDirection::RIGHT};
   for (auto md: consider) {
     for (const auto &nxPiece: currentPiece.getClosedRotN()) {
       if (nxPiece.canMove(md)) {

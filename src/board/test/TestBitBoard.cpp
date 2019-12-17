@@ -71,6 +71,21 @@ SCENARIO("simple rotation tests") {
   }
 }
 
+SCENARIO("repeated rotate test") {
+  for (auto blockType: allBlockTypes) {
+    BitBoard b;
+    auto piece = b.getPiece(blockType);
+    for (int i = 0; i < 3; ++i) piece = piece.move(MoveDirection::DOWN);
+
+    auto rotPieceAC = piece;
+    auto rotPieceC = piece;
+    for (int i = 0; i < 4; ++i) rotPieceAC = piece.rotate(RotateDirection::ROTATE_AC);
+    for (int i = 0; i < 4; ++i) rotPieceC = piece.rotate(RotateDirection::ROTATE_C);
+    REQUIRE(piece == rotPieceAC);
+    REQUIRE(piece == rotPieceC);
+  }
+}
+
 SCENARIO("friends check") {
   GIVEN("some BitPieces") {
     BitBoard b;
