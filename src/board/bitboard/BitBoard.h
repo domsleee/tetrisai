@@ -11,6 +11,7 @@
 #include <set>
 #include <unordered_set>
 #include <cassert>
+#include "src/board/BoardPrinter.tpp"
 
 class BitBoard;
 class BitPieceInfo;
@@ -82,18 +83,18 @@ class BitPieceInfo {
   int getId() const { return id_; }
   int getRepId() const { return BitBoardPre::getRepIdFromId(id_); }
   std::vector<BitPieceInfo> getClosedRotN() const {
+
     std::vector<BitPieceInfo> vs{*this};
     for (int id: BitBoardPre::getOpenRotN(id_)) {
       auto piece = b_->getPieceFromId(id);
-      if (b_->vacant(piece)) {
+      if (b_->vacant(piece) && (BitBoardPre::getOpenRotN(id_).size() != 3 || vs.size() > 1 || id != BitBoardPre::getOpenRotN(id_).back())) {
         vs.emplace_back(piece);
       }
     }
     return vs;
 
-
+    
     std::unordered_set<BitPieceInfo> v{*this};
-
     for (auto rotD: {RotateDirection::ROTATE_AC, RotateDirection::ROTATE_C}) {
       if (canRotate(rotD)) {
         auto nx = rotate(rotD);
@@ -103,11 +104,17 @@ class BitPieceInfo {
         }
       }
     }
+    return {v.begin(), v.end()};
+
+
+
 
     std::set<BitPieceInfo> s1{v.begin(), v.end()}, s2{vs.begin(), vs.end()};
     if (s1 != s2) {
-      printf("s1: "); for (auto v: s1) printf("%d ", v.getId()); printf("\n");
-      printf("s2: "); for (auto v: s2) printf("%d ", v.getId()); printf("\n");
+      printf("self: %d\n", id_);
+      printf("s1(v): "); for (auto v: s1) printf("%d ", v.getId()); printf("\n");
+      printf("s2(vs): "); for (auto v: s2) printf("%d ", v.getId()); printf("\n");
+      printBoardWithPiece(*b_, *this);
       printf("openN size: %lu\n", BitBoardPre::getOpenRotN(id_).size());
     }
     assert(s1 == s2);
