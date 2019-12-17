@@ -121,6 +121,12 @@ cc_binary(
 )
 
 cc_binary(
+    name = "precompute",
+    srcs = ["pso/main/main_precompute.cpp"],
+    deps = [":pso"],
+    copts = EXEC_COPTS
+)
+cc_binary(
     name = "ew_move_finder_cache",
     srcs = ["pso/main/main.cpp", "shared/MoveFinder/debug/debug.cpp"],
     deps = [":pso"],

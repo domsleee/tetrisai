@@ -241,14 +241,14 @@ namespace BitBoardPre {
     for (int i = 0; i < moveToId_.size(); ++i) {
       auto piece = b.getPieceFromId(i);
       auto blockType = idToBlockType_[i];
-      std::unordered_set<int> s;
+      std::unordered_set<int> s, after;
       static const std::vector<RotateDirection> rotDirs = {RotateDirection::ROTATE_C, RotateDirection::ROTATE_AC};      
       for (auto rotDir: rotDirs) {
         if (piece.canRotate(rotDir)) {
           auto rotPiece = piece.rotate(rotDir);
           s.insert(rotPiece.getId());
           //printf("consider1: %d\n", rotPiece.getId());
-          if (rotPiece.canRotate(rotDir)) { s.insert(rotPiece.rotate(rotDir).getId()); /*printf("consider2: %d\n", rotPiece.rotate(rotDir).getId()); */ }
+          if (rotPiece.canRotate(rotDir)) { after.insert(rotPiece.rotate(rotDir).getId()); /*printf("consider2: %d\n", rotPiece.rotate(rotDir).getId()); */ }
         }
       }      
       s.erase(piece.getId());
@@ -266,6 +266,8 @@ namespace BitBoardPre {
       //assert(s.size() < 4);      
       idToOpenRotN_[i].clear();
       for (auto id: s) idToOpenRotN_[i].push_back(id);
+      for (auto id: after) idToOpenRotN_[i].push_back(id);
+
     }
   }
 }
