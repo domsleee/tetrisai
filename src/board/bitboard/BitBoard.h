@@ -88,7 +88,7 @@ class BitPieceInfo {
         vs.emplace_back(piece);
       }
     }
-    //return vs;
+    return vs;
 
 
     std::unordered_set<BitPieceInfo> v{*this};

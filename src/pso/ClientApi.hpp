@@ -28,7 +28,7 @@
 double get_score_regular(const Weighting &w, int seed=-1) {
   auto ew_container = NewEvaluateWeightingsContainer(
     MoveEvaluatorAdapter(MoveEvaluator(), w),
-    CacheMoveFinder<MoveFinder>()
+    CacheMoveFinder<MoveFinderRewrite>()
   );
   auto ew = ew_container.getInstance();
   if (seed != -1) ew.setSeed(seed);

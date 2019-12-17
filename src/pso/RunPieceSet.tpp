@@ -2,6 +2,7 @@
 #include "src/common/common.hpp"
 #include <memory>
 
+const int MAX_LINES = 230;
 
 template <typename MyGetNextMove>
 class RunPieceSet {
@@ -29,7 +30,7 @@ int RunPieceSet<MyGetNextMove>::runGame(const std::vector<BlockType> &pieceSet) 
     int lineClears = b.applyPieceInfo(pieceInfo);
     sm.addLineClears(lineClears);
     moves++;
-    if (sm.getTotalLines() >= 150) break;
+    if (sm.getTotalLines() >= MAX_LINES) break;
   }
   dprintf("moves: %d, score: %d, lineClears: %d\n", moves, sm.getScore(), sm.getTotalLines());
   return sm.getScore();
