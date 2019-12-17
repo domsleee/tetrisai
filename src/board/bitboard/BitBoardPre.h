@@ -31,4 +31,6 @@ namespace BitBoardPre {
   int getEmptyMoveId();
 
   int getMoveHeight(int id);
+
+  const std::vector<int>& getOpenRotN(int id);
 }

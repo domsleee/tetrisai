@@ -121,9 +121,9 @@ SimplePieceInfo SimplePieceInfo::rotate(RotateDirection rotateDirection) const {
   assert(canRotate(rotateDirection));
   auto ret = *this;
   ret.position_ = SimpleRotator::getRotatePosition(position_, blockType_, rotateState_, rotateDirection);
-  ret.rotateState_ += rotateState_ + (rotateDirection == RotateDirection::ROTATE_C ? 1 : -1);
-  ret.rotateState_ %= 4;
-  if (ret.rotateState_ < 0) ret.rotateState_ = 0;
+  ret.rotateState_ = rotateState_ + (rotateDirection == RotateDirection::ROTATE_C ? 1 : -1);
+  if (ret.rotateState_ < 0) ret.rotateState_ = 3;
+  if (ret.rotateState_ > 3) ret.rotateState_ = 0;
   return ret;
 };
 bool SimplePieceInfo::canMove(MoveDirection moveDirection) const {
