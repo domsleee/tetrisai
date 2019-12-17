@@ -10,6 +10,7 @@
 #include <iostream>
 #include <set>
 #include <unordered_set>
+#include <cassert>
 
 class BitBoard;
 class BitPieceInfo;
