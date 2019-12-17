@@ -241,30 +241,27 @@ namespace BitBoardPre {
     for (int i = 0; i < moveToId_.size(); ++i) {
       auto piece = b.getPieceFromId(i);
       auto blockType = idToBlockType_[i];
-      printf("new...\n");
       std::unordered_set<int> s;
       static const std::vector<RotateDirection> rotDirs = {RotateDirection::ROTATE_C, RotateDirection::ROTATE_AC};      
       for (auto rotDir: rotDirs) {
         if (piece.canRotate(rotDir)) {
           auto rotPiece = piece.rotate(rotDir);
           s.insert(rotPiece.getId());
-          printf("consider1: %d\n", rotPiece.getId());
-          if (rotPiece.canRotate(rotDir)) { s.insert(rotPiece.rotate(rotDir).getId()); printf("consider2: %d\n", rotPiece.rotate(rotDir).getId()); }
+          //printf("consider1: %d\n", rotPiece.getId());
+          if (rotPiece.canRotate(rotDir)) { s.insert(rotPiece.rotate(rotDir).getId()); /*printf("consider2: %d\n", rotPiece.rotate(rotDir).getId()); */ }
         }
-      }
-      
-      printf("before: %lu\n", s.size());
+      }      
       s.erase(piece.getId());
-      printf("after: %lu\n", s.size());
 
       if (s.size() >= 4) {
         //std::cout << piece.getPosition() << '\n';;
-        printf("ACTUAL\n");
+        printf("PROBLEM - ACTUAL\n");
         piece.print();
         for (int v: s) {
           b.getPieceFromId(v).getPosition().print();
         }
         printf("id: %d\n", i);
+        assert(false);
       }
       //assert(s.size() < 4);      
       idToOpenRotN_[i].clear();

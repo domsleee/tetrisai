@@ -79,8 +79,8 @@ SCENARIO("repeated rotate test") {
 
     auto rotPieceAC = piece;
     auto rotPieceC = piece;
-    for (int i = 0; i < 4; ++i) rotPieceAC = piece.rotate(RotateDirection::ROTATE_AC);
-    for (int i = 0; i < 4; ++i) rotPieceC = piece.rotate(RotateDirection::ROTATE_C);
+    for (int i = 0; i < 4; ++i) rotPieceAC = rotPieceAC.rotate(RotateDirection::ROTATE_AC);
+    for (int i = 0; i < 4; ++i) rotPieceC = rotPieceC.rotate(RotateDirection::ROTATE_C);
     REQUIRE(piece == rotPieceAC);
     REQUIRE(piece == rotPieceC);
   }
