@@ -121,6 +121,13 @@ cc_binary(
 )
 
 cc_binary(
+    name = "ew_18_19",
+    srcs = ["pso/main/main_18_19.cpp"],
+    deps = [":pso"],
+    copts = EXEC_COPTS
+)
+
+cc_binary(
     name = "precompute",
     srcs = ["pso/main/main_precompute.cpp"],
     deps = [":pso"],

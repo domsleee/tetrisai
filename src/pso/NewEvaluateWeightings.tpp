@@ -16,23 +16,32 @@ class NewEvaluateWeightings {
   double runAllPieceSets() const;
   void setSeed(int seed);
   void setNumGames(int numGames);
+  std::unique_ptr<MyRunPieceSet> runPieceSet_handler_;
  private:
   PieceSetGetter ps_;
   int num_games_ = NUM_GAMES;
-  std::unique_ptr<const MyRunPieceSet> runPieceSet_handler_;
 };
 
 
 template<typename MyRunPieceSet>
 double NewEvaluateWeightings<MyRunPieceSet>::runAllPieceSets() const {
   auto pieceSets = ps_.getPieceSets(num_games_);
-  std::vector<int> scores;
+  std::vector<ScoreManager> scores;
   for (const auto &pieceSet: pieceSets) {
     scores.push_back(runPieceSet_handler_->runGame(pieceSet));
   }
-  if (scores.size() == 1) return scores[0];
-  std::sort(scores.begin(), scores.end());
-  double score = average(scores.end()-30, scores.end());
+  if (scores.size() == 1) return scores[0].getScore();
+  
+  std::sort(scores.begin(), scores.end(), [](auto &s1, auto &s2) {
+    return s1.getScore() < s2.getScore();
+  });
+  std::vector<int> scoreInts;
+  for (auto sm: scores) scoreInts.push_back(sm.getScore());
+
+  for (auto sm: scores) {
+    printf("score: %d, lines: %d\n", sm.getScore(), sm.getTotalLines());
+  }
+  double score = average(scoreInts.end()-30, scoreInts.end());
   return score;
 }
 

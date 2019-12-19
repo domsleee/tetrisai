@@ -8,21 +8,32 @@
 template<typename MyMoveFinder, typename MyMoveEvaluator>
 class NewGetNextMove {
  public:
-  NewGetNextMove(const MyMoveEvaluator &me, MyMoveFinder &mf): me_(me), mf_(mf) {}
+  NewGetNextMove(const MyMoveEvaluator &me, MyMoveFinder &mf): me_(std::make_unique<MyMoveEvaluator>(me)), mf_(std::make_unique<MyMoveFinder>(mf)) {}
   Move getNextMove(const BitBoard& board, BlockType blockType) const;
+
+  void setMoveEvaluator(MyMoveEvaluator &me) {
+    me_ = std::make_unique<MyMoveEvaluator>(me);
+  }
+  void setMoveFinder(MyMoveFinder &mf) {
+    mf_ = std::make_unique<MyMoveFinder>(mf);
+  }
  private:
-  const MyMoveEvaluator &me_;
-  const MyMoveFinder &mf_;
+  //const MyMoveEvaluator &me_;
+  //const MyMoveFinder &mf_;
+
+  std::unique_ptr<MyMoveEvaluator> me_;
+  std::unique_ptr<MyMoveFinder> mf_;
+
 };
 
 
 template<typename MyMoveFinder, typename MyMoveEvaluator>
 Move NewGetNextMove<MyMoveFinder, MyMoveEvaluator>::getNextMove(const BitBoard &board, const BlockType blockType) const {
-  auto allMoves = mf_.findAllMoves(board, blockType);
+  auto allMoves = mf_->findAllMoves(board, blockType);
   auto bestPiece = allMoves[0];
   double bestScore = 6e60;
   for (const auto& piece: allMoves) {
-    double score = me_.evaluate(board, piece);
+    double score = me_->evaluate(board, piece);
     if (score < bestScore || (score == bestScore && piece < bestPiece)) {
       bestPiece = piece;
       bestScore = score;

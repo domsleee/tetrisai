@@ -7,7 +7,7 @@
 
 #include "src/common/common.hpp"
 
-Move GetNextMove::getNextMove(const BitBoard& board, BlockType blockType, const Weighting &w, const ScoreManager &sm) const {
+Move GetNextMove::getNextMove(const BitBoard& board, BlockType blockType, const Weighting &w, const ScoreManager &sm) {
   MoveFinder f;
   //OptAllMoveFinder f;
   auto allMoves = f.findAllMoves(board, blockType);

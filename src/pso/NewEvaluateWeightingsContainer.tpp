@@ -9,25 +9,25 @@
 
 template<typename MyMoveEvaluator, typename MyMoveFinder>
 class NewEvaluateWeightingsContainer {
-  std::unique_ptr<MyMoveEvaluator> me_;
-  std::unique_ptr<MyMoveFinder> mf_;
+  std::unique_ptr<MyMoveEvaluator> me_, me2_;
+  std::unique_ptr<MyMoveFinder> mf_, mf2_;
 
   using MyGetNextMove = NewGetNextMove<MyMoveFinder, MyMoveEvaluator>;
   using MyRunPieceSet = RunPieceSet<MyGetNextMove>;
   using MyNewEvaluateWeightings = NewEvaluateWeightings<MyRunPieceSet>;
 
   std::unique_ptr<MyGetNextMove> getNextMove_;
-  std::unique_ptr<MyRunPieceSet> runPieceSet_;
 
  public:
+  std::unique_ptr<MyRunPieceSet> runPieceSet_;
   NewEvaluateWeightingsContainer(const MyMoveEvaluator &me, const MyMoveFinder &mf) :
     me_(std::make_unique<MyMoveEvaluator>(me)),
     mf_(std::make_unique<MyMoveFinder>(mf))
   {}
+  
 
   MyNewEvaluateWeightings getInstance() {
-    getNextMove_ = std::make_unique<MyGetNextMove>(*me_, *mf_); 
+    getNextMove_ = std::make_unique<MyGetNextMove>(*me_, *mf_);
     return MyNewEvaluateWeightings(MyRunPieceSet(*getNextMove_));
   }
 };
-

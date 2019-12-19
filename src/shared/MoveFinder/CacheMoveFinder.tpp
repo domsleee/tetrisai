@@ -16,6 +16,10 @@ class CacheMoveFinder {
   static CacheMoveFinderNs::MyT<MyBoard, MyBoardPieceInfo> glob_map_; // todo: dont make this static
 
  public:
+  CacheMoveFinder() { }
+  CacheMoveFinder(const MyMoveFinder &mf) {
+    move_finder_ = mf;
+  }
   std::vector<BitPieceInfo> findAllMoves(const MyBoard& board, BlockType blockType) const {
     if (glob_map_[blockType].count(board)) {
       return glob_map_[blockType][board];
