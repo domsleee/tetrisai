@@ -52,6 +52,6 @@ ScoreManager RunPieceSet<MyGetNextMove>::runGame(const std::vector<BlockType> &p
       if (sm.getTotalLines() >= MAX_LINES) break;
     };
   }
-  printf("yes: %d\n", sm.getScore());
+  //printf("yes: %d\n", sm.getScore());
   return sm;
 };
