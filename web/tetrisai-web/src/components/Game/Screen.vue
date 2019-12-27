@@ -18,7 +18,7 @@ const SCREEN_WIDTH = 256;
 export default Vue.extend({
   name: 'Screen',
   mounted() {
-    console.log("screen mounted...");
+    console.log('screen mounted...');
     this.initCanvas();
     this.$emit('myloaded');
   },
@@ -39,22 +39,22 @@ export default Vue.extend({
       buf: null,
       buf8: null,
       buf32: null,
-      SCREEN_WIDTH: SCREEN_WIDTH,
-      SCREEN_HEIGHT: SCREEN_HEIGHT,
+      SCREEN_WIDTH,
+      SCREEN_HEIGHT,
     };
   },
   methods: {
     initCanvas() {
       this.canvas = this.$refs.input;
-      this.context = this.canvas.getContext("2d");
+      this.context = this.canvas.getContext('2d');
       this.imageData = this.context.getImageData(
         0,
         0,
         SCREEN_WIDTH,
-        SCREEN_HEIGHT
+        SCREEN_HEIGHT,
       );
 
-      this.context.fillStyle = "black";
+      this.context.fillStyle = 'black';
       // set alpha to opaque
       this.context.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
@@ -70,7 +70,6 @@ export default Vue.extend({
       }
     },
     setBuffer(buffer: any) {
-      console.log("set buffer...");
       let i = 0;
       for (let y = 0; y < SCREEN_HEIGHT; ++y) {
         for (let x = 0; x < SCREEN_WIDTH; ++x) {
@@ -84,32 +83,13 @@ export default Vue.extend({
     writeBuffer() {
       this.imageData.data.set(this.buf8);
       this.context.putImageData(this.imageData, 0, 0);
-      console.log("write buff...");
-      console.log(this.buf8);
-    },
-
-    fitInParent() {
-      let parent = this.canvas.parentNode;
-      // @ts-ignore
-      let parentWidth = parent.clientWidth;
-      // @ts-ignore
-      let parentHeight = parent.clientHeight;
-      let parentRatio = parentWidth / parentHeight;
-      let desiredRatio = SCREEN_WIDTH / SCREEN_HEIGHT;
-      if (desiredRatio < parentRatio) {
-        this.canvas.style.width = `${Math.round(parentHeight * desiredRatio)}px`;
-        this.canvas.style.height = `${parentHeight}px`;
-      } else {
-        this.canvas.style.width = `${parentWidth}px`;
-        this.canvas.style.height = `${Math.round(parentWidth / desiredRatio)}px`;
-      }
     },
 
     screenshot() {
       const img = new Image();
       img.src = this.canvas.toDataURL('image/png');
       return img;
-    }
-  }
+    },
+  },
 });
 </script>
