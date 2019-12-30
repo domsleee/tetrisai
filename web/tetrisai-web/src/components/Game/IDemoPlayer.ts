@@ -21,4 +21,8 @@ export interface IDemoPlayer {
   addEvent(entry: DemoEntry): void;
   addEvents(entry: DemoEntry[]): void;
   destroy(): void;
+  getFrame(): number;
+  getLatestFrame(): number;
+  addFrameListener(fn: ((frame: number) => void)): void;
+  removeFrameListener(fn: ((frame: number) => void)): void;
 }

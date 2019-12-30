@@ -3,6 +3,7 @@
     class="Screen"
     :width="SCREEN_WIDTH"
     :height="SCREEN_HEIGHT"
+    @mousedown="onMouseDown"
     ref="input"
   />
 </template>
@@ -10,7 +11,6 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import jsnes from 'jsnes';
 
 const SCREEN_HEIGHT = 240;
 const SCREEN_WIDTH = 256;
@@ -21,6 +21,8 @@ export default Vue.extend({
     console.log('screen mounted...');
     this.initCanvas();
     this.$emit('myloaded');
+    // @ts-ignore
+    window['screenshot'] = this.screenshot.bind(this);
   },
   data(): {
     canvas: Element | any,
@@ -33,8 +35,8 @@ export default Vue.extend({
     SCREEN_HEIGHT: number,
   } {
     return {
-      context: null,
       canvas: null,
+      context: null,
       imageData: null,
       buf: null,
       buf8: null,
@@ -44,6 +46,19 @@ export default Vue.extend({
     };
   },
   methods: {
+    onMouseDown(e: any) {
+      // Make coordinates unscaled
+      const rect = this.canvas.getBoundingClientRect();
+
+      const style = window.getComputedStyle ? getComputedStyle(this.canvas, null) : this.canvas.currentStyle;
+      const actWidth = parseFloat(style.width) - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+      const actHeight = parseFloat(style.height) - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom);
+      const scale = SCREEN_WIDTH / actWidth;
+
+      const x = Math.round((e.offsetX - parseFloat(style.paddingLeft)) * scale);
+      const y = Math.round((e.offsetY - parseFloat(style.paddingRight)) * scale);
+      console.log('Mouse click', x, y);
+    },
     initCanvas() {
       this.canvas = this.$refs.input;
       this.context = this.canvas.getContext('2d');
@@ -53,6 +68,8 @@ export default Vue.extend({
         SCREEN_WIDTH,
         SCREEN_HEIGHT,
       );
+
+      // [45, 89] ==> [73, 204]
 
       this.context.fillStyle = 'black';
       // set alpha to opaque
@@ -88,6 +105,8 @@ export default Vue.extend({
     screenshot() {
       const img = new Image();
       img.src = this.canvas.toDataURL('image/png');
+      document.body.append(img);
+      console.log('appended to body');
       return img;
     },
   },

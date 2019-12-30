@@ -32,8 +32,7 @@ import Vue from 'vue';
 import jsnes from 'jsnes';
 // @ts-ignore
 import Screen from './Game/Screen';
-import { DemoPlayer } from './Game/DemoPlayer';
-import { IDemoPlayer, DemoButton } from './Game/IDemoPlayer';
+import { GameLogic } from './Game/GameLogic';
 
 const ROM_LOCAL_STORAGE_KEY = 'romlocalstorage';
 
@@ -53,13 +52,6 @@ export default Vue.extend({
     if (ROM_LOCAL_STORAGE_KEY in localStorage) {
       this.romLoaded = true;
     }
-    /*
-    window.addEventListener('message', (e) => {
-      if (e.data && typeof e.data === 'string' && e.data.match(/webpackHotUpdate/)) {
-        if (this.demoPlayer !== null) { this.demoPlayer.destroy(); }
-      }
-    });
-    */
   },
   methods: {
     screenLoaded() {
@@ -94,42 +86,8 @@ export default Vue.extend({
     },
     onScreenMounted() {
       const screen: Screen = this.$refs.screen;
-      const nes = new jsnes.NES({
-        onFrame: (buffer: any) => {
-          screen.setBuffer(buffer);
-          screen.writeBuffer();
-        },
-        onAudioSample: () => {
-          //console.log('audio sample');
-        },
-      });
-      nes.loadROM(this.loadRomFromLocalStorage());
-
-      const demoPlayer = new DemoPlayer(nes);
-      window.addEventListener('message', (e) => {
-        if (e.data && typeof e.data === 'string' && e.data.match(/webpackHotUpdate/)) {
-          if (demoPlayer !== null) { demoPlayer.destroy(); }
-        }
-      });
-
-      class ButtonAdder {
-        public frame: number = 270;
-
-        public addButtonPress(button: DemoButton) {
-          demoPlayer.addEvent({button, frame: this.frame, isDown: true});
-          demoPlayer.addEvent({button, frame: this.frame + 1, isDown: false});
-          this.frame += 5;
-        }
-      }
-      const buttonAdder = new ButtonAdder();
-
-      for (let i = 0; i < 3; ++i) { buttonAdder.addButtonPress(DemoButton.BUTTON_START); }
-      for (let i = 0; i < 3; ++i) { buttonAdder.addButtonPress(DemoButton.BUTTON_RIGHT); }
-      buttonAdder.addButtonPress(DemoButton.BUTTON_DOWN);
-
-      demoPlayer.addEvent({button: DemoButton.BUTTON_A, frame: buttonAdder.frame + 10, isDown: true});
-      demoPlayer.addEvent({button: DemoButton.BUTTON_START, frame: buttonAdder.frame + 15, isDown: true});
-      demoPlayer.addEvent({button: DemoButton.BUTTON_START, frame: buttonAdder.frame + 200, isDown: false});
+      let gl = new GameLogic();
+      gl.run(screen, this.loadRomFromLocalStorage());
     },
   },
 });
