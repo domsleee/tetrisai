@@ -11,6 +11,7 @@ std::vector<BitPieceInfo> MoveFinderRewrite::findAllMoves(const BitBoard& b, Blo
   holdingSeen_[MoveDirection::RIGHT].clear();
   releasedSeen_.clear();
   moveSet_.clear();
+  pred_.clear();
   auto pieceInfo = b.getPiece(blockType);
 
   runHolding(pieceInfo, MoveDirection::LEFT);
@@ -18,6 +19,11 @@ std::vector<BitPieceInfo> MoveFinderRewrite::findAllMoves(const BitBoard& b, Blo
 
   //printf("solution space: %lu\n", seen_.size());
   return {moveSet_.begin(), moveSet_.end()};
+}
+
+void MoveFinderRewrite::addEdge(const BitPieceInfo &u, const BitPieceInfo &v) const {
+  if (!record_edges_) return;
+  pred_[v].push_back(u);
 }
 
 void MoveFinderRewrite::runHolding(const BitPieceInfo &currentPiece, MoveDirection md, int dasRem, int dropRem) const {  
@@ -36,7 +42,10 @@ void MoveFinderRewrite::runHolding(const BitPieceInfo &currentPiece, MoveDirecti
       if (nxPiece.canMove(md)) { canMove = true, movePiece = nxPiece.move(md); }
       else { canStay = true; }
     }
-    if (canMove) runHolding(movePiece, md, MAX_DAS_REM, dropRem);
+    if (canMove) {
+      addEdge(currentPiece, movePiece);
+      runHolding(movePiece, md, MAX_DAS_REM, dropRem);
+    }
     if (canStay) dropRem = 0;
   }
 
@@ -47,7 +56,10 @@ void MoveFinderRewrite::runHolding(const BitPieceInfo &currentPiece, MoveDirecti
       if (nxPiece.canMove(MoveDirection::DOWN)) { canMove = true, movePiece = nxPiece.move(MoveDirection::DOWN); }
       else { moveSet_.insert(nxPiece); }
     }
-    if (canMove) runHolding(movePiece, md, dasRem, maxDropRem_);
+    if (canMove) {
+      addEdge(currentPiece, movePiece);
+      runHolding(movePiece, md, dasRem, maxDropRem_);
+    }
   }
   runReleased(currentPiece);
 }
@@ -76,14 +88,18 @@ void MoveFinderRewrite::runReleased(const BitPieceInfo &currentPiece, bool lastH
   for (auto md: consider) {
     for (const auto &nxPiece: currentPiece.getClosedRotN()) {
       if (nxPiece.canMove(md)) {
-        runReleased(nxPiece.move(md), true);
+        const auto &endPiece = currentPiece.move(md);
+        addEdge(currentPiece, endPiece);
+        runReleased(endPiece, true);
         break;
       }
     }
   }
   for (const auto &nxPiece: currentPiece.getClosedRotN()) {
     if (nxPiece.canMove(MoveDirection::DOWN)) {
-      runReleased(nxPiece.move(MoveDirection::DOWN), false);
+      const auto &endPiece = nxPiece.move(MoveDirection::DOWN);
+      addEdge(currentPiece, endPiece);
+      runReleased(endPiece, false);
     } else moveSet_.insert(nxPiece);
   }
 }
