@@ -24,6 +24,35 @@
 // get_score_level18_start_actual_das_lookahead
 // get_score_level18_start_actual_das_lookahead_quicktap
 
+
+// todo: move to factory
+auto get1819(const Weighting &w1, const Weighting &w2) {
+  auto ew_container = NewEvaluateWeightingsContainer(
+      MoveEvaluatorAdapter(MoveEvaluator(), w1),
+      CacheMoveFinder(MoveFinderRewrite())
+  );
+  auto ew = ew_container.getInstance();
+
+  ew.setNumGames(500);
+  ew.setSeed(25);
+
+  auto nxMoveFinder = MoveFinderRewrite();
+  nxMoveFinder.setMaxDropRem(2);
+  auto cacheNxMoveFinder = CacheMoveFinder(nxMoveFinder);
+  auto nxMoveEvaluator = MoveEvaluatorAdapter(MoveEvaluator(), w2);
+
+  ew.runPieceSet_handler_->addTransition(100, [&](auto& rps) -> void {
+    rps.getNextMoveHandler_.setMoveEvaluator(nxMoveEvaluator);
+  });
+
+  ew.runPieceSet_handler_->addTransition(130, [&](auto& rps) -> void {
+    rps.getNextMoveHandler_.setMoveFinder(cacheNxMoveFinder);
+  });
+  return ew_container;
+}
+
+
+
 // num dimensions: 17
 double get_score_regular(const Weighting &w, int seed=-1) {
   auto ew_container = NewEvaluateWeightingsContainer(
@@ -57,9 +86,6 @@ double get_score_regular2(const Weighting &w, int seed=-1) {
   return ew.runAllPieceSets();
 }
 
-
-
-
 double get_score_18_19(const Weighting &w1, const Weighting &w2) {
   auto ew_container = NewEvaluateWeightingsContainer(
       MoveEvaluatorAdapter(MoveEvaluator(), w1),
@@ -85,3 +111,5 @@ double get_score_18_19(const Weighting &w1, const Weighting &w2) {
 
   return ew.runAllPieceSets();
 }
+
+

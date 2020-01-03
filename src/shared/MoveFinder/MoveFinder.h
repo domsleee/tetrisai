@@ -40,7 +40,6 @@ class MoveFinder {
  public:
   std::vector<BitPieceInfo> findAllMoves(const BitBoard&, BlockType) const;
  private:
-  mutable const BitBoard *b_; // like, this is temporary
   mutable std::unordered_set<MyTuple> seen_;
   mutable std::unordered_set<BitPieceInfo> moves_;
   void dp(BitPieceInfo currentPiece, KeyStatus keyStatus, int numReleases = 0, int das = 16, int numFrames = 0, int numRotations = 0) const;

@@ -126,6 +126,13 @@ cc_binary(
     deps = [":pso"],
     copts = EXEC_COPTS
 )
+cc_binary(
+    name = "ew_get_moves",
+    srcs = ["pso/main/main_get_moves.cpp"],
+    deps = [":pso"],
+    copts = EXEC_COPTS
+)
+
 
 cc_binary(
     name = "precompute",

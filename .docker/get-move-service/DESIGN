@@ -1,0 +1,18 @@
+
+Routes:
+/get-moves
+* POST request
+  * board (200 bits)
+  * piece (integer, 0 to 6)
+
+* return value:
+  * nomove, or
+
+  * board (200 bits)
+  * instructions
+    + array of [frame, action, isDown]
+
+/healthcheck
+* returns 200 if all is ok
+* returns 500 if binary crashed
+
