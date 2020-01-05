@@ -21,7 +21,7 @@ class MoveFinderRewrite {
  private:
   int maxDropRem_ = DEFAULT_MAX_DROP_REM;
   bool record_edges_ = false;
-  //mutable std::unique_ptr<BitPieceInfo> startPiece_;
+  mutable std::shared_ptr<BitPieceInfo> startPiece_ = nullptr;
   mutable std::unordered_map<int, int> holdingSeen_[2];
   mutable std::unordered_map<int, int> releasedSeen_;
   mutable std::unordered_set<BitPieceInfo> moveSet_;

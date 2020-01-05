@@ -37,18 +37,22 @@ class GetMoves(IGetMoves):
     if result == "no moves":
       return "n", None, None
 
+    demo_entries = []
     num_moves = int(self._process_line(self._process.read_line(), "num moves"))
-    # todo: process mvoes
+    for i in range(num_moves):
+      move = self._process.read_line()
+      demo_entries.append([5, 5, False])
+      # todo.
     self._logger.debug("num_moves: %d" % num_moves)
     nx_board = self._process_line(self._process.read_line(), "board")
     self._process_line(self._process.read_line(), "line clears")
     assert(self._process.is_empty())
-    return "r", nx_board, []
+    return "r", nx_board, demo_entries
   
   def _process_line(self, s: str, lhs: str) -> str:
     col_split = s.split(':')
     if len(col_split) != 2:
-      raise ValueError("Invalid line '%s'" % s)
+      raise ValueError("Invalid line (expected a colon) '%s'" % s)
     my_lhs = col_split[0].strip()
     if my_lhs != lhs:
       raise ValueError("Invalid line. Expected lhs to be '%s' in '%s'" % (lhs, s))

@@ -21,8 +21,11 @@ auto w1 = WeightingFn::readFromString(best18);
 auto w2 = WeightingFn::readFromString(best19);
 
 void handleGetMove(int num_lines);
-std::string getImmediateNeighbourStr(const BitPieceInfo &p1, const BitPieceInfo &p2);
+std::pair<int, std::string> getImmediateNeighbourStr(const BitPieceInfo &p1, const BitPieceInfo &p2);
 
+// notes
+// - does drop come before das?
+// - no level 19 support atm
 
 int main() {
   while(true) {
@@ -93,12 +96,15 @@ void handleGetMove(int num_lines) {
     bool ended = true;
     auto &edges = pred_.at(curr);
     for (auto nx: edges) {
-      if (pred_priority.count(nx) && pred_priority[nx] > priority) continue;
-      priority = pred_priority[nx];
+      if (pred_priority.count(nx) == 0) continue;
+      if (pred_priority.count(nx) && pred_priority.at(nx) > priority) continue;
+      priority = pred_priority.at(nx);
       curr = nx;
-      printf("curr: %d\n", curr.getId());
-      curr.getPosition().print();
-      printf("pred.count(curr) %d, pred_priority.count(curr): %d (%d)\n", pred_.count(curr), pred_priority.count(curr), pred_priority[curr]);
+      if (MY_DEBUG) {
+        printf("curr: %d\n", curr.getId());
+        curr.getPosition().print();
+        printf("pred.count(curr) %d, pred_priority.count(curr): %d (%d)\n", pred_.count(curr), pred_priority.count(curr), pred_priority.at(curr));
+      }
       backwards.push_back(curr);
       ended = false;
       break;
@@ -116,7 +122,9 @@ void handleGetMove(int num_lines) {
     //printBoardWithPiece(piece.getBoard(), piece);
   }
 
-  std::cout << "num moves: " << forwards.size()-1 << '\n';
+
+  std::vector<std::string> strings;
+  int ct = 0;
   for (int i = 1; i < forwards.size(); ++i) {
     auto piece1 = forwards[i-1];
     auto piece2 = forwards[i];
@@ -124,18 +132,25 @@ void handleGetMove(int num_lines) {
       printBoardWithPiece(piece1.getBoard(), piece1);
       printBoardWithPiece(piece2.getBoard(), piece2);
     }
-    std::cout << getImmediateNeighbourStr(piece1, piece2);    
+    auto [delta, st] = getImmediateNeighbourStr(piece1, piece2);
+    ct += delta;
+    strings.push_back(st);
   }
+
+  std::cout << "num moves: " << ct << '\n';
+  for (auto st: strings) std::cout << st;
   std::cout << "board: " << board << '\n';
   std::cout << "line clears: " << lineClears << '\n';
 }
 
-std::string getImmediateNeighbourStr(const BitPieceInfo &p1, const BitPieceInfo &p2) {
+std::pair<int, std::string> getImmediateNeighbourStr(const BitPieceInfo &p1, const BitPieceInfo &p2) {
   // todo: can be precomputed with an empty board (if required)
   std::stringstream ss;
+  int ct = 0;
 
   auto addMoveToSS = [&](const BitPieceInfo &piece1, const BitPieceInfo &piece2, MoveDirection md) {
     assert(piece2 == piece1.move(md));
+    ct++;
     ss << 0 << " m " << md << '\n';
   };
   auto addRotationToSS = [&](const BitPieceInfo &piece1, const BitPieceInfo &piece2) {
@@ -145,6 +160,7 @@ std::string getImmediateNeighbourStr(const BitPieceInfo &p1, const BitPieceInfo 
         auto nxPiece = piece1.rotate(rotateDirection);
         if (nxPiece == piece2) {
           ss << 0 << " r " << rotateDirection << '\n';
+          ct++;
           return;
         }
       }
@@ -157,6 +173,7 @@ std::string getImmediateNeighbourStr(const BitPieceInfo &p1, const BitPieceInfo 
           if (nxPiece2 == piece2) {
             ss << 0 << " r " << rotateDirection << '\n';
             ss << 0 << " r " << rotateDirection << '\n';
+            ct += 2;
             return;
           }
         }
@@ -168,7 +185,7 @@ std::string getImmediateNeighbourStr(const BitPieceInfo &p1, const BitPieceInfo 
   for (auto rotPiece: p1.getClosedRotN()) {
     if (rotPiece == p2) {
       addRotationToSS(p1, rotPiece);
-      return ss.str();
+      return {ct, ss.str()};
     }
 
     for (auto moveDirection: validMoveDirections) {
@@ -177,7 +194,7 @@ std::string getImmediateNeighbourStr(const BitPieceInfo &p1, const BitPieceInfo 
         if (nxPiece == p2) {
           addRotationToSS(p1, rotPiece);
           addMoveToSS(rotPiece, p2, moveDirection);
-          return ss.str();
+          return {ct, ss.str()};
         }
       }
     }

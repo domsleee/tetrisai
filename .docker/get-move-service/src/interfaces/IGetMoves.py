@@ -1,6 +1,7 @@
 import abc
 import typing
 
+# frame, enum, isMove
 DemoEntry = typing.Tuple[int, int, bool]
 BoardT = str
 

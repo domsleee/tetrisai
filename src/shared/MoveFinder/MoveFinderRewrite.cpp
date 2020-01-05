@@ -15,10 +15,12 @@ std::vector<BitPieceInfo> MoveFinderRewrite::findAllMoves(const BitBoard& b, Blo
   holdingSeen_[MoveDirection::RIGHT].clear();
   releasedSeen_.clear();
   moveSet_.clear();
-  pred_.clear();
-  pred_priority_.clear();
   auto pieceInfo = b.getPiece(blockType);
-  //startPiece_ = std::make_unique<BitPieceInfo>(pieceInfo);
+  if (record_edges_) {
+    startPiece_ = std::make_shared<BitPieceInfo>(pieceInfo);
+    pred_.clear();
+    pred_priority_.clear();
+  }
 
   runHolding(pieceInfo, MoveDirection::LEFT);
   runHolding(pieceInfo, MoveDirection::RIGHT);
@@ -31,7 +33,7 @@ std::vector<BitPieceInfo> MoveFinderRewrite::findAllMoves(const BitBoard& b, Blo
 void MoveFinderRewrite::addEdge(const BitPieceInfo &u, const BitPieceInfo &v, int priority) const {
   if (!record_edges_) return;
   if (pred_priority_.count(v) && priority >= pred_priority_[v]) return;
-  //if (v == *startPiece_) return;
+  if (v == *startPiece_) return;
   pred_priority_[v] = priority;
   pred_[v].empty();
   pred_[v].push_back(u);
