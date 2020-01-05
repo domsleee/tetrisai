@@ -1,12 +1,7 @@
 from interfaces.IGetMoves import IGetMoves, DemoEntry, BoardT
-import subprocess
 import typing
 import os
-import select
-import time
-from IOReader import IOReader
 from SimpleProcess import SimpleProcess
-import asyncio
 import logging
 
 DIR = "/Users/dom/Documents/git/tetrisAI/.docker/get-move-service/src"
@@ -60,5 +55,6 @@ class GetMoves(IGetMoves):
     return col_split[1].strip()
     
   def _send_str(self, b: bytes):
+    self._logger.debug("send_line %s" % b)
     self._process.send_line(b)
 

@@ -10,6 +10,8 @@ const char INSTRUCTION_HEALTH = 'h';
 const char INSTRUCTION_GET_MOVE = 'g';
 const char INSTRUCTION_QUIT = 'q';
 
+const bool MY_DEBUG = false;
+
 const int LINE_TRANSITION = 100;
 
 std::string best18 = "[-0.9981266671825644 6.314235664122202 9.218841471366666 0.27802110735477736 -4.1780630417598195 7.433743023240332 8.34877823356098 1.8788685887367613 -0.8499180634596748 -1.8078460542586594 7.642165019678991 -4.116700896835317 4.954418944561089 -12.37120499004913 -11.044493568377911 1.8097163771233449 -1.0832040443509103]";
@@ -26,7 +28,7 @@ int main() {
   while(true) {
     char instruction;
     std::cin >> instruction;
-    int num_lines;
+    int num_lines = 0;
     switch(instruction) {
       case(INSTRUCTION_HEALTH): {
         std::cout << "OK\n";
@@ -66,6 +68,7 @@ void handleGetMove(int num_lines) {
   BlockType blockType = static_cast<BlockType>(piece);
   auto board = BitBoard(boardStr);
   auto [me, mf] = getMeMfPair(num_lines);
+  mf.setRecordEdges(true);
   auto getNextMoveHandler = NewGetNextMove(me, mf);
   if (board.hasNoMoves(blockType)) {
     std::cout << "result: no moves\n";
@@ -74,27 +77,53 @@ void handleGetMove(int num_lines) {
   std::cout << "result: moves\n";
   auto move = getNextMoveHandler.getNextMove(board, blockType);
   
+  const auto oldBoard = board;
   const auto lineClears = board.applyMove(move);
   const auto &mf_ = getNextMoveHandler.getMoveFinder();
   const auto &pred_ = mf_.getRecordedEdges();
+  const auto &pred_priority = mf_.getPredPriority();
 
   auto movePiece = board.getPiece(move);
 
   std::vector<BitPieceInfo> backwards;
   auto curr = movePiece;
+  int priority = 500; // max
   backwards.push_back(curr);
   while (pred_.count(curr)) {
-    curr = *pred_.at(curr).begin();
-    backwards.push_back(curr);
+    bool ended = true;
+    auto &edges = pred_.at(curr);
+    for (auto nx: edges) {
+      if (pred_priority.count(nx) && pred_priority[nx] > priority) continue;
+      priority = pred_priority[nx];
+      curr = nx;
+      printf("curr: %d\n", curr.getId());
+      curr.getPosition().print();
+      printf("pred.count(curr) %d, pred_priority.count(curr): %d (%d)\n", pred_.count(curr), pred_priority.count(curr), pred_priority[curr]);
+      backwards.push_back(curr);
+      ended = false;
+      break;
+    }
+    if (ended) break;
   }
 
   auto forwards = backwards;
   std::reverse(forwards.begin(), forwards.end());
+  for (int i = 0; i < forwards.size(); ++i) {
+    forwards[i] = oldBoard.getPieceFromId(forwards[i].getId());
+  }
+
+  for (auto piece: forwards) {
+    //printBoardWithPiece(piece.getBoard(), piece);
+  }
 
   std::cout << "num moves: " << forwards.size()-1 << '\n';
   for (int i = 1; i < forwards.size(); ++i) {
     auto piece1 = forwards[i-1];
     auto piece2 = forwards[i];
+    if (MY_DEBUG) {
+      printBoardWithPiece(piece1.getBoard(), piece1);
+      printBoardWithPiece(piece2.getBoard(), piece2);
+    }
     std::cout << getImmediateNeighbourStr(piece1, piece2);    
   }
   std::cout << "board: " << board << '\n';
@@ -104,19 +133,19 @@ void handleGetMove(int num_lines) {
 std::string getImmediateNeighbourStr(const BitPieceInfo &p1, const BitPieceInfo &p2) {
   // todo: can be precomputed with an empty board (if required)
   std::stringstream ss;
-  printf("immediate...\n");
 
   auto addMoveToSS = [&](const BitPieceInfo &piece1, const BitPieceInfo &piece2, MoveDirection md) {
     assert(piece2 == piece1.move(md));
     ss << 0 << " m " << md << '\n';
   };
   auto addRotationToSS = [&](const BitPieceInfo &piece1, const BitPieceInfo &piece2) {
+    if (piece1 == piece2) return;
     for (auto rotateDirection: allRotateDirections) {
       if (piece1.canRotate(rotateDirection)) {
         auto nxPiece = piece1.rotate(rotateDirection);
         if (nxPiece == piece2) {
           ss << 0 << " r " << rotateDirection << '\n';
-          return ss.str();
+          return;
         }
       }
     }
@@ -128,7 +157,7 @@ std::string getImmediateNeighbourStr(const BitPieceInfo &p1, const BitPieceInfo 
           if (nxPiece2 == piece2) {
             ss << 0 << " r " << rotateDirection << '\n';
             ss << 0 << " r " << rotateDirection << '\n';
-            return ss.str();
+            return;
           }
         }
       }

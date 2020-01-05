@@ -85,6 +85,7 @@ class BitPieceInfo {
   Move getPosition() const;
   int getId() const { return id_; }
   int getRepId() const { return BitBoardPre::getRepIdFromId(id_); }
+  const BitBoard& getBoard() const { return *b_; };
   std::vector<BitPieceInfo> getClosedRotN() const {
     std::vector<BitPieceInfo> vs{*this};
     for (int id: BitBoardPre::getOpenRotN(id_)) {

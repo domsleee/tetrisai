@@ -4,9 +4,9 @@
 import subprocess
 import os
 import shutil
+from pathlib import Path
 
-# todo: replace with current path of script
-DIR = "/Users/dom/Documents/git/tetrisAI/.docker/get-move-service/src"
+DIR = Path(__file__).parent.absolute()
 
 def main():
   subprocess.check_call(["bazel", "build", "//src:ew_get_moves"])

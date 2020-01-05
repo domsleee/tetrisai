@@ -37,6 +37,21 @@ class TestGetMoves(unittest.TestCase):
     self.assertEqual(exp_nx_board, nx_board)
     self.assertEqual(demo_entries, [])
 
+  def test_i_piece(self):
+    FULL_ROW = "1" + "0" + ("1" * 8)
+    EMPTY_ROW = "0" * 10
+    board = BitBoard.fromBoard(
+      ["0000000000" for _ in range(16)]
+      + ["1111111110" for _ in range(4)])
+    exp_nx_board = BitBoard.fromBoard([EMPTY_ROW for _ in range(20)])
+    piece = piece_to_int("I_PIECE")
+    _, nx_board, demo_entries = self.gm.get_moves(board, piece)
+    self.assertEqual(exp_nx_board, nx_board)
+    self.assertGreater(len(demo_entries), 0)
+    
+
+
+
 
 if __name__ == '__main__':
   unittest.main()
