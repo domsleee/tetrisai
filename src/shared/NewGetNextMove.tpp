@@ -17,6 +17,7 @@ class NewGetNextMove {
   void setMoveFinder(MyMoveFinder &mf) {
     mf_ = std::make_unique<MyMoveFinder>(mf);
   }
+  const MyMoveFinder& getMoveFinder() { return *mf_; }
  private:
   //const MyMoveEvaluator &me_;
   //const MyMoveFinder &mf_;
@@ -30,6 +31,7 @@ class NewGetNextMove {
 template<typename MyMoveFinder, typename MyMoveEvaluator>
 Move NewGetNextMove<MyMoveFinder, MyMoveEvaluator>::getNextMove(const BitBoard &board, const BlockType blockType) const {
   auto allMoves = mf_->findAllMoves(board, blockType);
+  assert(allMoves.size() > 0);
   auto bestPiece = allMoves[0];
   double bestScore = 6e60;
   for (const auto& piece: allMoves) {

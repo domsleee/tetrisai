@@ -13,6 +13,7 @@ def main():
   bazel_bin_path = get_bazel_bin_path()
   my_bin = os.path.join(bazel_bin_path, "src", "ew_get_moves")
   out_bin = os.path.join(DIR, "external_bin", "ew_get_moves")
+  os.remove(out_bin)
   shutil.copy(my_bin, out_bin)
 
 def get_bazel_bin_path():

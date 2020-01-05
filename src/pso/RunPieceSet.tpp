@@ -2,6 +2,7 @@
 #include "src/common/common.hpp"
 #include <memory>
 #include <map>
+#include <functional>
 
 const int MAX_LINES = 230;
 

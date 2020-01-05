@@ -9,8 +9,8 @@
 
 template<typename MyMoveEvaluator, typename MyMoveFinder>
 class NewEvaluateWeightingsContainer {
-  std::unique_ptr<MyMoveEvaluator> me_, me2_;
-  std::unique_ptr<MyMoveFinder> mf_, mf2_;
+  std::unique_ptr<MyMoveEvaluator> me_;
+  std::unique_ptr<MyMoveFinder> mf_;
 
   using MyGetNextMove = NewGetNextMove<MyMoveFinder, MyMoveEvaluator>;
   using MyRunPieceSet = RunPieceSet<MyGetNextMove>;

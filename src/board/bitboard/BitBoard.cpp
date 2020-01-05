@@ -9,9 +9,21 @@ std::size_t std::hash<BitBoard>::operator()(const BitBoard& b) const {
   return std::hash<decltype(b.bitset_)>{}(b.bitset_);
 }
 
+BitBoard::BitBoard(const std::string& s) {
+  std::vector<std::vector<int>> vs(NUM_ROWS, std::vector<int>(NUM_COLUMNS, 0));
+  int ind = 0;
+  for (int r = 0; r < NUM_ROWS; ++r) {
+    for (int c = 0; c < NUM_COLUMNS; ++c) {
+      vs[r][c] = s[ind++] - '0';
+    }
+  }
+  *this = {vs};
+}
+
 BitBoard::BitBoard(const std::vector<std::vector<int>>& vs) {
   BitBoardPre::precompute();
   for (int r = 0; r < NUM_ROWS; ++r) {
+    assert(vs[r].size() == NUM_COLUMNS);
     for (int c = 0; c < NUM_COLUMNS; ++c) {
       if (vs[r][c]) {
         height_ = std::max(height_, NUM_ROWS-r);

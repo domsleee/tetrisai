@@ -26,7 +26,7 @@ class BitBoard {
  friend BitPieceInfo;
  public:
   using B = std::bitset<NUM_ROWS*NUM_COLUMNS>;
-  BitBoard(){ BitBoardPre::precompute(); };
+  BitBoard() { BitBoardPre::precompute(); };
   int applyPieceInfo(const BitPieceInfo&);
   BitPieceInfo getPiece(BlockType blockType) const;
   bool vacant(const BitPieceInfo&) const;
@@ -38,6 +38,7 @@ class BitBoard {
 
   // convenience
   BitBoard(const std::vector<std::vector<int>>&);
+  BitBoard(const std::string&);
   int applyMove(const Move&move);
   BitPieceInfo getPiece(const Move& position) const;
   BitPieceInfo getPiece(BlockType blockType, const Move& position) const;
@@ -48,7 +49,9 @@ class BitBoard {
     return b1.bitset_ == b2.bitset_;
   }
   friend std::ostream& operator<<(std::ostream& os, const BitBoard& b) {
-    os << b.bitset_;
+    auto s = b.bitset_.to_string();
+    std::reverse(s.begin(), s.end());
+    os << s;
     return os;
   }
 

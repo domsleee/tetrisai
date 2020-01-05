@@ -2,6 +2,7 @@
 #include "src/board/bitboard/BitBoardPre.h"
 #include "src/board/bitboard/BitBoard.h"
 #include "src/board/SimpleBoard.h"
+#include "src/board/bitboard/BitBoardPreExt.hpp"
 #include <bitset>
 #include <queue>
 #include <vector>
@@ -13,7 +14,7 @@
 
 
 namespace BitBoardPre {
-  const int MAX_IND = 200000; // NUM_BLOCKS * NUM_ROWS * NUM_COLUMNS * NUM_ROTATIONS
+  const int MAX_IND = 12000; // NUM_BLOCKS * NUM_ROWS * NUM_COLUMNS * NUM_ROTATIONS
   const int NUM_BLOCKS = 8;
   const int NUM_MOVES = 4;
   const int NUM_ROTATIONS = 2;
@@ -43,6 +44,7 @@ namespace BitBoardPre {
   std::unordered_map<Move, int> moveToId_;
   std::bitset<200> idToBitset_[MAX_IND];
   std::vector<std::vector<int>> idToOpenRotN_(MAX_IND);
+  std::unordered_map<BitPieceInfo, std::unordered_map<BitPieceInfo, std::vector<Action>>> shortestPathVec_;
   int emptyMoveId_ = -1;
 
   void precompute() {
@@ -68,7 +70,13 @@ namespace BitBoardPre {
     setupHeights();
     setupRepIds();
     setupOpenRotN();
-    //fixMoves();
+
+    // external
+    shortestPathVec_ = BitBoardPreExt::setupAllShortestPaths();
+  }
+
+  const std::vector<Action>& getShortestPath(BitPieceInfo &p1, BitPieceInfo &p2) {
+    return shortestPathVec_.at(p1).at(p2);
   }
 
   void bfs(const SimplePieceInfo &p) {
@@ -267,7 +275,6 @@ namespace BitBoardPre {
       idToOpenRotN_[i].clear();
       for (auto id: s) idToOpenRotN_[i].push_back(id);
       for (auto id: after) idToOpenRotN_[i].push_back(id);
-
     }
   }
 }

@@ -5,14 +5,21 @@
 #include "src/common/Move.hpp"
 #include <bitset>
 
+// avoid circular deps
+class BitPieceInfo;
+
 namespace BitBoardPre {
+  // todo: union of type enums
+  enum Action {
+    MOVE_LEFT,
+    MOVE_RIGHT,
+    MOVE_DOWN,
+    MOVE_UP,
+    ROTATE_AC,
+    ROTATE_C
+  };
+
   void precompute();
-
-  //inline int pieceInfoToId(const SimplePieceInfo &p);
-
-  //inline int addRotate(int id, int nxId, RotateDirection rotateDirection);
-
-  //inline int addMove(int id, int nxId, MoveDirection moveDirection);
 
   int getStartingPieceId(BlockType blockType);
 
@@ -33,4 +40,7 @@ namespace BitBoardPre {
   int getMoveHeight(int id);
 
   const std::vector<int>& getOpenRotN(int id);
+
+  // throws exception if there is no path
+  const std::vector<Action>& getShortestPath(BitPieceInfo &p1, BitPieceInfo &p2);
 }

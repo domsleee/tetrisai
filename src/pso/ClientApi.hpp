@@ -28,8 +28,8 @@
 // todo: move to factory
 auto get1819(const Weighting &w1, const Weighting &w2) {
   auto ew_container = NewEvaluateWeightingsContainer(
-      MoveEvaluatorAdapter(MoveEvaluator(), w1),
-      CacheMoveFinder(MoveFinderRewrite())
+    MoveEvaluatorAdapter(MoveEvaluator(), w1),
+    CacheMoveFinder(MoveFinderRewrite())
   );
   auto ew = ew_container.getInstance();
 

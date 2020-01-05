@@ -10,10 +10,11 @@ const int DEFAULT_MAX_DROP_REM = 3; // 19 ==> 2
 
 class MoveFinderRewrite {
  public:
+  using AdjListT = std::unordered_map<BitPieceInfo, std::vector<BitPieceInfo>>;
   std::vector<BitPieceInfo> findAllMoves(const BitBoard& b, BlockType blockType) const;
   void setMaxDropRem(int v) { maxDropRem_ = v; }
   void setRecordEdges(bool record_edges) { record_edges_ = record_edges; }
-  std::unordered_map<BitPieceInfo, std::vector<BitPieceInfo>> getRecordedEdges() { return pred_; }
+  const AdjListT& getRecordedEdges() const { return pred_; }
 
  private:
   int maxDropRem_ = DEFAULT_MAX_DROP_REM;
@@ -21,7 +22,7 @@ class MoveFinderRewrite {
   mutable std::unordered_map<int, int> holdingSeen_[2];
   mutable std::unordered_map<int, int> releasedSeen_;
   mutable std::unordered_set<BitPieceInfo> moveSet_;
-  mutable std::unordered_map<BitPieceInfo, std::vector<BitPieceInfo>> pred_;
+  mutable AdjListT pred_;
   void runHolding(const BitPieceInfo& currentPiece, MoveDirection md) const {
     runHolding(currentPiece, md, 0, maxDropRem_);
   }
