@@ -9,7 +9,6 @@ import asyncio
 class TestGetMoves(unittest.TestCase):
   def setUp(self):
     self.gm = GetMoves()
-    asyncio.get_event_loop().run_until_complete(self.gm.init())
 
   def tearDown(self):
     self.gm.close()
@@ -48,10 +47,8 @@ class TestGetMoves(unittest.TestCase):
     _, nx_board, demo_entries = self.gm.get_moves(board, piece)
     self.assertEqual(exp_nx_board, nx_board)
     self.assertGreater(len(demo_entries), 0)
-    
-
-
-
+    self.assertEqual(demo_entries[0].frame, 0)
+    self.assertEqual(demo_entries[0].action, "RIGHT")
 
 if __name__ == '__main__':
   unittest.main()

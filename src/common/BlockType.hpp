@@ -2,7 +2,7 @@
 #include <vector>
 
 enum BlockType {
-  I_PIECE,
+  I_PIECE=0,
   L_PIECE,
   J_PIECE,
   T_PIECE,

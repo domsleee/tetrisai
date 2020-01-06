@@ -2,10 +2,11 @@ import asyncio
 import subprocess
 
 class SimpleProcess:
-  def __init__(self, args: list):
+  def __init__(self, args: list, loop: any=asyncio.get_event_loop()):
     self._args = args
     self._process = None
     self._timeout = 1.0
+    self._loop = loop
   
   async def init(self):
     self._process = await asyncio.create_subprocess_exec(*self._args,
@@ -14,7 +15,7 @@ class SimpleProcess:
   def read_line(self):
     async def fn():
       return await asyncio.wait_for(self._process.stdout.readline(), self._timeout)
-    line = asyncio.get_event_loop().run_until_complete(fn())
+    line = self._loop.run_until_complete(fn())
     return line.decode('utf-8').strip('\n')
   
   def is_empty(self):
@@ -27,5 +28,5 @@ class SimpleProcess:
   def close(self):
     async def fn():
       await self._process.wait()
-    asyncio.get_event_loop().run_until_complete(fn())
+    self._loop.run_until_complete(fn())
 

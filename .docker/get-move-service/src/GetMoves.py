@@ -3,6 +3,7 @@ import typing
 import os
 from SimpleProcess import SimpleProcess
 import logging
+import asyncio
 
 DIR = "/Users/dom/Documents/git/tetrisAI/.docker/get-move-service/src"
 DEFAULT_BINARY = os.path.join(DIR, "external_bin", "ew_get_moves")
@@ -10,13 +11,16 @@ DEFAULT_BINARY = os.path.join(DIR, "external_bin", "ew_get_moves")
 class GetMoves(IGetMoves):
   DEFAULT_TIMEOUT = 1.0
 
-  def __init__(self, binary: str = DEFAULT_BINARY):
+  def __init__(self, binary: str = DEFAULT_BINARY, loop=asyncio.get_event_loop()):
     self._binary = binary
     self._process = None
     self._logger = logging.Logger("GetMoves")
-    
-  async def init(self):
-    self._process = SimpleProcess([self._binary])
+    self._logger.setLevel(logging.DEBUG)
+    self._loop = loop
+    self._loop.run_until_complete(self.secondInit())
+  
+  async def secondInit(self):
+    self._process = SimpleProcess([self._binary], loop=self._loop)
     await self._process.init()
 
   def close(self):
@@ -31,6 +35,8 @@ class GetMoves(IGetMoves):
   def get_moves(self, board: str, piece: int) -> typing.Tuple[str, BoardT, typing.List[DemoEntry]]:    
     self._send_str(b'g\n')
     self._send_str((str(piece) + '\n').encode('utf-8'))
+    if len(board) != 200:
+      raise ValueError("Board string '%s' incorrect length (expect 200)" % board)
     self._send_str((board + '\n').encode('utf-8'))
 
     result = self._process_line(self._process.read_line(), "result")
@@ -41,12 +47,16 @@ class GetMoves(IGetMoves):
     num_moves = int(self._process_line(self._process.read_line(), "num moves"))
     for i in range(num_moves):
       move = self._process.read_line()
-      demo_entries.append([5, 5, False])
-      # todo.
+      [frame, action] = move.split(' ')
+      frame = int(frame)
+      demo_entries.append(DemoEntry(frame=frame, action=action))
     self._logger.debug("num_moves: %d" % num_moves)
     nx_board = self._process_line(self._process.read_line(), "board")
     self._process_line(self._process.read_line(), "line clears")
     assert(self._process.is_empty())
+    ok = self._process.read_line()
+    if ok != "OK":
+      raise ValueError("Expected OK, got '%s'" % ok)
     return "r", nx_board, demo_entries
   
   def _process_line(self, s: str, lhs: str) -> str:
@@ -59,6 +69,6 @@ class GetMoves(IGetMoves):
     return col_split[1].strip()
     
   def _send_str(self, b: bytes):
-    self._logger.debug("send_line %s" % b)
+    self._logger.info("send_line %s" % b)
     self._process.send_line(b)
 

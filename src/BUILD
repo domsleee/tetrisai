@@ -114,6 +114,13 @@ cc_binary(
 )
 
 cc_binary(
+    name = "main_sandbox",
+    srcs = ["pso/main/main_sandbox.cpp"],
+    deps = [":pso"],
+    copts = EXEC_COPTS
+)
+
+cc_binary(
     name = "ew_str",
     srcs = ["pso/main/main_str.cpp"],
     deps = [":pso"],

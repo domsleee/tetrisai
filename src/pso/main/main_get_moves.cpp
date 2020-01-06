@@ -21,7 +21,10 @@ auto w1 = WeightingFn::readFromString(best18);
 auto w2 = WeightingFn::readFromString(best19);
 
 void handleGetMove(int num_lines);
-std::pair<int, std::string> getImmediateNeighbourStr(const BitPieceInfo &p1, const BitPieceInfo &p2);
+std::pair<int, std::string> getImmediateNeighbourStr(const BitPieceInfo &p1, const BitPieceInfo &p2, int frame);
+
+template<typename Mf>
+std::vector<BitPieceInfo> getForwardLocations(const BitBoard &oldBoard, const BitPieceInfo &startingPiece, const Mf &mf);
 
 // notes
 // - does drop come before das?
@@ -43,6 +46,25 @@ int main() {
         exit(1);
       }
     }
+  }
+}
+
+
+std::string strRep(MoveDirection md) {
+  switch(md) {
+    case(MoveDirection::LEFT): return "LEFT";
+    case(MoveDirection::RIGHT): return "RIGHT";
+    case(MoveDirection::UP): return "UP";
+    case(MoveDirection::DOWN): return "DOWN";
+    default: throw std::runtime_error{"unknown move direction"};
+  }
+}
+
+std::string strRep(RotateDirection rd) {
+  switch(rd) {
+    case(RotateDirection::ROTATE_AC): return "ROTATE_AC";
+    case(RotateDirection::ROTATE_C): return "ROTATE_C";
+    default: throw std::runtime_error{"unknown rotate direction"};
   }
 }
 
@@ -83,20 +105,53 @@ void handleGetMove(int num_lines) {
   const auto oldBoard = board;
   const auto lineClears = board.applyMove(move);
   const auto &mf_ = getNextMoveHandler.getMoveFinder();
-  const auto &pred_ = mf_.getRecordedEdges();
-  const auto &pred_priority = mf_.getPredPriority();
 
-  auto movePiece = board.getPiece(move);
+  auto forwards = getForwardLocations(oldBoard, oldBoard.getPiece(move), mf_);
+  for (auto piece: forwards) {
+    printBoardWithPiece(piece.getBoard(), piece);
+  }
 
+  const auto &pred_frame = mf_.getPredFrame();
+  std::vector<std::string> strings;
+  int ct = 0;
+  for (int i = 1; i < forwards.size(); ++i) {
+    auto piece1 = forwards[i-1];
+    auto piece2 = forwards[i];
+    if (MY_DEBUG) {
+      printBoardWithPiece(piece1.getBoard(), piece1);
+      printBoardWithPiece(piece2.getBoard(), piece2);
+    }
+    int frame = pred_frame.at(piece2);
+    auto [delta, st] = getImmediateNeighbourStr(piece1, piece2, frame);
+    ct += delta;
+    strings.push_back(st);
+  }
+
+  std::cout << "num moves: " << ct << '\n';
+  for (auto st: strings) std::cout << st;
+  std::cout << "board: " << board << '\n';
+  std::cout << "line clears: " << lineClears << '\n';
+  std::cout << "OK\n";
+}
+
+template<typename Mf>
+std::vector<BitPieceInfo> getForwardLocations(const BitBoard &oldBoard, const BitPieceInfo &startingPiece, const Mf &mf) {
+  const auto &pred_ = mf.getRecordedEdges();
+  const auto &pred_priority = mf.getPredPriority();
   std::vector<BitPieceInfo> backwards;
-  auto curr = movePiece;
+  auto curr = startingPiece;
   int priority = 500; // max
   backwards.push_back(curr);
   while (pred_.count(curr)) {
     bool ended = true;
     auto &edges = pred_.at(curr);
     for (auto nx: edges) {
-      if (pred_priority.count(nx) == 0) continue;
+      // at root.
+      if (pred_priority.count(nx) == 0) {
+        backwards.push_back(nx);
+        ended = true;
+        break;
+      }
       if (pred_priority.count(nx) && pred_priority.at(nx) > priority) continue;
       priority = pred_priority.at(nx);
       curr = nx;
@@ -117,33 +172,10 @@ void handleGetMove(int num_lines) {
   for (int i = 0; i < forwards.size(); ++i) {
     forwards[i] = oldBoard.getPieceFromId(forwards[i].getId());
   }
-
-  for (auto piece: forwards) {
-    //printBoardWithPiece(piece.getBoard(), piece);
-  }
-
-
-  std::vector<std::string> strings;
-  int ct = 0;
-  for (int i = 1; i < forwards.size(); ++i) {
-    auto piece1 = forwards[i-1];
-    auto piece2 = forwards[i];
-    if (MY_DEBUG) {
-      printBoardWithPiece(piece1.getBoard(), piece1);
-      printBoardWithPiece(piece2.getBoard(), piece2);
-    }
-    auto [delta, st] = getImmediateNeighbourStr(piece1, piece2);
-    ct += delta;
-    strings.push_back(st);
-  }
-
-  std::cout << "num moves: " << ct << '\n';
-  for (auto st: strings) std::cout << st;
-  std::cout << "board: " << board << '\n';
-  std::cout << "line clears: " << lineClears << '\n';
+  return forwards;
 }
 
-std::pair<int, std::string> getImmediateNeighbourStr(const BitPieceInfo &p1, const BitPieceInfo &p2) {
+std::pair<int, std::string> getImmediateNeighbourStr(const BitPieceInfo &p1, const BitPieceInfo &p2, int frame) {
   // todo: can be precomputed with an empty board (if required)
   std::stringstream ss;
   int ct = 0;
@@ -151,7 +183,7 @@ std::pair<int, std::string> getImmediateNeighbourStr(const BitPieceInfo &p1, con
   auto addMoveToSS = [&](const BitPieceInfo &piece1, const BitPieceInfo &piece2, MoveDirection md) {
     assert(piece2 == piece1.move(md));
     ct++;
-    ss << 0 << " m " << md << '\n';
+    ss << frame << " " << strRep(md) << '\n';
   };
   auto addRotationToSS = [&](const BitPieceInfo &piece1, const BitPieceInfo &piece2) {
     if (piece1 == piece2) return;
@@ -159,7 +191,7 @@ std::pair<int, std::string> getImmediateNeighbourStr(const BitPieceInfo &p1, con
       if (piece1.canRotate(rotateDirection)) {
         auto nxPiece = piece1.rotate(rotateDirection);
         if (nxPiece == piece2) {
-          ss << 0 << " r " << rotateDirection << '\n';
+          ss << frame << " " << strRep(rotateDirection) << '\n';
           ct++;
           return;
         }
@@ -171,8 +203,8 @@ std::pair<int, std::string> getImmediateNeighbourStr(const BitPieceInfo &p1, con
         if (nxPiece.canRotate(rotateDirection)) {
           auto nxPiece2 = nxPiece.rotate(rotateDirection);
           if (nxPiece2 == piece2) {
-            ss << 0 << " r " << rotateDirection << '\n';
-            ss << 0 << " r " << rotateDirection << '\n';
+            ss << frame << " " << strRep(rotateDirection) << '\n';
+            ss << frame << " " << strRep(rotateDirection) << '\n';
             ct += 2;
             return;
           }

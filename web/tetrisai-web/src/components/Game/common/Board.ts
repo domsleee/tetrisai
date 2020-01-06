@@ -5,10 +5,12 @@ export const NUM_ROWS = 20;
 
 export interface IBoard {
   vacant(r: number, c: number): boolean;
+  getBitstring(): string;
 }
 
 export class Board implements IBoard {
   private b: BitSet = new BitSet(200);
+  private originalString: string = "0".repeat(200);
 
   public constructor(bitstring?: string) {
     if (!bitstring) {
@@ -20,6 +22,11 @@ export class Board implements IBoard {
     for (let i = 0; i < 200; ++i) {
       this.b.set(i, bitstring[i] === '1' ? 1 : 0);
     }
+    this.originalString = bitstring;
+  }
+
+  public getBitstring(): string {
+    return this.originalString;
   }
 
   public vacant(r: number, c: number): boolean {

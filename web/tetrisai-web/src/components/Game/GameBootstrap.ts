@@ -18,9 +18,9 @@ export class GameBootstrap {
 
     this.demoPlayer.addEvent({button: DemoButton.BUTTON_A, frame: buttonAdder.frame + 10, isDown: true});
     this.demoPlayer.addEvent({button: DemoButton.BUTTON_START, frame: buttonAdder.frame + 15 + 2, isDown: true});
-    this.demoPlayer.addEvent({button: DemoButton.BUTTON_START, frame: buttonAdder.frame + 22, isDown: false});
+    this.demoPlayer.addEvent({button: DemoButton.BUTTON_START, frame: buttonAdder.frame + 24, isDown: false});
 
-    await frameAwaiter.awaitFrame(buttonAdder.frame + 22);
+    await frameAwaiter.awaitFrame(buttonAdder.frame + 24);
   }
 
   public setupFromGameover() {

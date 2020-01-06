@@ -81,7 +81,7 @@ export class DemoPlayer implements IDemoPlayer {
   private processEvent(event: DemoEntry) {
     if (event.isDown) {
       this.nes.buttonDown(event.button);
-      console.log('buttonDown', event.button);
+      //console.log('buttonDown', event.button);
     } else {
       this.nes.buttonUp(event.button);
       // console.log('buttonUp', event.button);

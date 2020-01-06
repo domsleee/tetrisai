@@ -22,6 +22,7 @@ export class ReadNextPiece implements IReadNextPiece {
   private static readonly zAnchor = ReadNextPiece.lAnchor;
   private static readonly tAnchor = ReadNextPiece.lAnchor;
   private static readonly jAnchor = ReadNextPiece.lAnchor;
+  private static readonly sAnchor = ReadNextPiece.zAnchor.move(0, 2);
   private static readonly oAnchor = new NiceCoord(121, 201);
   private static readonly iAnchor = new NiceCoord(125, 193);
 
@@ -76,6 +77,13 @@ export class ReadNextPiece implements IReadNextPiece {
       ReadNextPiece.jAnchor.move(1, 2),
     ].every(isWhite);
 
+    const isSPiece = [
+      ReadNextPiece.sAnchor,
+      ReadNextPiece.sAnchor.move(0, -1),
+      ReadNextPiece.sAnchor.move(1, -1),
+      ReadNextPiece.sAnchor.move(1, -2),
+    ].every(isWhite);
+
     switch (true) {
       case isLPiece: return Piece.L_PIECE;
       case isIPiece: return Piece.I_PIECE;
@@ -83,7 +91,8 @@ export class ReadNextPiece implements IReadNextPiece {
       case isTPiece: return Piece.T_PIECE;
       case isOPiece: return Piece.O_PIECE;
       case isJPiece: return Piece.J_PIECE;
-      default: return Piece.S_PIECE;
+      case isSPiece: return Piece.S_PIECE;
+      default: throw new Error('Unable to identify piece');
     }
   }
 }

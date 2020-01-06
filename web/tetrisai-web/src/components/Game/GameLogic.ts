@@ -25,14 +25,14 @@ export class GameLogic {
 
     const gr = GameRunnerFactory.getInstance(demoPlayer, pixelChecker);
     const pa = new PieceAwaiter(pixelChecker, demoPlayer, frameAwaiter);
-    pa.init();
     console.log('first piece appeared!!');
-    gr.onFirstPieceAppear();
+    await gr.onFirstPieceAppear();
+    pa.init();
 
     let x = 15;
     while (x--) {
       await pa.awaitPiece();
-      gr.onNextPieceAppear();
+      await gr.onNextPieceAppear();
     }
   }
 }

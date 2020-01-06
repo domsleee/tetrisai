@@ -1,8 +1,27 @@
 import abc
 import typing
+import enum
 
-# frame, enum, isMove
-DemoEntry = typing.Tuple[int, int, bool]
+from dataclasses import dataclass
+
+ACTIONS = {
+  "LEFT",
+  "RIGHT",
+  "UP",
+  "DOWN",
+  "ROTATE_AC",
+  "ROTATE_C"
+}
+
+@dataclass
+class DemoEntry:
+  action: str
+  frame: int
+  def __init_(self, action:str, frame:int):
+    assert(action in ACTIONS)
+    self.action = action
+    self.frame = frame
+
 BoardT = str
 
 class IGetMoves:
