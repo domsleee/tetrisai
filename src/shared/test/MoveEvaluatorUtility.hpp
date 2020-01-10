@@ -49,3 +49,5 @@ Weighting getWeightsFromEmptyPiece2(const BitBoard &b);
 BitBoard getBoardFromPartialStringVector(std::vector<std::string> strings);
 
 #define REQ_IND(w, wExp, ind) REQUIRE(w[ind] == wExp[ind])
+
+std::vector<std::vector<int>> leftWell(int height);

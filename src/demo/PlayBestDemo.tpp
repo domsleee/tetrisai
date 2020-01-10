@@ -6,7 +6,7 @@
 template<typename MyPlayDemo, typename MyRunPieceSet>
 class PlayBestDemo {
  public:
-  PlayBestDemo(const MyPlayDemo &playDemo, const MyRunPieceSet &runPieceSetHandler):
+  PlayBestDemo(const MyPlayDemo &playDemo, MyRunPieceSet &runPieceSetHandler):
     playDemoHandler_(playDemo),
     runPieceSetHandler_(runPieceSetHandler)
     {}
@@ -14,7 +14,7 @@ class PlayBestDemo {
 
  private:
   const MyPlayDemo &playDemoHandler_;
-  const MyRunPieceSet &runPieceSetHandler_;
+  MyRunPieceSet &runPieceSetHandler_;
 };
 
 template<typename MyPlayDemo, typename MyRunPieceSet>
@@ -27,7 +27,8 @@ void PlayBestDemo<MyPlayDemo, MyRunPieceSet>::playBestDemo(std::vector<std::vect
   int ct = 1;
   for (const auto &pieceSet: pieceSets) {
     printf("play best demo %d/%lu, bestScore: %d\n", ct, pieceSets.size(), bestScore);
-    int score = runPieceSetHandler_.runGame(pieceSet);
+    auto sm = runPieceSetHandler_.runGame(pieceSet);
+    auto score = sm.getScore();
     printf("score: %d\n", score);
     if (score > bestScore) {
       bestScore = score;

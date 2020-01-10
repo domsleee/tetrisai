@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 enum MoveDirection {
   LEFT=0,
   RIGHT,

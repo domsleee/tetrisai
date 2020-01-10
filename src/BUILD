@@ -19,9 +19,10 @@ cc_library(
 
 cc_library(
     name = "shared",
-    hdrs = glob(["shared/*.h", "shared/*.hpp", "shared/*.tpp", "shared/MoveEvaluator/*.hpp", "shared/MoveFinder/*.h", "shared/MoveFinder/*.hpp", "shared/MoveFinder/*.tpp"]),
-    srcs = glob(["shared/*.cpp", "shared/MoveFinder/*.cpp", "shared/MoveEvaluator/*.cpp"]),
-    deps = [":common", ":board"]
+    hdrs = glob(["shared/*.h", "shared/*.hpp", "shared/*.tpp", "shared/MoveEvaluator/*.hpp", "shared/MoveFinder/*.h", "shared/MoveFinder/*.hpp", "shared/MoveFinder/*.tpp", "shared/MoveFinder/**/*.h"]),
+    srcs = glob(["shared/*.cpp", "shared/MoveFinder/*.cpp", "shared/MoveEvaluator/*.cpp", "shared/MoveFinder/**/*.cpp", "shared/MoveFinder/**/*.hpp"]),
+    deps = [":common", ":board"],
+    visibility = ["//visibility:public"]
 )
 
 cc_library(
@@ -72,13 +73,13 @@ cc_test(
 cc_test(
     name = "test_move_finder",
     srcs = ["shared/test/TestMoveFinder.cpp"],
-    deps = [":shared", "//:catch"]
+    deps = [":shared", "//:catch", ":move_evaluator_utility"]
 )
 
 cc_test(
     name = "test_move_finder_rewrite",
     srcs = ["shared/test/TestMoveFinderRewrite.cpp"],
-    deps = [":shared", "//:catch"]
+    deps = [":shared", "//:catch"   ]
 )
 
 cc_test(
@@ -98,6 +99,26 @@ cc_test(
     srcs = glob(["shared/test/TestMoveEvaluatorPenalty.cpp", "shared/test/*.hpp", "shared/test/*.h", "shared/test/MoveEvaluatorUtility.cpp"]),
     deps = [":shared", "//:catch"]
 )
+
+cc_test(
+    name = "test_move_finder_state",
+    srcs = glob(["shared/test/MoveFinderFSM/TestMoveFinderState.cpp"]),
+    deps = ["//src:shared", "//:catch"]
+)
+
+cc_test(
+    name = "test_move_finder_fsm",
+    srcs = glob(["shared/test/MoveFinderFSM/TestMoveFinderFSM.cpp"]),
+    deps = ["//src:shared", "//:catch", "//src:move_evaluator_utility"]
+)
+
+cc_library(
+    name = "move_evaluator_utility",
+    srcs = glob(["shared/test/MoveEvaluatorUtility.cpp"]),
+    hdrs = glob(["shared/test/MoveEvaluatorUtility.hpp"]),
+    deps = [":shared"]
+)
+
 
 cc_binary(
     name = "ew",

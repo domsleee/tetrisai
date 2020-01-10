@@ -66,3 +66,17 @@ BitBoard getBoardFromPartialStringVector(std::vector<std::string> strings) {
 
 
 #define REQ_IND(w, wExp, ind) REQUIRE(w[ind] == wExp[ind])
+
+
+std::vector<std::vector<int>> leftWell(int height) {
+  std::vector<std::vector<int>> vs;
+  for (int i = 0; i < NUM_ROWS-height; i++) {
+    vs.push_back(std::vector<int>(NUM_COLUMNS, 0));
+  }
+  std::vector<int> leftFree = std::vector<int>(NUM_COLUMNS, 1);
+  leftFree[0] = 0;
+  for (int i = 0; i < height; i++) {
+    vs.push_back(leftFree);
+  }
+  return vs;
+}

@@ -24,6 +24,8 @@
   </div>
   <div v-else>
     <Screen class="myscreen" ref="screen" @myloaded='screenLoaded' />
+    <pre style="position:absolute; top:10px; text-align:left;">Debug info<br />{{JSON.stringify(debug, null, 2)}}</pre>
+    <TableBoard ref="tableboard" />
   </div>
 </template>
 
@@ -32,6 +34,7 @@ import Vue from 'vue';
 import jsnes from 'jsnes';
 // @ts-ignore
 import Screen from './Game/Screen';
+import TableBoard from './TableBoard';
 import { GameLogic } from './Game/GameLogic';
 
 const ROM_LOCAL_STORAGE_KEY = 'romlocalstorage';
@@ -40,12 +43,19 @@ export default Vue.extend({
   name: 'Tetris',
   components: {
     Screen,
+    TableBoard,
   },
   data(): {
     romLoaded: boolean,
+    debug: any,
   } {
     return {
       romLoaded: false,
+      debug: {
+        frame: 0,
+        nextPiece: '',
+        board: '',
+      },
     };
   },
   mounted() {
@@ -86,8 +96,9 @@ export default Vue.extend({
     },
     onScreenMounted() {
       const screen: Screen = this.$refs.screen;
-      let gl = new GameLogic();
-      gl.run(screen, this.loadRomFromLocalStorage());
+      const tableBoard: TableBoard = this.$refs.tableboard;
+      const gl = new GameLogic();
+      gl.run(screen, this.loadRomFromLocalStorage(), tableBoard, this.debug);
     },
   },
 });

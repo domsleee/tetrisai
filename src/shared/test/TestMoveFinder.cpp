@@ -7,24 +7,12 @@
 #include <vector>
 #include <iostream>
 #include <algorithm>
+#include "src/shared/test/MoveEvaluatorUtility.hpp"
 
 
-std::vector<std::vector<int>> leftWell(int height) {
-  std::vector<std::vector<int>> vs;
-  for (int i = 0; i < NUM_ROWS-height; i++) {
-    vs.push_back(std::vector<int>(NUM_COLUMNS, 0));
-  }
-  std::vector<int> leftFree = std::vector<int>(NUM_COLUMNS, 1);
-  leftFree[0] = 0;
-  for (int i = 0; i < height; i++) {
-    vs.push_back(leftFree);
-  }
-  return vs;
-}
-
-SCENARIO("I-PIECE can clear 6 high") {
+SCENARIO("I-PIECE can clear 12 high") {
   GIVEN("a board with a slightly open left side") {
-    auto vs = leftWell(6);
+    auto vs = leftWell(12);
     BitBoard b(vs);
     WHEN("we search for moves") {
       THEN("the LHS move is available") {
@@ -37,9 +25,9 @@ SCENARIO("I-PIECE can clear 6 high") {
   }
 }
 
-SCENARIO("I-PIECE can't clear 7 high") {
+SCENARIO("I-PIECE can't clear 13 high") {
   GIVEN("a board with a slightly open left side") {
-    auto vs = leftWell(7);
+    auto vs = leftWell(13);
     BitBoard b(vs);
     WHEN("we search for moves") {
       THEN("the LHS move is NOT available") {

@@ -26,7 +26,7 @@ export class GameRunner {
   public async onFirstPieceAppear() {
     // todo.
     const nextPiece = this.readNextPieceHandler.getCurrentPieceFromEmulator();
-    const currFrame = this.demoPlayer.getLatestFrame();
+    const currFrame = this.demoPlayer.getFrame();
     [this.nextMoveEntries, this.nextMoveBoard, this.extraInformation] = await this.getNextMoveHandler.getNextMoveEntries(this.nextMoveBoard, nextPiece);
     this.expFrame = currFrame + (this.extraInformation.lastFrame || 0);
     console.log("currFrame, expFrame", currFrame, this.expFrame);
@@ -38,16 +38,19 @@ export class GameRunner {
    */
   static failed = 0;
 
-  public async onNextPieceAppear() {
-    if (this.demoPlayer.getLatestFrame() !== this.expFrame) {
-      console.log(`INCORRECT. Expected ${this.expFrame}, actually ${this.demoPlayer.getLatestFrame()}`);
+  public async onNextPieceAppear(tableBoard: any, debug: any) {
+    if (this.demoPlayer.getFrame() !== this.expFrame) {
+      console.log(`INCORRECT. Expected ${this.expFrame}, actually ${this.demoPlayer.getFrame()}`);
       console.log(this.nextMoveBoard);
       console.log(this.nextMoveEntries);
       GameRunner.failed++;
       if (GameRunner.failed > 15) throw new Error("you've failed for the last time!")
       //throw new Error("DFLSJKLF");
     }
-    const currFrame = this.demoPlayer.getLatestFrame();
+    tableBoard['board'] = this.nextMoveBoard;
+    debug['board'] = this.nextMoveBoard.getBitstring();
+
+    const currFrame = this.demoPlayer.getFrame();
     for (const demoEntry of this.nextMoveEntries) {
       demoEntry.frame += currFrame;
     }
@@ -56,6 +59,7 @@ export class GameRunner {
     this.demoPlayer.addEvents(this.nextMoveEntries);
 
     const nextPiece = this.readNextPieceHandler.getCurrentPieceFromEmulator();
+    debug['nextPiece'] = nextPiece;
     console.log("next Piece", nextPiece);
 
     this.nextMoveEntries = [];

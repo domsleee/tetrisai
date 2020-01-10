@@ -7,13 +7,17 @@ import { PieceAwaiter } from './PieceAwaiter';
 import { FrameAwaiter } from './FrameAwaiter';
 
 export class GameLogic {
-  public async run(screen: any, rom: any) {
+  public async run(screen: any, rom: any, tableBoard: any, debug: any) {
+    debug['ok'] = "DFLSJFLSK";
     const factory = new EmulatorFactory(screen, rom);
     const nes = factory.getInstance();
     // @ts-ignore
     window['nes'] = nes;
 
     const demoPlayer = new DemoPlayer(nes);
+    demoPlayer.addFrameListener((frame: number) => {
+      debug['frame'] = frame.toString();
+    });
     const bs = new GameBootstrap(demoPlayer);
     const frameAwaiter = new FrameAwaiter(demoPlayer);
 
@@ -32,7 +36,7 @@ export class GameLogic {
     let x = 15;
     while (x--) {
       await pa.awaitPiece();
-      await gr.onNextPieceAppear();
+      await gr.onNextPieceAppear(tableBoard, debug);
     }
   }
 }

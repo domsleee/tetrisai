@@ -1,6 +1,7 @@
 
 #include "src/common/Weighting.hpp"
 #include "src/pso/ClientApi.hpp"
+#include "src/shared/MoveFinder/MoveFinderFSM.h"
 
 #include <iostream>
 #include <stdexcept>
@@ -26,6 +27,9 @@ std::pair<int, std::string> getImmediateNeighbourStr(const BitPieceInfo &p1, con
 template<typename Mf>
 std::vector<BitPieceInfo> getForwardLocations(const BitBoard &oldBoard, const BitPieceInfo &startingPiece, const Mf &mf);
 
+template<typename MfT>
+std::pair<std::vector<std::string>, int> getStrings(const BitBoard &oldBoard, const Move &move, MfT &mf_);
+
 // notes
 // - does drop come before das?
 // - no level 19 support atm
@@ -50,29 +54,11 @@ int main() {
 }
 
 
-std::string strRep(MoveDirection md) {
-  switch(md) {
-    case(MoveDirection::LEFT): return "LEFT";
-    case(MoveDirection::RIGHT): return "RIGHT";
-    case(MoveDirection::UP): return "UP";
-    case(MoveDirection::DOWN): return "DOWN";
-    default: throw std::runtime_error{"unknown move direction"};
-  }
-}
-
-std::string strRep(RotateDirection rd) {
-  switch(rd) {
-    case(RotateDirection::ROTATE_AC): return "ROTATE_AC";
-    case(RotateDirection::ROTATE_C): return "ROTATE_C";
-    default: throw std::runtime_error{"unknown rotate direction"};
-  }
-}
-
 auto getMeMfPair(int num_lines) {
   auto me1 = MoveEvaluatorAdapter(MoveEvaluator(), w1);
   auto me2 = MoveEvaluatorAdapter(MoveEvaluator(), w2);
-  auto mf1 = MoveFinderRewrite();
-  auto mf2 = MoveFinderRewrite();
+  auto mf1 = MoveFinderFSM();
+  auto mf2 = MoveFinderFSM();
   mf2.setMaxDropRem(2);
   if (num_lines < LINE_TRANSITION) {
     return std::pair(me1, mf1);
@@ -106,6 +92,48 @@ void handleGetMove(int num_lines) {
   const auto lineClears = board.applyMove(move);
   const auto &mf_ = getNextMoveHandler.getMoveFinder();
 
+  //auto [strings, ct] = getStrings(oldBoard, move, mf_);
+  const auto pieceInfo = oldBoard.getPiece(move);
+  auto strings = mf_.getShortestPath(pieceInfo);
+  auto ct = strings.size();
+
+  std::cout << "num moves: " << ct << '\n';
+  for (auto st: strings) std::cout << st;
+  std::cout << "board: " << board << '\n';
+  std::cout << "line clears: " << lineClears << '\n';
+  std::cout << "OK\n";
+}
+
+
+
+
+
+
+
+
+// begin CANCER
+
+std::string strRep(MoveDirection md) {
+  switch(md) {
+    case(MoveDirection::LEFT): return "LEFT";
+    case(MoveDirection::RIGHT): return "RIGHT";
+    case(MoveDirection::UP): return "UP";
+    case(MoveDirection::DOWN): return "DOWN";
+    default: throw std::runtime_error{"unknown move direction"};
+  }
+}
+
+std::string strRep(RotateDirection rd) {
+  switch(rd) {
+    case(RotateDirection::ROTATE_AC): return "ROTATE_AC";
+    case(RotateDirection::ROTATE_C): return "ROTATE_C";
+    default: throw std::runtime_error{"unknown rotate direction"};
+  }
+}
+
+
+template<typename MfT>
+std::pair<std::vector<std::string>, int> getStrings(const BitBoard &oldBoard, const Move &move, MfT &mf_) {
   auto forwards = getForwardLocations(oldBoard, oldBoard.getPiece(move), mf_);
   for (auto piece: forwards) {
     printBoardWithPiece(piece.getBoard(), piece);
@@ -126,12 +154,7 @@ void handleGetMove(int num_lines) {
     ct += delta;
     strings.push_back(st);
   }
-
-  std::cout << "num moves: " << ct << '\n';
-  for (auto st: strings) std::cout << st;
-  std::cout << "board: " << board << '\n';
-  std::cout << "line clears: " << lineClears << '\n';
-  std::cout << "OK\n";
+  return {strings, ct};
 }
 
 template<typename Mf>
