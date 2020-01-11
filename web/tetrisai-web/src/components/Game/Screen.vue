@@ -112,3 +112,9 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style>
+.Screen {
+  image-rendering: pixelated;
+}
+</style>

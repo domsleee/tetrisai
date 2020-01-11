@@ -1,7 +1,7 @@
 import { IDemoPlayer } from "../IDemoPlayer";
 
 export class ErrorHandler {
-  public static fatal(msg: string) {
+  public static fatal(msg: string): never {
     if (this.demoPlayer !== null) {
       this.demoPlayer.timer.stop();
     }

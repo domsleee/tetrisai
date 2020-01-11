@@ -13,10 +13,12 @@
     "@types/node": "^13.1.1",
     "bitset": "^5.0.5",
     "core-js": "^3.4.3",
+    "esm": "^3.2.25",
     "jimp": "^0.9.3",
     "jsnes": "^1.1.0",
     "mocha-param": "^2.0.0",
     "sortedset": "0.0.2",
+    "ts-mocha": "^6.0.0",
     "vue": "^2.6.10"
   },
   "devDependencies": {
