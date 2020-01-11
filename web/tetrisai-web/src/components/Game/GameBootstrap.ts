@@ -17,12 +17,16 @@ export class GameBootstrap {
     buttonAdder.addButtonPress(DemoButton.BUTTON_DOWN);
 
     this.demoPlayer.addEvent({button: DemoButton.BUTTON_A, frame: buttonAdder.frame + 10, isDown: true});
-    this.demoPlayer.addEvent({button: DemoButton.BUTTON_START, frame: buttonAdder.frame + 17, isDown: true});
-    this.demoPlayer.addEvent({button: DemoButton.BUTTON_A, frame: buttonAdder.frame + 18, isDown: false});
-    this.demoPlayer.addEvent({button: DemoButton.BUTTON_START, frame: buttonAdder.frame + 18, isDown: false});
-    this.demoPlayer.addEvent({button: DemoButton.BUTTON_SELECT, frame: buttonAdder.frame + 24, isDown: false});
+    // 17 - 84k
+    const chosenFrame = 17;
+    this.demoPlayer.addEvent({button: DemoButton.BUTTON_START, frame: buttonAdder.frame + chosenFrame, isDown: true});
+    const framesToSetup = 7;
+    const dF = chosenFrame + framesToSetup;
+    this.demoPlayer.addEvent({button: DemoButton.BUTTON_A, frame: buttonAdder.frame + dF - 1, isDown: false});
+    this.demoPlayer.addEvent({button: DemoButton.BUTTON_START, frame: buttonAdder.frame + dF - 1, isDown: false});
+    this.demoPlayer.addEvent({button: DemoButton.BUTTON_SELECT, frame: buttonAdder.frame + dF, isDown: false});
 
-    await frameAwaiter.awaitFrame(buttonAdder.frame + 24);
+    await frameAwaiter.awaitFrame(buttonAdder.frame + dF);
   }
 
   public setupFromGameover() {

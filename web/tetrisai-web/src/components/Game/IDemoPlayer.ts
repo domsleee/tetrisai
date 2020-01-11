@@ -1,3 +1,4 @@
+import { FrameTimer } from './DemoPlayer';
 
 // from jsnes controller constants
 export enum DemoButton {
@@ -18,6 +19,7 @@ export interface DemoEntry {
 }
 
 export interface IDemoPlayer {
+  timer: FrameTimer;
   addEvent(entry: DemoEntry): void;
   addEvents(entry: DemoEntry[]): void;
   goBack(numFrames: number): void;

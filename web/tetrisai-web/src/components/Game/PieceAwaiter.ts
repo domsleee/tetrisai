@@ -3,6 +3,9 @@ import { IDemoPlayer, DemoButton } from './IDemoPlayer';
 import { IFrameAwaiter } from './FrameAwaiter';
 
 export class PieceAwaiter {
+  private static readonly greyPixel = [49, 59];
+  private static readonly GREY_PIXEL_COLOUR = 0xff525252;
+
   private readonly pixelChecker: IPixelChecker;
   private readonly demoPlayer: IDemoPlayer;
   private readonly frameAwaiter: IFrameAwaiter;
@@ -10,6 +13,9 @@ export class PieceAwaiter {
   private readonly rRange = [73, 204];
   private readonly cRange = [45, 89];
   private matrix: number[][] = [];
+
+  private isTetrisingCooldown = 0;
+  private readonly IS_TETRISING_COOLDOWN_MAX = 1;
 
   constructor(pixelChecker: IPixelChecker, demoPlayer: IDemoPlayer, frameAwaiter: IFrameAwaiter) {
     this.pixelChecker = pixelChecker;
@@ -41,9 +47,15 @@ export class PieceAwaiter {
           row[c] = newV;
         }
       }
-      if (diff) {
+      const greyPixelColour = this.pixelChecker.getPixel(PieceAwaiter.greyPixel[0], PieceAwaiter.greyPixel[1]);
+      //console.log("grey pixel colour", greyPixelColour.toString(16));
+      const isFlashing = (greyPixelColour !== PieceAwaiter.GREY_PIXEL_COLOUR);
+      const isTetrising = isFlashing || this.isTetrisingCooldown > 0;
+      this.isTetrisingCooldown = Math.max(0, this.isTetrisingCooldown - 1);
+      if (isFlashing) { this.isTetrisingCooldown = this.IS_TETRISING_COOLDOWN_MAX; }
+      if (diff && !isTetrising) {
         console.log('diff!');
-        this.demoPlayer.goBack(1);
+        //this.demoPlayer.goBack(1);
         break;
       }
       if (this.demoPlayer.isEmpty()) {

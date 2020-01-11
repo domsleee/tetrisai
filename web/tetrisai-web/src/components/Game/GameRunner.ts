@@ -18,6 +18,7 @@ export class GameRunner {
   private readNextPieceHandler: IReadNextPiece;
   private debug: any;
   private tableBoard: any = null;
+  private firstNextPieceAppear = true;
 
   public constructor(demoPlayer: IDemoPlayer, getNextMoveHandler: IGetNextMove, readNextPieceHandler: IReadNextPiece, debug: any) {
     this.demoPlayer = demoPlayer;
@@ -71,14 +72,6 @@ export class GameRunner {
   static failed = 0;
 
   public async onNextPieceAppear() {
-    if (this.demoPlayer.getFrame() !== this.expFrame) {
-      //console.log(`INCORRECT. Expected ${this.expFrame}, actually ${this.demoPlayer.getFrame()}`);
-      //console.log(this.nextMoveBoard);
-      //console.log(this.nextMoveEntries);
-      GameRunner.failed++;
-      if (GameRunner.failed > 1e9) throw new Error("you've failed for the last time!")
-      //throw new Error("DFLSJKLF");
-    }
     if (this.tableBoard) this.tableBoard['board'] = this.nextMoveBoard;
     this.debug['board'] = this.nextMoveBoard.getBitstring();
 
@@ -96,6 +89,18 @@ export class GameRunner {
 
     this.nextMoveEntries = [];
     [this.nextMoveEntries, this.nextMoveBoard, this.extraInformation] = await this.getNextMoveHandler.getNextMoveEntries(this.nextMoveBoard, nextPiece);
+    // add an event 3 frames later than last frame, and remove first nextMoveEntry
+    if (this.nextMoveEntries.length > 0 && this.nextMoveEntries[0].frame === 1) {
+      if (this.extraInformation.lastFrame) {
+        this.demoPlayer.addEvent({
+          frame: currFrame + this.extraInformation.lastFrame + 3,
+          button: this.nextMoveEntries[0].button,
+          isDown: true,
+        });
+        this.nextMoveEntries.slice(1);
+      }
+    }
+
     this.expFrame = currFrame + (this.extraInformation.lastFrame || 0);
   }
 }

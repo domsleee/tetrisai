@@ -6,6 +6,7 @@ import { PixelChecker } from './PixelGetter';
 import { PieceAwaiter } from './PieceAwaiter';
 import { FrameAwaiter } from './FrameAwaiter';
 import { DemoButton } from './IDemoPlayer';
+import { ErrorHandler } from './common/ErrorHandler';
 
 export class GameLogic {
   public async run(screen: any, rom: any, tableBoard: any, debug: any) {
@@ -15,11 +16,11 @@ export class GameLogic {
     // @ts-ignore
     window['nes'] = nes;
 
-
     const demoPlayer = new DemoPlayer(nes);
+    ErrorHandler.setup(demoPlayer);
     demoPlayer.addFrameListener((frame: number) => {
-      if (frame == 1105) {
-        //demoPlayer.timer.setFps(0.5);
+      if (frame == 3396) {
+        //demoPlayer.timer.setFps(0.33);
       }
       debug['fps'] = demoPlayer.timer.getFps();
       debug['frame'] = frame.toString();
@@ -28,7 +29,6 @@ export class GameLogic {
     const frameAwaiter = new FrameAwaiter(demoPlayer);
 
     await bs.setupFromNewCanvas(frameAwaiter);
-
     console.log("setup??");
 
     const pixelChecker = new PixelChecker(screen);

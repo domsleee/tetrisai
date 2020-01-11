@@ -1,6 +1,7 @@
 import { IDemoPlayer, DemoEntry, DemoButton } from './IDemoPlayer';
 import { IEmulator } from './Emulator/IEmulator';
 import SortedSet from 'sortedset';
+import { ErrorHandler } from './common/ErrorHandler';
 
 type ListenerFn = ((frame: number) => void);
 
@@ -28,6 +29,7 @@ export class FrameTimer {
   }
 
   public stop() {
+    if (this.timer === null) { return; }
     clearInterval(this.timer);
     this.timer = null;
   }
@@ -36,10 +38,10 @@ export class FrameTimer {
 export class DemoPlayer implements IDemoPlayer {
   private nes: IEmulator;
   private events: any = new SortedSet([], (a: DemoEntry, b: DemoEntry) => {
-    if (a.frame != b.frame) return a.frame - b.frame;
+    if (a.frame !== b.frame) { return a.frame - b.frame; }
     // up is preferred
-    if (a.isDown != b.isDown) return (a.isDown ? 0 : 1) - (b.isDown ? 0 : 1);
-    if (a.button != b.button) return a.button - b.button;
+    if (a.isDown !== b.isDown) { return (a.isDown ? 0 : 1) - (b.isDown ? 0 : 1); }
+    if (a.button !== b.button) { return a.button - b.button; }
     return 0;
   });
   private lastNesJSONStr: any = null;
@@ -113,7 +115,7 @@ export class DemoPlayer implements IDemoPlayer {
   private tick() {
     const eventsProcessed = this.forwardEventsToEmulator();
     if (!this.isEmpty() || eventsProcessed > 0) {
-      this.lastNesJSONStr = JSON.stringify(this.nes.toJSON());
+      //this.lastNesJSONStr = JSON.stringify(this.nes.toJSON());
       this.nes.frame();
       for (const listener of this.frameListeners) { listener(this.nes.getFrame()); }
     }
@@ -141,7 +143,7 @@ export class DemoPlayer implements IDemoPlayer {
     if (event.isDown) {
       if (event.button in this.buttonIsDown && this.buttonIsDown[event.button]) {
         console.log(event);
-        throw new Error(`button ${DemoButton[event.button]} was down, cannot go down again!`);
+        ErrorHandler.fatal(`button ${DemoButton[event.button]} was down, cannot go down again!`);
       }
       this.buttonIsDown[event.button] = true;
       this.nes.buttonDown(event.button);
