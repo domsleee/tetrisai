@@ -28,13 +28,14 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
   q.push({0, s1});
   q.push({0, s2});
 
-  auto s3 = s2;
+  auto s3(s2);
   s3.dasRem_ = 6; // no das charge
   seen.insert(s3);
-  q.push({0, s3});
+  //q.push({0, s3});
 
   while (!q.empty()) {
     const auto [numMoves, top] = q.top(); q.pop();
+    //printf("DASREM %d -> %d (numMoves: %d)\n", top.frameEntered_, top.dasRem_, numMoves);
 
     auto addNxFrame = [&, top=top, numMoves=numMoves]{
       auto nxFrame = top;
@@ -45,24 +46,13 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
       q.push({numMoves, nxFrame});
     };
 
-    // rotations...
-    for (auto rotateDirection: allRotateDirections) {
-      if (top.rotateCooldown_[rotateDirection] == 0 && top.piece_.canRotate(rotateDirection)) {
-        auto nxRotate = top;
-        nxRotate.piece_ = top.piece_.rotate(rotateDirection);
-        nxRotate.rotateCooldown_[rotateDirection] = 2;
-        if (seen.count(nxRotate)) continue; seen.insert(nxRotate);
-        addEdge(top, nxRotate, rotateDirection);
-        q.push({numMoves+1, nxRotate});
-      }
-    }
-
     // if drop rem is zero, you MUST move down
     if (top.dropRem_ == 0) {
       if (top.piece_.canMove(MoveDirection::DOWN)) {
         auto nxMovedDown = top;
         nxMovedDown.piece_ = top.piece_.move(MoveDirection::DOWN);
         nxMovedDown.dropRem_ = maxDropRem_;
+        nxMovedDown.setRotateCooldown(1);
         if (seen.count(nxMovedDown)) continue; seen.insert(nxMovedDown);
         addEdge(top, nxMovedDown, MoveDirection::DOWN);
         q.push({numMoves, nxMovedDown});
@@ -89,15 +79,20 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
         // either keep holding or release.
         // you MUST move across if dasRem is zero when you're holding
         if (top.dasRem_ == 0) {
+          // consider bringing in moveCooldownFromRotate_
+          if (top.moveCooldown_ != 0) continue; // cant proceed
+          //printf("dasRem_ 0 on frame: %d\n", top.frameEntered_);
           auto moveDirection = top.isLeftHolding_ ? MoveDirection::LEFT : MoveDirection::RIGHT;
           if (top.piece_.canMove(moveDirection)) {
             auto nxMoved = top;
             nxMoved.piece_ = top.piece_.move(moveDirection);
             nxMoved.dasRem_ = MAX_DAS_REM;
-            if (seen.count(nxMoved)) continue; seen.insert(nxMoved);
+            nxMoved.setRotateCooldown(1);
+            if (seen.count(nxMoved)) continue;
+            seen.insert(nxMoved);
             addEdge(top, nxMoved, moveDirection);
             q.push({numMoves+1, nxMoved});
-            break;
+            continue;
           }
         }
 
@@ -105,11 +100,13 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
         {
           auto nxReleased = top;
           nxReleased.fsmState_ = FSMState::RELEASED;
-          nxReleased.moveCooldown_ = 1+1;
+          nxReleased.moveCooldown_ = 1+1; // can eventually be 1
           onEnterReleased(nxReleased);
-          if (seen.count(nxReleased)) continue; seen.insert(nxReleased);
-          addEdge(top, nxReleased, Action::NONE);
-          q.push({numMoves, nxReleased});
+          if (!seen.count(nxReleased)) {
+            seen.insert(nxReleased);
+            addEdge(top, nxReleased, Action::NONE);
+            q.push({numMoves, nxReleased});
+          }
         }
         addNxFrame();
       } break;
@@ -121,6 +118,7 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
               auto nxTapped = top;
               nxTapped.piece_ = top.piece_.move(moveDirection);
               nxTapped.fsmState_ = FSMState::TAPPED_ONCE;
+              nxTapped.setRotateCooldown(1);
               onEnterTapped(nxTapped);
               if (seen.count(nxTapped))
               continue; seen.insert(nxTapped);
@@ -135,6 +133,21 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
         // nothing to do here, lol.
         addNxFrame();
       } break;
+    }
+
+    // rotations...
+    for (auto rotateDirection: allRotateDirections) {
+      if (top.rotateCooldown_[rotateDirection] == 0 && top.piece_.canRotate(rotateDirection)) {
+        auto nxRotate = top;
+        nxRotate.piece_ = top.piece_.rotate(rotateDirection);
+        nxRotate.rotateCooldown_[rotateDirection] = 2;
+        // move is processed before rotation. This means that any move after the rotation
+        // this means any move after the rotation MUST be at least on the frame after
+        nxRotate.moveCooldown_ = 1;
+        if (seen.count(nxRotate)) continue; seen.insert(nxRotate);
+        addEdge(top, nxRotate, rotateDirection);
+        q.push({numMoves+1, nxRotate});
+      }
     }
 
   }

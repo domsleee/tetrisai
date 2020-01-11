@@ -26,4 +26,14 @@ export class Emulator implements IEmulator {
   public buttonUp(button: DemoButton) {
     this.nes.buttonUp(1, button);
   }
+
+  public revertFromJSON(jsonStr: any, numFrames: number) {
+    this.nes.fromJSON(jsonStr);
+    this.frameCt -= numFrames;
+    console.log("GONE BACK. NEW FRAMECT", this.frameCt);
+  }
+
+  public toJSON() {
+    return this.nes.toJSON();
+  }
 }

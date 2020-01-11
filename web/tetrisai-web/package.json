@@ -16,6 +16,7 @@
     "jimp": "^0.9.3",
     "jsnes": "^1.1.0",
     "mocha-param": "^2.0.0",
+    "sortedset": "0.0.2",
     "vue": "^2.6.10"
   },
   "devDependencies": {

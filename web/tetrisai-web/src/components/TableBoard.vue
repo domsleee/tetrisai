@@ -15,7 +15,9 @@ import Vue from "vue";
 
 interface Data {
   board: null | IBoard;
-};
+  rows: number[];
+  columns: number[];
+}
 
 export default Vue.extend({
   data(): Data {
@@ -28,7 +30,6 @@ export default Vue.extend({
   methods: {
     pieceColour(row: number, column: number) {
       if (!this.board) { return 'black'; }
-      console.log(this.board);
       if (!this.board.vacant(row, column)) { return 'white'; }
       return 'red';
     }

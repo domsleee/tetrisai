@@ -8,8 +8,8 @@ import { PixelChecker, IPixelChecker } from './PixelGetter';
 import { ExtraInformation } from './ExtraInformation';
 
 export class GameRunnerFactory {
-  public static getInstance(demoPlayer: IDemoPlayer, pixelChecker: IPixelChecker): GameRunner {
-    return new GameRunner(demoPlayer, new GetNextMove(), new ReadNextPiece(pixelChecker));
+  public static getInstance(demoPlayer: IDemoPlayer, pixelChecker: IPixelChecker, debug: any): GameRunner {
+    return new GameRunner(demoPlayer, new GetNextMove(), new ReadNextPiece(pixelChecker), debug);
   }
 }
 

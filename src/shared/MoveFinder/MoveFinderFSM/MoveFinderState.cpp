@@ -8,5 +8,6 @@ std::size_t std::hash<MoveFinderState>::operator()(const MoveFinderState& s1) co
   ^ std::hash<int>{}(s1.rotateCooldown_[1])
   ^ std::hash<int>{}(s1.moveCooldown_)
   ^ std::hash<int>{}(s1.dropRem_)
-  ^ std::hash<int>{}(s1.dasRem_);
+  ^ std::hash<int>{}(s1.dasRem_)
+  ^ std::hash<int>{}(s1.frameEntered_);
 }

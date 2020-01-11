@@ -29,6 +29,7 @@ export class PieceAwaiter {
   }
 
   public async awaitPiece() {
+    console.log("awaiting piece...");
     let frame = this.demoPlayer.getFrame();
     while (true) {
       let diff = false;
@@ -42,12 +43,13 @@ export class PieceAwaiter {
       }
       if (diff) {
         console.log('diff!');
+        this.demoPlayer.goBack(1);
         break;
       }
-      if (this.demoPlayer.getFrame() === this.demoPlayer.getLatestFrame()) {
+      if (this.demoPlayer.isEmpty()) {
         this.demoPlayer.addEvent({
           button: DemoButton.BUTTON_SELECT,
-          frame: this.demoPlayer.getLatestFrame() + 1,
+          frame: this.demoPlayer.getFrame(),
           isDown: false,
         });
       }

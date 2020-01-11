@@ -20,9 +20,11 @@ export interface DemoEntry {
 export interface IDemoPlayer {
   addEvent(entry: DemoEntry): void;
   addEvents(entry: DemoEntry[]): void;
+  goBack(numFrames: number): void;
   destroy(): void;
   getFrame(): number;
   getLatestFrame(): number;
+  isEmpty(): boolean;
   addFrameListener(fn: ((frame: number) => void)): void;
   removeFrameListener(fn: ((frame: number) => void)): void;
 }

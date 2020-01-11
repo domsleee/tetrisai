@@ -9,6 +9,11 @@ export interface IBoard {
 }
 
 export class Board implements IBoard {
+  public static fromNormalBoard(vs: string[]): Board {
+    const bitstring = vs.join('');
+    return new Board(bitstring);
+  }
+
   private b: BitSet = new BitSet(200);
   private originalString: string = "0".repeat(200);
 

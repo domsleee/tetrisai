@@ -25,18 +25,24 @@ class MoveFinderState {
   int moveCooldown_ = 0; // on release ==> 1
   int dropRem_;
   int maxDropRem_;
-  int dasRem_ = 0; // on zero, can use das (indicated by FSMState::HOLDING)
+  int dasRem_ = 1; // on zero, can use das (indicated by FSMState::HOLDING)
 
   // extra info for pathfinding
   int frameEntered_ = 0;
-  int numMoves_ = 0;
 
   MoveFinderState(const BitPieceInfo &piece, bool isLeftHolding, int maxDropRem):
-    piece_(piece),
     isLeftHolding_(isLeftHolding),
-    maxDropRem_(maxDropRem),
-    dropRem_(maxDropRem)
-  {}
+    piece_(piece),
+    dropRem_(maxDropRem),
+    maxDropRem_(maxDropRem)
+  {
+    dasRem_ = 1;
+  }
+
+  void setRotateCooldown(int cooldown) {
+    rotateCooldown_[0] = std::max(rotateCooldown_[0], 1);
+    rotateCooldown_[1] = std::max(rotateCooldown_[1], 1);
+  }
 
   void nextFrame() {
     frameEntered_++;
@@ -55,7 +61,8 @@ class MoveFinderState {
     && s1.rotateCooldown_[1] == s2.rotateCooldown_[1]
     && s1.moveCooldown_ == s2.moveCooldown_
     && s1.dropRem_ == s2.dropRem_
-    && s1.dasRem_ == s2.dasRem_;
+    && s1.dasRem_ == s2.dasRem_
+    && s1.frameEntered_ == s2.frameEntered_; // you may not need this, however im leaving it in
   }
 
   friend std::size_t std::hash<MoveFinderState>::operator()(const MoveFinderState&) const;
