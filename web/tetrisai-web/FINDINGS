@@ -1,0 +1,6 @@
+Maybe important:
+* For developing MoveFinderFSM: With JSNES, you cannot press two buttons at the same time (e.g. move and rotate). Only the first will be registered
+* When holding DAS, the piece will be moved on the SECOND frame, not the first.
+
+Not important
+* When you get a tetris and the screen flashes, it flashes every 4 frames (for one frame). Despite being flashed for only one frame, the pixels are affected for 2 frames.
