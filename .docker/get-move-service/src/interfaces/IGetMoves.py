@@ -34,7 +34,7 @@ class IGetMoves:
     """
   
   @abc.abstractmethod
-  def get_moves(self, board: str, piece: int) -> typing.Tuple[BoardT, typing.List[DemoEntry]]:
+  def get_moves(self, board: str, piece: int, firstMoveDirection: typing.Optional[str]) -> typing.Tuple[BoardT, typing.List[DemoEntry]]:
     """[summary]
     
     Arguments:

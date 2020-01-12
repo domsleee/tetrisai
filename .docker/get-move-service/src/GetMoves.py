@@ -32,9 +32,14 @@ class GetMoves(IGetMoves):
     nx_line = self._process.read_line()
     return nx_line == "OK"
 
-  def get_moves(self, board: str, piece: int) -> typing.Tuple[str, BoardT, typing.List[DemoEntry]]:    
-    self._send_str(b'g\n')
+  def get_moves(self, board: str, piece: int, firstMoveDirection: typing.Optional[str] = None) -> typing.Tuple[str, BoardT, typing.List[DemoEntry]]:    
+    if firstMoveDirection:
+      self._send_str(b'k\n')
+    else:
+      self._send_str(b'g\n')
     self._send_str((str(piece) + '\n').encode('utf-8'))
+    if firstMoveDirection:
+      self._send_str(firstMoveDirection[0].encode('utf-8'))
     if len(board) != 200:
       raise ValueError("Board string '%s' incorrect length (expect 200)" % board)
     self._send_str((board + '\n').encode('utf-8'))

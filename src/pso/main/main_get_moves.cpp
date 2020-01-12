@@ -9,6 +9,7 @@
 
 const char INSTRUCTION_HEALTH = 'h';
 const char INSTRUCTION_GET_MOVE = 'g';
+const char INSTRUCTION_GET_MOVE_GIVEN_FIRST_DIRECTION = 'k';
 const char INSTRUCTION_QUIT = 'q';
 
 const bool MY_DEBUG = false;
@@ -21,7 +22,7 @@ std::string best19 = "[-14.89103037780527 6.1859328293901985 3.1475886283096397 
 auto w1 = WeightingFn::readFromString(best18);
 auto w2 = WeightingFn::readFromString(best19);
 
-void handleGetMove(int num_lines);
+void handleGetMove(int num_lines, bool givenFirstMoveDirection=false);
 std::pair<int, std::string> getImmediateNeighbourStr(const BitPieceInfo &p1, const BitPieceInfo &p2, int frame);
 
 template<typename Mf>
@@ -43,8 +44,9 @@ int main() {
       case(INSTRUCTION_HEALTH): {
         std::cout << "OK\n";
       } break;
-      case (INSTRUCTION_GET_MOVE): handleGetMove(num_lines); break;
-      case (INSTRUCTION_QUIT): exit(0);
+      case(INSTRUCTION_GET_MOVE): handleGetMove(num_lines); break;
+      case(INSTRUCTION_GET_MOVE_GIVEN_FIRST_DIRECTION): handleGetMove(num_lines, true); break;
+      case(INSTRUCTION_QUIT): exit(0);
       default: {
         std::cout << "unknown command\n";
         exit(1);
@@ -66,11 +68,13 @@ auto getMeMfPair(int num_lines) {
   return std::pair(me2, mf2);
 }
 
-void handleGetMove(int num_lines) {
+void handleGetMove(int num_lines, bool givenFirstMoveDirection) {
   int piece;
+  char firstMoveDirectionChar;
   std::string boardStr;
 
   std::cin >> piece;
+  if (givenFirstMoveDirection) std::cin >> firstMoveDirectionChar;
   std::cin >> boardStr;
 
   //std::cout << "board str: " << boardStr << '\n';
@@ -80,6 +84,7 @@ void handleGetMove(int num_lines) {
   auto board = BitBoard(boardStr);
   auto [me, mf] = getMeMfPair(num_lines);
   mf.setRecordEdges(true);
+  if (givenFirstMoveDirection) mf.setFirstMoveDirectionChar(firstMoveDirectionChar);
   auto getNextMoveHandler = NewGetNextMove(me, mf);
   if (board.hasNoMoves(blockType)) {
     std::cout << "result: no moves\n";
