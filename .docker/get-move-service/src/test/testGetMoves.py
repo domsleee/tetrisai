@@ -63,7 +63,7 @@ class TestGetMoves(unittest.TestCase):
     self.assertNotEqual(not_exp_nx_board, nx_board)
     self.assertGreater(len(demo_entries), 0)
     self.assertEqual(1, demo_entries[0].frame)
-    self.assertEqual("RIGHT", demo_entries[0].action)
+    self.assertEqual("LEFT", demo_entries[0].action)
 
 
 if __name__ == '__main__':

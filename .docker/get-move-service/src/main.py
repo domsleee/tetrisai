@@ -42,7 +42,7 @@ def get_move_handler():
       raise ValueError(f"Unexpected firstMoveDirection: {firstMoveDirection}")
     print("REQUEST")
     print(payload)
-    r, board, demo_entries = get_moves_service.get_moves(board, piece)
+    r, board, demo_entries = get_moves_service.get_moves(board, piece, firstMoveDirection)
     ret = {
       'board': board,
       'demo_entries': [str(demo_entry.frame) + " " + demo_entry.action for demo_entry in demo_entries]

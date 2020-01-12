@@ -23,15 +23,25 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
 
   auto s1 = MoveFinderState(b.getPiece(blockType), true, maxDropRem_);
   auto s2 = MoveFinderState(b.getPiece(blockType), false, maxDropRem_);
-  seen.insert(s1);
-  seen.insert(s2);
-  q.push({0, s1});
-  q.push({0, s2});
-
   auto s3(s2);
   s3.dasRem_ = 6; // no das charge
-  seen.insert(s3);
-  //q.push({0, s3});
+
+  if (!hasFirstMoveConstraint_) {
+    seen.insert(s1);
+    seen.insert(s2);
+    q.push({0, s1});
+    q.push({0, s2});
+
+    seen.insert(s3);
+    q.push({0, s3});
+  } else {
+    switch(firstMoveDirectionChar_) {
+      case 'L': { seen.insert(s1); q.push({0, s1}); } break;
+      case 'R': { seen.insert(s2); q.push({0, s2}); } break;
+      case 'N': { seen.insert(s3); q.push({0, s3}); } break;
+      default: throw std::runtime_error("Unknown firstMoveDirectionChar_");
+    }
+  }
 
   while (!q.empty()) {
     const auto [numMoves, top] = q.top(); q.pop();

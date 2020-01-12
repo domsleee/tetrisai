@@ -10,7 +10,7 @@ struct Move {
   std::vector<Coord> coords_;
   Move(const std::vector<Coord>& coords) {
     if (coords.size() != 4) {
-      throw new std::runtime_error{"require vector of size 4"};
+      throw std::runtime_error{"require vector of size 4"};
     }
     for (auto coord: coords) {
       maxR = std::max(maxR, coord.r);

@@ -9,7 +9,7 @@ Action toAction(MoveDirection md) {
     case MoveDirection::UP: return Action::UP;
     case MoveDirection::DOWN: return Action::DOWN;
   }
-  throw new std::runtime_error("unable to convert move to action");
+  throw std::runtime_error("unable to convert move to action");
 }
 
 Action toAction(RotateDirection rd) {
@@ -17,7 +17,7 @@ Action toAction(RotateDirection rd) {
     case RotateDirection::ROTATE_AC: return Action::ROTATE_AC;
     case RotateDirection::ROTATE_C: return Action::ROTATE_C;
   }
-  throw new std::runtime_error("unable to convert rotation to action");
+  throw std::runtime_error("unable to convert rotation to action");
 }
 
 std::string toString(Action a) {
@@ -29,5 +29,5 @@ std::string toString(Action a) {
     case Action::UP: return "UP"; break;
     case Action::DOWN: return "DOWN"; break;
   }
-  throw new std::runtime_error("unable to convert action to string");
+  throw std::runtime_error("unable to convert action to string");
 }

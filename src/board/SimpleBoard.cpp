@@ -12,7 +12,7 @@ Coord getMoveDirectionVector(MoveDirection m) {
     case MoveDirection::RIGHT: return {0, 1};
     case MoveDirection::UP: return {-1, 0};
     case MoveDirection::DOWN: return {1, 0};
-    default: throw new std::runtime_error{"should never happen"};
+    default: throw std::runtime_error{"should never happen"};
   }
 }
 
@@ -25,11 +25,11 @@ SimpleBoard::SimpleBoard() {
 SimpleBoard::SimpleBoard(const std::vector<std::vector<int>> &startingBoard) {
   for (int r = 0; r < NUM_ROWS; r++) rowCt_[r] = 0;
   if (startingBoard.size() != NUM_ROWS) {
-    throw new std::runtime_error("incorrect number of rows in constructor");
+    throw std::runtime_error("incorrect number of rows in constructor");
   }
   for (int r = 0; r < NUM_ROWS; r++) {
     if (startingBoard[r].size() != NUM_COLUMNS) {
-      throw new std::runtime_error("incorrect number of columns!");
+      throw std::runtime_error("incorrect number of columns!");
     }
     for (int c = 0; c < NUM_COLUMNS; c++) {
       board_[r][c] = startingBoard[r][c];
@@ -162,12 +162,12 @@ void simplePieceSanity(const SimplePieceInfo &p) {
     if (!(coord1.r < coord2.r || (coord1.r == coord2.r && coord1.c < coord2.c))) {
       coord1.print();
       coord2.print();
-      throw new std::runtime_error{"um"};
+      throw std::runtime_error{"um"};
     }
   }
   for (const auto& coord: p.position_.coords_) {
     if (!(0 <= coord.r && coord.r < NUM_ROWS && 0 <= coord.c && coord.c < NUM_COLUMNS)) {
-      throw new std::runtime_error{"out of bounds..."};
+      throw std::runtime_error{"out of bounds..."};
     }
   }
 }

@@ -39,7 +39,7 @@ class GetMoves(IGetMoves):
       self._send_str(b'g\n')
     self._send_str((str(piece) + '\n').encode('utf-8'))
     if firstMoveDirection:
-      self._send_str(firstMoveDirection[0].encode('utf-8'))
+      self._send_str((firstMoveDirection[0] + '\n').encode('utf-8'))
     if len(board) != 200:
       raise ValueError("Board string '%s' incorrect length (expect 200)" % board)
     self._send_str((board + '\n').encode('utf-8'))
@@ -47,6 +47,8 @@ class GetMoves(IGetMoves):
     result = self._process_line(self._process.read_line(), "result")
     if result == "no moves":
       return "n", None, None
+    elif result != "moves":
+      raise ValueError(f"wtf is {result}")
 
     demo_entries = []
     num_moves = int(self._process_line(self._process.read_line(), "num moves"))

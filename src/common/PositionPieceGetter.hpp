@@ -40,7 +40,7 @@ struct PositionPieceGetter {
           {0, 4}, {0, 5}, {0, 6}, {1, 4}
         }};
       }
-      default: throw new std::runtime_error{"should never happen"};
+      default: throw std::runtime_error{"should never happen"};
 
     }
   }

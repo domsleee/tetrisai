@@ -7,6 +7,8 @@
 #include <stdexcept>
 #include <stdlib.h>
 
+#define dprintf(...) fprintf(stderr, __VA_ARGS__)
+
 const char INSTRUCTION_HEALTH = 'h';
 const char INSTRUCTION_GET_MOVE = 'g';
 const char INSTRUCTION_GET_MOVE_GIVEN_FIRST_DIRECTION = 'k';
@@ -35,11 +37,21 @@ std::pair<std::vector<std::string>, int> getStrings(const BitBoard &oldBoard, co
 // - does drop come before das?
 // - no level 19 support atm
 
+void run();
 int main() {
-  while(true) {
-    char instruction;
-    std::cin >> instruction;
+  try {
+    run();
+  } catch (std::runtime_error &e) {
+    std::cout << "Caught an exception of an unexpected type: "
+              << e.what () << '\n';
+  }
+}
+
+void run() {
+  char instruction;
+  while(std::cin >> instruction) {
     int num_lines = 0;
+    //dprintf("instruction: %c\n", instruction);
     switch(instruction) {
       case(INSTRUCTION_HEALTH): {
         std::cout << "OK\n";
@@ -54,7 +66,6 @@ int main() {
     }
   }
 }
-
 
 auto getMeMfPair(int num_lines) {
   auto me1 = MoveEvaluatorAdapter(MoveEvaluator(), w1);
@@ -77,6 +88,7 @@ void handleGetMove(int num_lines, bool givenFirstMoveDirection) {
   if (givenFirstMoveDirection) std::cin >> firstMoveDirectionChar;
   std::cin >> boardStr;
 
+  //std::cout << "firstMoveDirectionChar: " << firstMoveDirectionChar << '\n';
   //std::cout << "board str: " << boardStr << '\n';
   //std::cout << "piece: " << piece << '\n';
 
@@ -239,7 +251,7 @@ std::pair<int, std::string> getImmediateNeighbourStr(const BitPieceInfo &p1, con
         }
       }
     }
-    throw new std::runtime_error("no rotate direction found...");
+    throw std::runtime_error("no rotate direction found...");
   };
 
   for (auto rotPiece: p1.getClosedRotN()) {
@@ -259,5 +271,5 @@ std::pair<int, std::string> getImmediateNeighbourStr(const BitPieceInfo &p1, con
       }
     }
   }
-  throw new std::runtime_error("unable to complete move!");
+  throw std::runtime_error("unable to complete move!");
 }
