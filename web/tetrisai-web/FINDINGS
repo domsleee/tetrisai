@@ -1,4 +1,6 @@
 Maybe important:
+* There is a frame lag on registering buttons. For example, if you hold down LEFT after frame 555 is rendered, it will not be shown until 557.
+  - You can press LEFT the frame before the piece appears (after the frame before the piece appears), and it will be applied the frame after the piece appears (i.e. 2 frames later)
 * For developing MoveFinderFSM: With JSNES, you cannot press two buttons at the same time (e.g. move and rotate). Only the first will be registered
 * When holding DAS, the piece will be moved on the SECOND frame, not the first.
 

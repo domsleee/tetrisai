@@ -2,6 +2,7 @@ import { IDemoPlayer, DemoEntry, DemoButton } from './IDemoPlayer';
 import { Piece } from './common/Enums';
 import { IBoard, Board } from './common/Board';
 import { ExtraInformation } from './ExtraInformation';
+import { IReadCurrentPiece } from '../GameRunner/ReadCurrentPiece';
 
 function sleep(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -20,7 +21,11 @@ export class GameRunner {
   private tableBoard: any = null;
   private firstNextPieceAppear = true;
 
-  public constructor(demoPlayer: IDemoPlayer, getNextMoveHandler: IGetNextMove, readNextPieceHandler: IReadNextPiece, debug: any) {
+  public constructor(demoPlayer: IDemoPlayer,
+                     getNextMoveHandler: IGetNextMove,
+                     readNextPieceHandler: IReadNextPiece,
+                     readCurrentPieceHandler: IReadCurrentPiece,
+                     debug: any) {
     this.demoPlayer = demoPlayer;
     this.getNextMoveHandler = getNextMoveHandler;
     this.readNextPieceHandler = readNextPieceHandler;
