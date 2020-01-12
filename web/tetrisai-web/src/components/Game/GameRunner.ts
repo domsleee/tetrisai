@@ -14,12 +14,13 @@ export class GameRunner {
   private expFrame: number = 0;
   private extraInformation: ExtraInformation = {};
 
-  private demoPlayer: IDemoPlayer;
-  private getNextMoveHandler: IGetNextMove;
-  private readNextPieceHandler: IReadNextPiece;
+  private readonly demoPlayer: IDemoPlayer;
+  private readonly getNextMoveHandler: IGetNextMove;
+  private readonly readNextPieceHandler: IReadNextPiece;
+  private readonly readCurrentPieceHandler: IReadCurrentPiece;
+
   private debug: any;
   private tableBoard: any = null;
-  private firstNextPieceAppear = true;
 
   public constructor(demoPlayer: IDemoPlayer,
                      getNextMoveHandler: IGetNextMove,
@@ -29,6 +30,7 @@ export class GameRunner {
     this.demoPlayer = demoPlayer;
     this.getNextMoveHandler = getNextMoveHandler;
     this.readNextPieceHandler = readNextPieceHandler;
+    this.readCurrentPieceHandler = readCurrentPieceHandler;
     this.nextMoveBoard = Board.fromNormalBoard([
       "0000000000",
       "0000000000",
@@ -60,11 +62,23 @@ export class GameRunner {
   }
 
   public async onFirstPieceAppear() {
-    // todo.
-    const nextPiece = this.readNextPieceHandler.getCurrentPieceFromEmulator();
     const currFrame = this.demoPlayer.getFrame();
+    this.demoPlayer.addEvent({
+      button: DemoButton.BUTTON_LEFT,
+      isDown: false,
+      frame: currFrame + 2,
+    });
+
+    const currPiece = this.readCurrentPieceHandler.getPieceFromEmulator();
+    let moveEntries, unused;
+    [moveEntries, this.nextMoveBoard, unused] =
+      await this.getNextMoveHandler.getNextMoveEntries(new Board(), currPiece, 'LEFT');
+    this.addRawDemoEventsToDemoPlayer(moveEntries);
+
+    const nextPiece = this.readNextPieceHandler.getCurrentPieceFromEmulator();
     if (this.tableBoard) { this.tableBoard['board'] = this.nextMoveBoard; }
-    [this.nextMoveEntries, this.nextMoveBoard, this.extraInformation] = await this.getNextMoveHandler.getNextMoveEntries(this.nextMoveBoard, nextPiece);
+    [this.nextMoveEntries, this.nextMoveBoard, this.extraInformation] =
+      await this.getNextMoveHandler.getNextMoveEntries(this.nextMoveBoard, nextPiece);
     this.expFrame = currFrame + (this.extraInformation.lastFrame || 0);
     console.log("currFrame, expFrame", currFrame, this.expFrame);
     //this.demoPlayer.addEvent({frame: 555, button: DemoButton.BUTTON_RIGHT, isDown: true});
@@ -79,14 +93,8 @@ export class GameRunner {
   public async onNextPieceAppear() {
     if (this.tableBoard) this.tableBoard['board'] = this.nextMoveBoard;
     this.debug['board'] = this.nextMoveBoard.getBitstring();
-
     const currFrame = this.demoPlayer.getFrame();
-    for (const demoEntry of this.nextMoveEntries) {
-      demoEntry.frame += currFrame;
-    }
-    console.log("nextMoveEntries...", this.nextMoveEntries);
-    //await sleep(5*1000000000000000);
-    this.demoPlayer.addEvents(this.nextMoveEntries);
+    this.addRawDemoEventsToDemoPlayer(this.nextMoveEntries);
 
     const nextPiece = this.readNextPieceHandler.getCurrentPieceFromEmulator();
     this.debug['nextPiece'] = nextPiece;
@@ -108,10 +116,20 @@ export class GameRunner {
 
     this.expFrame = currFrame + (this.extraInformation.lastFrame || 0);
   }
-}
 
+  private addRawDemoEventsToDemoPlayer(demoEvents: DemoEntry[]) {
+    const currFrame = this.demoPlayer.getFrame();
+    for (const demoEntry of demoEvents) {
+      demoEntry.frame += currFrame;
+    }
+    console.log('adding', demoEvents);
+    this.demoPlayer.addEvents(demoEvents);
+  }
+}
+export type FirstMoveDirectionT = 'LEFT' | 'RIGHT' | 'NONE';
 export interface IGetNextMove {
-  getNextMoveEntries(board: IBoard, nextPiece: Piece): Promise<[DemoEntry[], IBoard, ExtraInformation]>;
+  getNextMoveEntries(board: IBoard, nextPiece: Piece, firstMoveDirection?: FirstMoveDirectionT):
+    Promise<[DemoEntry[], IBoard, ExtraInformation]>;
 }
 
 export interface IReadNextPiece {

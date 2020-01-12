@@ -37,12 +37,12 @@ def get_move_handler():
   try:
     board = payload['board']
     piece = piece_to_int(payload['piece'])
-    firstMoveDirection = payload.get('firstMoveDirection')
-    if firstMoveDirection not in [None, 'NONE', 'LEFT', 'RIGHT']:
-      raise ValueError(f"Unexpected firstMoveDirection: {firstMoveDirection}")
+    first_move_direction = payload.get('first_move_direction')
+    if first_move_direction not in [None, 'NONE', 'LEFT', 'RIGHT']:
+      raise ValueError(f"Unexpected first_move_direction: {first_move_direction}")
     print("REQUEST")
     print(payload)
-    r, board, demo_entries = get_moves_service.get_moves(board, piece, firstMoveDirection)
+    r, board, demo_entries = get_moves_service.get_moves(board, piece, first_move_direction)
     ret = {
       'board': board,
       'demo_entries': [str(demo_entry.frame) + " " + demo_entry.action for demo_entry in demo_entries]

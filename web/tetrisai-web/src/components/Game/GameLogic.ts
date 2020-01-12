@@ -39,6 +39,11 @@ export class GameLogic {
     const pa = new PieceAwaiter(pixelChecker, demoPlayer, frameAwaiter);
     console.log('first piece appeared!!');
     gr.setTableBoard(tableBoard);
+    demoPlayer.addEvent({
+      frame: demoPlayer.getFrame() + 1,
+      button: DemoButton.BUTTON_LEFT,
+      isDown: true,
+    });
     await gr.onFirstPieceAppear();
     pa.init();
 

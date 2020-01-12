@@ -21,6 +21,6 @@ export class ReadCurrentPiece implements IReadCurrentPiece {
         return piece;
       }
     }
-    ErrorHandler.fatal('no piece is being displayed');
+    throw ErrorHandler.fatal('no piece is being displayed');
   }
 }

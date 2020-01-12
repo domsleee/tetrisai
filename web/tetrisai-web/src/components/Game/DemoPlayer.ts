@@ -143,7 +143,7 @@ export class DemoPlayer implements IDemoPlayer {
     if (event.isDown) {
       if (event.button in this.buttonIsDown && this.buttonIsDown[event.button]) {
         console.log(event);
-        ErrorHandler.fatal(`button ${DemoButton[event.button]} was down, cannot go down again!`);
+        ErrorHandler.fatal(`button ${DemoButton[event.button]} was down, cannot go down again! (frame: ${this.getFrame()})`);
       }
       this.buttonIsDown[event.button] = true;
       this.nes.buttonDown(event.button);

@@ -1,4 +1,4 @@
-import { IGetNextMove } from './GameRunner';
+import { IGetNextMove, FirstMoveDirectionT } from './GameRunner';
 import { DemoEntry, DemoButton } from './IDemoPlayer';
 import { Piece } from './common/Enums';
 import { Board, IBoard } from './common/Board';
@@ -7,20 +7,24 @@ import { ExtraInformation } from './ExtraInformation';
 
 const URL = 'http://localhost:5000/get-moves';
 export class GetNextMove implements IGetNextMove {
-  public async getNextMoveEntries(board: IBoard, nextPiece: Piece): Promise<[DemoEntry[], IBoard, ExtraInformation]> {
-    const resp = await axios.post(URL, {
+  public async getNextMoveEntries(board: IBoard, nextPiece: Piece, firstMoveDirection?: FirstMoveDirectionT):
+    Promise<[DemoEntry[], IBoard, ExtraInformation]> {
+    const data: any = {
       board: board.getBitstring(),
       piece: nextPiece.toString(),
-    });
+    };
+    if (firstMoveDirection) { data.first_move_direction = firstMoveDirection; }
+    const resp = await axios.post(URL, data);
     const nxBoard = new Board(resp.data.board);
     let lastFrame = 0;
     const demoEntries = [];
     console.log("resp.data");
     console.log(resp.data);
+    if (firstMoveDirection) { resp.data.demo_entries = resp.data.demo_entries.slice(1); }
     for (const str of resp.data.demo_entries) {
-      let [frameStr, action, ...rest] = str.split(' ');
-      lastFrame = parseInt(frameStr);
-      if (action == 'DOWN') continue;
+      const [frameStr, action, ...rest] = str.split(' ');
+      lastFrame = parseInt(frameStr, 10);
+      if (action === 'DOWN') { continue; }
       let button = DemoButton.BUTTON_A;
       switch (action) {
         case 'LEFT': button = DemoButton.BUTTON_LEFT; break;
