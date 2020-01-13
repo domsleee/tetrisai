@@ -35,8 +35,8 @@ export class GetNextMove implements IGetNextMove {
       }
 
       let frame = parseInt(frameStr);
-      if (frame === 0) { frame++; }
       let fr1 = frame-1, fr2 = frame;
+      if (frame > 1) { fr1 = frame - 3, fr2 = frame - 2; }
       demoEntries.push({
         frame: fr1,
         button,

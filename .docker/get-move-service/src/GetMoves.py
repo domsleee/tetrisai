@@ -4,9 +4,18 @@ import os
 from SimpleProcess import SimpleProcess
 import logging
 import asyncio
+import dataclasses
 
 DIR = "/Users/dom/Documents/git/tetrisAI/.docker/get-move-service/src"
 DEFAULT_BINARY = os.path.join(DIR, "external_bin", "ew_get_moves")
+
+
+@dataclasses.dataclass
+class GetMovesResult():
+  result: str
+  nx_board: str = None
+  lines_cleared: int = None
+  demo_entries: typing.List[DemoEntry] = None
 
 class GetMoves(IGetMoves):
   DEFAULT_TIMEOUT = 1.0
@@ -46,7 +55,7 @@ class GetMoves(IGetMoves):
 
     result = self._process_line(self._process.read_line(), "result")
     if result == "no moves":
-      return "n", None, None
+      return GetMovesResult(result="n")
     elif result != "moves":
       raise ValueError(f"wtf is {result}")
 
@@ -59,12 +68,12 @@ class GetMoves(IGetMoves):
       demo_entries.append(DemoEntry(frame=frame, action=action))
     self._logger.debug("num_moves: %d" % num_moves)
     nx_board = self._process_line(self._process.read_line(), "board")
-    self._process_line(self._process.read_line(), "line clears")
+    lines_cleared = self._process_line(self._process.read_line(), "line clears")
     assert(self._process.is_empty())
     ok = self._process.read_line()
     if ok != "OK":
       raise ValueError("Expected OK, got '%s'" % ok)
-    return "r", nx_board, demo_entries
+    return GetMovesResult(result="r", nx_board=nx_board, lines_cleared=lines_cleared, demo_entries=demo_entries)
   
   def _process_line(self, s: str, lhs: str) -> str:
     col_split = s.split(':')

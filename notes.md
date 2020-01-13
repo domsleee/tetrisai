@@ -8,6 +8,11 @@ Bot interface:
 + Evaluate all possible moves
 + Choose move with best evaluation
 
+todo:
++ Fix level 19. Use TOJSON and build a test around it, using selenium mayb
+
+write toString and fromString. then write tests that load states
+
 
 
 OK so:
