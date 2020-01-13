@@ -3,6 +3,7 @@ import { Piece } from './common/Enums';
 import { IBoard, Board } from './common/Board';
 import { ExtraInformation } from './ExtraInformation';
 import { IReadCurrentPiece } from '../GameRunner/ReadCurrentPiece';
+import { IGetNextMove } from './IGetNextMove';
 
 function sleep(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -13,6 +14,7 @@ export class GameRunner {
   private nextMoveBoard: IBoard = new Board();
   private expFrame: number = 0;
   private extraInformation: ExtraInformation = {};
+  private totalLineClears: number = 0;
 
   private readonly demoPlayer: IDemoPlayer;
   private readonly getNextMoveHandler: IGetNextMove;
@@ -70,15 +72,19 @@ export class GameRunner {
     });
 
     const currPiece = this.readCurrentPieceHandler.getPieceFromEmulator();
-    let moveEntries, unused;
-    [moveEntries, this.nextMoveBoard, unused] =
-      await this.getNextMoveHandler.getNextMoveEntries(new Board(), currPiece, 'LEFT');
-    this.addRawDemoEventsToDemoPlayer(moveEntries);
+    let moveEntries;
+    [moveEntries, this.nextMoveBoard, this.extraInformation] =
+      await this.getNextMoveHandler.getNextMoveEntries(new Board(), currPiece, {
+        firstMoveDirection: 'LEFT',
+      });
+    this.addRawDemoEventsToDemoPlayer(moveEntries, this.extraInformation);
 
     const nextPiece = this.readNextPieceHandler.getCurrentPieceFromEmulator();
     if (this.tableBoard) { this.tableBoard['board'] = this.nextMoveBoard; }
     [this.nextMoveEntries, this.nextMoveBoard, this.extraInformation] =
-      await this.getNextMoveHandler.getNextMoveEntries(this.nextMoveBoard, nextPiece);
+      await this.getNextMoveHandler.getNextMoveEntries(this.nextMoveBoard, nextPiece, {
+        totalLineClears: this.totalLineClears,
+      });
     this.expFrame = currFrame + (this.extraInformation.lastFrame || 0);
     console.log("currFrame, expFrame", currFrame, this.expFrame);
     //this.demoPlayer.addEvent({frame: 555, button: DemoButton.BUTTON_RIGHT, isDown: true});
@@ -88,20 +94,22 @@ export class GameRunner {
    * pre: nextMoveEntries & nextMoveBoard are set
    * post: nextMoveEntries and nextMoveBoard are set correctly
    */
-  static failed = 0;
 
   public async onNextPieceAppear() {
     if (this.tableBoard) this.tableBoard['board'] = this.nextMoveBoard;
     this.debug['board'] = this.nextMoveBoard.getBitstring();
     const currFrame = this.demoPlayer.getFrame();
-    this.addRawDemoEventsToDemoPlayer(this.nextMoveEntries);
+    this.addRawDemoEventsToDemoPlayer(this.nextMoveEntries, this.extraInformation);
 
     const nextPiece = this.readNextPieceHandler.getCurrentPieceFromEmulator();
     this.debug['nextPiece'] = nextPiece;
     console.log("next Piece", nextPiece);
 
     this.nextMoveEntries = [];
-    [this.nextMoveEntries, this.nextMoveBoard, this.extraInformation] = await this.getNextMoveHandler.getNextMoveEntries(this.nextMoveBoard, nextPiece);
+    [this.nextMoveEntries, this.nextMoveBoard, this.extraInformation] =
+      await this.getNextMoveHandler.getNextMoveEntries(this.nextMoveBoard, nextPiece, {
+        totalLineClears: this.totalLineClears,
+      });
     // add an event 3 frames later than last frame, and remove first nextMoveEntry
     if (this.nextMoveEntries.length > 0 && this.nextMoveEntries[0].frame === 1) {
       if (this.extraInformation.lastFrame) {
@@ -117,7 +125,11 @@ export class GameRunner {
     this.expFrame = currFrame + (this.extraInformation.lastFrame || 0);
   }
 
-  private addRawDemoEventsToDemoPlayer(demoEvents: DemoEntry[]) {
+  private addRawDemoEventsToDemoPlayer(demoEvents: DemoEntry[], extraInfo: ExtraInformation) {
+    if (extraInfo.lineClears) {
+      this.totalLineClears += extraInfo.lineClears;
+    }
+
     const currFrame = this.demoPlayer.getFrame();
     for (const demoEntry of demoEvents) {
       demoEntry.frame += currFrame;
@@ -125,11 +137,6 @@ export class GameRunner {
     console.log('adding', demoEvents);
     this.demoPlayer.addEvents(demoEvents);
   }
-}
-export type FirstMoveDirectionT = 'LEFT' | 'RIGHT' | 'NONE';
-export interface IGetNextMove {
-  getNextMoveEntries(board: IBoard, nextPiece: Piece, firstMoveDirection?: FirstMoveDirectionT):
-    Promise<[DemoEntry[], IBoard, ExtraInformation]>;
 }
 
 export interface IReadNextPiece {

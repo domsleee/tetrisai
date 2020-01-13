@@ -63,6 +63,11 @@ class TestGetMoves(unittest.TestCase):
     self.assertEqual(1, result.demo_entries[0].frame)
     self.assertEqual("LEFT", result.demo_entries[0].action)
 
+  def test_set_num_lines(self):
+    self.gm.set_num_lines(5)
+    self.assertEqual(5, self.gm.get_num_lines())
+    self.gm.set_num_lines(8)
+    self.assertEqual(8, self.gm.get_num_lines())
 
 if __name__ == '__main__':
   unittest.main()

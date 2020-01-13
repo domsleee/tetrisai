@@ -75,6 +75,15 @@ class GetMoves(IGetMoves):
       raise ValueError("Expected OK, got '%s'" % ok)
     return GetMovesResult(result="r", nx_board=nx_board, lines_cleared=lines_cleared, demo_entries=demo_entries)
   
+  def set_num_lines(self, num_lines:int):
+    self._send_str(b'l\n')
+    self._send_str((str(num_lines) + '\n').encode('utf-8'))
+  
+  def get_num_lines(self) -> int:
+    self._send_str(b'L\n')
+    num_lines = int(self._process_line(self._process.read_line(), "num lines"))
+    return num_lines
+
   def _process_line(self, s: str, lhs: str) -> str:
     col_split = s.split(':')
     if len(col_split) != 2:

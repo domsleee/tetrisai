@@ -1,26 +1,27 @@
-import { IGetNextMove, FirstMoveDirectionT } from './GameRunner';
 import { DemoEntry, DemoButton } from './IDemoPlayer';
 import { Piece } from './common/Enums';
 import { Board, IBoard } from './common/Board';
 import axios from 'axios';
 import { ExtraInformation } from './ExtraInformation';
+import { IGetNextMove, OptionalNextMoveParams } from './IGetNextMove';
 
 const URL = 'http://localhost:5000/get-moves';
 export class GetNextMove implements IGetNextMove {
-  public async getNextMoveEntries(board: IBoard, nextPiece: Piece, firstMoveDirection?: FirstMoveDirectionT):
+  public async getNextMoveEntries(board: IBoard, nextPiece: Piece, optional: OptionalNextMoveParams):
     Promise<[DemoEntry[], IBoard, ExtraInformation]> {
     const data: any = {
       board: board.getBitstring(),
       piece: nextPiece.toString(),
     };
-    if (firstMoveDirection) { data.first_move_direction = firstMoveDirection; }
+    if (optional.firstMoveDirection) { data.first_move_direction = optional.firstMoveDirection; }
     const resp = await axios.post(URL, data);
     const nxBoard = new Board(resp.data.board);
     let lastFrame = 0;
     const demoEntries = [];
     console.log("resp.data");
     console.log(resp.data);
-    if (firstMoveDirection) { resp.data.demo_entries = resp.data.demo_entries.slice(1); }
+    if (optional.firstMoveDirection) { resp.data.demo_entries = resp.data.demo_entries.slice(1); }
+    if (optional.totalLineClears) { resp.data.line_clears = optional.totalLineClears; }
     for (const str of resp.data.demo_entries) {
       const [frameStr, action, ...rest] = str.split(' ');
       lastFrame = parseInt(frameStr, 10);

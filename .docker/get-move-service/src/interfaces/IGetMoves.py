@@ -44,3 +44,19 @@ class IGetMoves:
     Returns:
       typing.List[DemoEntry] -- [description]
     """
+  
+  @abc.abstractmethod
+  def set_num_lines(self, num_lines:int) -> None:
+    """[summary]
+    
+    Arguments:
+        num_lines {int} -- [description]
+    """
+  
+  @abc.abstractmethod
+  def get_num_lines(self) -> int:
+    """[summary]
+    
+    Returns:
+        int -- [description]
+    """

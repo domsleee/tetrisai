@@ -14,9 +14,13 @@ const char INSTRUCTION_GET_MOVE = 'g';
 const char INSTRUCTION_GET_MOVE_GIVEN_FIRST_DIRECTION = 'k';
 const char INSTRUCTION_QUIT = 'q';
 
+const char INSTRUCTION_SET_NUM_LINES = 'l';
+const char INSTRUCTION_GET_NUM_LINES = 'L';
+
 const bool MY_DEBUG = false;
 
 const int LINE_TRANSITION = 100;
+const int LINE_ON_LEVEL_19 = 130;
 
 std::string best18 = "[-0.9981266671825644 6.314235664122202 9.218841471366666 0.27802110735477736 -4.1780630417598195 7.433743023240332 8.34877823356098 1.8788685887367613 -0.8499180634596748 -1.8078460542586594 7.642165019678991 -4.116700896835317 4.954418944561089 -12.37120499004913 -11.044493568377911 1.8097163771233449 -1.0832040443509103]";
 std::string best19 = "[-14.89103037780527 6.1859328293901985 3.1475886283096397 4.549423856563027 6.4739513866334395 7.16934616046338 19.220915906005704 -1.5353264906442918 8.606784031245795 4.760696336241033 13.769672756691616 -2.0002884453295877 -2.4896370025512127 -8.345237667961287 -13.478496677643442 1.0396980163363931 2.178578911705224]";
@@ -49,8 +53,8 @@ int main() {
 
 void run() {
   char instruction;
+  int num_lines = 0;
   while(std::cin >> instruction) {
-    int num_lines = 0;
     //dprintf("instruction: %c\n", instruction);
     switch(instruction) {
       case(INSTRUCTION_HEALTH): {
@@ -58,6 +62,12 @@ void run() {
       } break;
       case(INSTRUCTION_GET_MOVE): handleGetMove(num_lines); break;
       case(INSTRUCTION_GET_MOVE_GIVEN_FIRST_DIRECTION): handleGetMove(num_lines, true); break;
+      case(INSTRUCTION_SET_NUM_LINES): {
+        std::cin >> num_lines;
+      } break;
+      case(INSTRUCTION_GET_NUM_LINES): {
+        std::cout << "num lines: " << num_lines << '\n';
+      } break;
       case(INSTRUCTION_QUIT): exit(0);
       default: {
         std::cout << "unknown command\n";
@@ -73,10 +83,13 @@ auto getMeMfPair(int num_lines) {
   auto mf1 = MoveFinderFSM();
   auto mf2 = MoveFinderFSM();
   mf2.setMaxDropRem(2);
-  if (num_lines < LINE_TRANSITION) {
-    return std::pair(me1, mf1);
+  if (num_lines >= LINE_ON_LEVEL_19) {
+    return std::pair(me2, mf2);
   }
-  return std::pair(me2, mf2);
+  else if (num_lines >= LINE_TRANSITION) {
+    return std::pair(me2, mf1);
+  }
+  return std::pair(me1, mf1);
 }
 
 void handleGetMove(int num_lines, bool givenFirstMoveDirection) {
