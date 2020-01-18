@@ -1,4 +1,5 @@
 import { FrameTimer } from './DemoPlayer';
+import { ICapturable } from './ICapturable';
 
 // from jsnes controller constants
 export enum DemoButton {
@@ -18,7 +19,7 @@ export interface DemoEntry {
   isDown: boolean;
 }
 
-export interface IDemoPlayer {
+export interface IDemoPlayer extends ICapturable<string> {
   timer: FrameTimer;
   addEvent(entry: DemoEntry): void;
   addEvents(entry: DemoEntry[]): void;

@@ -14,14 +14,16 @@ export class GetNextMove implements IGetNextMove {
       piece: nextPiece.toString(),
     };
     if (optional.firstMoveDirection) { data.first_move_direction = optional.firstMoveDirection; }
+    if (optional.totalLineClears) { data.line_clears = optional.totalLineClears; }
     const resp = await axios.post(URL, data);
     const nxBoard = new Board(resp.data.board);
     let lastFrame = 0;
     const demoEntries = [];
+    console.log("REQUEST");
+    console.log(data);
     console.log("resp.data");
     console.log(resp.data);
     if (optional.firstMoveDirection) { resp.data.demo_entries = resp.data.demo_entries.slice(1); }
-    if (optional.totalLineClears) { resp.data.line_clears = optional.totalLineClears; }
     for (const str of resp.data.demo_entries) {
       const [frameStr, action, ...rest] = str.split(' ');
       lastFrame = parseInt(frameStr, 10);
@@ -37,7 +39,7 @@ export class GetNextMove implements IGetNextMove {
 
       let frame = parseInt(frameStr);
       let fr1 = frame-1, fr2 = frame;
-      if (frame > 1) { fr1 = frame - 3, fr2 = frame - 2; }
+      //if (frame > 1) { fr1 = frame - 2, fr2 = frame - 1; }
       demoEntries.push({
         frame: fr1,
         button,
@@ -54,6 +56,7 @@ export class GetNextMove implements IGetNextMove {
     });
     return [demoEntries, nxBoard, {
       lastFrame,
+      lineClears: parseInt(resp.data.line_clears, 10),
     }];
   }
 }

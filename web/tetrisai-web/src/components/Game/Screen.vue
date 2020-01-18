@@ -8,7 +8,6 @@
   />
 </template>
 
-
 <script lang="ts">
 import Vue from 'vue';
 
@@ -25,14 +24,14 @@ export default Vue.extend({
     window['screenshot'] = this.screenshot.bind(this);
   },
   data(): {
-    canvas: Element | any,
-    context: any,
-    imageData: any,
-    buf: ArrayBuffer | any,
-    buf8: Uint8ClampedArray | any,
-    buf32: Uint32Array | any,
-    SCREEN_WIDTH: number,
-    SCREEN_HEIGHT: number,
+    canvas: Element | any;
+    context: any;
+    imageData: any;
+    buf: ArrayBuffer | any;
+    buf8: Uint8ClampedArray | any;
+    buf32: Uint32Array | any;
+    SCREEN_WIDTH: number;
+    SCREEN_HEIGHT: number;
   } {
     return {
       canvas: null,
@@ -42,7 +41,7 @@ export default Vue.extend({
       buf8: null,
       buf32: null,
       SCREEN_WIDTH,
-      SCREEN_HEIGHT,
+      SCREEN_HEIGHT
     };
   },
   methods: {
@@ -50,13 +49,23 @@ export default Vue.extend({
       // Make coordinates unscaled
       const rect = this.canvas.getBoundingClientRect();
 
-      const style = window.getComputedStyle ? getComputedStyle(this.canvas, null) : this.canvas.currentStyle;
-      const actWidth = parseFloat(style.width) - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
-      const actHeight = parseFloat(style.height) - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom);
+      const style = window.getComputedStyle
+        ? getComputedStyle(this.canvas, null)
+        : this.canvas.currentStyle;
+      const actWidth =
+        parseFloat(style.width) -
+        parseFloat(style.paddingLeft) -
+        parseFloat(style.paddingRight);
+      const actHeight =
+        parseFloat(style.height) -
+        parseFloat(style.paddingTop) -
+        parseFloat(style.paddingBottom);
       const scale = SCREEN_WIDTH / actWidth;
 
       const x = Math.round((e.offsetX - parseFloat(style.paddingLeft)) * scale);
-      const y = Math.round((e.offsetY - parseFloat(style.paddingRight)) * scale);
+      const y = Math.round(
+        (e.offsetY - parseFloat(style.paddingRight)) * scale
+      );
       console.log('Mouse click', x, y);
     },
     initCanvas() {
@@ -66,7 +75,7 @@ export default Vue.extend({
         0,
         0,
         SCREEN_WIDTH,
-        SCREEN_HEIGHT,
+        SCREEN_HEIGHT
       );
 
       // [45, 89] ==> [73, 204]
@@ -108,8 +117,8 @@ export default Vue.extend({
       document.body.append(img);
       console.log('appended to body');
       return img;
-    },
-  },
+    }
+  }
 });
 </script>
 

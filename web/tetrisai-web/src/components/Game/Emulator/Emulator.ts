@@ -33,7 +33,16 @@ export class Emulator implements IEmulator {
     console.log("GONE BACK. NEW FRAMECT", this.frameCt);
   }
 
-  public toJSON() {
-    return this.nes.toJSON();
+  public capture(): string {
+    return JSON.stringify({
+      nes: this.nes.toJSON(),
+      frameCt: this.frameCt,
+    });
+  }
+
+  public restoreFromCapture(capture: string) {
+    const json = JSON.parse(capture);
+    this.nes.fromJSON(json.nes);
+    this.frameCt = json.frameCt;
   }
 }

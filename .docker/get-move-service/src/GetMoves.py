@@ -14,7 +14,7 @@ DEFAULT_BINARY = os.path.join(DIR, "external_bin", "ew_get_moves")
 class GetMovesResult():
   result: str
   nx_board: str = None
-  lines_cleared: int = None
+  line_clears: int = None
   demo_entries: typing.List[DemoEntry] = None
 
 class GetMoves(IGetMoves):
@@ -68,12 +68,12 @@ class GetMoves(IGetMoves):
       demo_entries.append(DemoEntry(frame=frame, action=action))
     self._logger.debug("num_moves: %d" % num_moves)
     nx_board = self._process_line(self._process.read_line(), "board")
-    lines_cleared = self._process_line(self._process.read_line(), "line clears")
+    line_clears = self._process_line(self._process.read_line(), "line clears")
     assert(self._process.is_empty())
     ok = self._process.read_line()
     if ok != "OK":
       raise ValueError("Expected OK, got '%s'" % ok)
-    return GetMovesResult(result="r", nx_board=nx_board, lines_cleared=lines_cleared, demo_entries=demo_entries)
+    return GetMovesResult(result="r", nx_board=nx_board, line_clears=line_clears, demo_entries=demo_entries)
   
   def set_num_lines(self, num_lines:int):
     self._send_str(b'l\n')

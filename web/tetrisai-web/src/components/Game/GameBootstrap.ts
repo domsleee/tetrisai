@@ -16,9 +16,14 @@ export class GameBootstrap {
     for (let i = 0; i < 3; ++i) { buttonAdder.addButtonPress(DemoButton.BUTTON_RIGHT); }
     buttonAdder.addButtonPress(DemoButton.BUTTON_DOWN);
 
-    this.demoPlayer.addEvent({button: DemoButton.BUTTON_A, frame: buttonAdder.frame + 10, isDown: true});
     // 17 - 84k
+    // 22 - trash
+    // 23 - 355k
+
+    // 21 -- good for 19
+    // 22 - 346k @ 19
     const chosenFrame = 23;
+    this.demoPlayer.addEvent({button: DemoButton.BUTTON_A, frame: buttonAdder.frame + chosenFrame - 1, isDown: true});
     this.demoPlayer.addEvent({button: DemoButton.BUTTON_START, frame: buttonAdder.frame + chosenFrame, isDown: true});
     const framesToSetup = 7;
     const dF = chosenFrame + framesToSetup;

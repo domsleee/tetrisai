@@ -1,4 +1,4 @@
-import { GameRunner, IGetNextMove, IReadNextPiece } from './GameRunner';
+import { GameRunner, IReadNextPiece } from './GameRunner';
 import { IDemoPlayer, DemoEntry, DemoButton } from './IDemoPlayer';
 import { Piece } from './common/Enums';
 import { IBoard } from './common/Board';
@@ -8,6 +8,8 @@ import { PixelChecker, IPixelChecker } from './PixelGetter';
 import { ExtraInformation } from './ExtraInformation';
 import { ReadCurrentPiece } from '../GameRunner/ReadCurrentPiece';
 import { ReadBoard } from '../GameRunner/ReadBoard';
+import { IGetNextMove } from './IGetNextMove';
+
 
 export class GameRunnerFactory {
   public static getInstance(demoPlayer: IDemoPlayer, pixelChecker: IPixelChecker, debug: any): GameRunner {

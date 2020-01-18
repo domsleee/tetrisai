@@ -10,8 +10,8 @@
 </template>
 
 <script lang="ts">
-import { IBoard } from "./Game/common/Board";
-import Vue from "vue";
+import { IBoard } from './Game/common/Board';
+import Vue from 'vue';
 
 interface Data {
   board: null | IBoard;
@@ -24,13 +24,17 @@ export default Vue.extend({
     return {
       board: null,
       rows: [...Array(20).keys()],
-      columns: [...Array(10).keys()],
+      columns: [...Array(10).keys()]
     };
   },
   methods: {
     pieceColour(row: number, column: number) {
-      if (!this.board) { return 'black'; }
-      if (!this.board.vacant(row, column)) { return 'white'; }
+      if (!this.board) {
+        return 'black';
+      }
+      if (!this.board.vacant(row, column)) {
+        return 'white';
+      }
       return 'red';
     }
   }

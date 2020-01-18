@@ -1,12 +1,8 @@
 {
   "defaultSeverity": "warning",
-  "extends": [
-    "tslint:recommended"
-  ],
+  "extends": ["tslint:recommended", "tslint-config-prettier"],
   "linterOptions": {
-    "exclude": [
-      "node_modules/**"
-    ]
+    "exclude": ["node_modules/**"]
   },
   "rules": {
     "indent": [true, "spaces", 2],
@@ -17,6 +13,7 @@
     "no-bitwise": false,
     "quotemark": [true, "single"],
     "no-console": false,
-    "max-classes-per-file": 2
+    "max-classes-per-file": 2,
+    "only-arrow-functions": false
   }
 }

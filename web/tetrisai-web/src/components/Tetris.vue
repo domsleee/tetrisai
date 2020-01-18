@@ -56,6 +56,7 @@ export default Vue.extend({
         nextPiece: '',
         board: '',
         fps: '',
+        totalLineClears: '',
       },
     };
   },

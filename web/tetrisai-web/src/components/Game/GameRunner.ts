@@ -4,12 +4,13 @@ import { IBoard, Board } from './common/Board';
 import { ExtraInformation } from './ExtraInformation';
 import { IReadCurrentPiece } from '../GameRunner/ReadCurrentPiece';
 import { IGetNextMove } from './IGetNextMove';
+import { ICapturable } from './ICapturable';
 
 function sleep(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-export class GameRunner {
+export class GameRunner implements ICapturable<any> {
   private nextMoveEntries: DemoEntry[] = [];
   private nextMoveBoard: IBoard = new Board();
   private expFrame: number = 0;
@@ -76,6 +77,7 @@ export class GameRunner {
     [moveEntries, this.nextMoveBoard, this.extraInformation] =
       await this.getNextMoveHandler.getNextMoveEntries(new Board(), currPiece, {
         firstMoveDirection: 'LEFT',
+        totalLineClears: this.totalLineClears,
       });
     this.addRawDemoEventsToDemoPlayer(moveEntries, this.extraInformation);
 
@@ -111,7 +113,10 @@ export class GameRunner {
         totalLineClears: this.totalLineClears,
       });
     // add an event 3 frames later than last frame, and remove first nextMoveEntry
-    if (this.nextMoveEntries.length > 0 && this.nextMoveEntries[0].frame === 1) {
+    if (this.nextMoveEntries.length > 0 && this.nextMoveEntries[0].frame === 1 &&
+        [DemoButton.BUTTON_LEFT, DemoButton.BUTTON_RIGHT].indexOf(this.nextMoveEntries[0].button) !== -1) {
+      console.log("LATEST");
+      console.log(this.nextMoveEntries);
       if (this.extraInformation.lastFrame) {
         this.demoPlayer.addEvent({
           frame: currFrame + this.extraInformation.lastFrame + 3,
@@ -125,9 +130,33 @@ export class GameRunner {
     this.expFrame = currFrame + (this.extraInformation.lastFrame || 0);
   }
 
+  public capture(): any {
+    return JSON.stringify({
+      demoPlayer: this.demoPlayer.capture(),
+      nextMoveBoardString: this.nextMoveBoard.getBitstring(),
+      nextMoveEntries: JSON.stringify(this.nextMoveEntries),
+      extraInformation: JSON.stringify(this.extraInformation),
+      totalLineClears: this.totalLineClears,
+    });
+  }
+
+  public restoreFromCapture(capture: any) {
+    const oldFps = this.demoPlayer.timer.getFps();
+    this.demoPlayer.timer.setFps(0);
+    const json = JSON.parse(capture);
+    this.demoPlayer.restoreFromCapture(json.demoPlayer);
+    this.nextMoveEntries = JSON.parse(json.nextMoveEntries);
+    this.extraInformation = JSON.parse(json.extraInformation);
+    this.nextMoveBoard = new Board(json.nextMoveBoardString);
+    this.totalLineClears = json.totalLineClears;
+    this.demoPlayer.timer.setFps(2);
+  }
+
   private addRawDemoEventsToDemoPlayer(demoEvents: DemoEntry[], extraInfo: ExtraInformation) {
     if (extraInfo.lineClears) {
+      console.log("totalLineClears", this.totalLineClears);
       this.totalLineClears += extraInfo.lineClears;
+      this.debug['totalLineClears'] = this.totalLineClears;
     }
 
     const currFrame = this.demoPlayer.getFrame();

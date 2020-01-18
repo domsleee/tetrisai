@@ -1,4 +1,4 @@
-import { IDemoPlayer } from "../IDemoPlayer";
+import { IDemoPlayer } from '../IDemoPlayer';
 
 export class ErrorHandler {
   public static fatal(msg: string): never {
