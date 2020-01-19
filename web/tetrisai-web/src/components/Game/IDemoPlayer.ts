@@ -1,5 +1,5 @@
-import { FrameTimer } from './DemoPlayer';
 import { ICapturable } from './ICapturable';
+import { FrameTimer } from './FrameTimer';
 
 // from jsnes controller constants
 export enum DemoButton {
@@ -10,7 +10,7 @@ export enum DemoButton {
   BUTTON_UP = 4,
   BUTTON_DOWN = 5,
   BUTTON_LEFT = 6,
-  BUTTON_RIGHT = 7,
+  BUTTON_RIGHT = 7
 }
 
 export interface DemoEntry {
@@ -28,6 +28,6 @@ export interface IDemoPlayer extends ICapturable<string> {
   getFrame(): number;
   getLatestFrame(): number;
   isEmpty(): boolean;
-  addFrameListener(fn: ((frame: number) => void)): void;
-  removeFrameListener(fn: ((frame: number) => void)): void;
+  addFrameListener(fn: (frame: number) => void): void;
+  removeFrameListener(fn: (frame: number) => void): void;
 }

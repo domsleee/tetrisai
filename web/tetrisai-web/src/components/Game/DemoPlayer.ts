@@ -2,41 +2,9 @@ import { IDemoPlayer, DemoEntry, DemoButton } from './IDemoPlayer';
 import { IEmulator } from './Emulator/IEmulator';
 import SortedSet from 'sortedset';
 import { ErrorHandler } from './common/ErrorHandler';
+import { FrameTimer } from './FrameTimer';
 
 type ListenerFn = (frame: number) => void;
-
-export class FrameTimer {
-  private fps: number = 60.0;
-  private timer: any = null;
-  private onTick: () => void;
-
-  public constructor(onTick: () => void) {
-    this.onTick = onTick;
-    this.setFps(this.fps);
-  }
-
-  public setFps(fps: number) {
-    if (this.timer) {
-      clearInterval(this.timer);
-    }
-    this.timer = setInterval(() => {
-      this.onTick();
-    }, 1000.0 / fps);
-    this.fps = fps;
-  }
-
-  public getFps() {
-    return this.fps;
-  }
-
-  public stop() {
-    if (this.timer === null) {
-      return;
-    }
-    clearInterval(this.timer);
-    this.timer = null;
-  }
-}
 
 export class DemoPlayer implements IDemoPlayer {
   public timer: FrameTimer;
@@ -153,7 +121,7 @@ export class DemoPlayer implements IDemoPlayer {
       return ErrorHandler.fatal('no version in demoplayer capture');
     }
 
-    const version = myjson['version'];
+    const version = myjson.version;
     switch (version) {
       case 2:
         {
@@ -198,7 +166,6 @@ export class DemoPlayer implements IDemoPlayer {
   }
 
   private processEvent(event: DemoEntry) {
-    //if (event.frame >= 490) { return; }
     if (event.isDown) {
       if (
         event.button in this.buttonIsDown &&
@@ -216,11 +183,11 @@ export class DemoPlayer implements IDemoPlayer {
       }
       this.buttonIsDown[event.button] = true;
       this.emu.buttonDown(event.button);
-      //console.log(`${event.frame}: D: ${DemoButton[event.button]}`);
+      // console.log(`${event.frame}: D: ${DemoButton[event.button]}`);
     } else {
       this.buttonIsDown[event.button] = false;
       this.emu.buttonUp(event.button);
-      //if (event.button !== DemoButton.BUTTON_SELECT) { console.log(`${event.frame}: U: ${DemoButton[event.button]}`); }
+      // if (event.button !== DemoButton.BUTTON_SELECT) { console.log(`${event.frame}: U: ${DemoButton[event.button]}`); }
     }
   }
 }

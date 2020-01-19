@@ -42,8 +42,21 @@ export class PieceAwaiter implements ICapturable<CaptureT> {
   }
 
   public restoreFromCapture(capture: CaptureT) {
+    const matrix = JSON.parse(capture.matrix);
+    if (matrix.length !== this.matrix.length) {
+      throw new Error('invalid');
+    }
+    /*for (let i = 0; i < matrix.length; ++i) {
+      const newRow = matrix[i];
+      const row = this.matrix[i];
+      if (row.length !== newRow.length) {
+        throw new Error('invalid row');
+      }
+      for (const [j, _] of row.entries()) {
+        row[j] = newRow[j];
+      }
+    }*/
     this.matrix = JSON.parse(capture.matrix);
-    console.log('RESTORED MATRIX', this.matrix);
     this.isTetrisingCooldown = capture.isTetrisingCooldown;
   }
 
@@ -62,49 +75,39 @@ export class PieceAwaiter implements ICapturable<CaptureT> {
     }
   }
 
+  public countDiff(mutate = true) {
+    let diff = 0;
+    let total = 0;
+    for (let r = this.rRange[0]; r <= this.rRange[1]; ++r) {
+      const row = this.matrix[r];
+      for (let c = this.cRange[0]; c <= this.cRange[1]; ++c) {
+        const newV = this.pixelChecker.getPixel(r, c);
+        if (newV !== row[c]) diff++;
+        if (mutate) row[c] = newV;
+        total++;
+      }
+    }
+    return [diff, total];
+  }
+
   public async awaitPiece() {
     console.log('awaiting piece...');
     let frame = this.demoPlayer.getFrame();
-    let total = 0;
     while (true) {
-      let diff = 0;
-      let diffs = [];
-      for (let r = this.rRange[0]; r <= this.rRange[1]; ++r) {
-        const row = this.matrix[r];
-        for (let c = this.cRange[0]; c <= this.cRange[1]; ++c) {
-          const newV = this.pixelChecker.getPixel(r, c);
-          if (newV !== row[c]) {
-            diff++;
-            diffs.push([r, c, newV, row[c]]);
-          }
-          row[c] = newV;
-          total++;
-        }
-      }
+      const [diff, total] = this.countDiff();
       const greyPixelColour = this.pixelChecker.getPixel(
         PieceAwaiter.greyPixel[0],
         PieceAwaiter.greyPixel[1]
       );
-      // console.log("grey pixel colour", greyPixelColour.toString(16));
       const isFlashing = greyPixelColour !== PieceAwaiter.GREY_PIXEL_COLOUR;
       const isTetrising = isFlashing || this.isTetrisingCooldown > 0;
       this.isTetrisingCooldown = Math.max(0, this.isTetrisingCooldown - 1);
       if (isFlashing) {
         this.isTetrisingCooldown = this.IS_TETRISING_COOLDOWN_MAX;
       }
-      if (diff && !isTetrising) {
+      if (diff > 0 && !isTetrising) {
         console.log('diff!', diff);
-        // this.demoPlayer.goBack(1);
-        if (diff !== 196) break;
-        if (diff === 196) {
-          console.log(diffs);
-          console.log(total);
-          /*for (let diffInfo of diffs) {
-            const r = diffInfo[0];
-            const c = diffInfo[1];
-            console.log(diffInfo, this.matrix[r][c], this.pixelChecker.getPixel(r, c));
-          }*/
-        }
+        break;
       }
       if (this.demoPlayer.isEmpty()) {
         this.demoPlayer.addEvent({

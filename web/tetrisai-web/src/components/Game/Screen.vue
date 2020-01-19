@@ -14,14 +14,17 @@ import Vue from 'vue';
 const SCREEN_HEIGHT = 240;
 const SCREEN_WIDTH = 256;
 
+interface CaptureT {
+  buf: string;
+}
+
 export default Vue.extend({
   name: 'Screen',
   mounted() {
     console.log('screen mounted...');
     this.initCanvas();
     this.$emit('myloaded');
-    // @ts-ignore
-    window['screenshot'] = this.screenshot.bind(this);
+    (window as any).screenshot = this.screenshot.bind(this);
   },
   data(): {
     canvas: Element | any;
@@ -95,7 +98,27 @@ export default Vue.extend({
         this.buf32[i] = 0xff000000;
       }
     },
+    capture(): CaptureT {
+      return {
+        buf: JSON.stringify(this.buf)
+      };
+    },
+    restoreFromCapture(capture: CaptureT) {
+      const newBuf = JSON.parse(capture.buf);
+      if (newBuf.length !== this.buf.length) {
+        throw new Error('invalid buf in capture');
+      }
+      for (let i = 0; i < this.buf.length; ++i) {
+        this.buf[i] = newBuf[i];
+      }
+      //this.buf = newBuf;
+      this.buf8 = new Uint8ClampedArray(this.buf);
+      this.buf32 = new Uint32Array(this.buf);
+      this.setBuffer(this.buf);
+      this.writeBuffer();
+    },
     setBuffer(buffer: any) {
+      console.log('setBuffer called.');
       let i = 0;
       for (let y = 0; y < SCREEN_HEIGHT; ++y) {
         for (let x = 0; x < SCREEN_WIDTH; ++x) {
