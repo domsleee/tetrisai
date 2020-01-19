@@ -36,7 +36,7 @@ export class GameLogic implements ICapturable<string> {
     this.demoPlayer = new DemoPlayer(this.emu);
     ErrorHandler.setup(this.demoPlayer); // todo: rename as register
 
-    const pixelChecker = new PixelChecker(screen);
+    const pixelChecker = new PixelChecker(screen.screen);
     this.frameAwaiter = new FrameAwaiter(this.demoPlayer);
     this.gr = GameRunnerFactory.getInstance(
       this.demoPlayer,

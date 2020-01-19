@@ -4,6 +4,12 @@
   "linterOptions": {
     "exclude": ["node_modules/**"]
   },
+  "parserOptions": {
+    "parser": "@typescript-eslint/parser",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
   "rules": {
     "indent": [true, "spaces", 2],
     "interface-name": false,

@@ -1,8 +1,9 @@
+import { ScreenT } from '@/types';
 export const WIDTH = 256;
 export const HEIGHT = 240;
 
 export class PixelChecker implements IPixelChecker {
-  private screen: any;
+  private screen: ScreenT;
 
   constructor(screen: any) {
     this.screen = screen;
