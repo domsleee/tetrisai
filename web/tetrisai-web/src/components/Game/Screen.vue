@@ -118,7 +118,7 @@ export default Vue.extend({
       this.writeBuffer();
     },
     setBuffer(buffer: any) {
-      console.log('setBuffer called.');
+      //console.log('setBuffer called.');
       let i = 0;
       for (let y = 0; y < SCREEN_HEIGHT; ++y) {
         for (let x = 0; x < SCREEN_WIDTH; ++x) {

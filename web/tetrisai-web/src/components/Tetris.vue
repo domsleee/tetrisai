@@ -23,8 +23,10 @@
     </div>
   </div>
   <div v-else>
-    <Screen class="myscreen" ref="screen" @myloaded='screenLoaded' />
-    <pre style="position:absolute; top:10px; text-align:left;">Debug info<br />{{JSON.stringify(debug, null, 2)}}</pre>
+    <Screen class="myscreen" ref="screen" @myloaded="screenLoaded" />
+    <pre
+      style="position:absolute; top:10px; text-align:left;"
+    >Debug info<br />{{JSON.stringify(debug, null, 2)}}</pre>
     <TableBoard ref="tableboard" />
   </div>
 </template>
@@ -43,11 +45,11 @@ export default Vue.extend({
   name: 'Tetris',
   components: {
     Screen,
-    TableBoard,
+    TableBoard
   },
   data(): {
-    romLoaded: boolean,
-    debug: any,
+    romLoaded: boolean;
+    debug: any;
   } {
     return {
       romLoaded: false,
@@ -56,8 +58,8 @@ export default Vue.extend({
         nextPiece: '',
         board: '',
         fps: '',
-        totalLineClears: '',
-      },
+        totalLineClears: ''
+      }
     };
   },
   mounted() {
@@ -77,15 +79,19 @@ export default Vue.extend({
     },
     handleDrop(e: DragEvent) {
       e.preventDefault();
-      if (!e.dataTransfer) { return; }
+      if (!e.dataTransfer) {
+        return;
+      }
       const file = e.dataTransfer.items
         ? e.dataTransfer.items[0].getAsFile()
         : e.dataTransfer.files[0];
 
-      if (file == null) { return; }
+      if (file == null) {
+        return;
+      }
       const reader = new FileReader();
       reader.readAsBinaryString(file);
-      reader.onload = (e2) => {
+      reader.onload = e2 => {
         this.saveRomToLocalStorage(reader.result);
         this.romLoaded = true;
       };
@@ -99,17 +105,22 @@ export default Vue.extend({
     onScreenMounted() {
       const screen: Screen = this.$refs.screen;
       const tableBoard: any = this.$refs.tableboard;
-      const gl = new GameLogic();
-      gl.run(screen, this.loadRomFromLocalStorage(), tableBoard, this.debug);
-    },
-  },
+      const gl = new GameLogic(
+        screen,
+        this.loadRomFromLocalStorage(),
+        tableBoard,
+        this.debug
+      );
+      gl.run();
+    }
+  }
 });
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .ListPage {
-  height: 100vh!important;
+  height: 100vh !important;
 }
 h3 {
   margin: 40px 0 0;
@@ -128,14 +139,16 @@ a {
 .myscreen {
   box-sizing: border-box;
   padding: 2em;
-  width: 100vw; 
+  width: 100vw;
   height: 93.75vw; /* height:width ratio = 240/256 = .9375  */
   background: pink;
   max-height: 100vh;
   max-width: 106.66vh; /* 16/9 = 1.778 */
   margin: auto;
   position: absolute;
-  top:0;bottom:0; /* vertical center */
-  left:0;right:0; /* horizontal center */
+  top: 0;
+  bottom: 0; /* vertical center */
+  left: 0;
+  right: 0; /* horizontal center */
 }
 </style>

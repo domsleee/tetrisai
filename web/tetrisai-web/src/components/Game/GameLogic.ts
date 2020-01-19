@@ -4,7 +4,7 @@ import { GameBootstrap } from './GameBootstrap';
 import { GameRunnerFactory } from './GameRunnerFactory';
 import { PixelChecker } from './PixelGetter';
 import { PieceAwaiter } from './PieceAwaiter';
-import { FrameAwaiter } from './FrameAwaiter';
+import { FrameAwaiter, IFrameAwaiter } from './FrameAwaiter';
 import { DemoButton, IDemoPlayer } from './IDemoPlayer';
 import { ErrorHandler } from './common/ErrorHandler';
 import { GetOldCapture } from './GetOldCapture';
@@ -19,55 +19,59 @@ function download(filename: any, text: any) {
 }
 
 export class GameLogic implements ICapturable<string> {
-  private pa: PieceAwaiter | null = null;
-  private gr: GameRunner | null = null;
-  // todo: work out how to find capture and restoreFromCapture on screen
-  private screen: any | null = null;
-  private demoPlayer: IDemoPlayer | null = null;
+  private readonly pa: PieceAwaiter;
+  private readonly gr: GameRunner;
+  private readonly screen: any;
+  private readonly demoPlayer: IDemoPlayer;
+  private readonly debug: any;
+  private readonly emu: IEmulator;
+  private readonly frameAwaiter: IFrameAwaiter;
 
-  // todo: move to constructor
-  public async run(screen: any, rom: any, tableBoard: any, debug: any) {
+  constructor(screen: any, rom: any, tableBoard: any, debug: any) {
+    this.screen = screen;
+    this.debug = debug;
+
     const factory = new EmulatorFactory(screen, rom);
-    const emu = factory.getInstance();
-    const demoPlayer = new DemoPlayer(emu);
-    this.demoPlayer = demoPlayer;
-    ErrorHandler.setup(demoPlayer);
-    const bs = new GameBootstrap(demoPlayer);
-    const frameAwaiter = new FrameAwaiter(demoPlayer);
-    await bs.setupFromNewCanvas(frameAwaiter);
-    console.log('setup??');
+    this.emu = factory.getInstance();
+    this.demoPlayer = new DemoPlayer(this.emu);
+    ErrorHandler.setup(this.demoPlayer); // todo: rename as register
 
     const pixelChecker = new PixelChecker(screen);
-    const gr = GameRunnerFactory.getInstance(demoPlayer, pixelChecker, debug);
-    this.addFluff(demoPlayer, emu, gr, debug);
+    this.frameAwaiter = new FrameAwaiter(this.demoPlayer);
+    this.gr = GameRunnerFactory.getInstance(
+      this.demoPlayer,
+      pixelChecker,
+      debug
+    );
+    this.gr.setTableBoard(tableBoard);
+    this.pa = new PieceAwaiter(
+      pixelChecker,
+      this.demoPlayer,
+      this.frameAwaiter
+    );
+  }
 
-    const pa = new PieceAwaiter(pixelChecker, demoPlayer, frameAwaiter);
-    this.gr = gr;
-    this.pa = pa;
-    this.screen = screen;
-    console.log('first piece appeared!!');
-    gr.setTableBoard(tableBoard);
-    demoPlayer.addEvent({
-      frame: demoPlayer.getFrame() + 1,
+  public async run() {
+    const bs = new GameBootstrap(this.demoPlayer);
+    await bs.setupFromNewCanvas(this.frameAwaiter);
+    this.addFluff();
+    this.demoPlayer.addEvent({
+      frame: this.demoPlayer.getFrame() + 1,
       button: DemoButton.BUTTON_LEFT,
       isDown: true
     });
-    await gr.onFirstPieceAppear();
-    pa.init();
+    await this.gr.onFirstPieceAppear();
+    this.pa.init();
 
     let x = 500;
     while (x--) {
-      await this.considerCaptureAndRestore(pa, gr, demoPlayer);
-      await pa.awaitPiece();
-      console.log('PIECE HERE');
-      await gr.onNextPieceAppear();
+      await this.considerCaptureAndRestore();
+      await this.pa.awaitPiece();
+      await this.gr.onNextPieceAppear();
     }
   }
 
   public capture(): string {
-    if (this.gr == null || this.pa == null || this.screen == null) {
-      throw ErrorHandler.fatal('invalid call');
-    }
     return JSON.stringify({
       gr: this.gr.capture(),
       pa: this.pa.capture(),
@@ -76,9 +80,6 @@ export class GameLogic implements ICapturable<string> {
   }
 
   public restoreFromCapture(capture: string) {
-    if (this.gr == null || this.pa == null || this.demoPlayer == null) {
-      throw ErrorHandler.fatal('invalid call');
-    }
     const oldFps = this.demoPlayer.timer.getFps();
     this.demoPlayer.timer.setFps(0);
     console.log('no fps anymore...');
@@ -92,12 +93,8 @@ export class GameLogic implements ICapturable<string> {
   }
 
   static myfirst = true;
-  public async considerCaptureAndRestore(
-    pa: PieceAwaiter,
-    gr: GameRunner,
-    demoPlayer: IDemoPlayer
-  ) {
-    if (demoPlayer.getFrame() >= 1e9 * 21200) {
+  private async considerCaptureAndRestore() {
+    if (this.demoPlayer.getFrame() >= 1e9 * 21200) {
       download('new_transition', this.capture());
       throw ErrorHandler.fatal('end.');
     }
@@ -110,30 +107,25 @@ export class GameLogic implements ICapturable<string> {
     }
   }
 
-  private addFluff(
-    demoPlayer: IDemoPlayer,
-    emu: IEmulator,
-    gr: GameRunner,
-    debug: any
-  ) {
-    debug['ok'] = 'DFLSJFLSK';
+  private addFluff() {
+    this.debug['ok'] = 'DFLSJFLSK';
 
     // @ts-ignore
-    window['emu'] = emu;
+    window['emu'] = this.emu;
 
     // @ts-ignore
-    window['demoPlayer'] = demoPlayer;
+    window['demoPlayer'] = this.demoPlayer;
 
     // @ts-ignore
     window['download_cap'] = () => {
-      const cap = gr.capture();
+      const cap = this.gr.capture();
       // @ts-ignore
       window['download']('my_download', cap);
     };
 
-    demoPlayer.addFrameListener((frame: number) => {
-      debug['fps'] = demoPlayer.timer.getFps();
-      debug['frame'] = frame.toString();
+    this.demoPlayer.addFrameListener((frame: number) => {
+      this.debug['fps'] = this.demoPlayer.timer.getFps();
+      this.debug['frame'] = frame.toString();
     });
   }
 }
