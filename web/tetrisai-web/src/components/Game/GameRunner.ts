@@ -3,8 +3,9 @@ import { Piece } from './common/Enums';
 import { IBoard, Board } from './common/Board';
 import { ExtraInformation } from './ExtraInformation';
 import { IReadCurrentPiece } from '../GameRunner/ReadCurrentPiece';
-import { IGetNextMove } from './IGetNextMove';
+import { IGetNextMove, FirstMoveDirectionT } from './IGetNextMove';
 import { ICapturable } from './ICapturable';
+import { IReadNextPiece } from './IReadNextPiece';
 
 function sleep(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -116,49 +117,21 @@ export class GameRunner implements ICapturable<any> {
    */
 
   public async onNextPieceAppear() {
-    if (this.tableBoard) this.tableBoard['board'] = this.nextMoveBoard;
-    this.debug['board'] = this.nextMoveBoard.getBitstring();
     const currFrame = this.demoPlayer.getFrame();
     this.addRawDemoEventsToDemoPlayer(
       this.nextMoveEntries,
       this.extraInformation
     );
-
+    if (this.tableBoard) this.tableBoard['board'] = this.nextMoveBoard;
     const nextPiece = this.readNextPieceHandler.getCurrentPieceFromEmulator();
+    this.debug['board'] = this.nextMoveBoard.getBitstring();
     this.debug['nextPiece'] = nextPiece;
     console.log('next Piece', nextPiece);
 
-    this.nextMoveEntries = [];
-    [
-      this.nextMoveEntries,
-      this.nextMoveBoard,
-      this.extraInformation
-    ] = await this.getNextMoveHandler.getNextMoveEntries(
-      this.nextMoveBoard,
-      nextPiece,
-      {
-        totalLineClears: this.totalLineClears
-      }
-    );
-    // add an event 3 frames later than last frame, and remove first nextMoveEntry
-    if (
-      this.nextMoveEntries.length > 0 &&
-      this.nextMoveEntries[0].frame === 1 &&
-      [DemoButton.BUTTON_LEFT, DemoButton.BUTTON_RIGHT].indexOf(
-        this.nextMoveEntries[0].button
-      ) !== -1
-    ) {
-      console.log('LATEST');
-      console.log(this.nextMoveEntries);
-      if (this.extraInformation.lastFrame) {
-        this.demoPlayer.addEvent({
-          frame: currFrame + this.extraInformation.lastFrame + 3,
-          button: this.nextMoveEntries[0].button,
-          isDown: true
-        });
-        this.nextMoveEntries.slice(1);
-      }
-    }
+    const oldPiece = nextPiece; // todo.
+    await this.adaptBasedOnNextPiece(oldPiece, nextPiece);
+    await this.prepareEntriesForNextPieceAppear(nextPiece);
+    this.forceEarlyMove(currFrame);
 
     this.expFrame = currFrame + (this.extraInformation.lastFrame || 0);
   }
@@ -182,6 +155,78 @@ export class GameRunner implements ICapturable<any> {
     this.totalLineClears = json.totalLineClears;
   }
 
+  private async prepareEntriesForNextPieceAppear(nextPiece: Piece) {
+    this.nextMoveEntries = [];
+    [
+      this.nextMoveEntries,
+      this.nextMoveBoard,
+      this.extraInformation
+    ] = await this.getNextMoveHandler.getNextMoveEntries(
+      this.nextMoveBoard,
+      nextPiece,
+      {
+        totalLineClears: this.totalLineClears
+      }
+    );
+  }
+
+  private forceEarlyMove(currFrame: number) {
+    if (
+      this.nextMoveEntries.length > 0 &&
+      this.nextMoveEntries[0].frame === 1 &&
+      [DemoButton.BUTTON_LEFT, DemoButton.BUTTON_RIGHT].indexOf(
+        this.nextMoveEntries[0].button
+      ) !== -1
+    ) {
+      console.log('LATEST');
+      console.log(this.nextMoveEntries);
+      if (this.extraInformation.lastFrame) {
+        this.demoPlayer.addEvent({
+          frame: currFrame + this.extraInformation.lastFrame + 3,
+          button: this.nextMoveEntries[0].button,
+          isDown: true
+        });
+        this.nextMoveEntries.slice(1);
+      }
+    }
+  }
+
+  private async adaptBasedOnNextPiece(oldPiece: Piece, nextPiece: Piece) {
+    const firstMoveDirection = this.getFirstMoveDirection(this.nextMoveEntries);
+
+    const res = this.getNextMoveHandler.getNextMoveEntriesGivenNextPiece(
+      this.nextMoveBoard,
+      oldPiece,
+      nextPiece,
+      this.totalLineClears,
+      firstMoveDirection
+    );
+  }
+
+  private getFirstMoveDirection(demoEntries: DemoEntry[]): FirstMoveDirectionT {
+    if (demoEntries.length === 0) {
+      return 'NONE';
+    }
+    switch (demoEntries[0].button) {
+      case DemoButton.BUTTON_LEFT:
+        return 'LEFT';
+      case DemoButton.BUTTON_RIGHT:
+        return 'RIGHT';
+      default:
+        return 'NONE';
+    }
+  }
+
+  private getMovesBasedOnNextPiece(
+    board: IBoard,
+    piece: Piece,
+    nextPiece: Piece,
+    totalLineClears: number
+  ): DemoEntry[] {
+    // todo.
+    return [];
+  }
+
   private addRawDemoEventsToDemoPlayer(
     demoEvents: DemoEntry[],
     extraInfo: ExtraInformation
@@ -199,8 +244,4 @@ export class GameRunner implements ICapturable<any> {
     console.log('adding', demoEvents);
     this.demoPlayer.addEvents(demoEvents);
   }
-}
-
-export interface IReadNextPiece {
-  getCurrentPieceFromEmulator(): Piece;
 }

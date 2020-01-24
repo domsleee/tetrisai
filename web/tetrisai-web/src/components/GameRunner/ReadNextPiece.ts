@@ -1,8 +1,8 @@
-import { IReadNextPiece } from '../Game/GameRunner';
 import { Piece } from '../Game/common/Enums';
 import { IPixelChecker } from '../Game/PixelGetter';
 import { ErrorHandler } from '../Game/common/ErrorHandler';
 import { NiceCoord } from './ReadNextPiece/NiceCoord';
+import { IReadNextPiece } from '../Game/IReadNextPiece';
 
 export class ReadNextPiece implements IReadNextPiece {
   private static readonly lAnchor = new NiceCoord(121, 197);

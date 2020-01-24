@@ -3,60 +3,105 @@ import { Piece } from './common/Enums';
 import { Board, IBoard } from './common/Board';
 import axios from 'axios';
 import { ExtraInformation } from './ExtraInformation';
-import { IGetNextMove, OptionalNextMoveParams } from './IGetNextMove';
+import {
+  IGetNextMove,
+  OptionalNextMoveParams,
+  FirstMoveDirectionT,
+  NextTwoPiecesReturnT
+} from './IGetNextMove';
 
 const URL = 'http://localhost:5000/get-moves';
 export class GetNextMove implements IGetNextMove {
-  public async getNextMoveEntries(board: IBoard, nextPiece: Piece, optional: OptionalNextMoveParams):
-    Promise<[DemoEntry[], IBoard, ExtraInformation]> {
+  public async getNextMoveEntries(
+    board: IBoard,
+    nextPiece: Piece,
+    optional: OptionalNextMoveParams
+  ): Promise<[DemoEntry[], IBoard, ExtraInformation]> {
     const data: any = {
       board: board.getBitstring(),
-      piece: nextPiece.toString(),
+      piece: nextPiece.toString()
     };
-    if (optional.firstMoveDirection) { data.first_move_direction = optional.firstMoveDirection; }
-    if (optional.totalLineClears) { data.line_clears = optional.totalLineClears; }
+    if (optional.firstMoveDirection) {
+      data.first_move_direction = optional.firstMoveDirection;
+    }
+    if (optional.totalLineClears) {
+      data.line_clears = optional.totalLineClears;
+    }
     const resp = await axios.post(URL, data);
     const nxBoard = new Board(resp.data.board);
     let lastFrame = 0;
     const demoEntries = [];
-    console.log("REQUEST");
+    console.log('REQUEST');
     console.log(data);
-    console.log("resp.data");
+    console.log('resp.data');
     console.log(resp.data);
-    if (optional.firstMoveDirection) { resp.data.demo_entries = resp.data.demo_entries.slice(1); }
+    if (optional.firstMoveDirection) {
+      resp.data.demo_entries = resp.data.demo_entries.slice(1);
+    }
     for (const str of resp.data.demo_entries) {
       const [frameStr, action, ...rest] = str.split(' ');
       lastFrame = parseInt(frameStr, 10);
-      if (action === 'DOWN') { continue; }
+      if (action === 'DOWN') {
+        continue;
+      }
       let button = DemoButton.BUTTON_A;
       switch (action) {
-        case 'LEFT': button = DemoButton.BUTTON_LEFT; break;
-        case 'RIGHT': button = DemoButton.BUTTON_RIGHT; break;
-        case 'ROTATE_C': button = DemoButton.BUTTON_A; break;
-        case 'ROTATE_AC': button = DemoButton.BUTTON_B; break;
-        default: throw new Error("no such button");
+        case 'LEFT':
+          button = DemoButton.BUTTON_LEFT;
+          break;
+        case 'RIGHT':
+          button = DemoButton.BUTTON_RIGHT;
+          break;
+        case 'ROTATE_C':
+          button = DemoButton.BUTTON_A;
+          break;
+        case 'ROTATE_AC':
+          button = DemoButton.BUTTON_B;
+          break;
+        default:
+          throw new Error('no such button');
       }
 
       let frame = parseInt(frameStr);
-      let fr1 = frame-1, fr2 = frame;
+      let fr1 = frame - 1,
+        fr2 = frame;
       //if (frame > 1) { fr1 = frame - 2, fr2 = frame - 1; }
       demoEntries.push({
         frame: fr1,
         button,
-        isDown: true,
+        isDown: true
       });
       demoEntries.push({
         frame: fr2,
         button,
-        isDown: false,
+        isDown: false
       });
     }
     demoEntries.sort((a: DemoEntry, b: DemoEntry) => {
       return a.frame - b.frame;
     });
-    return [demoEntries, nxBoard, {
-      lastFrame,
-      lineClears: parseInt(resp.data.line_clears, 10),
-    }];
+    return [
+      demoEntries,
+      nxBoard,
+      {
+        lastFrame,
+        lineClears: parseInt(resp.data.line_clears, 10)
+      }
+    ];
+  }
+
+  public async getNextMoveEntriesGivenNextPiece(
+    board: IBoard,
+    piece: Piece,
+    nextPiece: Piece,
+    totalLineClears: number,
+    firstMoveDirection: FirstMoveDirectionT
+  ): Promise<NextTwoPiecesReturnT> {
+    return {
+      demoEntries: [],
+      board,
+      boardAfter: board,
+      extraInformation: {}
+    };
   }
 }
