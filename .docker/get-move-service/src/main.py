@@ -7,7 +7,7 @@ import asyncio
 import logging
 import dataclasses
 import json
-import os 
+import os
 
 from flask_cors import CORS, cross_origin
 
@@ -21,10 +21,11 @@ DIR = os.path.dirname(os.path.realpath(__file__))
 
 logging.basicConfig(level=logging.DEBUG)
 
+
 @app.route('/')
 @cross_origin()
 def hello():
-  return "Hello World!"
+    return "Hello World!"
 
 
 @app.route('/get-moves', methods=['POST'])
@@ -35,13 +36,14 @@ def get_move_handler():
     sem.acquire(timeout=30)
   except Exception:
     abort("failed to get lock")
-  
+
   try:
     board = payload['board']
     piece = piece_to_int(payload['piece'])
     first_move_direction = payload.get('first_move_direction')
     if first_move_direction not in [None, 'NONE', 'LEFT', 'RIGHT']:
-      raise ValueError(f"Unexpected first_move_direction: {first_move_direction}")
+      raise ValueError(
+        f"Unexpected first_move_direction: {first_move_direction}")
 
     line_clears = 0
     if 'line_clears' in payload:
@@ -50,7 +52,8 @@ def get_move_handler():
     get_moves_service.set_num_lines(line_clears)
     print("REQUEST")
     print(payload)
-    result = get_moves_service.get_moves(board, piece, first_move_direction)
+    result = get_moves_service.get_moves(
+        board, piece, first_move_direction)
     ret = {
       'board': result.nx_board,
       'demo_entries': [str(demo_entry.frame) + " " + demo_entry.action for demo_entry in result.demo_entries],
@@ -59,8 +62,12 @@ def get_move_handler():
     print(ret)
     return json.dumps(ret)
   finally:
-    sem.release()
+      sem.release()
 
+
+@app.route('/get-moves-given-piece')
+def get_moves_given_piece_hander():
+  pass
 
 @app.route('/get-file', methods=['POST'])
 @cross_origin()
@@ -74,10 +81,11 @@ def get_file_handler():
     'result': s
   })
 
-  
+
 @app.route('/healthcheck')
 def healthcheck():
   return get_moves_service.healthcheck()
+
 
 if __name__ == '__main__':
   get_moves_service = GetMoves(loop=loop)

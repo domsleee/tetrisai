@@ -11,13 +11,32 @@ import {
 } from './IGetNextMove';
 
 const URL = 'http://localhost:5000/get-moves';
+const URL2 = 'http://localhost:500/get-moves-given-piece';
+/* get-moves-given-piece
+ */
+
+interface GetMovesRequestT {
+  board: string;
+  piece: string;
+  first_move_direction?: FirstMoveDirectionT;
+  line_clears?: number;
+}
+
+interface GetMovesGivenPieceRequestT {
+  board: IBoard;
+  piece: Piece;
+  next_piece: Piece;
+  first_move_direction: FirstMoveDirectionT;
+  line_clears: number;
+}
+
 export class GetNextMove implements IGetNextMove {
   public async getNextMoveEntries(
     board: IBoard,
     nextPiece: Piece,
     optional: OptionalNextMoveParams
   ): Promise<[DemoEntry[], IBoard, ExtraInformation]> {
-    const data: any = {
+    const data: GetMovesT = {
       board: board.getBitstring(),
       piece: nextPiece.toString()
     };
@@ -63,9 +82,8 @@ export class GetNextMove implements IGetNextMove {
       }
 
       let frame = parseInt(frameStr);
-      let fr1 = frame - 1,
-        fr2 = frame;
-      //if (frame > 1) { fr1 = frame - 2, fr2 = frame - 1; }
+      const fr1 = frame - 1;
+      const fr2 = frame;
       demoEntries.push({
         frame: fr1,
         button,
