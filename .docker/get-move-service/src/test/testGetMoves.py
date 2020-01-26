@@ -4,6 +4,7 @@ from GetMoves import GetMoves
 from utility.BitBoard import BitBoard
 from common import piece_to_int
 import asyncio
+import logging
 
 
 class TestGetMoves(unittest.TestCase):
@@ -68,6 +69,45 @@ class TestGetMoves(unittest.TestCase):
     self.assertEqual(5, self.gm.get_num_lines())
     self.gm.set_num_lines(8)
     self.assertEqual(8, self.gm.get_num_lines())
+
+  def test_given_next_piece_greedy_tetris(self):
+    board = BitBoard.fromBoard(
+      ["0000000000" for _ in range(16)]
+      + ["1111111110" for _ in range(4)])
+    exp_nx_board = BitBoard.fromBoard([self.EMPTY_ROW for _ in range(20)])
+    piece = piece_to_int("I_PIECE")
+    result = self.gm.get_moves_given_piece(board, piece, piece, "RIGHT")
+    self.assertEqual(exp_nx_board, result.nx_board)
+    self.assertGreater(len(result.demo_entries), 0)
+    self.assertEqual(1, result.demo_entries[0].frame)
+    self.assertEqual("RIGHT", result.demo_entries[0].action)
+  
+  def test_given_next_piece_into_tetris(self):
+    board = BitBoard.fromBoard(
+      ["0000000000" for _ in range(16)]
+      + ["1111111000" for _ in range(2)]
+      + ["1111111110" for _ in range(2)])
+    exp_nx_board = BitBoard.fromBoard(
+      ["0000000000" for _ in range(16)]
+      + ["1111111110" for _ in range(4)])
+    piece1 = piece_to_int("O_PIECE")
+    piece2 = piece_to_int("I_PIECE")
+    first_move_direction = 'RIGHT'
+    result = self.gm.get_moves_given_piece(board, piece1, piece2, first_move_direction)
+    self.assertEqual(exp_nx_board, result.nx_board)
+    self.assertGreater(len(result.demo_entries), 0)
+    self.assertEqual(1, result.demo_entries[0].frame)
+    self.assertEqual(first_move_direction, result.demo_entries[0].action)
+
+  def test_get_moves_given_piece_broken_case(self):
+    board = '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000010010000001111100000'
+    piece1 = piece_to_int('T_PIECE')
+    piece2 = piece_to_int('O_PIECE')
+    first_move_direction = 'LEFT'
+    result = self.gm.get_moves_given_piece(board, piece1, piece2, first_move_direction)
+    self.assertEqual(1, result.demo_entries[0].frame)
+    self.assertEqual(first_move_direction, result.demo_entries[0].action)
+
 
 if __name__ == '__main__':
   unittest.main()

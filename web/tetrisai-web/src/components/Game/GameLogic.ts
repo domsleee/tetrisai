@@ -63,9 +63,8 @@ export class GameLogic implements ICapturable<string> {
     await this.gr.onFirstPieceAppear();
     this.pa.init();
 
-    let x = 500;
-    while (x--) {
-      await this.considerCaptureAndRestore();
+    while (true) {
+      //await this.considerCaptureAndRestore();
       await this.pa.awaitPiece();
       await this.gr.onNextPieceAppear();
     }
@@ -81,7 +80,7 @@ export class GameLogic implements ICapturable<string> {
 
   public restoreFromCapture(capture: string) {
     const oldFps = this.demoPlayer.timer.getFps();
-    this.demoPlayer.timer.setFps(0);
+    this.demoPlayer.timer.stop();
     console.log('no fps anymore...');
     const json = JSON.parse(capture);
     this.gr.restoreFromCapture(json.gr);
@@ -94,15 +93,13 @@ export class GameLogic implements ICapturable<string> {
 
   static myfirst = true;
   private async considerCaptureAndRestore() {
-    if (this.demoPlayer.getFrame() >= 1e9 * 21200) {
+    if (this.demoPlayer.getFrame() >= 1e200 * 27800) {
       download('new_transition', this.capture());
       throw ErrorHandler.fatal('end.');
     }
     if (GameLogic.myfirst) {
       console.log('RESTORING....');
-      this.restoreFromCapture(
-        await new GetOldCapture().getJustBeforeTransition()
-      );
+      this.restoreFromCapture(await new GetOldCapture().getGreenFrozen());
       GameLogic.myfirst = false;
     }
   }

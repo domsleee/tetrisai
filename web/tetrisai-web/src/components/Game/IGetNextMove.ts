@@ -11,7 +11,6 @@ export interface OptionalNextMoveParams {
 export interface NextTwoPiecesReturnT {
   demoEntries: DemoEntry[];
   board: IBoard;
-  boardAfter: IBoard;
   extraInformation: ExtraInformation;
 }
 

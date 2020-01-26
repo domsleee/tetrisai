@@ -24,6 +24,14 @@ class DemoEntry:
 
 BoardT = str
 
+
+@dataclass
+class GetMovesResult():
+  result: str
+  nx_board: str = None
+  line_clears: int = None
+  demo_entries: typing.List[DemoEntry] = None
+
 class IGetMoves:
   @abc.abstractmethod
   def healthcheck(self) -> bool:
@@ -34,7 +42,7 @@ class IGetMoves:
     """
   
   @abc.abstractmethod
-  def get_moves(self, board: str, piece: int, firstMoveDirection: typing.Optional[str]) -> typing.Tuple[BoardT, typing.List[DemoEntry]]:
+  def get_moves(self, board: str, piece: int, firstMoveDirection: typing.Optional[str]) -> GetMovesResult:
     """[summary]
     
     Arguments:
@@ -44,6 +52,21 @@ class IGetMoves:
     Returns:
       typing.List[DemoEntry] -- [description]
     """
+  
+  @abc.abstractmethod
+  def get_moves_given_piece(self, board: str, piece: int, nextPiece: int, firstMoveDirection: str) -> GetMovesResult:
+    """[summary]
+    
+    Arguments:
+        board {str} -- [description]
+        piece {int} -- [description]
+        nextPiece {int} -- [description]
+        firstMoveDirection {str} -- [description]
+    
+    Returns:
+        GetMovesResult -- [description]
+    """
+  
   
   @abc.abstractmethod
   def set_num_lines(self, num_lines:int) -> None:

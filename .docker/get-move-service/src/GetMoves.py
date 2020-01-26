@@ -1,4 +1,4 @@
-from interfaces.IGetMoves import IGetMoves, DemoEntry, BoardT
+from interfaces.IGetMoves import IGetMoves, DemoEntry, BoardT, GetMovesResult
 import typing
 import os
 from SimpleProcess import SimpleProcess
@@ -8,14 +8,6 @@ import dataclasses
 
 DIR = "/Users/dom/Documents/git/tetrisAI/.docker/get-move-service/src"
 DEFAULT_BINARY = os.path.join(DIR, "external_bin", "ew_get_moves")
-
-
-@dataclasses.dataclass
-class GetMovesResult():
-  result: str
-  nx_board: str = None
-  line_clears: int = None
-  demo_entries: typing.List[DemoEntry] = None
 
 class GetMoves(IGetMoves):
   DEFAULT_TIMEOUT = 1.0
@@ -41,7 +33,7 @@ class GetMoves(IGetMoves):
     nx_line = self._process.read_line()
     return nx_line == "OK"
 
-  def get_moves(self, board: str, piece: int, firstMoveDirection: typing.Optional[str] = None) -> typing.Tuple[str, BoardT, typing.List[DemoEntry]]:    
+  def get_moves(self, board: str, piece: int, firstMoveDirection: typing.Optional[str] = None) -> GetMovesResult:    
     if firstMoveDirection:
       self._send_str(b'k\n')
     else:
@@ -59,14 +51,7 @@ class GetMoves(IGetMoves):
     elif result != "moves":
       raise ValueError(f"wtf is {result}")
 
-    demo_entries = []
-    num_moves = int(self._process_line(self._process.read_line(), "num moves"))
-    for i in range(num_moves):
-      move = self._process.read_line()
-      [frame, action] = move.split(' ')
-      frame = int(frame)
-      demo_entries.append(DemoEntry(frame=frame, action=action))
-    self._logger.debug("num_moves: %d" % num_moves)
+    demo_entries = self._read_num_moves()
     nx_board = self._process_line(self._process.read_line(), "board")
     line_clears = self._process_line(self._process.read_line(), "line clears")
     assert(self._process.is_empty())
@@ -75,6 +60,38 @@ class GetMoves(IGetMoves):
       raise ValueError("Expected OK, got '%s'" % ok)
     return GetMovesResult(result="r", nx_board=nx_board, line_clears=line_clears, demo_entries=demo_entries)
   
+  def _read_num_moves(self):
+    demo_entries = []
+    num_moves = int(self._process_line(self._process.read_line(), "num moves"))
+    for i in range(num_moves):
+      move = self._process.read_line()
+      [frame, action] = move.split(' ')
+      frame = int(frame)
+      demo_entries.append(DemoEntry(frame=frame, action=action))
+    self._logger.debug("num_moves: %d" % num_moves)
+    return demo_entries
+
+  def get_moves_given_piece(self, board: str, piece: int, nextPiece: int, firstMoveDirection: str) -> GetMovesResult:
+    self._send_str(b'p\n')
+    self._send_str((str(piece) + '\n').encode('utf-8'))
+    self._send_str((str(nextPiece) + '\n').encode('utf-8'))
+    self._send_str((firstMoveDirection[0] + '\n').encode('utf-8'))
+    self._send_str((board + '\n').encode('utf-8'))
+
+    result = self._process_line(self._process.read_line(), "result")
+    if result == "no moves":
+      return GetMovesResult(result="n")
+    elif result != "moves":
+      raise ValueError(f"Unknown result '{result}'")
+
+    demo_entries = self._read_num_moves()
+    nx_board = self._process_line(self._process.read_line(), "board")
+    line_clears = self._process_line(self._process.read_line(), "line clears")
+    ok = self._process.read_line()
+    if ok != "OK":
+      raise ValueError("Expected OK, got '%s'" % ok)
+    return GetMovesResult(result="r", nx_board=nx_board, line_clears=line_clears, demo_entries=demo_entries)
+
   def set_num_lines(self, num_lines:int):
     self._send_str(b'l\n')
     self._send_str((str(num_lines) + '\n').encode('utf-8'))

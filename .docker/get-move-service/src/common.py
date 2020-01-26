@@ -1,3 +1,4 @@
+import threading
 
 def piece_to_int(piece: str) -> int:
   ind = [
@@ -12,3 +13,5 @@ def piece_to_int(piece: str) -> int:
   if ind == -1:
     raise ValueError("unknown piece")
   return ind
+
+sem = threading.Semaphore(1)

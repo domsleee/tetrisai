@@ -63,6 +63,10 @@ export class DemoPlayer implements IDemoPlayer {
     console.log('new entries', this.events);
   }
 
+  public clearEvents() {
+    this.events.clear();
+  }
+
   public destroy() {
     this.timer.stop();
   }

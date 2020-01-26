@@ -1,7 +1,7 @@
 import { DemoEntry, DemoButton } from './IDemoPlayer';
 import { Piece } from './common/Enums';
 import { Board, IBoard } from './common/Board';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { ExtraInformation } from './ExtraInformation';
 import {
   IGetNextMove,
@@ -11,7 +11,7 @@ import {
 } from './IGetNextMove';
 
 const URL = 'http://localhost:5000/get-moves';
-const URL2 = 'http://localhost:500/get-moves-given-piece';
+const URL2 = 'http://localhost:5000/get-moves-given-piece';
 /* get-moves-given-piece
  */
 
@@ -23,10 +23,16 @@ interface GetMovesRequestT {
 }
 
 interface GetMovesGivenPieceRequestT {
-  board: IBoard;
-  piece: Piece;
-  next_piece: Piece;
+  board: string;
+  piece: string;
+  next_piece: string;
   first_move_direction: FirstMoveDirectionT;
+  line_clears: number;
+}
+
+interface GetMovesGivenPieceResponseT {
+  board: string;
+  demo_entries: string[];
   line_clears: number;
 }
 
@@ -36,7 +42,7 @@ export class GetNextMove implements IGetNextMove {
     nextPiece: Piece,
     optional: OptionalNextMoveParams
   ): Promise<[DemoEntry[], IBoard, ExtraInformation]> {
-    const data: GetMovesT = {
+    const data: GetMovesRequestT = {
       board: board.getBitstring(),
       piece: nextPiece.toString()
     };
@@ -48,8 +54,6 @@ export class GetNextMove implements IGetNextMove {
     }
     const resp = await axios.post(URL, data);
     const nxBoard = new Board(resp.data.board);
-    let lastFrame = 0;
-    const demoEntries = [];
     console.log('REQUEST');
     console.log(data);
     console.log('resp.data');
@@ -57,7 +61,54 @@ export class GetNextMove implements IGetNextMove {
     if (optional.firstMoveDirection) {
       resp.data.demo_entries = resp.data.demo_entries.slice(1);
     }
-    for (const str of resp.data.demo_entries) {
+    const [demoEntries, lastFrame] = this.parseDemoEntries(
+      resp.data.demo_entries
+    );
+    return [
+      demoEntries,
+      nxBoard,
+      {
+        lastFrame,
+        lineClears: parseInt(resp.data.line_clears, 10)
+      }
+    ];
+  }
+
+  public async getNextMoveEntriesGivenNextPiece(
+    board: IBoard,
+    piece: Piece,
+    nextPiece: Piece,
+    totalLineClears: number,
+    firstMoveDirection: FirstMoveDirectionT
+  ): Promise<NextTwoPiecesReturnT> {
+    const req: GetMovesGivenPieceRequestT = {
+      board: board.getBitstring(),
+      piece: piece.toString(),
+      next_piece: nextPiece.toString(),
+      first_move_direction: firstMoveDirection,
+      line_clears: totalLineClears
+    };
+    const resp: AxiosResponse<GetMovesGivenPieceResponseT> = await axios.post(
+      URL2,
+      req
+    );
+    const [demoEntries, lastFrame] = this.parseDemoEntries(
+      resp.data.demo_entries
+    );
+    const nxBoard = new Board(resp.data.board);
+    return {
+      demoEntries,
+      board: nxBoard,
+      extraInformation: {
+        lineClears: resp.data.line_clears
+      }
+    };
+  }
+
+  private parseDemoEntries(demo_entries: string[]): [DemoEntry[], number] {
+    let demoEntries: DemoEntry[] = [];
+    let lastFrame = 0;
+    for (const str of demo_entries) {
       const [frameStr, action, ...rest] = str.split(' ');
       lastFrame = parseInt(frameStr, 10);
       if (action === 'DOWN') {
@@ -81,7 +132,7 @@ export class GetNextMove implements IGetNextMove {
           throw new Error('no such button');
       }
 
-      let frame = parseInt(frameStr);
+      const frame = parseInt(frameStr, 10);
       const fr1 = frame - 1;
       const fr2 = frame;
       demoEntries.push({
@@ -98,28 +149,6 @@ export class GetNextMove implements IGetNextMove {
     demoEntries.sort((a: DemoEntry, b: DemoEntry) => {
       return a.frame - b.frame;
     });
-    return [
-      demoEntries,
-      nxBoard,
-      {
-        lastFrame,
-        lineClears: parseInt(resp.data.line_clears, 10)
-      }
-    ];
-  }
-
-  public async getNextMoveEntriesGivenNextPiece(
-    board: IBoard,
-    piece: Piece,
-    nextPiece: Piece,
-    totalLineClears: number,
-    firstMoveDirection: FirstMoveDirectionT
-  ): Promise<NextTwoPiecesReturnT> {
-    return {
-      demoEntries: [],
-      board,
-      boardAfter: board,
-      extraInformation: {}
-    };
+    return [demoEntries, lastFrame];
   }
 }

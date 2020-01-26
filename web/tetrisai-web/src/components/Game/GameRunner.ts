@@ -15,7 +15,7 @@ export class GameRunner implements ICapturable<any> {
   private nextMoveEntries: DemoEntry[] = [];
   private nextMoveBoard: IBoard = new Board();
   private expFrame: number = 0;
-  private extraInformation: ExtraInformation = {};
+  private extraInformation: ExtraInformation;
   private totalLineClears: number = 0;
 
   private readonly demoPlayer: IDemoPlayer;
@@ -25,6 +25,7 @@ export class GameRunner implements ICapturable<any> {
 
   private debug: any;
   private tableBoard: any = null;
+  private oldPiece: Piece;
 
   public constructor(
     demoPlayer: IDemoPlayer,
@@ -107,6 +108,7 @@ export class GameRunner implements ICapturable<any> {
       }
     );
     this.expFrame = currFrame + (this.extraInformation.lastFrame || 0);
+    this.oldPiece = nextPiece;
     console.log('currFrame, expFrame', currFrame, this.expFrame);
     //this.demoPlayer.addEvent({frame: 555, button: DemoButton.BUTTON_RIGHT, isDown: true});
   }
@@ -117,6 +119,9 @@ export class GameRunner implements ICapturable<any> {
    */
 
   public async onNextPieceAppear() {
+    const oldFps = this.demoPlayer.timer.getFps();
+    this.demoPlayer.timer.stop();
+    await sleep(5 * 1000);
     const currFrame = this.demoPlayer.getFrame();
     this.addRawDemoEventsToDemoPlayer(
       this.nextMoveEntries,
@@ -128,12 +133,15 @@ export class GameRunner implements ICapturable<any> {
     this.debug['nextPiece'] = nextPiece;
     console.log('next Piece', nextPiece);
 
-    const oldPiece = nextPiece; // todo.
-    await this.adaptBasedOnNextPiece(oldPiece, nextPiece);
+    const oldPiece = this.oldPiece;
+    const oldLineClears = this.extraInformation.lineClears;
+    //await this.adaptBasedOnNextPiece(oldPiece, nextPiece, oldLineClears);
     await this.prepareEntriesForNextPieceAppear(nextPiece);
     this.forceEarlyMove(currFrame);
 
     this.expFrame = currFrame + (this.extraInformation.lastFrame || 0);
+    this.oldPiece = nextPiece;
+    this.demoPlayer.timer.setFps(oldFps);
   }
 
   public capture(): any {
@@ -191,16 +199,38 @@ export class GameRunner implements ICapturable<any> {
     }
   }
 
-  private async adaptBasedOnNextPiece(oldPiece: Piece, nextPiece: Piece) {
+  private async adaptBasedOnNextPiece(
+    oldPiece: Piece,
+    nextPiece: Piece,
+    oldLineClears: number
+  ) {
     const firstMoveDirection = this.getFirstMoveDirection(this.nextMoveEntries);
 
-    const res = this.getNextMoveHandler.getNextMoveEntriesGivenNextPiece(
+    const res = await this.getNextMoveHandler.getNextMoveEntriesGivenNextPiece(
       this.nextMoveBoard,
       oldPiece,
       nextPiece,
       this.totalLineClears,
       firstMoveDirection
     );
+
+    const demoEntries =
+      firstMoveDirection !== 'NONE'
+        ? res.demoEntries.slice(2)
+        : res.demoEntries;
+
+    const currFrame = this.demoPlayer.getFrame();
+    for (const demoEntry of demoEntries) {
+      demoEntry.frame += currFrame;
+    }
+
+    const lineClears = res.extraInformation.lineClears;
+    this.totalLineClears += lineClears - oldLineClears;
+    this.debug['totalLineClears'] = this.totalLineClears;
+
+    this.demoPlayer.clearEvents();
+    this.demoPlayer.addEvents(demoEntries);
+    // do some work
   }
 
   private getFirstMoveDirection(demoEntries: DemoEntry[]): FirstMoveDirectionT {

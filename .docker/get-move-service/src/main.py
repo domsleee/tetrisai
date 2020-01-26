@@ -1,6 +1,6 @@
 from flask import Flask, abort, request, jsonify
 import threading
-from interfaces.IGetMoves import IGetMoves
+from routes.get_moves_given_piece import get_moves_given_piece_page
 from GetMoves import GetMoves
 from common import piece_to_int
 import asyncio
@@ -8,18 +8,20 @@ import logging
 import dataclasses
 import json
 import os
+from common import sem
+from GetMovesService import get_moves_service
 
 from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
-sem = threading.Semaphore(1)
-get_moves_service: IGetMoves
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 loop = asyncio.get_event_loop()
 DIR = os.path.dirname(os.path.realpath(__file__))
 
 logging.basicConfig(level=logging.DEBUG)
+
+app.register_blueprint(get_moves_given_piece_page)
 
 
 @app.route('/')
@@ -62,12 +64,7 @@ def get_move_handler():
     print(ret)
     return json.dumps(ret)
   finally:
-      sem.release()
-
-
-@app.route('/get-moves-given-piece')
-def get_moves_given_piece_hander():
-  pass
+    sem.release()
 
 @app.route('/get-file', methods=['POST'])
 @cross_origin()
@@ -88,5 +85,5 @@ def healthcheck():
 
 
 if __name__ == '__main__':
-  get_moves_service = GetMoves(loop=loop)
+  #init_get_moves_service(loop)
   app.run()

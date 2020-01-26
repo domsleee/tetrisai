@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 from tetrisai import runner
 from tetrisai.runner_settings import RunnerSettings
 from tetrisai.run_particle import RunParticle
