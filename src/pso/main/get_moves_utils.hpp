@@ -25,10 +25,10 @@ auto getMeMfPair(int num_lines) {
   mf2.setMaxDropRem(2);
   mf3.setMaxDropRem(1);
 
-  if (num_lines >= LINE_ON_LEVEL_29) {
+  /*if (num_lines >= LINE_ON_LEVEL_29) {
     return std::pair(me2, mf3);
-  }
-  else if (num_lines >= LINE_ON_LEVEL_19) {
+  }*/
+  if (num_lines >= LINE_ON_LEVEL_19) {
     return std::pair(me2, mf2);
   }
   else if (num_lines >= LINE_TRANSITION) {

@@ -51,6 +51,16 @@ auto get1819(const Weighting &w1, const Weighting &w2) {
   return ew_container;
 }
 
+template <typename MoveEvaluator>
+double get_score_regular(MoveEvaluator me, int seed=-1) {
+  auto ew_container = NewEvaluateWeightingsContainer(
+    me,
+    CacheMoveFinder<MoveFinderRewrite>()
+  );
+  auto ew = ew_container.getInstance();
+  if (seed != -1) ew.setSeed(seed);
+  return ew.runAllPieceSets();
+}
 
 
 // num dimensions: 17

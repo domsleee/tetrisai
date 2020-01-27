@@ -42,6 +42,8 @@ class MoveEvaluator {
   static const int TOTAL_WEIGHTED_SOLID_CELLS = 15;
   static const int COLUMN_HEIGHT_VARIANCE = 16;
 
+  static const int NUM_FACTORS = 17;
+
   double evaluate(const BitBoard& b, const BitPieceInfo& p, const Weighting &w) const {
     auto nxBoard = b;
     auto deltaLines = nxBoard.applyPieceInfo(p);

@@ -133,8 +133,10 @@ void handleGetMoveGivenNextPiece(int num_lines) {
   using SetT = std::tuple<double, BitPieceInfo, BitPieceInfo>;
   struct SetComp {
     bool operator()(const SetT t1, const SetT t2) const {
-      // todo: investigate nondeterminism
-      return std::get<0>(t1) < std::get<0>(t2);
+      if (std::get<0>(t1) != std::get<0>(t2)) {
+        return std::get<0>(t1) < std::get<0>(t2);
+      }
+      return std::get<2>(t1) < std::get<2>(t2);
     }
   };
 

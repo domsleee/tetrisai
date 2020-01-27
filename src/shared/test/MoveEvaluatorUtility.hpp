@@ -51,3 +51,25 @@ BitBoard getBoardFromPartialStringVector(std::vector<std::string> strings);
 #define REQ_IND(w, wExp, ind) REQUIRE(w[ind] == wExp[ind])
 
 std::vector<std::vector<int>> leftWell(int height);
+
+template<typename MoveEvaluator>
+Weighting getWeightsTemp(const BitBoard &b, const BitPieceInfo &piece) {
+  int num_factors = MoveEvaluatorPenalty::getNumFactors();
+  Weighting w(num_factors, 0);
+  Weighting res(num_factors, 0);
+  for (int i = 0; i < num_factors; i++) {
+    if (i > 0) w[i-1] = 0;
+    w[i] = 1;
+    MoveEvaluator me(w);
+    res[i] = me.evaluate(b, piece);
+  }
+  return res;
+}
+
+template<typename MoveEvaluator>
+auto getWeightsFromEmptyPieceT(const BitBoard &b) {
+  const auto m = BitBoardPre::idToMove(BitBoardPre::getEmptyMoveId());
+  auto piece = b.getPiece(m);
+  return getWeightsTemp<MoveEvaluator>(b, piece);
+}
+
