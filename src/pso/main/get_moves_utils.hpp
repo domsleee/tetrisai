@@ -28,7 +28,7 @@ auto getMeMfPair(int num_lines) {
   if (num_lines >= LINE_ON_LEVEL_29) {
     return std::pair(me2, mf3);
   }
-  if (num_lines >= LINE_ON_LEVEL_19) {
+  else if (num_lines >= LINE_ON_LEVEL_19) {
     return std::pair(me2, mf2);
   }
   else if (num_lines >= LINE_TRANSITION) {
