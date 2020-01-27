@@ -21,6 +21,6 @@ Move GetNextMove::getNextMove(const BitBoard& board, BlockType blockType, const 
       bestScore = score;
     }
   }
-  //dprintf("bestScore: %.8f\n", bestScore);
+  dprintf("GetNextMove: bestScore: %.8f\n", bestScore);
   return bestPiece.getPosition();
 }

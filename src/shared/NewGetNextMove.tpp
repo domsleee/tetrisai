@@ -34,13 +34,16 @@ Move NewGetNextMove<MyMoveFinder, MyMoveEvaluator>::getNextMove(const BitBoard &
   assert(allMoves.size() > 0);
   auto bestPiece = allMoves[0];
   double bestScore = 6e60;
+  dprintf("NewGetNextMove: numMoves: %lu\n", allMoves.size());
   for (const auto& piece: allMoves) {
     double score = me_->evaluate(board, piece);
     if (score < bestScore || (score == bestScore && piece < bestPiece)) {
       bestPiece = piece;
       bestScore = score;
     }
+    dprintf("NewGetNextMove: score: %0.2f\n", score);
+    piece.print();
   }
-  //dprintf("bestScore: %.8f\n", bestScore);
+  dprintf("NewGetNextMove: bestScore: %.8f\n", bestScore);
   return bestPiece.getPosition();
 }
