@@ -133,6 +133,8 @@ class MoveEvaluator {
     eval += w[PILE_HEIGHT] * pileHeight;
     eval += w[COLUMN_HEIGHT_SPREAD] * columnHeightSpread;
 
+    //for (auto v: w) std::cout << v << ' '; std::cout << '\n';
+
     return eval;
   }
 

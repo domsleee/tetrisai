@@ -15,7 +15,7 @@ class MoveEvaluatorAdapter {
   }
 
  private:
-  const MoveEvaluator &mv_;
-  const Weighting &w_;
+  const MoveEvaluator mv_;
+  const Weighting w_;
 };
 

@@ -96,9 +96,8 @@ SCENARIO("strange O2 edge case") {
   auto pieceInfo = b.getPiece(move);
   
   auto eval = me.evaluate(b, pieceInfo);
-  printf("eval: %0.2f\n", eval);
-
   auto [me2, mf] = getMeMfPair(0);
   auto eval2 = me2.evaluate(b, pieceInfo);
   REQUIRE(eval == eval2);
+  REQUIRE_THAT(eval, Catch::WithinAbs(-20.39f, 0.01f));
 }
