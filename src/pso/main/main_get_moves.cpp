@@ -63,28 +63,6 @@ void run() {
   }
 }
 
-auto getMeMfPair(int num_lines) {
-  auto me1 = MoveEvaluatorAdapter(MoveEvaluator(), w1);
-  auto me2 = MoveEvaluatorAdapter(MoveEvaluator(), w2);
-  
-  auto mf1 = MoveFinderFSM();
-  auto mf2 = MoveFinderFSM();
-  auto mf3 = MoveFinderFSM();
-  mf2.setMaxDropRem(2);
-  mf3.setMaxDropRem(1);
-
-  if (false && num_lines >= LINE_ON_LEVEL_29) {
-    return std::pair(me2, mf3);
-  }
-  if (num_lines >= LINE_ON_LEVEL_19) {
-    return std::pair(me2, mf2);
-  }
-  else if (num_lines >= LINE_TRANSITION) {
-    return std::pair(me2, mf1);
-  }
-  return std::pair(me1, mf1);
-}
-
 auto getNextMoveHandlerFactory(int num_lines) {
   auto [me, mf] = getMeMfPair(num_lines);
   return NewGetNextMove(me, mf);
