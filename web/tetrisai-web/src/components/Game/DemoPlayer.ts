@@ -6,10 +6,18 @@ import { FrameTimer } from './FrameTimer';
 
 type ListenerFn = (frame: number) => void;
 
+interface WrappedDemoEntry {
+  entry: DemoEntry;
+  startFrame: number;
+}
+
 export class DemoPlayer implements IDemoPlayer {
   public timer: FrameTimer;
   private emu: IEmulator;
   private events: any = new SortedSet([], (a: DemoEntry, b: DemoEntry) => {
+    if (a.startFrame !== b.startFrame) {
+      return a.startFrame - b.startFrame;
+    }
     if (a.frame !== b.frame) {
       return a.frame - b.frame;
     }
@@ -60,11 +68,12 @@ export class DemoPlayer implements IDemoPlayer {
     for (const event of entries) {
       this.addEvent(event);
     }
-    console.log('new entries', this.events);
+    this.printEvents();
   }
 
   public clearEvents(amount?: number) {
-    console.log('CLEARNING EVENTS');
+    console.log('CLEARNING EVENTS', this.getFrame());
+    console.log('before...');
     this.printEvents();
     if (amount === undefined) this.events.clear();
     else {
@@ -74,6 +83,7 @@ export class DemoPlayer implements IDemoPlayer {
       }
       for (const event of toDelete) this.events.delete(event);
     }
+    console.log('after...');
     this.printEvents();
   }
 

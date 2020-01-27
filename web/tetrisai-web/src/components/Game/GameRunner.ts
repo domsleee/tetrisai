@@ -6,6 +6,7 @@ import { IReadCurrentPiece } from '../GameRunner/ReadCurrentPiece';
 import { IGetNextMove, FirstMoveDirectionT } from './IGetNextMove';
 import { ICapturable } from './ICapturable';
 import { IReadNextPiece } from './IReadNextPiece';
+import { getDemoEntry } from './DemoEntryHelpers';
 
 function sleep(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -27,6 +28,7 @@ export class GameRunner implements ICapturable<any> {
   private tableBoard: any = null;
   private oldPiece: Piece;
   private oldBoard: IBoard;
+  private fpsControl = true;
 
   public constructor(
     demoPlayer: IDemoPlayer,
@@ -62,20 +64,22 @@ export class GameRunner implements ICapturable<any> {
       '0000110000'
     ]);
     this.debug = debug;
-    this.debug['board'] = this.nextMoveBoard.getBitstring();
+    //this.debug['board'] = this.nextMoveBoard.getBitstring();
   }
 
   public setTableBoard(tableBoard: any) {
     this.tableBoard = tableBoard;
   }
 
+  public disableFpsControl() {
+    this.fpsControl = false;
+  }
+
   public async onFirstPieceAppear() {
     const currFrame = this.demoPlayer.getFrame();
-    this.demoPlayer.addEvent({
-      button: DemoButton.BUTTON_LEFT,
-      isDown: false,
-      frame: currFrame + 2
-    });
+    this.demoPlayer.addEvent(
+      getDemoEntry(currFrame + 2, DemoButton.BUTTON_LEFT, false)
+    );
 
     const currPiece = this.readCurrentPieceHandler.getPieceFromEmulator();
     let moveEntries;
@@ -122,8 +126,7 @@ export class GameRunner implements ICapturable<any> {
 
   public async onNextPieceAppear() {
     const oldFps = this.demoPlayer.timer.getFps();
-    this.demoPlayer.timer.stop();
-    //await sleep(100);
+    this.demoPlayer.timer.freeze();
     const currFrame = this.demoPlayer.getFrame();
     this.addRawDemoEventsToDemoPlayer(
       this.nextMoveEntries,
@@ -132,7 +135,7 @@ export class GameRunner implements ICapturable<any> {
     if (this.tableBoard) this.tableBoard['board'] = this.nextMoveBoard;
     const nextPiece = this.readNextPieceHandler.getCurrentPieceFromEmulator();
 
-    this.debug['board'] = this.nextMoveBoard.getBitstring();
+    //this.debug['board'] = this.nextMoveBoard.getBitstring();
     this.debug['nextPiece'] = nextPiece;
     console.log('next Piece', nextPiece);
 
@@ -150,13 +153,15 @@ export class GameRunner implements ICapturable<any> {
 
     this.expFrame = currFrame + (this.extraInformation.lastFrame || 0);
     this.oldPiece = nextPiece;
-    this.demoPlayer.timer.setFps(oldFps);
+    this.demoPlayer.timer.unfreeze();
   }
 
   public capture(): any {
     return JSON.stringify({
       demoPlayer: this.demoPlayer.capture(),
       nextMoveBoardString: this.nextMoveBoard.getBitstring(),
+      oldBoardString: this.oldBoard.getBitstring(),
+      oldPiece: this.oldPiece,
       nextMoveEntries: JSON.stringify(this.nextMoveEntries),
       extraInformation: JSON.stringify(this.extraInformation),
       totalLineClears: this.totalLineClears
@@ -170,6 +175,9 @@ export class GameRunner implements ICapturable<any> {
     this.extraInformation = JSON.parse(json.extraInformation);
     this.nextMoveBoard = new Board(json.nextMoveBoardString);
     this.totalLineClears = json.totalLineClears;
+    this.oldBoard = new Board(json.oldBoardString);
+    // @ts-ignore
+    this.oldPiece = Piece[json.oldPiece];
   }
 
   private async prepareEntriesForNextPieceAppear(nextPiece: Piece) {
@@ -198,11 +206,13 @@ export class GameRunner implements ICapturable<any> {
       console.log('LATEST');
       console.log(this.nextMoveEntries);
       if (this.extraInformation.lastFrame) {
-        this.demoPlayer.addEvent({
-          frame: currFrame + this.extraInformation.lastFrame + 3,
-          button: this.nextMoveEntries[0].button,
-          isDown: true
-        });
+        this.demoPlayer.addEvent(
+          getDemoEntry(
+            currFrame + this.extraInformation.lastFrame + 3,
+            this.nextMoveEntries[0].button,
+            true
+          )
+        );
         this.nextMoveEntries.slice(1);
       }
     }
@@ -214,7 +224,11 @@ export class GameRunner implements ICapturable<any> {
     nextPiece: Piece,
     oldLineClears: number
   ) {
-    const firstMoveDirection = this.getFirstMoveDirection(this.nextMoveEntries);
+    const currFrame = this.demoPlayer.getFrame();
+    const firstMoveDirection = this.getFirstMoveDirection(
+      this.nextMoveEntries,
+      currFrame
+    );
 
     const res = await this.getNextMoveHandler.getNextMoveEntriesGivenNextPiece(
       oldBoard,
@@ -225,17 +239,14 @@ export class GameRunner implements ICapturable<any> {
     );
 
     const clearAmount = firstMoveDirection !== 'NONE' ? 2 : 0;
-
     const demoEntries = res.demoEntries.slice(clearAmount);
-
-    const currFrame = this.demoPlayer.getFrame();
     for (const demoEntry of demoEntries) {
       demoEntry.frame += currFrame;
     }
 
     this.nextMoveBoard = res.board;
     if (this.tableBoard) this.tableBoard['board'] = this.nextMoveBoard;
-    this.debug['board'] = this.nextMoveBoard.getBitstring();
+    //this.debug['board'] = this.nextMoveBoard.getBitstring();
 
     const lineClears = res.extraInformation.lineClears;
     this.totalLineClears += lineClears - oldLineClears;
@@ -245,8 +256,11 @@ export class GameRunner implements ICapturable<any> {
     this.demoPlayer.addEvents(demoEntries);
   }
 
-  private getFirstMoveDirection(demoEntries: DemoEntry[]): FirstMoveDirectionT {
-    if (demoEntries.length === 0) {
+  private getFirstMoveDirection(
+    demoEntries: DemoEntry[],
+    currFrame: number
+  ): FirstMoveDirectionT {
+    if (demoEntries.length === 0 || demoEntries[0].frame !== currFrame) {
       return 'NONE';
     }
     switch (demoEntries[0].button) {
@@ -273,7 +287,6 @@ export class GameRunner implements ICapturable<any> {
     for (const demoEntry of demoEvents) {
       demoEntry.frame += currFrame;
     }
-    console.log('adding', demoEvents);
     this.demoPlayer.addEvents(demoEvents);
   }
 }

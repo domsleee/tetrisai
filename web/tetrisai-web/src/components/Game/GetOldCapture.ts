@@ -13,6 +13,11 @@ export class GetOldCapture {
     return await this.req(file);
   }
 
+  public async getProblematicPlacement() {
+    const file = 'problematic_placement.txt';
+    return await this.req(file);
+  }
+
   private async req(file: string) {
     const res: { data: { result: any }; status: number } = await axios.post(
       URL,

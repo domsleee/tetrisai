@@ -15,6 +15,7 @@ export enum DemoButton {
 
 export interface DemoEntry {
   frame: number;
+  startFrame: number;
   button: DemoButton;
   isDown: boolean;
 }

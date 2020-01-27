@@ -137,11 +137,13 @@ export class GetNextMove implements IGetNextMove {
       const fr2 = frame;
       demoEntries.push({
         frame: fr1,
+        startFrame: fr1,
         button,
         isDown: true
       });
       demoEntries.push({
         frame: fr2,
+        startFrame: fr1,
         button,
         isDown: false
       });

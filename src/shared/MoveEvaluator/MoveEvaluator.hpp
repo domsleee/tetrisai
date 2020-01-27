@@ -49,10 +49,8 @@ class MoveEvaluator {
   }
   
   double my_evaluate(const BitBoard &b, const BitPieceInfo& p, const Weighting &w, int deltaLines) const {
-    if (deltaLines == 4) {
-      return -1e9;
-    }
-    double eval = 0;
+    double offset = (deltaLines == 4) ? -1e9 : 0;
+    double eval = offset;
     VacancyChecker vac(b);
     eval += w[TOTAL_LINES_CLEARED] * deltaLines;
     eval += w[TOTAL_LOCK_HEIGHT] * (NUM_ROWS - p.getPosition().maxR - 1);

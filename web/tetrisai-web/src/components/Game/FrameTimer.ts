@@ -1,10 +1,13 @@
 export class FrameTimer {
+  public onTick: () => void;
   private fps: number = 60.0;
   private timer: any = null;
-  private onTick: () => void;
+  private frozen: boolean = false;
 
   public constructor(onTick: () => void) {
-    this.onTick = onTick;
+    this.onTick = () => {
+      if (!this.frozen) onTick();
+    };
     this.setFps(this.fps);
   }
 
@@ -28,5 +31,13 @@ export class FrameTimer {
     }
     clearInterval(this.timer);
     this.timer = null;
+  }
+
+  public freeze() {
+    this.frozen = true;
+  }
+
+  public unfreeze() {
+    this.frozen = false;
   }
 }

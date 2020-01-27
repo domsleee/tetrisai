@@ -3,6 +3,7 @@ import { IDemoPlayer, DemoButton } from './IDemoPlayer';
 import { IFrameAwaiter } from './FrameAwaiter';
 import { ICapturable } from './ICapturable';
 import { NUM_COLUMNS } from './common/Board';
+import { getDemoEntry } from './DemoEntryHelpers';
 
 interface CaptureT {
   matrix: string;
@@ -110,11 +111,13 @@ export class PieceAwaiter implements ICapturable<CaptureT> {
         break;
       }
       if (this.demoPlayer.isEmpty()) {
-        this.demoPlayer.addEvent({
-          button: DemoButton.BUTTON_SELECT,
-          frame: this.demoPlayer.getFrame(),
-          isDown: false
-        });
+        this.demoPlayer.addEvent(
+          getDemoEntry(
+            this.demoPlayer.getFrame(),
+            DemoButton.BUTTON_SELECT,
+            false
+          )
+        );
       }
       await this.frameAwaiter.awaitFrame(frame + 1);
       frame++;

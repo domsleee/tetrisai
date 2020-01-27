@@ -78,6 +78,7 @@ auto getMeMfPair(int num_lines) {
   auto me2 = MoveEvaluatorAdapter(MoveEvaluator(), w2);
   auto mf1 = MoveFinderFSM();
   auto mf2 = MoveFinderFSM();
+  auto mf3 = MoveFinderFSM();
   mf2.setMaxDropRem(2);
   if (num_lines >= LINE_ON_LEVEL_19) {
     return std::pair(me2, mf2);
@@ -167,7 +168,7 @@ void handleGetMoveGivenNextPiece(int num_lines) {
   for (const auto nxPiece: mf.findAllMoves(board, blockType1)) {
     auto [nxBoard, lineClears] = applyPieceInfo(board, nxPiece);
     int totalLineClears = num_lines + lineClears;
-    double scoreOffset = totalLineClears == 4 ? -1e9 : 0;
+    double scoreOffset = lineClears == 4 ? -1e9 : 0;
     auto [me2, mf2] = getMeMfPair(totalLineClears);
     for (const auto nxPiece2: mf2.findAllMoves(nxBoard, blockType2)) {
       auto score = me2.evaluate(nxBoard, nxPiece2);

@@ -11,6 +11,7 @@ import { GetOldCapture } from './GetOldCapture';
 import { GameRunner } from './GameRunner';
 import { IEmulator } from './Emulator/IEmulator';
 import { ICapturable } from './ICapturable';
+import { getDemoEntry } from './DemoEntryHelpers';
 
 function download(filename: any, text: any) {
   const FileSaver = require('file-saver');
@@ -55,16 +56,14 @@ export class GameLogic implements ICapturable<string> {
     const bs = new GameBootstrap(this.demoPlayer);
     await bs.setupFromNewCanvas(this.frameAwaiter);
     this.addFluff();
-    this.demoPlayer.addEvent({
-      frame: this.demoPlayer.getFrame() + 1,
-      button: DemoButton.BUTTON_LEFT,
-      isDown: true
-    });
+    this.demoPlayer.addEvent(
+      getDemoEntry(this.demoPlayer.getFrame() + 1, DemoButton.BUTTON_LEFT, true)
+    );
     await this.gr.onFirstPieceAppear();
     this.pa.init();
 
     while (true) {
-      //await this.considerCaptureAndRestore();
+      await this.considerCaptureAndRestore();
       await this.pa.awaitPiece();
       await this.gr.onNextPieceAppear();
     }
@@ -92,15 +91,39 @@ export class GameLogic implements ICapturable<string> {
   }
 
   static myfirst = true;
+  static slowMoKeyHandler: any = null;
+
   private async considerCaptureAndRestore() {
-    if (this.demoPlayer.getFrame() >= 1e200 * 27800) {
-      download('new_transition', this.capture());
+    const enterSloMo = () => {
+      this.demoPlayer.timer.stop();
+      this.gr.disableFpsControl();
+      if (GameLogic.slowMoKeyHandler) {
+        document.removeEventListener('keydown', GameLogic.slowMoKeyHandler);
+        GameLogic.slowMoKeyHandler = false;
+      }
+      GameLogic.slowMoKeyHandler = (e: KeyboardEvent) => {
+        console.log('KEYPRESS');
+        if (e.code === 'ArrowRight') {
+          this.demoPlayer.timer.onTick();
+        }
+      };
+      document.addEventListener('keydown', GameLogic.slowMoKeyHandler);
+    };
+
+    if (false && this.demoPlayer.getFrame() >= 2200) {
+      download('problematic_placement', this.capture());
       throw ErrorHandler.fatal('end.');
     }
-    if (GameLogic.myfirst) {
+    if (false && GameLogic.myfirst) {
       console.log('RESTORING....');
-      this.restoreFromCapture(await new GetOldCapture().getGreenFrozen());
+      this.restoreFromCapture(
+        await new GetOldCapture().getProblematicPlacement()
+      );
       GameLogic.myfirst = false;
+    }
+    if (false && this.demoPlayer.getFrame() >= 2000 && GameLogic.myfirst) {
+      GameLogic.myfirst = false;
+      enterSloMo();
     }
   }
 

@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from flask import Flask, abort, request, jsonify
 import threading
 from routes.get_moves_given_piece import get_moves_given_piece_page
