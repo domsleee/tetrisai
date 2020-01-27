@@ -63,8 +63,18 @@ export class DemoPlayer implements IDemoPlayer {
     console.log('new entries', this.events);
   }
 
-  public clearEvents() {
-    this.events.clear();
+  public clearEvents(amount?: number) {
+    console.log('CLEARNING EVENTS');
+    this.printEvents();
+    if (amount === undefined) this.events.clear();
+    else {
+      const toDelete = [];
+      for (const event of this.events) {
+        if (amount-- <= 0) toDelete.push(event);
+      }
+      for (const event of toDelete) this.events.delete(event);
+    }
+    this.printEvents();
   }
 
   public destroy() {
@@ -193,5 +203,11 @@ export class DemoPlayer implements IDemoPlayer {
       this.emu.buttonUp(event.button);
       // if (event.button !== DemoButton.BUTTON_SELECT) { console.log(`${event.frame}: U: ${DemoButton[event.button]}`); }
     }
+  }
+
+  private printEvents() {
+    const arr = [];
+    for (const event of this.events) arr.push(event);
+    console.log(arr);
   }
 }

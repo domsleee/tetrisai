@@ -26,6 +26,7 @@ export class GameRunner implements ICapturable<any> {
   private debug: any;
   private tableBoard: any = null;
   private oldPiece: Piece;
+  private oldBoard: IBoard;
 
   public constructor(
     demoPlayer: IDemoPlayer,
@@ -96,6 +97,7 @@ export class GameRunner implements ICapturable<any> {
     if (this.tableBoard) {
       this.tableBoard['board'] = this.nextMoveBoard;
     }
+    this.oldBoard = this.nextMoveBoard;
     [
       this.nextMoveEntries,
       this.nextMoveBoard,
@@ -121,7 +123,7 @@ export class GameRunner implements ICapturable<any> {
   public async onNextPieceAppear() {
     const oldFps = this.demoPlayer.timer.getFps();
     this.demoPlayer.timer.stop();
-    await sleep(5 * 1000);
+    //await sleep(100);
     const currFrame = this.demoPlayer.getFrame();
     this.addRawDemoEventsToDemoPlayer(
       this.nextMoveEntries,
@@ -129,13 +131,20 @@ export class GameRunner implements ICapturable<any> {
     );
     if (this.tableBoard) this.tableBoard['board'] = this.nextMoveBoard;
     const nextPiece = this.readNextPieceHandler.getCurrentPieceFromEmulator();
+
     this.debug['board'] = this.nextMoveBoard.getBitstring();
     this.debug['nextPiece'] = nextPiece;
     console.log('next Piece', nextPiece);
 
     const oldPiece = this.oldPiece;
     const oldLineClears = this.extraInformation.lineClears;
-    //await this.adaptBasedOnNextPiece(oldPiece, nextPiece, oldLineClears);
+    await this.adaptBasedOnNextPiece(
+      this.oldBoard,
+      oldPiece,
+      nextPiece,
+      oldLineClears
+    );
+    this.oldBoard = this.nextMoveBoard;
     await this.prepareEntriesForNextPieceAppear(nextPiece);
     this.forceEarlyMove(currFrame);
 
@@ -200,6 +209,7 @@ export class GameRunner implements ICapturable<any> {
   }
 
   private async adaptBasedOnNextPiece(
+    oldBoard: IBoard,
     oldPiece: Piece,
     nextPiece: Piece,
     oldLineClears: number
@@ -207,30 +217,32 @@ export class GameRunner implements ICapturable<any> {
     const firstMoveDirection = this.getFirstMoveDirection(this.nextMoveEntries);
 
     const res = await this.getNextMoveHandler.getNextMoveEntriesGivenNextPiece(
-      this.nextMoveBoard,
+      oldBoard,
       oldPiece,
       nextPiece,
       this.totalLineClears,
       firstMoveDirection
     );
 
-    const demoEntries =
-      firstMoveDirection !== 'NONE'
-        ? res.demoEntries.slice(2)
-        : res.demoEntries;
+    const clearAmount = firstMoveDirection !== 'NONE' ? 2 : 0;
+
+    const demoEntries = res.demoEntries.slice(clearAmount);
 
     const currFrame = this.demoPlayer.getFrame();
     for (const demoEntry of demoEntries) {
       demoEntry.frame += currFrame;
     }
 
+    this.nextMoveBoard = res.board;
+    if (this.tableBoard) this.tableBoard['board'] = this.nextMoveBoard;
+    this.debug['board'] = this.nextMoveBoard.getBitstring();
+
     const lineClears = res.extraInformation.lineClears;
     this.totalLineClears += lineClears - oldLineClears;
     this.debug['totalLineClears'] = this.totalLineClears;
 
-    this.demoPlayer.clearEvents();
+    this.demoPlayer.clearEvents(clearAmount);
     this.demoPlayer.addEvents(demoEntries);
-    // do some work
   }
 
   private getFirstMoveDirection(demoEntries: DemoEntry[]): FirstMoveDirectionT {
@@ -245,16 +257,6 @@ export class GameRunner implements ICapturable<any> {
       default:
         return 'NONE';
     }
-  }
-
-  private getMovesBasedOnNextPiece(
-    board: IBoard,
-    piece: Piece,
-    nextPiece: Piece,
-    totalLineClears: number
-  ): DemoEntry[] {
-    // todo.
-    return [];
   }
 
   private addRawDemoEventsToDemoPlayer(

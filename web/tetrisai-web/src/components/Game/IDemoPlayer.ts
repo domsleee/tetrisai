@@ -23,7 +23,7 @@ export interface IDemoPlayer extends ICapturable<string> {
   timer: FrameTimer;
   addEvent(entry: DemoEntry): void;
   addEvents(entry: DemoEntry[]): void;
-  clearEvents(): void;
+  clearEvents(amount?: number): void;
   goBack(numFrames: number): void;
   destroy(): void;
   getFrame(): number;

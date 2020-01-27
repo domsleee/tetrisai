@@ -113,4 +113,3 @@ class GetMoves(IGetMoves):
   def _send_str(self, b: bytes):
     self._logger.info("send_line %s" % b)
     self._process.send_line(b)
-

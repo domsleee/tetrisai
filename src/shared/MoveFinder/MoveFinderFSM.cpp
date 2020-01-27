@@ -9,9 +9,17 @@ const int MAX_DAS_REM = 6;
 void onEnterReleased(MoveFinderState &s);
 void onEnterTapped(MoveFinderState &s);
 
+template <typename T>
+void safeInsert(std::unordered_set<MoveFinderState> &seen, const BitBoard &b, T& q, MoveFinderState state) {
+  if (b.vacant(state.piece_)) {
+    seen.insert(state);
+    q.push({0, state});
+  }
+}
+
 std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockType blockType) {
   pred_.clear();
-  finalMoveToState_.clear(); // I think we still need this...
+  finalMoveToState_.clear();
   std::unordered_set<MoveFinderState> seen;
   using PairT = std::pair<int, MoveFinderState>;
   auto cmp = [](const PairT &l, const PairT &r) {
@@ -23,22 +31,19 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
 
   auto s1 = MoveFinderState(b.getPiece(blockType), true, maxDropRem_);
   auto s2 = MoveFinderState(b.getPiece(blockType), false, maxDropRem_);
+  s1.releaseCooldown_ = s2.releaseCooldown_ = 1;
   auto s3(s2);
-  s3.dasRem_ = 6; // no das charge
+  s3.fsmState_ = FSMState::RELEASED;
 
   if (!hasFirstMoveConstraint_) {
-    seen.insert(s1);
-    seen.insert(s2);
-    q.push({0, s1});
-    q.push({0, s2});
-
-    seen.insert(s3);
-    q.push({0, s3});
+    safeInsert(seen, b, q, s1);
+    safeInsert(seen, b, q, s2);
+    safeInsert(seen, b, q, s3);
   } else {
     switch(firstMoveDirectionChar_) {
-      case 'L': { seen.insert(s1); q.push({0, s1}); } break;
-      case 'R': { seen.insert(s2); q.push({0, s2}); } break;
-      case 'N': { seen.insert(s3); q.push({0, s3}); } break;
+      case 'L': { safeInsert(seen, b, q, s1); } break;
+      case 'R': { safeInsert(seen, b, q, s2); } break;
+      case 'N': { safeInsert(seen, b, q, s3); } break;
       default: throw std::runtime_error("Unknown firstMoveDirectionChar_");
     }
   }
@@ -107,7 +112,7 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
         }
 
         // releasing...
-        {
+        if (top.releaseCooldown_ == 0) {
           auto nxReleased = top;
           nxReleased.fsmState_ = FSMState::RELEASED;
           nxReleased.moveCooldown_ = 1+1; // can eventually be 1
