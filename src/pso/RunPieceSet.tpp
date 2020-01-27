@@ -34,7 +34,7 @@ ScoreManager RunPieceSet<MyGetNextMove>::runGame(const std::vector<BlockType> &p
     transitionLines = it->first;
   }
   
-  int moves = 0, i;
+  int moves = 0;
   for (auto blockType: pieceSet) {
     if (b.hasNoMoves(blockType)) {
       break;

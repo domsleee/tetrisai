@@ -7,6 +7,7 @@
 #include "src/shared/MoveEvaluator/MoveEvaluator.hpp"
 #include "src/shared/ScoreManager.hpp"
 #include "src/shared/test/MoveEvaluatorUtility.hpp"
+#include "src/pso/main/get_moves_utils.hpp"
 #include <vector>
 #include <iostream>
 #include <algorithm>
@@ -72,7 +73,6 @@ SCENARIO("Metrics 2 line up") {
   REQ_IND(w, wExp, MoveEvaluator::COLUMN_HEIGHT_VARIANCE);
   
   //REQUIRE(w == wExp);
-
 }
 
 SCENARIO("lock height") {
@@ -84,4 +84,21 @@ SCENARIO("lock height") {
   auto w = getWeights(b, piece, MoveEvaluator());
   REQUIRE(w[MoveEvaluator::TOTAL_LOCK_HEIGHT] == 13);
 
+}
+
+// todo: move to utils
+SCENARIO("strange O2 edge case") {
+  const auto testFile = TEST_FOLDER + "/test3.in";
+  auto b = readBoard(testFile);
+  auto me = MoveEvaluatorAdapter(MoveEvaluator(), w1);
+  // (18, 8), (19, 7), (19, 8), (19, 9)
+  auto move = Move({{18, 8}, {19, 7}, {19, 8}, {19, 9}});
+  auto pieceInfo = b.getPiece(move);
+  
+  auto eval = me.evaluate(b, pieceInfo);
+  printf("eval: %0.2f\n", eval);
+
+  auto [me2, mf] = getMeMfPair(0);
+  auto eval2 = me2.evaluate(b, pieceInfo);
+  REQUIRE(eval == eval2);
 }

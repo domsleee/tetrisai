@@ -2,8 +2,13 @@
 
 #include <string>
 
+//#define MY_DEBUG 1
+
+#ifdef MY_DEBUG
 #define dprintf(...) printf(__VA_ARGS__)
-//#define dprintf(...)
+#else
+#define dprintf(...)
+#endif
 
 const int NUM_ROWS = 20;
 const int NUM_COLUMNS = 10;

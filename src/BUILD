@@ -34,7 +34,7 @@ cc_library(
 
 cc_library(
     name = "pso",
-    hdrs = glob(["pso/*.h", "pso/*.hpp", "pso/random/*.hpp", "pso/*.tpp"]),
+    hdrs = glob(["pso/*.h", "pso/*.hpp", "pso/random/*.hpp", "pso/*.tpp", "pso/main/*.hpp"]),
     srcs = glob(["pso/*.cpp"]),
     deps = [":common", ":board", ":shared", "//third_party:optim", "@boost//:random"]
 )
@@ -91,7 +91,8 @@ cc_test(
 cc_test(
     name = "test_move_evaluator",
     srcs = glob(["shared/test/TestMoveEvaluator.cpp", "shared/test/*.hpp", "shared/test/MoveEvaluatorUtility.cpp"]),
-    deps = [":shared", "//:catch"]
+    copts = ["-O2"],
+    deps = [":shared", "//:catch", ":pso"]
 )
 
 cc_test(
