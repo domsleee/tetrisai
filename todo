@@ -1,4 +1,32 @@
+Todo
+
+Things to try
++ Train using MoveFinderFSM (will probably take forever)
++ Train with new TETRIS_READY
+
+Functional improvements
++ Fix move ordering (prioritise least moves + least taps)
++ One-piece lookahead in evaluation
++ setup CI
++ feature vector: type safety & ease of accessing new features
+
+Performance improvements
++ Use normal MoveFinder (web)
++ consider using threading (web)
+
+
+
+
+
+
+
+
+
+
+
+
 TODAY
+
 + setup level 18 AI & run
 
 Blocked
