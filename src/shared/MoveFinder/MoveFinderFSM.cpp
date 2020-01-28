@@ -49,16 +49,17 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
   }
 
   while (!q.empty()) {
-    const auto [numMoves, top] = q.top(); q.pop();
-    //printf("DASREM %d -> %d (numMoves: %d)\n", top.frameEntered_, top.dasRem_, numMoves);
+    const int SCORE_FRAME_ENTERED = 10000;
+    const int SCORE_ROTATED = 100;
 
-    auto addNxFrame = [&, top=top, numMoves=numMoves]{
+    const auto [topScore, top] = q.top(); q.pop();
+    auto addNxFrame = [&, top=top, topScore=topScore]{
       auto nxFrame = top;
       nxFrame.nextFrame();
       if (seen.count(nxFrame)) return;
       seen.insert(nxFrame);
       addEdge(top, nxFrame, Action::NONE);
-      q.push({numMoves, nxFrame});
+      q.push({topScore, nxFrame});
     };
 
     // if drop rem is zero, you MUST move down
@@ -70,17 +71,17 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
         nxMovedDown.setRotateCooldown(1);
         if (seen.count(nxMovedDown)) continue; seen.insert(nxMovedDown);
         addEdge(top, nxMovedDown, MoveDirection::DOWN);
-        q.push({numMoves, nxMovedDown});
+        q.push({topScore, nxMovedDown});
         continue;
       } else {
         // a final state
         const auto &piece = top.piece_;
         if (finalMoveToState_.count(piece) == 0) {
-          finalMoveToState_.insert({piece, {top, numMoves}});
+          finalMoveToState_.insert({piece, {top, topScore}});
         } else {
-          auto [oldState, oldNumMoves] = finalMoveToState_.at(piece);
-          if (numMoves < oldNumMoves) {
-            finalMoveToState_.insert({piece, {top, numMoves}});
+          auto [oldState, oldScore] = finalMoveToState_.at(piece);
+          if (topScore < oldScore) {
+            finalMoveToState_.insert({piece, {top, topScore}});
           }
         }
         assert(pred_.count(top) == 1);
@@ -106,7 +107,7 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
             if (seen.count(nxMoved)) continue;
             seen.insert(nxMoved);
             addEdge(top, nxMoved, moveDirection);
-            q.push({numMoves+1, nxMoved});
+            q.push({topScore+1, nxMoved});
             continue;
           }
         }
@@ -120,7 +121,7 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
           if (!seen.count(nxReleased)) {
             seen.insert(nxReleased);
             addEdge(top, nxReleased, Action::NONE);
-            q.push({numMoves, nxReleased});
+            q.push({topScore, nxReleased});
           }
         }
         addNxFrame();
@@ -138,7 +139,7 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
               if (seen.count(nxTapped))
               continue; seen.insert(nxTapped);
               addEdge(top, nxTapped, moveDirection);
-              q.push({numMoves+1, nxTapped});
+              q.push({topScore + 1 + nxTapped.frameEntered_ * SCORE_FRAME_ENTERED, nxTapped});
             }
           }
         }
@@ -161,7 +162,7 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
         nxRotate.moveCooldown_ = 1;
         if (seen.count(nxRotate)) continue; seen.insert(nxRotate);
         addEdge(top, nxRotate, rotateDirection);
-        q.push({numMoves+1, nxRotate});
+        q.push({topScore+1 + SCORE_ROTATED * nxRotate.frameEntered_, nxRotate});
       }
     }
 
@@ -192,7 +193,7 @@ std::vector<std::string> MoveFinderFSM::getShortestPath(const BitPieceInfo piece
   auto [state, numMoves] = finalMoveToState_.at(piece);
   std::vector<std::pair<MoveFinderState, Action>> backwards;
   while (pred_.count(state)) {
-    const auto &[nxState, action]  = pred_.at(state);
+    const auto &[nxState, action] = pred_.at(state);
     backwards.push_back({state, action});
     state = nxState;
   }

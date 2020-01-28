@@ -7,6 +7,7 @@ import { IGetNextMove, FirstMoveDirectionT } from './IGetNextMove';
 import { ICapturable } from './ICapturable';
 import { IReadNextPiece } from './IReadNextPiece';
 import { getDemoEntry } from './DemoEntryHelpers';
+import { Features } from './Features';
 
 function sleep(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -224,6 +225,7 @@ export class GameRunner implements ICapturable<any> {
     nextPiece: Piece,
     oldLineClears: number
   ) {
+    if (!Features.adaptBasedOnNextPiece) return;
     const currFrame = this.demoPlayer.getFrame();
     const firstMoveDirection = this.getFirstMoveDirection(
       this.nextMoveEntries,

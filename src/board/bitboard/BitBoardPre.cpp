@@ -226,7 +226,6 @@ namespace BitBoardPre {
     auto b = BitBoard();
     for (int i = 0; i < moveToId_.size(); ++i) {
       auto piece = b.getPieceFromId(i);
-      auto blockType = idToBlockType_[i];
       auto nxPiece = piece;
       int repId = i;
 
@@ -248,7 +247,6 @@ namespace BitBoardPre {
     auto b = BitBoard();
     for (int i = 0; i < moveToId_.size(); ++i) {
       auto piece = b.getPieceFromId(i);
-      auto blockType = idToBlockType_[i];
       std::unordered_set<int> s, after;
       static const std::vector<RotateDirection> rotDirs = {RotateDirection::ROTATE_C, RotateDirection::ROTATE_AC};      
       for (auto rotDir: rotDirs) {
