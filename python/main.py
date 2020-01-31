@@ -13,6 +13,7 @@ def main(args):
   runner_settings = RunnerSettings()
   print(runner_settings)
   run_particle = RunParticle(args.binary)
+  run_particle.print_config()
   runner.MyRunner(runner_settings, run_particle).run()
 
 if __name__ == "__main__":

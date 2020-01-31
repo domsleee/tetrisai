@@ -9,11 +9,14 @@ struct Config {
   int startingLines = UNDEF;
 
   void print() const {
+    printf("CONFIG\n");
+    printf("========\n");
     printf("seed: %d\n", seed);
     printf("numGames: %d\n", numGames);
     printf("numLines: %d\n", numLines);
-    printf("maxDropRem: %d\n", maxDropRem);
+    printf("maxDropRem (todo): %d\n", maxDropRem);
     printf("startingLines: %d\n", startingLines);
+    printf("========\n");
   }
 };
 

@@ -20,12 +20,7 @@ class RunParticle(IRunParticle):
     return await self._run_cmd(exec_str)
 
   async def _run_cmd(self, cmd: str):
-    proc = await asyncio.create_subprocess_shell(
-      cmd,
-      stdout=asyncio.subprocess.PIPE,
-      stderr=asyncio.subprocess.PIPE)
-
-    stdout, stderr = await proc.communicate()
+    stdout, stderr = await self._run_cmd_base(cmd)
     try:
       return float(stdout.decode("utf-8"))
     except Exception as ex:
@@ -34,5 +29,19 @@ class RunParticle(IRunParticle):
       print(stdout.decode("utf-8"))
       raise ex
   
+  async def _run_cmd_base(self, cmd: str):
+    proc = await asyncio.create_subprocess_shell(
+      cmd,
+      stdout=asyncio.subprocess.PIPE,
+      stderr=asyncio.subprocess.PIPE)
+    stdout, stderr = await proc.communicate()
+    return (stdout, stderr)
+
   def run_sync(self, vs: Particle, seed: int = None):
     return asyncio.run(self.run(vs, seed))
+  
+  def print_config(self):
+    async def fn():
+      stdout, _ = await self._run_cmd_base(f'{self._binary} -c')
+      return stdout
+    print(asyncio.run(fn()))

@@ -1976,3 +1976,114 @@ Traceback (most recent call last):
     return float(stdout.decode("utf-8"))
 ValueError: could not convert string to float: 
 2019-11-26 20:16:23,722 - pyswarms.single.global_best - INFO - Optimize for 6900 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2020-02-01 02:50:45,236 - pyswarms.single.global_best - INFO - Optimize for 6900 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2020-02-01 02:50:48,349 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished coro=<AsyncParticleGroupRunner.run.<locals>.particle_worker() done, defined at /Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py:20> exception=ValueError("could not convert string to float: 'Expected at least 19 arguments (i.e. 18 factors), given 18\\n'")>
+Traceback (most recent call last):
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 40, in particle_worker
+    val = await self._run_evaluator.run(vs, seed=seed)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle.py", line 20, in run
+    return await self._run_cmd(exec_str)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle.py", line 35, in _run_cmd
+    raise ex
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle.py", line 30, in _run_cmd
+    return float(stdout.decode("utf-8"))
+ValueError: could not convert string to float: 'Expected at least 19 arguments (i.e. 18 factors), given 18\n'
+2020-02-01 02:50:48,378 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished coro=<AsyncParticleGroupRunner.run.<locals>.particle_worker() done, defined at /Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py:20> exception=ValueError("could not convert string to float: 'Expected at least 19 arguments (i.e. 18 factors), given 18\\n'")>
+Traceback (most recent call last):
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 40, in particle_worker
+    val = await self._run_evaluator.run(vs, seed=seed)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle.py", line 20, in run
+    return await self._run_cmd(exec_str)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle.py", line 35, in _run_cmd
+    raise ex
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle.py", line 30, in _run_cmd
+    return float(stdout.decode("utf-8"))
+ValueError: could not convert string to float: 'Expected at least 19 arguments (i.e. 18 factors), given 18\n'
+2020-02-01 02:50:48,378 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished coro=<AsyncParticleGroupRunner.run.<locals>.particle_worker() done, defined at /Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py:20> exception=ValueError("could not convert string to float: 'Expected at least 19 arguments (i.e. 18 factors), given 18\\n'")>
+Traceback (most recent call last):
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 40, in particle_worker
+    val = await self._run_evaluator.run(vs, seed=seed)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle.py", line 20, in run
+    return await self._run_cmd(exec_str)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle.py", line 35, in _run_cmd
+    raise ex
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle.py", line 30, in _run_cmd
+    return float(stdout.decode("utf-8"))
+ValueError: could not convert string to float: 'Expected at least 19 arguments (i.e. 18 factors), given 18\n'
+2020-02-01 02:51:11,574 - pyswarms.single.global_best - INFO - Optimize for 6900 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2020-02-01 02:51:12,719 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished coro=<AsyncParticleGroupRunner.run.<locals>.particle_worker() done, defined at /Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py:20> exception=ValueError("could not convert string to float: 'argc: 18\\nExpected at least 19 arguments (i.e. 18 factors), given 18\\n'")>
+Traceback (most recent call last):
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 40, in particle_worker
+    val = await self._run_evaluator.run(vs, seed=seed)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle.py", line 20, in run
+    return await self._run_cmd(exec_str)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle.py", line 35, in _run_cmd
+    raise ex
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle.py", line 30, in _run_cmd
+    return float(stdout.decode("utf-8"))
+ValueError: could not convert string to float: 'argc: 18\nExpected at least 19 arguments (i.e. 18 factors), given 18\n'
+2020-02-01 02:51:12,722 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished coro=<AsyncParticleGroupRunner.run.<locals>.particle_worker() done, defined at /Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py:20> exception=ValueError("could not convert string to float: 'argc: 18\\nExpected at least 19 arguments (i.e. 18 factors), given 18\\n'")>
+Traceback (most recent call last):
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 40, in particle_worker
+    val = await self._run_evaluator.run(vs, seed=seed)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle.py", line 20, in run
+    return await self._run_cmd(exec_str)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle.py", line 35, in _run_cmd
+    raise ex
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle.py", line 30, in _run_cmd
+    return float(stdout.decode("utf-8"))
+ValueError: could not convert string to float: 'argc: 18\nExpected at least 19 arguments (i.e. 18 factors), given 18\n'
+2020-02-01 02:51:12,723 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished coro=<AsyncParticleGroupRunner.run.<locals>.particle_worker() done, defined at /Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py:20> exception=ValueError("could not convert string to float: 'argc: 18\\nExpected at least 19 arguments (i.e. 18 factors), given 18\\n'")>
+Traceback (most recent call last):
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 40, in particle_worker
+    val = await self._run_evaluator.run(vs, seed=seed)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle.py", line 20, in run
+    return await self._run_cmd(exec_str)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle.py", line 35, in _run_cmd
+    raise ex
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle.py", line 30, in _run_cmd
+    return float(stdout.decode("utf-8"))
+ValueError: could not convert string to float: 'argc: 18\nExpected at least 19 arguments (i.e. 18 factors), given 18\n'
+2020-02-01 02:55:25,820 - pyswarms.single.global_best - INFO - Optimize for 6900 iters with {'c1': 2.5, 'c2': 2.5, 'w': 0.92}
+2020-02-01 02:55:26,974 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished coro=<AsyncParticleGroupRunner.run.<locals>.particle_worker() done, defined at /Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py:20> exception=ValueError("could not convert string to float: 'Expected at least 19 arguments (i.e. 18 factors), given 18\\n'")>
+Traceback (most recent call last):
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 40, in particle_worker
+    val = await self._run_evaluator.run(vs, seed=seed)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle.py", line 20, in run
+    return await self._run_cmd(exec_str)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle.py", line 30, in _run_cmd
+    raise ex
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle.py", line 25, in _run_cmd
+    return float(stdout.decode("utf-8"))
+ValueError: could not convert string to float: 'Expected at least 19 arguments (i.e. 18 factors), given 18\n'
+2020-02-01 02:55:26,975 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished coro=<AsyncParticleGroupRunner.run.<locals>.particle_worker() done, defined at /Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py:20> exception=ValueError("could not convert string to float: 'Expected at least 19 arguments (i.e. 18 factors), given 18\\n'")>
+Traceback (most recent call last):
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 40, in particle_worker
+    val = await self._run_evaluator.run(vs, seed=seed)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle.py", line 20, in run
+    return await self._run_cmd(exec_str)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle.py", line 30, in _run_cmd
+    raise ex
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle.py", line 25, in _run_cmd
+    return float(stdout.decode("utf-8"))
+ValueError: could not convert string to float: 'Expected at least 19 arguments (i.e. 18 factors), given 18\n'
+2020-02-01 02:55:26,976 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished coro=<AsyncParticleGroupRunner.run.<locals>.particle_worker() done, defined at /Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py:20> exception=ValueError("could not convert string to float: 'Expected at least 19 arguments (i.e. 18 factors), given 18\\n'")>
+Traceback (most recent call last):
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/async_particle_group_runner.py", line 40, in particle_worker
+    val = await self._run_evaluator.run(vs, seed=seed)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle.py", line 20, in run
+    return await self._run_cmd(exec_str)
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle.py", line 30, in _run_cmd
+    raise ex
+  File "/Users/dom/Documents/git/tetrisAI/python/tetrisai/run_particle.py", line 25, in _run_cmd
+    return float(stdout.decode("utf-8"))
+ValueError: could not convert string to float: 'Expected at least 19 arguments (i.e. 18 factors), given 18\n'

@@ -7,6 +7,15 @@
 using MoveEvaluatorT = MoveEvaluatorTetrisReady;
 
 int main(int argc, char ** argv) {
+  Config cfg;
+  cfg.numLines = 230;
+  cfg.startingLines = 130;
+  cfg.maxDropRem = 2;
+
+  if (argc == 2 && strcmp(argv[1], "-c") == 0) {
+    cfg.print();
+    exit(0);
+  }
   if (argc < MoveEvaluatorT::NUM_FACTORS+1) {
     printf("Expected at least %d arguments (i.e. %d factors), given %d\n", MoveEvaluatorT::NUM_FACTORS+1, MoveEvaluatorT::NUM_FACTORS, argc);
     exit(1);
@@ -22,9 +31,7 @@ int main(int argc, char ** argv) {
   }
 
   MoveEvaluatorT me(weightings);
-  Config cfg;
-  cfg.numLines = 230;
-  cfg.startingLines = 130;
+
   //cfg.print();
   std::cout << get_score_regular(me, seed) << '\n';
 }
