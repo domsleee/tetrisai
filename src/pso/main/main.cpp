@@ -25,6 +25,6 @@ int main(int argc, char ** argv) {
   Config cfg;
   cfg.numLines = 230;
   cfg.startingLines = 130;
-  cfg.print();
+  //cfg.print();
   std::cout << get_score_regular(me, seed) << '\n';
 }
