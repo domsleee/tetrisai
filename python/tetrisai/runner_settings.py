@@ -13,6 +13,7 @@ class RunnerSettings:
   num_particles: int = NUM_PARTICLES
   num_neighbours: int = NUM_NEIGHBOURS
   iterations: int = NUM_ITERATIONS
+  dimensions: int = DIMENSIONS
   local: bool = LOCAL
   velocity_clamp: typing.Tuple[float, float] = VELOCITY_CLAMP
   optimizer_options: dict = dataclasses.field(default_factory=dict)
