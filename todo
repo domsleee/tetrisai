@@ -1,25 +1,22 @@
 Todo
 
 Things to try
++ Train with (fixed) TETRIS_READY
 + Train using MoveFinderFSM (will probably take forever)
-+ Train with new TETRIS_READY
 
 Functional improvements
-+ Fix move ordering (prioritise least moves + least taps)
 + One-piece lookahead in evaluation
 + setup CI
 + feature vector: type safety & ease of accessing new features
 
 Performance improvements
-+ Use normal MoveFinder (web)
-+ consider using threading (web)
++ Use normal MoveFinder (in c++, for web)
++ consider using threading (in c++, for web)
 
 
-
-
-
-
-
+Notes for next run:
+* Fixed TETRIS_READY
+* We can use startingLines=130 for level 19 (to promote survival)
 
 
 

@@ -16,16 +16,24 @@ class RunPieceSet {
     mutators_.insert({lineClearCt, mutator});
   }
   ScoreManager runGame(const std::vector<BlockType> &pieceSet);
-  
+  void setNumLines(int numLines) {
+    numLines_ = numLines;
+  }
+  void setStartingLines(int startingLines) {
+    startingLines_ = startingLines;
+  }
   MyGetNextMove &getNextMoveHandler_;
 
  private:
+  int numLines_ = MAX_LINES;
+  int startingLines_ = 0;
   std::multimap<int, MutatorFnT> mutators_;
 };
 
 template <typename MyGetNextMove>
 ScoreManager RunPieceSet<MyGetNextMove>::runGame(const std::vector<BlockType> &pieceSet) {
   ScoreManager sm;
+  sm.setLines(startingLines_);
   BitBoard b;
 
   int transitionLines = MAX_LINES;

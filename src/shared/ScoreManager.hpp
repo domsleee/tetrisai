@@ -20,6 +20,9 @@ struct ScoreManager {
   int getTotalLines() const {
     return totalLines_;
   }
+  void setLines(int totalLines) {
+    totalLines_ = totalLines;
+  }
  private:
   int level_ = 19;
   int score_ = 0;

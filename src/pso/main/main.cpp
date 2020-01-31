@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "src/pso/ClientApi.hpp"
 #include "src/shared/MoveEvaluator/MoveEvaluatorTetrisReady.hpp"
+#include "src/shared/Config.hpp"
 
 using MoveEvaluatorT = MoveEvaluatorTetrisReady;
 
@@ -21,5 +22,8 @@ int main(int argc, char ** argv) {
   }
 
   MoveEvaluatorT me(weightings);
+  Config cfg;
+  cfg.numLines = 230;
+  cfg.startingLines = 130;
   std::cout << get_score_regular(me, seed) << '\n';
 }

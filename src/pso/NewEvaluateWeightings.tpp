@@ -16,6 +16,9 @@ class NewEvaluateWeightings {
   double runAllPieceSets() const;
   void setSeed(int seed);
   void setNumGames(int numGames);
+  void setNumLines(int numLines);
+  void setStartingLines(int startingLines);
+  void setDropRem(int dropRem);
   std::unique_ptr<MyRunPieceSet> runPieceSet_handler_;
  private:
   PieceSetGetter ps_;
@@ -54,3 +57,21 @@ template<typename MyRunPieceSet>
 void NewEvaluateWeightings<MyRunPieceSet>::setNumGames(int num_games) {
   num_games_ = num_games;
 }
+
+template<typename MyRunPieceSet>
+void NewEvaluateWeightings<MyRunPieceSet>::setNumLines(int numLines) {
+  runPieceSet_handler_.setNumLines(numLines);
+}
+
+
+template<typename MyRunPieceSet>
+void NewEvaluateWeightings<MyRunPieceSet>::setStartingLines(int startingLines) {
+  runPieceSet_handler_.setStartingLines(startingLines);
+}
+
+
+template<typename MyRunPieceSet>
+void NewEvaluateWeightings<MyRunPieceSet>::setDropRem(int numLines) {
+  // todo
+}
+
