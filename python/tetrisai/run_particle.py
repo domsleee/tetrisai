@@ -43,5 +43,5 @@ class RunParticle(IRunParticle):
   def print_config(self):
     async def fn():
       stdout, _ = await self._run_cmd_base(f'{self._binary} -c')
-      return stdout
+      return stdout.decode('utf-8')
     print(asyncio.run(fn()))
