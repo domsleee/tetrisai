@@ -8,7 +8,7 @@ struct Config {
   int maxDropRem = UNDEF; // todo.
   int startingLines = UNDEF;
 
-  void print() {
+  void print() const {
     printf("seed: %d\n", seed);
     printf("numGames: %d\n", numGames);
     printf("numLines: %d\n", numLines);
