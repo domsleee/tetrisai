@@ -29,7 +29,7 @@ class RunnerSettings:
 
     return {
       'n_particles': self.num_particles,
-      'dimensions': DIMENSIONS,
+      'dimensions': self.dimensions,
       'velocity_clamp': self.velocity_clamp,
       'options': self.optimizer_options
     }
