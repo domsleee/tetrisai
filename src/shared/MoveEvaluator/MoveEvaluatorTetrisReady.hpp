@@ -9,8 +9,7 @@
 
 #include "src/common/common.hpp"
 #include <cassert>
-
-
+#include <cstdio>
 
 class MoveEvaluatorTetrisReady {
  public:
@@ -20,7 +19,10 @@ class MoveEvaluatorTetrisReady {
   constexpr int getNumFactors() { return NUM_FACTORS; }
 
   MoveEvaluatorTetrisReady(const Weighting &w): me_{MoveEvaluator(), w}, w_{w} {
-    assert(w.size() == NUM_FACTORS);
+    if (w.size() != NUM_FACTORS) {
+      printf("Bad weight vector size. Expected %d, got %lu", NUM_FACTORS, w.size());
+      throw std::runtime_error("bad weight vector size");
+    }
   }
 
   double evaluate(const BitBoard &b, const BitPieceInfo &p) const {
