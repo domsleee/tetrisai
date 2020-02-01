@@ -10,6 +10,7 @@
 #include "src/common/common.hpp"
 #include <cassert>
 #include <cstdio>
+#include <cstring>
 
 class MoveEvaluatorTetrisReady {
  public:

@@ -1,5 +1,6 @@
 #include "src/common/Weighting.hpp"
 #include "src/common/Debug.hpp"
+#include <cassert>
 
 namespace WeightingFn {
   Weighting readFromStream(std::istream &is) {
