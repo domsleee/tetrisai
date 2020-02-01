@@ -9,6 +9,7 @@
 
 #include "src/shared/MoveFinder/CacheMoveFinder.tpp"
 #include "src/pso/NewEvaluateWeightingsContainer.tpp"
+#include "src/shared/Config.hpp"
 
 
 // todo: use config
@@ -24,9 +25,8 @@
 // get_score_level18_start_actual_das_lookahead
 // get_score_level18_start_actual_das_lookahead_quicktap
 
-
 template <typename MoveEvaluator>
-double get_score_regular(MoveEvaluator me, int seed=-1) {
+double get_score_regular(MoveEvaluator me, const Config &cfg) {
   auto moveFinder = MoveFinderRewrite();
   moveFinder.setMaxDropRem(2);
   auto ew_container = NewEvaluateWeightingsContainer(
@@ -34,8 +34,15 @@ double get_score_regular(MoveEvaluator me, int seed=-1) {
     CacheMoveFinder(moveFinder)
   );
   auto ew = ew_container.getInstance();
-  if (seed != -1) ew.setSeed(seed);
+  cfg.applyConfig(ew);
   return ew.runAllPieceSets();
+}
+
+template <typename MoveEvaluator>
+double get_score_regular(MoveEvaluator me, int seed=-1) {
+  Config cfg;
+  cfg.seed = seed;
+  return get_score_regular(me, cfg);
 }
 
 double get_score_regular(const Weighting &w, int seed=-1) {

@@ -1,3 +1,4 @@
+#pragma once
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -60,13 +61,13 @@ void NewEvaluateWeightings<MyRunPieceSet>::setNumGames(int num_games) {
 
 template<typename MyRunPieceSet>
 void NewEvaluateWeightings<MyRunPieceSet>::setNumLines(int numLines) {
-  runPieceSet_handler_.setNumLines(numLines);
+  runPieceSet_handler_->setNumLines(numLines);
 }
 
 
 template<typename MyRunPieceSet>
 void NewEvaluateWeightings<MyRunPieceSet>::setStartingLines(int startingLines) {
-  runPieceSet_handler_.setStartingLines(startingLines);
+  runPieceSet_handler_->setStartingLines(startingLines);
 }
 
 

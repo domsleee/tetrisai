@@ -33,5 +33,5 @@ int main(int argc, char ** argv) {
   MoveEvaluatorT me(weightings);
 
   //cfg.print();
-  std::cout << get_score_regular(me, seed) << '\n';
+  std::cout << get_score_regular(me, seed, cfg) << '\n';
 }
