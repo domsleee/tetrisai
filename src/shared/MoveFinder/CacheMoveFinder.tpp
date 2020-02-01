@@ -16,7 +16,7 @@ class CacheMoveFinder {
   mutable CacheMoveFinderNs::MyT<MyBoard, MyBoardPieceInfo> glob_map_;
 
   void reset() {
-    for (int i = 0; i < NUM_BLOCK_TYPES; ++i) glob_map_.at(i) = {};
+    glob_map_.assign(NUM_BLOCK_TYPES, {});
   }
 
  public:

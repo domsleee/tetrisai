@@ -24,9 +24,11 @@ class RunParticle(IRunParticle):
     try:
       return float(stdout.decode("utf-8"))
     except Exception as ex:
+      print("EXCEPTION!!!!")
       print(cmd)
       print(stdout)
       print(stdout.decode("utf-8"))
+      print(stderr)
       raise ex
   
   async def _run_cmd_base(self, cmd: str):
