@@ -27,11 +27,11 @@ int main(int argc, char ** argv) {
 
   int seed = -1;
   if (argc > MoveEvaluatorT::NUM_FACTORS+1) {
-    int seed = atoi(argv[MoveEvaluatorT::NUM_FACTORS+1]);
+    cfg.seed = atoi(argv[MoveEvaluatorT::NUM_FACTORS+1]);
   }
 
   MoveEvaluatorT me(weightings);
 
   //cfg.print();
-  std::cout << get_score_regular(me, seed, cfg) << '\n';
+  std::cout << get_score_regular(me, cfg) << '\n';
 }

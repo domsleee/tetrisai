@@ -22,6 +22,9 @@ class MoveFinderRewrite {
  private:
   int maxDropRem_ = DEFAULT_MAX_DROP_REM;
   bool record_edges_ = false;
+
+  // todo: Move these "mutable" boys into an inner class
+  //       they are all reset on run. Also "getRecordedEdges" is no longer used, get rid of it!
   mutable std::unordered_map<int, int> holdingSeen_[2];
   mutable std::unordered_map<int, int> releasedSeen_;
   mutable std::unordered_set<BitPieceInfo> moveSet_;

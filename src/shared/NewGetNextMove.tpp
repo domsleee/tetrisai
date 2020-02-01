@@ -17,6 +17,9 @@ class NewGetNextMove {
   void setMoveFinder(MyMoveFinder &mf) {
     mf_ = std::make_unique<MyMoveFinder>(mf);
   }
+  void setMaxDropRem(int maxDropRem) {
+    mf_->setMaxDropRem(maxDropRem);
+  }
   const MyMoveFinder& getMoveFinder() { return *mf_; }
  private:
   //const MyMoveEvaluator &me_;

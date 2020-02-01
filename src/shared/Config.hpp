@@ -27,5 +27,6 @@ struct Config {
     if (numGames != Config::UNDEF) ew.setNumGames(numGames);
     if (numLines != Config::UNDEF) ew.setNumLines(numLines);
     if (startingLines != Config::UNDEF) ew.setStartingLines(startingLines);
+    if (maxDropRem != Config::UNDEF) ew.setMaxDropRem(maxDropRem);
   }
 };

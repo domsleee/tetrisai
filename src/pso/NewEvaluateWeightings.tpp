@@ -19,7 +19,7 @@ class NewEvaluateWeightings {
   void setNumGames(int numGames);
   void setNumLines(int numLines);
   void setStartingLines(int startingLines);
-  void setDropRem(int dropRem);
+  void setMaxDropRem(int dropRem);
   std::unique_ptr<MyRunPieceSet> runPieceSet_handler_;
  private:
   PieceSetGetter ps_;
@@ -72,7 +72,8 @@ void NewEvaluateWeightings<MyRunPieceSet>::setStartingLines(int startingLines) {
 
 
 template<typename MyRunPieceSet>
-void NewEvaluateWeightings<MyRunPieceSet>::setDropRem(int numLines) {
+void NewEvaluateWeightings<MyRunPieceSet>::setMaxDropRem(int maxDropRem) {
+  runPieceSet_handler_->setMaxDropRem(maxDropRem);
   // todo
 }
 

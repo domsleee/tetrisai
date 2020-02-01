@@ -13,16 +13,21 @@ template <typename MyMoveFinder=AllMoveFinder<BitBoard, BitPieceInfo>, typename 
 class CacheMoveFinder {
  private:
   MyMoveFinder move_finder_;
-  static CacheMoveFinderNs::MyT<MyBoard, MyBoardPieceInfo> glob_map_; // todo: dont make this static
+  mutable CacheMoveFinderNs::MyT<MyBoard, MyBoardPieceInfo> glob_map_;
+
+  void reset() {
+    for (int i = 0; i < NUM_BLOCK_TYPES; ++i) glob_map_.at(i) = {};
+  }
 
  public:
-  CacheMoveFinder() { }
+  CacheMoveFinder() { reset(); }
   CacheMoveFinder(const MyMoveFinder &mf) {
     move_finder_ = mf;
+    reset();
   }
   std::vector<BitPieceInfo> findAllMoves(const MyBoard& board, BlockType blockType) const {
-    if (glob_map_[blockType].count(board)) {
-      return glob_map_[blockType][board];
+    if (glob_map_.at(blockType).count(board)) {
+      return glob_map_.at(blockType)[board];
     }
 
 #ifdef MOVE_FINDER_CACHE
@@ -35,7 +40,9 @@ class CacheMoveFinder {
     return glob_map_[blockType][board] = move_finder_.findAllMoves(board, blockType);
 #endif
   }
-};
 
-template <typename MyMoveFinder, typename MyBoard, typename MyBoardPieceInfo>
-CacheMoveFinderNs::MyT<MyBoard, MyBoardPieceInfo> CacheMoveFinder<MyMoveFinder, MyBoard, MyBoardPieceInfo>::glob_map_(static_cast<size_t>(NUM_BLOCK_TYPES));
+  void setMaxDropRem(int maxDropRem) {
+    reset();
+    move_finder_.setMaxDropRem(maxDropRem);
+  }
+};

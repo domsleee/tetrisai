@@ -22,6 +22,9 @@ class RunPieceSet {
   void setStartingLines(int startingLines) {
     startingLines_ = startingLines;
   }
+  void setMaxDropRem(int maxDropRem) {
+    getNextMoveHandler_.setMaxDropRem(maxDropRem);
+  }
   MyGetNextMove &getNextMoveHandler_;
 
  private:
