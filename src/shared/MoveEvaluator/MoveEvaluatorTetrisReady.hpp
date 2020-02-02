@@ -17,11 +17,16 @@ class MoveEvaluatorTetrisReady {
   static const int NUM_FACTORS = MoveEvaluator::NUM_FACTORS + 1;
   static const int TETRIS_READY = MoveEvaluator::NUM_FACTORS;
 
+  mutable int colHeights_[NUM_COLUMNS];
+
   constexpr int getNumFactors() { return NUM_FACTORS; }
+  int* getColHeights() const {
+    return colHeights_;
+  }
 
   MoveEvaluatorTetrisReady(const Weighting &w): me_{MoveEvaluator(), w}, w_{w} {
-    if (w.size() != NUM_FACTORS) {
-      printf("Bad weight vector size. Expected %d, got %lu", NUM_FACTORS, w.size());
+    if (w.size() < NUM_FACTORS) {
+      printf("Bad weight vector size. Expected at least %d, got %lu", NUM_FACTORS, w.size());
       throw std::runtime_error("bad weight vector size");
     }
   }
@@ -29,7 +34,7 @@ class MoveEvaluatorTetrisReady {
   double evaluate(const BitBoard &b, const BitPieceInfo &p) const {
     VacancyChecker vac(b);
 
-    int colHeights[NUM_COLUMNS];
+    int *colHeights = (int*)colHeights_;
     double eval = me_.evaluate(b, p);
     for (int c = 0; c < NUM_COLUMNS; ++c) colHeights[c] = 0;
     for (int c = 0; c < NUM_COLUMNS; c++) {

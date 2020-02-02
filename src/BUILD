@@ -107,6 +107,12 @@ cc_test(
 )
 
 cc_test(
+    name = "test_move_evaluator_block",
+    srcs = glob(["shared/test/TestMoveEvaluatorBlock.cpp", "shared/test/*.hpp", "shared/test/*.h", "shared/test/MoveEvaluatorUtility.cpp"]),
+    deps = [":shared", "//:catch"]
+)
+
+cc_test(
     name = "test_move_finder_state",
     srcs = glob(["shared/test/MoveFinderFSM/TestMoveFinderState.cpp"]),
     deps = ["//src:shared", "//:catch"]
