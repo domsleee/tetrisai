@@ -1,10 +1,10 @@
 #include <iostream>
 #include <stdlib.h>
 #include "src/pso/ClientApi.hpp"
-#include "src/shared/MoveEvaluator/MoveEvaluatorTetrisReady.hpp"
+#include "src/shared/MoveEvaluator/MoveEvaluatorBlock.hpp"
 #include "src/shared/Config.hpp"
 
-using MoveEvaluatorT = MoveEvaluatorTetrisReady;
+using MoveEvaluatorT = MoveEvaluatorBlock;
 
 int main(int argc, char ** argv) {
   Config cfg;

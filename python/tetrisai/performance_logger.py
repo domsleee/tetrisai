@@ -36,4 +36,5 @@ class PerformanceLogger:
 
   def log_settings(self, settings: RunnerSettings):
     self._logger.debug(settings)
+    self._logger.debug(self._run_particle.get_config())
 
