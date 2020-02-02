@@ -15,3 +15,9 @@ class IRunParticle:
     """
     vs: particle to take in
     """
+    
+  @abc.abstractmethod
+  def get_config(self) -> str:
+    """
+    
+    """

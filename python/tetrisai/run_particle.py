@@ -42,8 +42,11 @@ class RunParticle(IRunParticle):
   def run_sync(self, vs: Particle, seed: int = None):
     return asyncio.run(self.run(vs, seed))
   
-  def print_config(self):
+  def get_config(self) -> str:
     async def fn():
       stdout, _ = await self._run_cmd_base(f'{self._binary} -c')
       return stdout.decode('utf-8')
-    print(asyncio.run(fn()))
+    return asyncio.run(fn())
+
+  def print_config(self):
+    print(self.get_config())
