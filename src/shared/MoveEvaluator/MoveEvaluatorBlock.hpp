@@ -4,6 +4,7 @@
 
 #pragma once
 #include "src/shared/MoveEvaluator/MoveEvaluatorTetrisReady.hpp"
+#include "src/shared/MoveEvaluator/MoveEvaluatorBlockUtility.hpp"
 
 #include "src/common/common.hpp"
 #include <cassert>
@@ -26,19 +27,6 @@ class MoveEvaluatorBlock {
   static const int IS_BLOCK_BY_TWO = MoveEvaluatorTetrisReady::NUM_FACTORS + 7;
   static const int IS_BLOCK_BY_MORE_THAN_TWO = MoveEvaluatorTetrisReady::NUM_FACTORS + 8;
 
-  static constexpr int MAX_CLEAR_HEIGHTS[NUM_COLUMNS] = {
-    0, // unused
-    8,
-    11,
-    14,
-    17,
-    0, // unused
-    17,
-    14,
-    11,
-    0 // unused
-  };
-
   constexpr int getNumFactors() { return NUM_FACTORS; }
 
   MoveEvaluatorBlock(const Weighting &w): me_{w}, w_{w} {
@@ -52,33 +40,8 @@ class MoveEvaluatorBlock {
     auto eval = me_.evaluate(b, p);
     int* colHeights = me_.getColHeights();
 
-    using PairT = std::pair<int, int>;
-    // min heap
-    std::priority_queue<PairT, std::vector<PairT>, std::greater<PairT>> pq;
-    for (int c = 0; c < NUM_COLUMNS; ++c) {
-      pq.push({colHeights[c], c});
-    }
-    auto [bottomColumnHeight, bottomColumn] = pq.top(); pq.pop();
-    auto [secondColumnHeight, secondColumn] = pq.top(); pq.pop();
-
-    if (secondColumnHeight - bottomColumnHeight < 3) return eval;
-    if (bottomColumn == 5) return eval;
-    if (MAX_CLEAR_HEIGHTS[bottomColumn] > bottomColumnHeight) return eval; // you're screwed here haha
-
-    bool isRight = bottomColumn > 5;
-    int direction = isRight ? 1 : -1;
-
-    int minBlock = 20;
-    if (isRight) {
-      for (int c = 6; c < bottomColumn; ++c) {
-        minBlock = std::min(minBlock, MAX_CLEAR_HEIGHTS[c] - colHeights[c]);
-      }
-    } else {
-      for (int c = 4; c > bottomColumn; --c) {
-        minBlock = std::min(minBlock, MAX_CLEAR_HEIGHTS[c] - colHeights[c]);
-      }
-    }
-
+    auto [valid, minBlock] = getMinBlock(colHeights);
+    if (!valid) return eval;
     eval += (minBlock > 4) * w_[IS_MORE_THAN_FOUR_AWAY_FROM_BLOCK];
     eval += (minBlock == 4) * w_[IS_FOUR_AWAY_FROM_BLOCK];
     eval += (minBlock == 3) * w_[IS_THREE_AWAY_FROM_BLOCK];

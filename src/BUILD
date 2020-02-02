@@ -2,14 +2,6 @@ BENCHMARK_COPTS = ["-O2", "-DNDEBUG"]
 EXEC_COPTS = ["-O2"]
 EW_MOVE_FINDER_CACHE_COPTS = ["-O2", "-DMOVE_FINDER_CACHE"]
 
-cc_binary(
-    name = "tetrisai",
-    srcs = glob(["*.cpp", "*.hpp", "interfaces/*"]),
-    deps = [ ":common",
-        ":shared"
-    ],
-)
-
 cc_library(
     name = "common",
     srcs = glob(["common/*.cpp"]),
@@ -142,13 +134,6 @@ cc_binary(
 cc_binary(
     name = "ew_bench",
     srcs = ["pso/main/main_bench.cpp"],
-    deps = [":pso"],
-    copts = EXEC_COPTS
-)
-
-cc_binary(
-    name = "main_sandbox",
-    srcs = ["pso/main/main_sandbox.cpp"],
     deps = [":pso"],
     copts = EXEC_COPTS
 )
