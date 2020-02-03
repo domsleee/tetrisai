@@ -22,7 +22,7 @@ class MoveEvaluatorBlockLinear {
    
   constexpr int getNumFactors() { return NUM_FACTORS; }
 
-  MoveEvaluatorBlock(const Weighting &w): me_{w}, w_{w} {
+  MoveEvaluatorBlockLinear(const Weighting &w): me_{w}, w_{w} {
     if (w.size() < NUM_FACTORS) {
       printf("Bad weight vector size. Needed at least %d, got %lu", NUM_FACTORS, w.size());
       throw std::runtime_error("bad weight vector size");
