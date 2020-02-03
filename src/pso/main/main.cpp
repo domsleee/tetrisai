@@ -16,8 +16,8 @@ int main(int argc, char ** argv) {
     cfg.print();
     exit(0);
   }
-  if (argc < MoveEvaluatorT::NUM_FACTORS+1) {
-    printf("Expected at least %d arguments (i.e. %d factors), given %d\n", MoveEvaluatorT::NUM_FACTORS+1, MoveEvaluatorT::NUM_FACTORS, argc);
+  if (argc != MoveEvaluatorT::NUM_FACTORS+1) {
+    printf("Expected exactly %d arguments (i.e. %d factors), given %d\n", MoveEvaluatorT::NUM_FACTORS+1, MoveEvaluatorT::NUM_FACTORS, argc);
     exit(1);
   }
   Weighting weightings(MoveEvaluatorT::NUM_FACTORS);
