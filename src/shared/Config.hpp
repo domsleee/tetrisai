@@ -11,7 +11,7 @@ struct Config {
   int startingLines = UNDEF;
 
   void print() const {
-    printf("CONFIG\n");
+    printf("FEATURE EVALUATION CONFIG\n");
     printf("========\n");
     printf("seed: %d\n", seed);
     printf("numGames: %d\n", numGames);

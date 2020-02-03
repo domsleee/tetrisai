@@ -42,9 +42,10 @@ double NewEvaluateWeightings<MyRunPieceSet>::runAllPieceSets() const {
   std::vector<int> scoreInts;
   for (auto sm: scores) scoreInts.push_back(sm.getScore());
 
+  /*
   for (auto sm: scores) {
-    //printf("score: %d, lines: %d\n", sm.getScore(), sm.getTotalLines());
-  }
+    printf("score: %d, lines: %d\n", sm.getScore(), sm.getTotalLines());
+  }*/
   double score = average(scoreInts.end()-30, scoreInts.end());
   return score;
 }
