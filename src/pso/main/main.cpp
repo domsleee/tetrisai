@@ -14,6 +14,7 @@ int main(int argc, char ** argv) {
 
   if (argc == 2 && strcmp(argv[1], "-c") == 0) {
     cfg.print();
+    std::cout << "MoveEvaluator used: " << typeid(MoveEvaluatorT).name() << '\n';
     exit(0);
   }
   if (argc != MoveEvaluatorT::NUM_FACTORS+1) {
