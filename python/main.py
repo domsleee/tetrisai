@@ -10,7 +10,7 @@ import os
 logging.basicConfig()
 
 def main(args):
-  runner_settings = RunnerSettings(dimensions=18 + 2)
+  runner_settings = RunnerSettings(dimensions=18 + 3)
   print(runner_settings)
   run_particle = RunParticle(args.binary)
   run_particle.print_config()

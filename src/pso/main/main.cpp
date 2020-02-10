@@ -1,10 +1,10 @@
 #include <iostream>
 #include <stdlib.h>
 #include "src/pso/ClientApi.hpp"
-#include "src/shared/MoveEvaluator/MoveEvaluatorBlockLinear.hpp"
+#include "src/shared/MoveEvaluator/MoveEvaluatorBlockQuadratic.hpp"
 #include "src/shared/Config.hpp"
 
-using MoveEvaluatorT = MoveEvaluatorBlockLinear;
+using MoveEvaluatorT = MoveEvaluatorBlockQuadratic;
 
 int main(int argc, char ** argv) {
   Config cfg;
