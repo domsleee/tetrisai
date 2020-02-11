@@ -10,21 +10,31 @@ struct ScoreManager {
       case 4: { score_ += 1200 * (level_+1); } break;
     }
     totalLines_ += lineClears;
-    if (totalLines_ >= 140) {
-      level_ = 19 + (totalLines_ - 130)/10;
-    }
+    updateLevel();
   }
   int getScore() const {
     return score_;
+  }
+  int getLevel() const {
+    return level_;
   }
   int getTotalLines() const {
     return totalLines_;
   }
   void setLines(int totalLines) {
     totalLines_ = totalLines;
+    updateLevel();
   }
  private:
-  int level_ = 19;
+  void updateLevel() {
+    if (totalLines_ >= 130) {
+      level_ = 19 + (totalLines_ - 130)/10;
+    } else {
+      level_ = 18;
+    }
+  }
+
+  int level_ = 18;
   int score_ = 0;
   int totalLines_ = 0;
 };

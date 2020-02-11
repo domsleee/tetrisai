@@ -5,6 +5,7 @@
 #include <numeric>
 #include "src/common/common.hpp"
 #include "src/pso/PieceSetGetter.hpp"
+#include <execution>
 
 
 template<typename MyRunPieceSet>
@@ -15,6 +16,8 @@ class NewEvaluateWeightings {
     {}
 
   double runAllPieceSets() const;
+  std::vector<int> getSortedScoreInts() const;
+  std::vector<ScoreManager> getScoreManagers() const;
   void setSeed(int seed);
   void setNumGames(int numGames);
   void setNumLines(int numLines);
@@ -29,25 +32,44 @@ class NewEvaluateWeightings {
 
 template<typename MyRunPieceSet>
 double NewEvaluateWeightings<MyRunPieceSet>::runAllPieceSets() const {
-  auto pieceSets = ps_.getPieceSets(num_games_);
-  std::vector<ScoreManager> scores;
-  for (const auto &pieceSet: pieceSets) {
-    scores.push_back(runPieceSet_handler_->runGame(pieceSet));
-  }
-  if (scores.size() == 1) return scores[0].getScore();
-  
+  auto scoreInts = getSortedScoreInts();
+  if (scoreInts.size() == 1) return scoreInts[0];
+  double score = average(scoreInts.end()-30, scoreInts.end());
+  return score;
+}
+
+template<typename MyRunPieceSet>
+std::vector<int> NewEvaluateWeightings<MyRunPieceSet>::getSortedScoreInts() const {
+  auto scores = getScoreManagers();
   std::sort(scores.begin(), scores.end(), [](auto &s1, auto &s2) {
     return s1.getScore() < s2.getScore();
   });
   std::vector<int> scoreInts;
   for (auto sm: scores) scoreInts.push_back(sm.getScore());
+  return scoreInts;
+}
 
-  /*
-  for (auto sm: scores) {
-    printf("score: %d, lines: %d\n", sm.getScore(), sm.getTotalLines());
+template<typename MyRunPieceSet>
+std::vector<ScoreManager> NewEvaluateWeightings<MyRunPieceSet>::getScoreManagers() const {
+  auto pieceSets = ps_.getPieceSets(num_games_);
+  std::vector<ScoreManager> scores(pieceSets.size());
+
+  auto &runPieceSet = *runPieceSet_handler_;
+  BitBoardPre::precompute();
+
+  auto fn = [runPieceSet](const std::vector<BlockType> &pieceSet) -> ScoreManager {
+    //BitBoardPre::precompute();
+    return runPieceSet.runGame(pieceSet);
+  };
+
+  std::transform(std::execution::par, // par, seq, par_unseq
+               pieceSets.begin(), pieceSets.end(), 
+               scores.begin(), fn);
+
+  /*for (const auto &pieceSet: pieceSets) {
+    scores.push_back(runPieceSet_handler_->runGame(pieceSet));
   }*/
-  double score = average(scoreInts.end()-30, scoreInts.end());
-  return score;
+  return scores;
 }
 
 template<typename MyRunPieceSet>
@@ -75,6 +97,5 @@ void NewEvaluateWeightings<MyRunPieceSet>::setStartingLines(int startingLines) {
 template<typename MyRunPieceSet>
 void NewEvaluateWeightings<MyRunPieceSet>::setMaxDropRem(int maxDropRem) {
   runPieceSet_handler_->setMaxDropRem(maxDropRem);
-  // todo
 }
 

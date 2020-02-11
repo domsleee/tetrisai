@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 from flask import Flask, abort, request, jsonify
 import threading

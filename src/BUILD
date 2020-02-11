@@ -165,6 +165,14 @@ cc_binary(
     deps = [":pso"],
     copts = EXEC_COPTS
 )
+
+cc_binary(
+    name = "get_transition_evaluation",
+    srcs = ["pso/main/main_get_transition_evaluation.cpp"],
+    deps = [":pso"],
+    copts = EXEC_COPTS
+)
+
 cc_binary(
     name = "ew_move_finder_cache",
     srcs = ["pso/main/main.cpp", "shared/MoveFinder/debug/debug.cpp"],

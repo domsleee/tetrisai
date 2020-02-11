@@ -41,6 +41,9 @@ namespace BitBoardPre {
 
   const std::vector<int>& getOpenRotN(int id);
 
+  extern std::unordered_map<Move, int> moveToId_;
+
+
   // throws exception if there is no path
   const std::vector<Action>& getShortestPath(BitPieceInfo &p1, BitPieceInfo &p2);
 }

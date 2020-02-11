@@ -1,11 +1,14 @@
 #pragma once
 #include <iostream>
 #include <stdlib.h>
+#include <vector>
+
 #include "src/shared/MoveFinder/MoveFinder.h"
 #include "src/shared/MoveFinder/MoveFinderRewrite.h"
 #include "src/shared/MoveEvaluator/MoveEvaluatorAdapter.hpp"
 #include "src/shared/MoveEvaluator/MoveEvaluator.hpp"
 #include "src/shared/MoveEvaluator/MoveEvaluatorPenalty.hpp"
+#include "src/shared/ScoreManager.hpp"
 
 #include "src/shared/MoveFinder/CacheMoveFinder.tpp"
 #include "src/pso/NewEvaluateWeightingsContainer.tpp"
@@ -62,8 +65,8 @@ double get_score_regular_bench(const Weighting &w, int num_games=1, int seed=-1)
 
 double get_score_18_19(const Weighting &w1, const Weighting &w2) {
   auto ew_container = NewEvaluateWeightingsContainer(
-      MoveEvaluatorAdapter(MoveEvaluator(), w1),
-      CacheMoveFinder(MoveFinderRewrite())
+    MoveEvaluatorAdapter(MoveEvaluator(), w1),
+    CacheMoveFinder(MoveFinderRewrite())
   );
   auto ew = ew_container.getInstance();
 
@@ -86,4 +89,39 @@ double get_score_18_19(const Weighting &w1, const Weighting &w2) {
   return ew.runAllPieceSets();
 }
 
+template <typename MoveEvaluator>
+std::vector<ScoreManager> get_transition_evaluation(MoveEvaluator me1, MoveEvaluator me2, Config cfg, int moveEvaluatorLineTransition=100) {
+  auto mf1 = MoveFinderRewrite();
+  auto ew_container = NewEvaluateWeightingsContainer(
+    me1,
+    mf1
+  );
+
+  auto ew = ew_container.getInstance();
+  cfg.applyConfig(ew);
+
+  assert(moveEvaluatorLineTransition <= 130);
+
+  ew.runPieceSet_handler_->addTransition(moveEvaluatorLineTransition, [&](auto& rps) -> void {
+    rps.getNextMoveHandler_.setMoveEvaluator(me2);
+  });
+
+  auto mf2 = MoveFinderRewrite();
+  mf2.setMaxDropRem(2);
+  //auto cacheNxMoveFinder = CacheMoveFinder(nxMoveFinder);
+  ew.runPieceSet_handler_->addTransition(130, [&](auto& rps) -> void {
+    rps.getNextMoveHandler_.setMoveFinder(mf2);
+  });
+
+  ew.runPieceSet_handler_->addTransition(0, [&](auto& rps) -> void {
+    rps.getNextMoveHandler_.setMoveFinder(mf1);
+    rps.getNextMoveHandler_.setMoveEvaluator(me1);
+  });
+
+  auto sms = ew.getScoreManagers();
+  std::sort(sms.begin(), sms.end(), [](auto &s1, auto &s2) {
+    return s1.getScore() < s2.getScore();
+  });
+  return sms;
+}
 

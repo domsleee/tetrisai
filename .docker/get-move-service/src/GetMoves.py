@@ -6,7 +6,7 @@ import logging
 import asyncio
 import dataclasses
 
-DIR = "/Users/dom/Documents/git/tetrisAI/.docker/get-move-service/src"
+DIR = os.path.dirname(os.path.realpath(__file__))
 DEFAULT_BINARY = os.path.join(DIR, "external_bin", "ew_get_moves")
 
 class GetMoves(IGetMoves):
