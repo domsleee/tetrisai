@@ -1,19 +1,34 @@
 version: 2
 jobs:
+  build:
+    docker:
+      - image: domslee/bazel
+    steps:
+      - checkout
+      - run: >
+          bazel build //src:ew_get_moves
+      - persist_to_workspace:
+          root: bazel-bin
+          paths:
+            - src
   getMoveServiceTest:
     docker:
       - image: circleci/python:3.7.3
     steps:
       - checkout
+      - attach_workspace:
+          at: /tmp/bazel-bin
+      - run: >
+          cp /tmp/bazel-bin/src/ew_get_moves .docker/get-move-service/external_bin/
       - run: >
           cd .docker/get-move-service;
           sudo pip install pipenv;
           pipenv install;
-          pipenv run "cd src; ./rebuild.py";
           pipenv run "cd src/test; python -m unittest";
 workflows:
   version: 2
   build_and_test:
     jobs:
+      - build
       - getMoveServiceTest
 
