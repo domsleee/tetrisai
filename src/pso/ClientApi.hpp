@@ -78,12 +78,12 @@ double get_score_18_19(const Weighting &w1, const Weighting &w2) {
   auto cacheNxMoveFinder = CacheMoveFinder(nxMoveFinder);
   auto nxMoveEvaluator = MoveEvaluatorAdapter(MoveEvaluator(), w2);
 
-  ew.runPieceSet_handler_->addTransition(100, [&](auto& rps) -> void {
-    rps.getNextMoveHandler_.setMoveEvaluator(nxMoveEvaluator);
+  ew.runPieceSet_handler_->addTransition(100, [&](auto& getNextMoveHandler) -> void {
+    getNextMoveHandler.setMoveEvaluator(nxMoveEvaluator);
   });
 
-  ew.runPieceSet_handler_->addTransition(130, [&](auto& rps) -> void {
-    rps.getNextMoveHandler_.setMoveFinder(cacheNxMoveFinder);
+  ew.runPieceSet_handler_->addTransition(130, [&](auto& getNextMoveHandler) -> void {
+    getNextMoveHandler.setMoveFinder(cacheNxMoveFinder);
   });
 
   return ew.runAllPieceSets();
@@ -101,22 +101,15 @@ std::vector<ScoreManager> get_transition_evaluation(MoveEvaluator me1, MoveEvalu
   cfg.applyConfig(ew);
 
   assert(moveEvaluatorLineTransition <= 130);
-
-  ew.runPieceSet_handler_->addTransition(moveEvaluatorLineTransition, [&](auto& rps) -> void {
-    rps.getNextMoveHandler_.setMoveEvaluator(me2);
-  });
-
   auto mf2 = MoveFinderRewrite();
   mf2.setMaxDropRem(2);
   //auto cacheNxMoveFinder = CacheMoveFinder(nxMoveFinder);
-  ew.runPieceSet_handler_->addTransition(130, [&](auto& rps) -> void {
-    rps.getNextMoveHandler_.setMoveFinder(mf2);
-  });
 
-  ew.runPieceSet_handler_->addTransition(0, [&](auto& rps) -> void {
-    rps.getNextMoveHandler_.setMoveFinder(mf1);
-    rps.getNextMoveHandler_.setMoveEvaluator(me1);
-  });
+  ew.runPieceSet_handler_->addMfTransition(0, mf1);
+  ew.runPieceSet_handler_->addMeTransition(0, me1);
+
+  ew.runPieceSet_handler_->addMeTransition(moveEvaluatorLineTransition, me2);
+  ew.runPieceSet_handler_->addMfTransition(130, mf2);
 
   auto sms = ew.getScoreManagers();
   std::sort(sms.begin(), sms.end(), [](auto &s1, auto &s2) {

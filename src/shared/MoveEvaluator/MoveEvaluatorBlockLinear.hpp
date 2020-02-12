@@ -29,7 +29,7 @@ class MoveEvaluatorBlockLinear {
     }
   }
 
-  double evaluate(const BitBoard &b, const BitPieceInfo &p) const {
+  double evaluate(const BitBoard b, const BitPieceInfo p) const {
     auto eval = me_.evaluate(b, p);
     VacancyChecker vac(b);
     int colHeights[NUM_COLUMNS];

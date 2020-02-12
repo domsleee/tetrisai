@@ -9,12 +9,13 @@ template<typename MyMoveFinder, typename MyMoveEvaluator>
 class NewGetNextMove {
  public:
   NewGetNextMove(const MyMoveEvaluator &me, MyMoveFinder &mf): me_(std::make_unique<MyMoveEvaluator>(me)), mf_(std::make_unique<MyMoveFinder>(mf)) {}
+  NewGetNextMove(const NewGetNextMove &getNextMove): me_(std::make_unique<MyMoveEvaluator>(*getNextMove.me_)), mf_(std::make_unique<MyMoveFinder>(*getNextMove.mf_)) {}
   Move getNextMove(const BitBoard& board, BlockType blockType) const;
 
-  void setMoveEvaluator(MyMoveEvaluator &me) {
+  void setMoveEvaluator(const MyMoveEvaluator &me) {
     me_ = std::make_unique<MyMoveEvaluator>(me);
   }
-  void setMoveFinder(MyMoveFinder &mf) {
+  void setMoveFinder(const MyMoveFinder &mf) {
     mf_ = std::make_unique<MyMoveFinder>(mf);
   }
   void setMaxDropRem(int maxDropRem) {

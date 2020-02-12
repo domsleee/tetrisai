@@ -1,1 +1,1 @@
-build --cxxopt='-std=c++1z' --copt='-fpermissive' --cxxopt='-ltbb' --linkopt='-ltbb' --linkopt='-L /usr/local/include/tbb_hi/build/linux_intel64_gcc_cc9.2.1_libc2.30_kernel5.4.15_release'
+build --cxxopt='-std=c++1z' --copt='-fpermissive' --cxxopt='-fconcepts' --cxxopt='-ltbb' --linkopt='-ltbb' --linkopt='-L /usr/local/include/tbb_hi/build/linux_intel64_gcc_cc9.2.1_libc2.30_kernel5.4.15_release'

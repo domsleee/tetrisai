@@ -9,13 +9,26 @@ const int MAX_LINES = 230;
 template <typename MyGetNextMove>
 class RunPieceSet {
  public:
-  using MutatorFnT = std::function<void(RunPieceSet<MyGetNextMove>&)>;
-  RunPieceSet(MyGetNextMove &getNextMoveHandler): getNextMoveHandler_(getNextMoveHandler) {}
+  using MutatorFnT = std::function<void(MyGetNextMove&)>;
+  RunPieceSet(const MyGetNextMove &getNextMoveHandler): getNextMoveHandler_(getNextMoveHandler) {}
 
   void addTransition(int lineClearCt, MutatorFnT mutator) {
     mutators_.insert({lineClearCt, mutator});
   }
-  ScoreManager runGame(const std::vector<BlockType> &pieceSet);
+
+  void addMeTransition(int lineClearCt, const auto &me) {
+    mutators_.insert({lineClearCt, [=](auto& getNextMoveHandler) -> void {
+      getNextMoveHandler.setMoveEvaluator(me);
+    }});;
+  }
+
+  void addMfTransition(int lineClearCt, const auto &mf) {
+    mutators_.insert({lineClearCt, [=](auto& getNextMoveHandler) -> void {
+      getNextMoveHandler.setMoveFinder(mf);
+    }});;
+  }
+
+  ScoreManager runGame(const std::vector<BlockType> &pieceSet) const;
   void setNumLines(int numLines) {
     numLines_ = numLines;
   }
@@ -25,7 +38,7 @@ class RunPieceSet {
   void setMaxDropRem(int maxDropRem) {
     getNextMoveHandler_.setMaxDropRem(maxDropRem);
   }
-  MyGetNextMove &getNextMoveHandler_;
+  MyGetNextMove getNextMoveHandler_;
 
  private:
   int numLines_ = MAX_LINES;
@@ -34,15 +47,22 @@ class RunPieceSet {
 };
 
 template <typename MyGetNextMove>
-ScoreManager RunPieceSet<MyGetNextMove>::runGame(const std::vector<BlockType> &pieceSet) {
+ScoreManager RunPieceSet<MyGetNextMove>::runGame(const std::vector<BlockType> &pieceSet) const {
   ScoreManager sm;
   sm.setLines(startingLines_);
   BitBoard b;
+  auto getNextMoveHandler = getNextMoveHandler_;
 
   int transitionLines = MAX_LINES;
   auto it = mutators_.begin();
   if (it != mutators_.end()) {
     transitionLines = it->first;
+  }
+
+  while (it != mutators_.end() && sm.getTotalLines() >= transitionLines) {
+    it->second(getNextMoveHandler);
+    ++it;
+    transitionLines = it == mutators_.end() ? MAX_LINES : it->first;
   }
   
   int moves = 0;
@@ -55,14 +75,12 @@ ScoreManager RunPieceSet<MyGetNextMove>::runGame(const std::vector<BlockType> &p
     int lineClears = b.applyPieceInfo(pieceInfo);
     sm.addLineClears(lineClears);
     moves++;
-    if (sm.getTotalLines() >= transitionLines) {
-      if (it != mutators_.end()) {
-        it->second(*this);
-        ++it;
-        transitionLines = it == mutators_.end() ? MAX_LINES : it->first;
-      }
-      if (sm.getTotalLines() >= MAX_LINES) break;
-    };
+    while (it != mutators_.end() && sm.getTotalLines() >= transitionLines) {
+      it->second(getNextMoveHandler);
+      ++it;
+      transitionLines = it == mutators_.end() ? MAX_LINES : it->first;
+    }
+    if (sm.getTotalLines() >= MAX_LINES) break;
   }
   //printf("yes: %d\n", sm.getScore());
   return sm;

@@ -34,7 +34,7 @@ template<typename MyRunPieceSet>
 double NewEvaluateWeightings<MyRunPieceSet>::runAllPieceSets() const {
   auto scoreInts = getSortedScoreInts();
   if (scoreInts.size() == 1) return scoreInts[0];
-  double score = average(scoreInts.end()-30, scoreInts.end());
+  double score = average(scoreInts.cend()-30, scoreInts.cend());
   return score;
 }
 
@@ -62,13 +62,9 @@ std::vector<ScoreManager> NewEvaluateWeightings<MyRunPieceSet>::getScoreManagers
     return runPieceSet.runGame(pieceSet);
   };
 
-  std::transform(std::execution::par, // par, seq, par_unseq
+  std::transform(std::execution::seq, // par, seq, par_unseq
                pieceSets.begin(), pieceSets.end(), 
                scores.begin(), fn);
-
-  /*for (const auto &pieceSet: pieceSets) {
-    scores.push_back(runPieceSet_handler_->runGame(pieceSet));
-  }*/
   return scores;
 }
 

@@ -136,8 +136,8 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
               nxTapped.fsmState_ = FSMState::TAPPED_ONCE;
               nxTapped.setRotateCooldown(1);
               onEnterTapped(nxTapped);
-              if (seen.count(nxTapped))
-              continue; seen.insert(nxTapped);
+              if (seen.count(nxTapped)) continue;
+              seen.insert(nxTapped);
               addEdge(top, nxTapped, moveDirection);
               q.push({topScore + 1 + nxTapped.frameEntered_ * SCORE_FRAME_ENTERED, nxTapped});
             }
@@ -160,12 +160,12 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
         // move is processed before rotation. This means that any move after the rotation
         // this means any move after the rotation MUST be at least on the frame after
         nxRotate.moveCooldown_ = 1;
-        if (seen.count(nxRotate)) continue; seen.insert(nxRotate);
+        if (seen.count(nxRotate)) continue;
+        seen.insert(nxRotate);
         addEdge(top, nxRotate, rotateDirection);
         q.push({topScore+1 + SCORE_ROTATED * nxRotate.frameEntered_, nxRotate});
       }
     }
-
   }
 
   return {moves.begin(), moves.end()};  
