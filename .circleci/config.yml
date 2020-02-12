@@ -33,6 +33,6 @@ workflows:
     jobs:
       - build
       - getMoveServiceTest:
-        - requires:
+          requires:
             - build
 
