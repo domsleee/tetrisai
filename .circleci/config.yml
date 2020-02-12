@@ -32,5 +32,7 @@ workflows:
   build_and_test:
     jobs:
       - build
-      - getMoveServiceTest
+      getMoveServiceTest:
+        - requires:
+            - build
 
