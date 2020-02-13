@@ -10,19 +10,27 @@ jobs:
           add-apt-repository ppa:jonathonf/gcc-9.0 -y;
           apt install gcc-9 g++-9 -y;
           update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 60 --slave /usr/bin/g++ g++ /usr/bin/g++-9;
-          bazel build //src:ew_get_moves
+          bazel build //src:ew_get_moves;
+          mkdir persist;
+          cp -r /usr/local/include/tbb_build persist/tbb_build;
+          cp -r bazel-bin persist/bazel-bin;
       - persist_to_workspace:
-          root: bazel-bin
+          root: persist
           paths:
-            - src
+            - bazel-bin
+            - tbb_build
+      - persist_to_workspace:
+          root: /usr/local/include
   getMoveServiceTest:
     docker:
       - image: circleci/python:3.7.3
     steps:
       - checkout
       - attach_workspace:
-          at: /tmp/bazel-bin
+          at: /tmp/persist
       - run: >
+          cp -r /tmp/persist/bazel-bin/* ./bazel-bin;
+          cp -r /tmp/persist/tbb_build /usr/local/include/tbb_build;
           mkdir .docker/get-move-service/external_bin;
           cp /tmp/bazel-bin/src/ew_get_moves .docker/get-move-service/external_bin/
       - run: >
