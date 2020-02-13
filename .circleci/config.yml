@@ -21,7 +21,9 @@ jobs:
             - tbb_build
             - tbb
       - save_cache:
-          key: build-{{ .Branch }}
+          keys:
+            - build-{{ .Branch }}
+            - build-force1
           paths:
             - bazel-bin
             - bazel-out
