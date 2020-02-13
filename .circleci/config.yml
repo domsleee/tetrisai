@@ -13,7 +13,7 @@ jobs:
           bazel build //src:ew_get_moves;
           mkdir persist;
           cp -r /usr/local/include/tbb_build persist/tbb_build;
-          cp -r bazel-bin persist/bazel-bin;
+          cp -r bazel-bin/src persist/src;
       - persist_to_workspace:
           root: persist
           paths:
@@ -32,7 +32,7 @@ jobs:
           find /usr/local/include;
           sudo cp -r /tmp/persist/tbb_build /usr/local/include/tbb_build;
           mkdir .docker/get-move-service/external_bin;
-          sudo cp /tmp/persist/bazel-bin/src/ew_get_moves .docker/get-move-service/external_bin/
+          sudo cp /tmp/persist/src/ew_get_moves .docker/get-move-service/external_bin/
       - run: >
           cd .docker/get-move-service;
           sudo pip install pipenv;
