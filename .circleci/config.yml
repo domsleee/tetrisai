@@ -43,6 +43,8 @@ jobs:
           cp -r /tmp/persist/tbb /usr/local/include/tbb;
           cp /tmp/persist/src/ew_get_moves .docker/get-move-service/src/external_bin/
       - run: >
+          export LC_ALL=C.UTF-8;
+          export LANG=C.UTF-8;
           apt-get update;
           apt-get install python3 python3-pip -y;
           cd .docker/get-move-service;
