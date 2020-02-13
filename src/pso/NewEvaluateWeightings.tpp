@@ -36,7 +36,7 @@ double NewEvaluateWeightings<MyRunPieceSet>::runAllPieceSets() const {
   if (scoreInts.size() == 1) return scoreInts[0];
   double score = average(scoreInts.cend()-30, scoreInts.cend());
   return score;
-}
+}//
 
 template<typename MyRunPieceSet>
 std::vector<int> NewEvaluateWeightings<MyRunPieceSet>::getSortedScoreInts() const {
