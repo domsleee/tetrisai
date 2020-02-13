@@ -28,6 +28,7 @@ jobs:
           at: /tmp/persist
       - run: >
           find /tmp/persist;
+          mkdir -p /usr/local/include;
           cp -r /tmp/persist/tbb_build /usr/local/include/tbb_build;
           mkdir .docker/get-move-service/external_bin;
           cp /tmp/bazel-bin/src/ew_get_moves .docker/get-move-service/external_bin/
