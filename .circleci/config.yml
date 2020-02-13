@@ -2,14 +2,10 @@ version: 2
 jobs:
   build:
     docker:
-      - image: domslee/bazel:tbb
+      - image: domslee/bazel:tbb2
     steps:
       - checkout
       - run: >
-          apt-get install software-properties-common -y;
-          add-apt-repository ppa:jonathonf/gcc-9.0 -y;
-          apt install gcc-9 g++-9 -y;
-          update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 60 --slave /usr/bin/g++ g++ /usr/bin/g++-9;
           bazel build //src:ew_get_moves;
           mkdir persist;
           cp -r /usr/local/include/tbb_build persist/tbb_build;
@@ -23,21 +19,21 @@ jobs:
             - tbb
   getMoveServiceTest:
     docker:
-      - image: circleci/python:3.7.3
+      - image: domslee/bazel:tbb2
     steps:
       - checkout
       - attach_workspace:
           at: /tmp/persist
       - run: >
           mkdir -p /usr/local/include;
-          sudo cp -r /tmp/persist/tbb_build /usr/local/include/tbb_build;
-          sudo cp -r /tmp/persist/tbb /usr/local/include/tbb;
-          sudo cp /tmp/persist/src/ew_get_moves .docker/get-move-service/src/external_bin/
+          cp -r /tmp/persist/tbb_build /usr/local/include/tbb_build;
+          cp -r /tmp/persist/tbb /usr/local/include/tbb;
+          cp /tmp/persist/src/ew_get_moves .docker/get-move-service/src/external_bin/
       - run: >
-          sudo apt update;
-          sudo apt install libstdc++6;
+          apt update;
+          apt install python;
           cd .docker/get-move-service;
-          sudo pip install pipenv;
+          pip install pipenv;
           pipenv install;
           find /usr/local/include;
           pipenv run sh -c "cd src/test; python -m unittest";
