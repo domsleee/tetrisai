@@ -6,8 +6,6 @@ jobs:
     steps:
       - checkout
       - run: >
-          apt update;
-          apt install git -y;
           bazel build //src:ew_get_moves
       - persist_to_workspace:
           root: bazel-bin
