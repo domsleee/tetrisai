@@ -32,7 +32,6 @@ jobs:
           mkdir -p /usr/local/include;
           sudo cp -r /tmp/persist/tbb_build /usr/local/include/tbb_build;
           sudo cp -r /tmp/persist/tbb /usr/local/include/tbb;
-          mkdir .docker/get-move-service/src/external_bin;
           sudo cp /tmp/persist/src/ew_get_moves .docker/get-move-service/src/external_bin/
       - run: >
           cd .docker/get-move-service;
