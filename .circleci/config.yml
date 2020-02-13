@@ -19,8 +19,6 @@ jobs:
           paths:
             - bazel-bin
             - tbb_build
-      - persist_to_workspace:
-          root: /usr/local/include
   getMoveServiceTest:
     docker:
       - image: circleci/python:3.7.3
