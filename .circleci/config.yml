@@ -23,6 +23,7 @@ jobs:
       - attach_workspace:
           at: /tmp/bazel-bin
       - run: >
+          mkdir .docker/get-move-service/external_bin;
           cp /tmp/bazel-bin/src/ew_get_moves .docker/get-move-service/external_bin/
       - run: >
           cd .docker/get-move-service;
