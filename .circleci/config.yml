@@ -33,7 +33,7 @@ jobs:
           apt-get update;
           apt-get install python3 python3-pip -y;
           cd .docker/get-move-service;
-          python3 -m pip install pipenv;
+          python3 -m pip install pipenv --user;
           pipenv install;
           find /usr/local/include;
           pipenv run sh -c "cd src/test; python -m unittest";
