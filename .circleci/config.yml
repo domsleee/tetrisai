@@ -5,6 +5,9 @@ jobs:
       - image: domslee/bazel:tbb2
     steps:
       - checkout
+      - restore_cache:
+          keys:
+            - build-{{ .Branch }}
       - run: >
           bazel build //src:ew_get_moves;
           mkdir persist;
@@ -17,6 +20,15 @@ jobs:
             - src
             - tbb_build
             - tbb
+      - save_cache:
+          key: build-{{ .Branch }}
+          paths:
+            - bazel-bin
+            - bazel-out
+            - bazel-genfiles
+            - bazel-tetrisai
+            - bazel-project
+            - bazel-testlogs
   getMoveServiceTest:
     docker:
       - image: domslee/bazel:tbb2
