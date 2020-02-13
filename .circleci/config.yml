@@ -29,7 +29,7 @@ jobs:
       - attach_workspace:
           at: /tmp/persist
       - run: >
-          cp -r /tmp/persist/bazel-bin/* ./bazel-bin;
+          cp -r /tmp/persist/bazel-bin/* ./bazel-bin/;
           cp -r /tmp/persist/tbb_build /usr/local/include/tbb_build;
           mkdir .docker/get-move-service/external_bin;
           cp /tmp/bazel-bin/src/ew_get_moves .docker/get-move-service/external_bin/
