@@ -30,10 +30,10 @@ jobs:
           cp -r /tmp/persist/tbb /usr/local/include/tbb;
           cp /tmp/persist/src/ew_get_moves .docker/get-move-service/src/external_bin/
       - run: >
-          apt update;
-          apt install python;
+          apt-get update;
+          apt-get install python3 python3-pip -y;
           cd .docker/get-move-service;
-          pip install pipenv;
+          python3 -m pip install pipenv;
           pipenv install;
           find /usr/local/include;
           pipenv run sh -c "cd src/test; python -m unittest";
