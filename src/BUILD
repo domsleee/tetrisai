@@ -99,6 +99,18 @@ cc_test(
 )
 
 cc_test(
+    name = "test_move_evaluator_block_linear_no_tetris_ready",
+    srcs = glob(["shared/test/TestMoveEvaluatorBlockLinearNoTetrisReady.cpp", "shared/test/*.hpp", "shared/test/*.h", "shared/test/MoveEvaluatorUtility.cpp"]),
+    deps = [":shared", "//:catch"]
+)
+
+cc_test(
+    name = "test_move_evaluator_block_utility",
+    srcs = glob(["shared/test/TestMoveEvaluatorBlockUtility.cpp", "shared/test/*.hpp", "shared/test/*.h", "shared/test/MoveEvaluatorUtility.cpp"]),
+    deps = [":shared", "//:catch"]
+)
+
+cc_test(
     name = "test_move_evaluator_block",
     srcs = glob(["shared/test/TestMoveEvaluatorBlock.cpp", "shared/test/*.hpp", "shared/test/*.h", "shared/test/MoveEvaluatorUtility.cpp"]),
     deps = [":shared", "//:catch"]

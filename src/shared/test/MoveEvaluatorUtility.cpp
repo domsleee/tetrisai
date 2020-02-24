@@ -27,7 +27,7 @@ Weighting getExpectedWeights(const std::string &filepath) {
 
 
 Weighting getWeights2(const BitBoard &b, const BitPieceInfo &piece) {
-  int num_factors = MoveEvaluatorPenalty::getNumFactors();
+  int num_factors = MoveEvaluatorPenalty::NUM_FACTORS;
   Weighting w(num_factors, 0);
   Weighting res(num_factors, 0);
   for (int i = 0; i < num_factors; i++) {

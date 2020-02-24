@@ -14,10 +14,9 @@ int reachableHeight(int c, int framesPerDrop=2);
 class MoveEvaluatorPenalty {
  public:
   static const int NUM_FACTORS_ = 19-1; // it must be this
+  static const int NUM_FACTORS = NUM_FACTORS_; // it must be this
   static const int DAS_BLOCKED_LEFT = 17;
   static const int DAS_BLOCKED_RIGHT = 18;
-
-  static constexpr int getNumFactors() { return NUM_FACTORS_; }
 
   MoveEvaluatorPenalty(const Weighting &w): me_{MoveEvaluator(), w}, w_{w} {
     assert(w.size() == NUM_FACTORS_);

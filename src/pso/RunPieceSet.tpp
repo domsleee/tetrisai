@@ -53,7 +53,7 @@ ScoreManager RunPieceSet<MyGetNextMove>::runGame(const std::vector<BlockType> &p
   BitBoard b;
   auto getNextMoveHandler = getNextMoveHandler_;
 
-  int transitionLines = MAX_LINES;
+  int transitionLines = numLines_;
   auto it = mutators_.begin();
   if (it != mutators_.end()) {
     transitionLines = it->first;
@@ -62,7 +62,7 @@ ScoreManager RunPieceSet<MyGetNextMove>::runGame(const std::vector<BlockType> &p
   while (it != mutators_.end() && sm.getTotalLines() >= transitionLines) {
     it->second(getNextMoveHandler);
     ++it;
-    transitionLines = it == mutators_.end() ? MAX_LINES : it->first;
+    transitionLines = it == mutators_.end() ? numLines_ : it->first;
   }
   
   int moves = 0;
@@ -70,7 +70,7 @@ ScoreManager RunPieceSet<MyGetNextMove>::runGame(const std::vector<BlockType> &p
     if (b.hasNoMoves(blockType)) {
       break;
     };
-    auto move = getNextMoveHandler_.getNextMove(b, blockType);
+    auto move = getNextMoveHandler.getNextMove(b, blockType);
     auto pieceInfo = b.getPiece(blockType, move);
     int lineClears = b.applyPieceInfo(pieceInfo);
     sm.addLineClears(lineClears);
@@ -78,9 +78,9 @@ ScoreManager RunPieceSet<MyGetNextMove>::runGame(const std::vector<BlockType> &p
     while (it != mutators_.end() && sm.getTotalLines() >= transitionLines) {
       it->second(getNextMoveHandler);
       ++it;
-      transitionLines = it == mutators_.end() ? MAX_LINES : it->first;
+      transitionLines = it == mutators_.end() ? numLines_ : it->first;
     }
-    if (sm.getTotalLines() >= MAX_LINES) break;
+    if (sm.getTotalLines() >= numLines_) break;
   }
   //printf("yes: %d\n", sm.getScore());
   return sm;

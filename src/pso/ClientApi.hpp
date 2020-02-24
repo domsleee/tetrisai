@@ -31,7 +31,6 @@
 template <typename MoveEvaluator>
 double get_score_regular(MoveEvaluator me, const Config &cfg) {
   auto moveFinder = MoveFinderRewrite();
-  moveFinder.setMaxDropRem(2);
   auto ew_container = NewEvaluateWeightingsContainer(
     me,
     CacheMoveFinder(moveFinder)

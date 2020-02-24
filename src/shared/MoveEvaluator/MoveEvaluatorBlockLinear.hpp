@@ -44,6 +44,7 @@ class MoveEvaluatorBlockLinear {
     //int* colHeights = me_.getColHeights();
 
     auto [valid, minBlock] = getMinBlock(colHeights);
+    printf("valid: %d\n", valid);
     if (valid) eval += w_[LINEAR_A] * minBlock + w_[LINEAR_B];
     return eval;
   }
