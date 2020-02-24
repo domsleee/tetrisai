@@ -17,7 +17,7 @@
 
 Weighting transformW(const Weighting &w) {
   Weighting w2;
-  for (int i = 0; i < w.size(); ++i) {
+  for (int i = 0; i < static_cast<int>(w.size()); ++i) {
     if (i == MoveEvaluatorTetrisReady::TETRIS_READY) w2.push_back(0);
     w2.push_back(w[i]);
   }

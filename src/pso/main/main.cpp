@@ -1,10 +1,10 @@
 #include <iostream>
 #include <stdlib.h>
 #include "src/pso/ClientApi.hpp"
-#include "src/shared/MoveEvaluator/MoveEvaluatorBlockQuadratic.hpp"
+#include "src/pso/main/all_evaluators.hpp"
 #include "src/shared/Config.hpp"
 
-using MoveEvaluatorT = MoveEvaluatorBlockQuadratic;
+using MoveEvaluatorT = MoveEvaluatorBlockLinearNoTetrisReady;
 
 int main(int argc, char ** argv) {
   Config cfg;
@@ -26,7 +26,6 @@ int main(int argc, char ** argv) {
     weightings[i] = atof(argv[i+1]);
   }
 
-  int seed = -1;
   if (argc > MoveEvaluatorT::NUM_FACTORS+1) {
     cfg.seed = atoi(argv[MoveEvaluatorT::NUM_FACTORS+1]);
   }
