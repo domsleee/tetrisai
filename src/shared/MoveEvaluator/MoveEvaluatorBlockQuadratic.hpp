@@ -32,7 +32,7 @@ class MoveEvaluatorBlockQuadratic {
 
   double evaluate(const BitBoard &b, const BitPieceInfo &p) const {
     auto eval = me_.evaluate(b, p);
-    int* colHeights = me_.getColHeights();
+    int* colHeights = getColHeights(b).data();
 
     auto [valid, minBlock] = getMinBlock(colHeights);
     if (valid) eval += w_[QUADRATIC_A] * minBlock * minBlock + w_[QUADRATIC_B] * minBlock + w_[QUADRATIC_C];

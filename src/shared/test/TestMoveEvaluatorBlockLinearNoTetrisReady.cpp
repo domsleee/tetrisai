@@ -37,20 +37,16 @@ SCENARIO("is nearly blocking") {
       }
     }
   }
-  AND_GIVEN("a large board") {
-    GIVEN("a tetris ready board") {
+  AND_GIVEN("a large well (18) on the left") {
     const auto b = leftWell(18);
-    auto w = getWeightsFromEmptyPieceT<MoveEvaluatorBlockLinear>(b);
-    for (int i = 0; i < w.size(); ++i) {
-      printf("%d: %d\n", i, w[i]);
-    }
-
+    auto w = getWeightsFromEmptyPieceT<MoveEvaluatorBlockLinearNoTetrisReady>(b);
 
     WHEN("we evaluate") {
-      THEN("LIENAR_B is 1") {
+      THEN("LINEAR_B is 1") {
+        // explanation: TetrisReady is deleted, so LINEAR_B is moved back
+        REQUIRE(w[MoveEvaluatorBlockLinear::LINEAR_A-1] == -10);
         REQUIRE(w[MoveEvaluatorBlockLinear::LINEAR_B-1] == 1);
       }
     }
-  }
   }
 }

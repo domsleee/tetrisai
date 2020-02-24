@@ -36,6 +36,6 @@ SCENARIO("valid cases") {
     columns[0] = 0;
     auto minBlock = getMinBlock(columns);
     REQUIRE(true == minBlock.first);
-    REQUIRE(1 == minBlock.second);
+    REQUIRE(-1 == minBlock.second);
   }
 }

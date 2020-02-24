@@ -2,6 +2,7 @@
 #include <vector>
 #include "src/shared/MoveEvaluator/MoveEvaluatorBlockUtility.hpp"
 #include "src/common/common.hpp"
+#include "src/board/bitboard/BitBoard.h"
 
 static constexpr int MAX_CLEAR_HEIGHTS[NUM_COLUMNS] = {
   0, // unused
@@ -57,5 +58,19 @@ std::pair<bool, int> getMinBlock(int *colHeights) {
       minBlock = std::max(minBlock, colHeights[c] - MAX_CLEAR_HEIGHTS[c]);
     }
   }
-  return {true, minBlock};
+  return {true, -minBlock};
+}
+
+std::array<int, NUM_COLUMNS> getColHeights(const BitBoard &b) {
+  std::array<int, NUM_COLUMNS> colHeights;
+  for (int c = 0; c < NUM_COLUMNS; ++c) {
+    colHeights[c] = 0;
+    for (int r = 0; r < NUM_ROWS; ++r) {
+      if (!b.vacant({r, c})) {
+        colHeights[c] = NUM_ROWS - r;
+        break;
+      }
+    }
+  }
+  return colHeights;
 }

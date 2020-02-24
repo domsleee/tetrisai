@@ -54,7 +54,7 @@ BitBoard getBoardFromPartialStringVector(std::vector<std::string> strings) {
   for (;r < NUM_ROWS; ++r) {
     const auto &s = strings[r-rOffset];
     assert(s.size() <= NUM_COLUMNS);
-    for (int c = 0; c < s.size(); ++c) {
+    for (int c = 0; c < static_cast<int>(s.size()); ++c) {
       if (s[c] == '1') {
         vs[r][c] = 1;
       }

@@ -6,6 +6,7 @@
 #include "src/shared/MoveEvaluator/MoveEvaluatorTetrisReady.hpp"
 #include "src/shared/MoveEvaluator/MoveEvaluatorBlockUtility.hpp"
 
+
 #include "src/common/common.hpp"
 #include <cassert>
 #include <cstdio>
@@ -38,7 +39,7 @@ class MoveEvaluatorBlock {
 
   double evaluate(const BitBoard &b, const BitPieceInfo &p) const {
     auto eval = me_.evaluate(b, p);
-    int* colHeights = me_.getColHeights();
+    auto colHeights = getColHeights(b).data();
 
     auto [valid, minBlock] = getMinBlock(colHeights);
     if (!valid) return eval;
