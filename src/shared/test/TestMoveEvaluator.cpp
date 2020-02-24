@@ -44,8 +44,6 @@ SCENARIO("Metrics line up") {
 }
 
 
-
-
 SCENARIO("Metrics 2 line up") {
   const auto testFile = TEST_FOLDER + "/test2.in";
   const auto weightFile = TEST_FOLDER + "/test2.exp";
