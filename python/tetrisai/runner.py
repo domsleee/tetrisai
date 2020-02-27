@@ -12,16 +12,17 @@ from tetrisai.interfaces.i_run_particle import IRunParticle
 from tetrisai.async_particle_group_runner import ParticleGroup, AsyncParticleGroupRunner
 
 class MyRunner:
-  def __init__(self, runner_settings: RunnerSettings, run_particle: IRunParticle):
+  def __init__(self, runner_settings: RunnerSettings, run_particle: IRunParticle, performance_logger: PerformanceLogger=None):
     self._logger = logging.getLogger(__package__)
     self._seen = {}
     self._glob_best = 0.0
     self._best_particle = []
     self._runner_settings = runner_settings
-    self._performance_logger = PerformanceLogger(run_particle)
+    self._performance_logger = performance_logger
+    if performance_logger is None:
+      self._performance_logger = PerformanceLogger(run_particle)
     self._particle_group_runner = AsyncParticleGroupRunner(run_particle)
     self._iteration = 0
-    self._performance_logger.log_settings(self._runner_settings)
 
   def run(self):
     self._iteration = 0

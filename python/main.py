@@ -6,19 +6,25 @@ from common.common import DEFAULT_BINARY
 import argparse
 import logging
 import os
+from tetrisai.performance_logger import PerformanceLogger
 
 logging.basicConfig()
 
 def main(args):
-  runner_settings = RunnerSettings(dimensions=18 + 3)
+  runner_settings = RunnerSettings(dimensions=18 + 1)
   print(runner_settings)
   run_particle = RunParticle(args.binary)
   run_particle.print_config()
-  runner.MyRunner(runner_settings, run_particle).run()
+  performance_logger = PerformanceLogger(run_particle)
+  performance_logger.log_settings(runner_settings)
+  if args.note is not None:
+    performance_logger.note(args.note)
+  runner.MyRunner(runner_settings, run_particle, performance_logger=performance_logger).run()
 
 if __name__ == "__main__":
   parser = argparse.ArgumentParser()
   parser.add_argument("--binary", help="binary used for PSO", default=DEFAULT_BINARY)
+  parser.add_argument("--note", help="optional note")
   args = parser.parse_args()
   main(args)
 
