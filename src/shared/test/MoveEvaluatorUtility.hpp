@@ -11,7 +11,7 @@
 #include <algorithm>
 
 
-const std::string TEST_FOLDER = "/Users/dom/Documents/git/tetrisAI/src/shared/test/data";
+const std::string TEST_FOLDER = "/home/dom/tetrisai/src/shared/test/data";
 
 BitBoard readBoard(const std::string &filePath);
 
@@ -73,3 +73,25 @@ auto getWeightsFromEmptyPieceT(const BitBoard &b) {
   return getWeightsTemp<MyMoveEvaluator>(b, piece);
 }
 
+/*
+template<typename MyMoveEvaluator>
+Weighting getWeightsTemp(const BitBoard &b, const BitPieceInfo &piece, std::function<Weighting, MyMoveEvaluator> creatorFn) {
+  int num_factors = MyMoveEvaluator::NUM_FACTORS;
+  Weighting w(num_factors, 0);
+  Weighting res(num_factors, 0);
+  for (int i = 0; i < num_factors; i++) {
+    if (i > 0) w[i-1] = 0;
+    w[i] = 1;
+    MyMoveEvaluator me = createFn(w);
+    res[i] = me.evaluate(b, piece);
+  }
+  return res;
+}
+
+template<typename MyMoveEvaluator>
+auto getWeightsFromEmptyPieceT(const BitBoard &b, std::function<Weighting, MyMoveEvaluator> creatorFn) {
+  const auto m = BitBoardPre::idToMove(BitBoardPre::getEmptyMoveId());
+  auto piece = b.getPiece(m);
+  return getWeightsTemp<MyMoveEvaluator>(b, piece);
+}
+*/

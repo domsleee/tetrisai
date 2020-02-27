@@ -14,7 +14,6 @@
 #define REQ_DELTA(a, b) REQUIRE_THAT(a, Catch::WithinAbs(b, 0.01f));
 
 
-
 SCENARIO("is nearly blocking") {
   GIVEN("a tetris ready board") {
     // cover UP left
@@ -46,7 +45,7 @@ SCENARIO("is nearly blocking") {
     }
   }
   AND_GIVEN("a tetris ready board") {
-    // cover UP left
+    // cover UP RIGHT
     const std::vector<std::string> board = { // 9 rows
         "1111111110",
         "1111111110",

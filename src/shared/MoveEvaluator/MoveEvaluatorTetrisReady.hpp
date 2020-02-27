@@ -17,13 +17,6 @@ class MoveEvaluatorTetrisReady {
   static const int NUM_FACTORS = MoveEvaluator::NUM_FACTORS + 1;
   static const int TETRIS_READY = MoveEvaluator::NUM_FACTORS;
 
-  mutable int colHeights_[NUM_COLUMNS] = {};
-
-  constexpr int getNumFactors() { return NUM_FACTORS; }
-  int* getColHeights() const {
-    return colHeights_;
-  }
-
   MoveEvaluatorTetrisReady(const Weighting &w): me_{MoveEvaluator(), w}, w_{w} {
     if (w.size() < NUM_FACTORS) {
       printf("Bad weight vector size. Expected at least %d, got %lu", NUM_FACTORS, w.size());

@@ -32,16 +32,7 @@ class MoveEvaluatorBlockLinear {
   double evaluate(const BitBoard b, const BitPieceInfo p) const {
     auto eval = me_.evaluate(b, p);
     VacancyChecker vac(b);
-    int colHeights[NUM_COLUMNS];
-    for (int c = 0; c < NUM_COLUMNS; ++c) {
-      for (int r = 0; r < NUM_ROWS; ++r) {
-        if (!vac.is_vacant({r, c})) {
-          colHeights[c] = NUM_ROWS - r;
-          break;
-        }
-      }
-    }
-    //int* colHeights = me_.getColHeights();
+    int *colHeights = getColHeights(b).data();
 
     auto [valid, minBlock] = getMinBlock(colHeights);
     if (valid) eval += w_[LINEAR_A] * minBlock + w_[LINEAR_B];

@@ -62,7 +62,7 @@ std::vector<ScoreManager> NewEvaluateWeightings<MyRunPieceSet>::getScoreManagers
     return runPieceSet.runGame(pieceSet);
   };
 
-  std::transform(std::execution::seq, // par, seq, par_unseq
+  std::transform(std::execution::par_unseq, // par, seq, par_unseq
                pieceSets.begin(), pieceSets.end(), 
                scores.begin(), fn);
   return scores;

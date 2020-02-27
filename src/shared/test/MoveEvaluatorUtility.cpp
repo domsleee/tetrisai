@@ -27,7 +27,7 @@ Weighting getExpectedWeights(const std::string &filepath) {
 
 
 Weighting getWeights2(const BitBoard &b, const BitPieceInfo &piece) {
-  int num_factors = MoveEvaluatorPenalty::getNumFactors();
+  int num_factors = MoveEvaluatorPenalty::NUM_FACTORS;
   Weighting w(num_factors, 0);
   Weighting res(num_factors, 0);
   for (int i = 0; i < num_factors; i++) {
@@ -54,7 +54,7 @@ BitBoard getBoardFromPartialStringVector(std::vector<std::string> strings) {
   for (;r < NUM_ROWS; ++r) {
     const auto &s = strings[r-rOffset];
     assert(s.size() <= NUM_COLUMNS);
-    for (int c = 0; c < s.size(); ++c) {
+    for (int c = 0; c < static_cast<int>(s.size()); ++c) {
       if (s[c] == '1') {
         vs[r][c] = 1;
       }
