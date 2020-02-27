@@ -13,7 +13,7 @@ cc_library(
     name = "shared",
     hdrs = glob(["shared/*.h", "shared/*.hpp", "shared/*.tpp", "shared/MoveEvaluator/*.hpp", "shared/MoveFinder/*.h", "shared/MoveFinder/*.hpp", "shared/MoveFinder/*.tpp", "shared/MoveFinder/**/*.h"]),
     srcs = glob(["shared/*.cpp", "shared/MoveFinder/*.cpp", "shared/MoveEvaluator/*.cpp", "shared/MoveFinder/**/*.cpp", "shared/MoveFinder/**/*.hpp"]),
-    deps = [":common", ":board"],
+    deps = [":common", ":board", "@tbb//:tbb"],
     visibility = ["//visibility:public"]
 )
 
@@ -28,7 +28,7 @@ cc_library(
     name = "pso",
     hdrs = glob(["pso/*.h", "pso/*.hpp", "pso/random/*.hpp", "pso/*.tpp", "pso/main/*.hpp"]),
     srcs = glob(["pso/*.cpp"]),
-    deps = [":common", ":board", ":shared", "//third_party:optim", "@boost//:random"]
+    deps = [":common", ":board", ":shared", "//third_party:optim", "@boost//:random", "@tbb//:tbb"]
 )
 
 cc_library(
@@ -181,6 +181,13 @@ cc_binary(
 cc_binary(
     name = "get_transition_evaluation",
     srcs = ["pso/main/main_get_transition_evaluation.cpp"],
+    deps = [":pso"],
+    copts = EXEC_COPTS
+)
+
+cc_binary(
+    name = "bench_time",
+    srcs = ["pso/main/main_bench_time.cpp"],
     deps = [":pso"],
     copts = EXEC_COPTS
 )

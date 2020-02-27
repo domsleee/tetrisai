@@ -9,3 +9,20 @@ git_repository(
 
 load("@com_github_nelhage_rules_boost//:boost/boost.bzl", "boost_deps")
 boost_deps()
+
+new_local_repository(
+    name = "tbb",
+    path = "/usr/local/include/tbb",
+    build_file_content = """
+package(
+    default_visibility = [
+        "//visibility:public",
+    ],
+)
+
+cc_library(
+    name = "tbb",
+    srcs = glob(["**/*.h"]),
+)
+""",
+)
