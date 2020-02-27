@@ -186,6 +186,13 @@ cc_binary(
 )
 
 cc_binary(
+    name = "bench_time",
+    srcs = ["pso/main/main_bench_time.cpp"],
+    deps = [":pso"],
+    copts = EXEC_COPTS
+)
+
+cc_binary(
     name = "ew_move_finder_cache",
     srcs = ["pso/main/main.cpp", "shared/MoveFinder/debug/debug.cpp"],
     deps = [":pso"],
