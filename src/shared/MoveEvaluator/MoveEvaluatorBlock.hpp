@@ -39,9 +39,9 @@ class MoveEvaluatorBlock {
 
   double evaluate(const BitBoard &b, const BitPieceInfo &p) const {
     auto eval = me_.evaluate(b, p);
-    auto colHeights = getColHeights(b).data();
+    auto colHeights = getColHeights(b);
 
-    auto [valid, minBlock] = getMinBlock(colHeights);
+    auto [valid, minBlock] = getMinBlock(colHeights.data());
     if (!valid) return eval;
     eval += (minBlock > 4) * w_[IS_MORE_THAN_FOUR_AWAY_FROM_BLOCK];
     eval += (minBlock == 4) * w_[IS_FOUR_AWAY_FROM_BLOCK];
