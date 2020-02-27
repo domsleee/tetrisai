@@ -29,9 +29,8 @@
 // get_score_level18_start_actual_das_lookahead_quicktap
 
 template <typename MoveEvaluator>
-double get_score_regular(MoveEvaluator me, const Config &cfg) {
+double get_score_regular(MoveEvaluator me, const Config &cfg, bool is19=true) {
   auto moveFinder = MoveFinderRewrite();
-  moveFinder.setMaxDropRem(2);
   auto ew_container = NewEvaluateWeightingsContainer(
     me,
     CacheMoveFinder(moveFinder)
