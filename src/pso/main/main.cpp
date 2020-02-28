@@ -11,6 +11,7 @@ int main(int argc, char ** argv) {
   cfg.numLines = 230;
   cfg.startingLines = 130;
   cfg.maxDropRem = 2;
+  cfg.numGames = 1;
 
   if (argc == 2 && strcmp(argv[1], "-c") == 0) {
     cfg.print();

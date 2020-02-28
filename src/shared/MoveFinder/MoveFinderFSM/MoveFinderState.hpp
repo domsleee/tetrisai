@@ -41,8 +41,8 @@ class MoveFinderState {
   }
 
   void setRotateCooldown(int cooldown) {
-    rotateCooldown_[0] = std::max(rotateCooldown_[0], 1);
-    rotateCooldown_[1] = std::max(rotateCooldown_[1], 1);
+    rotateCooldown_[0] = std::max(rotateCooldown_[0], cooldown);
+    rotateCooldown_[1] = std::max(rotateCooldown_[1], cooldown);
   }
 
   void nextFrame() {
