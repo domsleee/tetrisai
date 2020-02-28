@@ -1,6 +1,4 @@
 #pragma once
-#include <unordered_set>
-#include <unordered_map>
 #include <vector>
 #include "src/common/Move.hpp"
 #include "src/board/bitboard/BitBoard.h"
@@ -11,7 +9,6 @@ const int DEFAULT_MAX_DROP_REM = 3; // 19 ==> 2
 
 class MoveFinderRewrite {
  public:
-  using AdjListT = std::unordered_map<BitPieceInfo, std::vector<BitPieceInfo>>;
   std::vector<BitPieceInfo> findAllMoves(const BitBoard& b, BlockType blockType) const;
   void setMaxDropRem(int v) { maxDropRem_ = v; }
 

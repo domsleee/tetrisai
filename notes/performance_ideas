@@ -10,3 +10,6 @@ Board -> Board -> Moves
 General idea:
 * If a square has changed, it can only affect a certain area of the next board
 
+
+
+

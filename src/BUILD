@@ -1,4 +1,4 @@
-BENCHMARK_COPTS = ["-O2", "-DNDEBUG"]
+BENCHMARK_COPTS = ["-Os", "-DNDEBUG"]
 EXEC_COPTS = ["-O2"]
 EW_MOVE_FINDER_CACHE_COPTS = ["-O2", "-DMOVE_FINDER_CACHE"]
 
@@ -11,8 +11,14 @@ cc_library(
 
 cc_library(
     name = "shared",
-    hdrs = glob(["shared/*.h", "shared/*.hpp", "shared/*.tpp", "shared/MoveEvaluator/*.hpp", "shared/MoveFinder/*.h", "shared/MoveFinder/*.hpp", "shared/MoveFinder/*.tpp", "shared/MoveFinder/**/*.h"]),
-    srcs = glob(["shared/*.cpp", "shared/MoveFinder/*.cpp", "shared/MoveEvaluator/*.cpp", "shared/MoveFinder/**/*.cpp", "shared/MoveFinder/**/*.hpp"]),
+    hdrs = glob(
+        ["shared/*.h", "shared/*.tpp", "shared/*.cpp", "shared/**/*.h", "shared/**/*.hpp", "shared/**/*.tpp"],
+        exclude = ["shared/test/**"]
+    ),
+    srcs = glob(
+        ["shared/*.cpp", "shared/**/*.cpp"],
+        exclude = ["shared/test/**"]
+    ),
     deps = [":common", ":board"],
     visibility = ["//visibility:public"]
 )
@@ -117,6 +123,13 @@ cc_test(
 )
 
 cc_test(
+    name = "test_move_finder_large",
+    srcs = glob(["shared/test/TestMoveFinderLarge.cpp", "shared/test/*.hpp", "shared/test/*.h", "shared/test/MoveEvaluatorUtility.cpp"]),
+    deps = [":shared", "//:catch"],
+    copts = ["-DRECORD_MOVES"]
+)
+
+cc_test(
     name = "test_move_finder_state",
     srcs = glob(["shared/test/MoveFinderFSM/TestMoveFinderState.cpp"]),
     deps = ["//src:shared", "//:catch"]
@@ -189,7 +202,7 @@ cc_binary(
     name = "bench_time",
     srcs = ["pso/main/main_bench_time.cpp"],
     deps = [":pso"],
-    copts = EXEC_COPTS
+    copts = EXEC_COPTS + ["-DPARALLEL=seq"]
 )
 
 cc_binary(

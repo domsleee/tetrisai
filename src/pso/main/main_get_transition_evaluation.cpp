@@ -1,6 +1,6 @@
 
 #include "src/pso/ClientApi.hpp"
-#include "src/pso/main/get_moves_utils.hpp"
+#include "src/shared/get_moves_utils.hpp"
 #include <chrono>
 
 #define MY_FN getBestMoveEvaluatorBlockQuadratic

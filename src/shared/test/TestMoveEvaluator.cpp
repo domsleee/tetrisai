@@ -7,7 +7,7 @@
 #include "src/shared/MoveEvaluator/MoveEvaluator.hpp"
 #include "src/shared/ScoreManager.hpp"
 #include "src/shared/test/MoveEvaluatorUtility.hpp"
-#include "src/pso/main/get_moves_utils.hpp"
+#include "src/shared/get_moves_utils.hpp"
 #include <vector>
 #include <iostream>
 #include <algorithm>

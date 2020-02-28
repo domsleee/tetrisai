@@ -5,8 +5,12 @@
 #include <numeric>
 #include "src/common/common.hpp"
 #include "src/pso/PieceSetGetter.hpp"
+#include "src/shared/ScoreManager.hpp"
 #include <execution>
 
+#ifndef PARALLEL
+#define PARALLEL par_unseq
+#endif
 
 template<typename MyRunPieceSet>
 class NewEvaluateWeightings {
@@ -61,8 +65,8 @@ std::vector<ScoreManager> NewEvaluateWeightings<MyRunPieceSet>::getScoreManagers
     //BitBoardPre::precompute();
     return runPieceSet.runGame(pieceSet);
   };
-
-  std::transform(std::execution::par_unseq, // par, seq, par_unseq
+  
+  std::transform(std::execution::PARALLEL, // par, seq, par_unseq
                pieceSets.begin(), pieceSets.end(), 
                scores.begin(), fn);
   return scores;

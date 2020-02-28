@@ -33,7 +33,7 @@ double get_score_regular(MoveEvaluator me, const Config &cfg, bool is19=true) {
   auto moveFinder = MoveFinderRewrite();
   auto ew_container = NewEvaluateWeightingsContainer(
     me,
-    CacheMoveFinder(moveFinder)
+    moveFinder
   );
   auto ew = ew_container.getInstance();
   cfg.applyConfig(ew);

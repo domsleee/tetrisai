@@ -3,6 +3,8 @@
 #include "src/board/bitboard/BitBoard.h"
 #include "src/board/BoardPrinter.tpp"
 #include <iostream>
+#include <unordered_map>
+#include <unordered_set>
 
 #define GET_ROT_DIR(piece) (piece.canRotate(RotateDirection::ROTATE_AC) ? RotateDirection::ROTATE_AC : RotateDirection::ROTATE_C);      
 
@@ -15,12 +17,11 @@ struct DoWork {
   std::unordered_map<int, int> holdingSeen_[2];
   std::unordered_map<int, int> releasedSeen_;
   std::unordered_set<BitPieceInfo> moveSet_;
-
   const int maxDropRem_;
 
   DoWork(int maxDropRem): maxDropRem_(maxDropRem) {}
 
-  std::vector<BitPieceInfo> findAllMoves(const BitBoard& b, BlockType blockType) const {
+  std::vector<BitPieceInfo> findAllMoves(const BitBoard& b, BlockType blockType) {
     holdingSeen_[MoveDirection::LEFT].clear();
     holdingSeen_[MoveDirection::RIGHT].clear();
     releasedSeen_.clear();
@@ -39,7 +40,7 @@ struct DoWork {
     if (false) return;
   }
 
-  void runHolding(const BitPieceInfo& currentPiece, MoveDirection md) const {
+  void runHolding(const BitPieceInfo& currentPiece, MoveDirection md) {
     runHolding(currentPiece, md, 0, maxDropRem_, 0);
   }
 

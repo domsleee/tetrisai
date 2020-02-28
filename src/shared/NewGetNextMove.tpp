@@ -4,6 +4,7 @@
 #include "src/board/bitboard/BitBoard.h"
 #include "src/shared/MoveEvaluator/MoveEvaluator.hpp"
 #include "src/board/BoardPrinter.tpp"
+#include "src/shared/di/di.h"
 
 template<typename MyMoveFinder, typename MyMoveEvaluator>
 class NewGetNextMove {
@@ -23,9 +24,6 @@ class NewGetNextMove {
   }
   const MyMoveFinder& getMoveFinder() { return *mf_; }
  private:
-  //const MyMoveEvaluator &me_;
-  //const MyMoveFinder &mf_;
-
   std::unique_ptr<MyMoveEvaluator> me_;
   std::unique_ptr<MyMoveFinder> mf_;
 
@@ -35,6 +33,9 @@ class NewGetNextMove {
 template<typename MyMoveFinder, typename MyMoveEvaluator>
 Move NewGetNextMove<MyMoveFinder, MyMoveEvaluator>::getNextMove(const BitBoard &board, const BlockType blockType) const {
   auto allMoves = mf_->findAllMoves(board, blockType);
+#ifdef RECORD_MOVES
+  Di::getMoveRecorder().recordMoves(board, blockType, allMoves);
+#endif
   assert(allMoves.size() > 0);
   auto bestPiece = allMoves[0];
   double bestScore = 6e60;
