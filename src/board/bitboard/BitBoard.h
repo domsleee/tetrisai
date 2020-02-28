@@ -77,6 +77,7 @@ struct std::hash<BitPieceInfo> {
 class BitPieceInfo {
   friend BitBoard;
  public:
+  BlockType getBlockType() const { return BitBoardPre::getBlockTypeFromId(id_); }
   BitPieceInfo(const BitPieceInfo &other) : BitPieceInfo(other.id_, other.b_) {}
   bool canRotate(RotateDirection) const;
   BitPieceInfo rotate(RotateDirection) const;
@@ -86,16 +87,25 @@ class BitPieceInfo {
   int getId() const { return id_; }
   int getRepId() const { return BitBoardPre::getRepIdFromId(id_); }
   const BitBoard& getBoard() const { return *b_; };
+
   std::vector<BitPieceInfo> getClosedRotN() const {
-    std::vector<BitPieceInfo> vs{*this};
-    for (int id: BitBoardPre::getOpenRotN(id_)) {
-      auto piece = b_->getPieceFromId(id);
-      if (b_->vacant(piece) && (BitBoardPre::getOpenRotN(id_).size() != 3 || vs.size() > 1 || id != BitBoardPre::getOpenRotN(id_).back())) {
-        vs.emplace_back(piece);
+    {
+      switch(getBlockType()) {
+        case BlockType::O_PIECE: return {*this};
+        case BlockType::I_PIECE:
+        case BlockType::S_PIECE:
+        case BlockType::Z_PIECE: {
+          return getClosedRotNTwoPossibleRots();
+        }
+        case BlockType::J_PIECE:
+        case BlockType::L_PIECE:
+        case BlockType::T_PIECE: {
+          return getClosedRotNFourPossibleRots();
+        }
       }
     }
-    return vs;
   }
+
   void print() const;
 
   friend bool operator==(const BitPieceInfo& p1, const BitPieceInfo& p2) {
@@ -115,4 +125,59 @@ class BitPieceInfo {
   BitPieceInfo(int id, const BitBoard *b) : id_(id), b_(b) {}
   int id_;
   const BitBoard* b_;
+
+  inline std::vector<BitPieceInfo> getClosedRotNTwoPossibleRots() const {
+    if (canRotate(RotateDirection::ROTATE_AC)) {
+      return {*this, rotate(RotateDirection::ROTATE_AC)};
+    }
+    return {*this};
+  }
+
+  inline std::vector<BitPieceInfo> getClosedRotNFourPossibleRots() const {
+    std::vector<BitPieceInfo> vs{*this};
+    for (int id: BitBoardPre::getOpenRotN(id_)) {
+      auto piece = b_->getPieceFromId(id);
+      if (b_->vacant(piece)) {
+        vs.push_back(piece);
+      }
+    }
+    return vs;
+  }
+
+
+  // unused code
+
+  std::vector<BitPieceInfo> __UNUSED_getClosedRotN_e() const {
+    static std::unordered_map<int, std::unordered_map<BitBoard, std::vector<BitPieceInfo>>> my_m_ = {};
+    if (my_m_.count(getRepId()) && my_m_[getRepId()].count(*b_)) {
+      return my_m_[getRepId()][*b_];
+    }
+    if (!my_m_.count(getRepId())) my_m_[getRepId()] = {};
+    return my_m_[getRepId()][*b_] = getClosedRotN();
+  }
+
+  bool __UNUSED_assertSizes(const std::vector<BitPieceInfo> &r1, const std::vector<BitPieceInfo> &r2) const {
+    if (r1.size() != r2.size()) return false;
+    return true;
+  }
+
+  std::vector<BitPieceInfo> __UNUSED_getClosedRotNFourPossibleRotsNew() const {
+    std::vector<BitPieceInfo> vs{*this};
+
+    bool halfTurn = false;
+    for (auto rotDir: allRotateDirections) {
+      auto nxPiece = *this;
+      if (nxPiece.canRotate(rotDir)) {
+        nxPiece = nxPiece.rotate(rotDir);
+        vs.push_back(nxPiece);
+        if (nxPiece.canRotate(rotDir)) {
+          if (!halfTurn) {
+            vs.push_back(nxPiece.rotate(rotDir));
+            halfTurn = true;
+          }
+        }
+      }
+    }
+    return vs;
+  }
 };

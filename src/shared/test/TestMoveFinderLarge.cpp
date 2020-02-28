@@ -4,7 +4,7 @@
 #include "catch.h"
 
 SCENARIO("large data") {
-  const auto file = TEST_FOLDER + "/big_data.in";
+  const auto file = TEST_FOLDER + "/big_data3.in";
   std::ifstream fin(file);
 
   char boardStr[205];
@@ -44,7 +44,7 @@ SCENARIO("large data") {
     std::set<int> expSet(expMoveInts.begin(), expMoveInts.end());
     for (auto v: moveInts) expSet.erase(v);
     std::cout << *expSet.begin() << '\n';
-    printBoardWithPiece(b, b.getPieceFromId(1934));*/
+    printBoardWithPiece(b, b.getPieceFromId(*expSet.begin()));*/
 
     REQUIRE(moveInts.size() == expMoveInts.size());
     std::sort(moveInts.begin(), moveInts.end());

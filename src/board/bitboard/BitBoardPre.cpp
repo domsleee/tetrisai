@@ -30,7 +30,7 @@ namespace BitBoardPre {
   inline int moveToId(const Move& move);
   void fixMoves();
   void setupHeights();
-  void setupRepIds();
+  void setupRepIds(const std::vector<std::vector<int>> &idToOpenRotN);
   void setupOpenRotN();
   bool isValidId(int id);
 
@@ -68,8 +68,8 @@ namespace BitBoardPre {
     }
     addEmptyPiece();
     setupHeights();
-    setupRepIds();
     setupOpenRotN();
+    setupRepIds(idToOpenRotN_);
 
     // external
     shortestPathVec_ = BitBoardPreExt::setupAllShortestPaths();
@@ -126,6 +126,11 @@ namespace BitBoardPre {
     int id = moveToId(move);
     idToBlockType_[id] = p.getBlockType();
     return id;
+  }
+
+  BlockType getBlockTypeFromId(int id) {
+    assert(isValidId(id));
+    return idToBlockType_[id];
   }
 
   inline int moveToId(const Move& move) {
@@ -222,39 +227,19 @@ namespace BitBoardPre {
     }
   }
 
-  void setupRepIds() {
-    auto b = BitBoard();
-    for (int i = 0; i < moveToId_.size(); ++i) {
-      auto piece = b.getPieceFromId(i);
-      auto nxPiece = piece;
-      int repId = i;
-
-      auto rotDir = nxPiece.canRotate(RotateDirection::ROTATE_AC) ? RotateDirection::ROTATE_AC : RotateDirection::ROTATE_C;      
-      for (int i = 0; i < 4; ++i) {
-        if (idToRep_[nxPiece.getId()] != UNDEFINED) {
-          repId = idToRep_[nxPiece.getId()];
-          break;
-        }
-        if (nxPiece.canRotate(rotDir)) {
-          nxPiece = nxPiece.rotate(rotDir);
-        }
-      }
-      idToRep_[i] = repId;
-    }
-  }
-
   void setupOpenRotN() {
     auto b = BitBoard();
     for (int i = 0; i < moveToId_.size(); ++i) {
       auto piece = b.getPieceFromId(i);
-      std::unordered_set<int> s, after;
-      static const std::vector<RotateDirection> rotDirs = {RotateDirection::ROTATE_C, RotateDirection::ROTATE_AC};      
+      std::unordered_set<int> s;
+      static const std::vector<RotateDirection> rotDirs = {RotateDirection::ROTATE_C, RotateDirection::ROTATE_AC};
       for (auto rotDir: rotDirs) {
-        if (piece.canRotate(rotDir)) {
-          auto rotPiece = piece.rotate(rotDir);
-          s.insert(rotPiece.getId());
-          //printf("consider1: %d\n", rotPiece.getId());
-          if (rotPiece.canRotate(rotDir)) { after.insert(rotPiece.rotate(rotDir).getId()); /*printf("consider2: %d\n", rotPiece.rotate(rotDir).getId()); */ }
+        auto myPiece = piece;
+        for (int i = 0; i < 2; ++i) {
+          if (myPiece.canRotate(rotDir)) {
+            myPiece = myPiece.rotate(rotDir);
+            s.insert(myPiece.getId());
+          }
         }
       }      
       s.erase(piece.getId());
@@ -272,7 +257,25 @@ namespace BitBoardPre {
       //assert(s.size() < 4);      
       idToOpenRotN_[i].clear();
       for (auto id: s) idToOpenRotN_[i].push_back(id);
-      for (auto id: after) idToOpenRotN_[i].push_back(id);
+    }
+  }
+
+  void setupRepIds(const std::vector<std::vector<int>> &idToOpenRotN) {
+    auto b = BitBoard();
+    for (int i = 0; i < static_cast<int>(moveToId_.size()); ++i) {
+      auto piece = b.getPieceFromId(i);
+      int repIdOverride = UNDEFINED;
+
+      for (auto rotId: idToOpenRotN[i]) {
+        if (idToRep_[rotId] != UNDEFINED) {
+          if (repIdOverride != UNDEFINED && repIdOverride != idToRep_[rotId]) {
+            throw std::runtime_error("Unexpected idToRep override");
+          }
+          repIdOverride = idToRep_[rotId];
+        }
+      }
+
+      idToRep_[i] = repIdOverride != UNDEFINED ? repIdOverride : i;
     }
   }
 }

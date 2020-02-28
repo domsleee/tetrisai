@@ -22,3 +22,8 @@ static std::vector<MoveDirection> validMoveDirections = {
   MoveDirection::RIGHT
 };
 
+static std::vector<MoveDirection> sidewaysMoveDirections = {
+  MoveDirection::LEFT,
+  MoveDirection::RIGHT
+};
+

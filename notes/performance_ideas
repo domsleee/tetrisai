@@ -13,3 +13,8 @@ General idea:
 
 
 
+MoveFinder optimisation:
+- No optimsation: ~38s
+- small change: 27s
+
+
