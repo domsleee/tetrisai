@@ -11,9 +11,6 @@
 #include <algorithm>
 #include <iostream>
 
-#define REQ_DELTA(a, b) REQUIRE_THAT(a, Catch::WithinAbs(b, 0.01f));
-
-
 
 SCENARIO("invalid cases") {
   GIVEN("no well") {

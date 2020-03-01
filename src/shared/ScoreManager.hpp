@@ -1,6 +1,9 @@
 #pragma once
 
 struct ScoreManager {
+  ScoreManager() {}
+  ScoreManager(int level): level_(level) {}
+
   void addLineClears(int lineClears) {
     switch(lineClears) {
       case 0: break;
@@ -26,11 +29,15 @@ struct ScoreManager {
     updateLevel();
   }
  private:
+  // 100 => 16
+  // 110 => 17
+  // 120 => 18
+  // 130 => 19
   void updateLevel() {
     if (totalLines_ >= 130) {
       level_ = 19 + (totalLines_ - 130)/10;
     } else {
-      level_ = 18;
+      level_ = std::max(level_, 18);
     }
   }
 

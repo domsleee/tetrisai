@@ -13,7 +13,7 @@
 #include <cstdio>
 #include <cstring>
 
-class MoveEvaluatorTetrisReady {
+class MoveEvaluatorTetrisReady: public IEvaluator {
  public:
   static const int NUM_FACTORS = MoveEvaluator::NUM_FACTORS + 1;
   static const int TETRIS_READY = MoveEvaluator::NUM_FACTORS;
@@ -29,8 +29,16 @@ class MoveEvaluatorTetrisReady {
     return evaluateGivenColHeights(b, p, getColHeights(b).data());
   }
 
+  double evaluateMine(const BitBoard &b, const BitPieceInfo &p) const override {
+    return evaluateMineGivenColHeights(b, p, getColHeights(b).data());
+  }
+
   double evaluateGivenColHeights(const BitBoard b, const BitPieceInfo p, int *colHeights) const {
-    double eval = me_.evaluate(b, p);
+    return me_.evaluate(b, p) + evaluateMineGivenColHeights(b, p, colHeights);
+  }
+
+  double evaluateMineGivenColHeights(const BitBoard b, const BitPieceInfo p, int *colHeights) const {
+    double eval = 0;
     VacancyChecker vac(b);
 
     int mc = 0;

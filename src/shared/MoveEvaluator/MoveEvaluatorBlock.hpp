@@ -28,8 +28,6 @@ class MoveEvaluatorBlock {
   static const int IS_BLOCK_BY_TWO = MoveEvaluatorTetrisReady::NUM_FACTORS + 7;
   static const int IS_BLOCK_BY_MORE_THAN_TWO = MoveEvaluatorTetrisReady::NUM_FACTORS + 8;
 
-  constexpr int getNumFactors() { return NUM_FACTORS; }
-
   MoveEvaluatorBlock(const Weighting &w): me_{w}, w_{w} {
     if (w.size() < NUM_FACTORS) {
       printf("Bad weight vector size. Needed at least %d, got %lu", NUM_FACTORS, w.size());

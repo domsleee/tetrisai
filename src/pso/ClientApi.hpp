@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <vector>
 
+#include "src/shared/MoveFinder/MoveFinderFSM.h"
+
 #include "src/shared/MoveFinder/MoveFinder.h"
 #include "src/shared/MoveFinder/MoveFinderRewrite.h"
 #include "src/shared/MoveEvaluator/MoveEvaluatorAdapter.hpp"

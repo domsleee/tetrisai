@@ -2,6 +2,8 @@
 #include <iostream>
 #include <fstream>
 
+#define REQ_DELTA(a, b) REQUIRE_THAT(a, Catch::WithinAbs(b, 0.01f));
+
 
 BitBoard readBoard(const std::string &filePath) {
   std::ifstream fin{filePath};

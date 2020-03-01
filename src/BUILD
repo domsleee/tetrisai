@@ -93,9 +93,15 @@ cc_test(
 )
 
 cc_test(
-    name = "test_move_evaluator_penalty",
-    srcs = glob(["shared/test/TestMoveEvaluatorPenalty.cpp", "shared/test/*.hpp", "shared/test/*.h", "shared/test/MoveEvaluatorUtility.cpp"]),
-    deps = [":shared", "//:catch"]
+    name = "test_move_evaluator_group",
+    srcs = glob(["shared/test/TestMoveEvaluatorGroup.cpp", "shared/test/*.hpp", "shared/test/MoveEvaluatorUtility.cpp"]),
+    deps = [":shared", "//:catch", ":pso"]
+)
+
+cc_test(
+    name = "test_move_evaluator_burns",
+    srcs = glob(["shared/test/TestMoveEvaluatorBurns.cpp", "shared/test/*.hpp", "shared/test/*.h", "shared/test/MoveEvaluatorUtility.cpp"]),
+    deps = [":shared", "//:catch", ":pso"]
 )
 
 cc_test(

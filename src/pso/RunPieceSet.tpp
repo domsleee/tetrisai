@@ -38,17 +38,21 @@ class RunPieceSet {
   void setMaxDropRem(int maxDropRem) {
     getNextMoveHandler_.setMaxDropRem(maxDropRem);
   }
+  void setStartingLevel(int startingLevel) {
+    startingLevel_ = startingLevel;
+  }
   MyGetNextMove getNextMoveHandler_;
 
  private:
   int numLines_ = MAX_LINES;
+  int startingLevel_ = 18;
   int startingLines_ = 0;
   std::multimap<int, MutatorFnT> mutators_;
 };
 
 template <typename MyGetNextMove>
 ScoreManager RunPieceSet<MyGetNextMove>::runGame(const std::vector<BlockType> &pieceSet) const {
-  ScoreManager sm;
+  ScoreManager sm{startingLevel_};
   sm.setLines(startingLines_);
   BitBoard b;
   auto getNextMoveHandler = getNextMoveHandler_;

@@ -34,10 +34,10 @@ class MoveEvaluator {
   double evaluate(const BitBoard& b, const BitPieceInfo& p, const Weighting &w) const {
     auto nxBoard = b;
     auto deltaLines = nxBoard.applyPieceInfo(p);
-    return my_evaluate(nxBoard, p, w, deltaLines);
+    return myEvaluate(nxBoard, p, w, deltaLines);
   }
   
-  double my_evaluate(const BitBoard &b, const BitPieceInfo& p, const Weighting &w, int deltaLines) const {
+  double myEvaluate(const BitBoard &b, const BitPieceInfo& p, const Weighting &w, int deltaLines) const {
     double offset = (deltaLines == 4) ? -1e9 : 0;
     double eval = offset;
     VacancyChecker vac(b);

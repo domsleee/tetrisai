@@ -10,6 +10,7 @@
 #include <iostream>
 #include <algorithm>
 
+#define REQ_DELTA(a, b) REQUIRE_THAT(a, Catch::WithinAbs(b, 0.01f));
 
 const std::string TEST_FOLDER = "/home/dom/tetrisai/src/shared/test/data";
 

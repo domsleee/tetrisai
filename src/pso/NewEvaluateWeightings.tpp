@@ -27,6 +27,9 @@ class NewEvaluateWeightings {
   void setNumLines(int numLines);
   void setStartingLines(int startingLines);
   void setMaxDropRem(int dropRem);
+  void setStartingLevel(int startingLevel) {
+    runPieceSet_handler_->setStartingLevel(startingLevel);
+  }
   std::unique_ptr<MyRunPieceSet> runPieceSet_handler_;
  private:
   PieceSetGetter ps_;

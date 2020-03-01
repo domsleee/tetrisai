@@ -2,6 +2,7 @@
 #include "src/shared/get_moves_utils.hpp"
 #include "src/shared/di/di.h"
 #include "src/shared/MoveRecorder/MoveRecorder.h"
+#include "src/shared/MoveEvaluator/MoveEvaluatorGroups.hpp"
 #include <chrono>
 
 
@@ -9,7 +10,7 @@ int main(int argc, char ** argv) {
   Di::setMoveRecorder(MoveRecorder());
 
   auto startTime = std::chrono::system_clock::now();
-  auto me = getBestMoveEvaluatorBlockLinear(true);
+  auto me = getBestMoveEvaluatorBlockLinear150_group(true);
   Config cfg;
   cfg.numGames = 100;
   cfg.seed = 55;

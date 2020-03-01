@@ -3,7 +3,7 @@
 #include "src/shared/get_moves_utils.hpp"
 #include <chrono>
 
-#define MY_FN getBestMoveEvaluatorBlockQuadratic
+#define MY_FN getBestMoveEvaluatorBlockLinear150
 
 const int MAXOUT_SCORE = 999999;
 

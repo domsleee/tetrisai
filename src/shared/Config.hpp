@@ -9,6 +9,7 @@ struct Config {
   int numLines = UNDEF;
   int maxDropRem = UNDEF; // todo.
   int startingLines = UNDEF;
+  int startingLevel = UNDEF;
 
   void print() const {
     printf("FEATURE EVALUATION CONFIG\n");
@@ -18,6 +19,7 @@ struct Config {
     printf("numLines: %d\n", numLines);
     printf("maxDropRem: %d\n", maxDropRem);
     printf("startingLines: %d\n", startingLines);
+    printf("startingLevel: %d\n", startingLevel);
     printf("========\n");
   }
 
@@ -28,5 +30,6 @@ struct Config {
     if (numLines != Config::UNDEF) ew.setNumLines(numLines);
     if (startingLines != Config::UNDEF) ew.setStartingLines(startingLines);
     if (maxDropRem != Config::UNDEF) ew.setMaxDropRem(maxDropRem);
+    if (startingLevel != Config::UNDEF) ew.setStartingLevel(startingLevel);
   }
 };

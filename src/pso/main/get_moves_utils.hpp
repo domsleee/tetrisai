@@ -2,7 +2,6 @@
 #pragma once
 #include "src/common/Weighting.hpp"
 #include "src/common/common.hpp"
-#include "src/pso/ClientApi.hpp"
 #include "src/shared/MoveFinder/MoveFinderFSM.h"
 #include "src/shared/MoveEvaluator/MoveEvaluatorTetrisReady.hpp"
 #include "src/shared/MoveEvaluator/MoveEvaluatorBlockLinear.hpp"

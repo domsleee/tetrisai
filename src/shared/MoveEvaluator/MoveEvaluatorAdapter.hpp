@@ -6,12 +6,17 @@
 #include <algorithm>
 #include <numeric>
 #include "src/shared/MoveEvaluator/MoveEvaluator.hpp"
+#include "src/shared/MoveEvaluator/IEvaluator.h"
 
-class MoveEvaluatorAdapter {
+
+class MoveEvaluatorAdapter: public IEvaluator {
  public:
   MoveEvaluatorAdapter(const MoveEvaluator &mv, const Weighting &w): mv_(mv), w_(w) {}
   double evaluate(const BitBoard &b, const BitPieceInfo &p) const {
     return mv_.evaluate(b, p, w_);
+  }
+  double evaluateMine(const BitBoard &b, const BitPieceInfo &p) const override {
+    return evaluate(b, p);
   }
 
  private:

@@ -20,8 +20,6 @@ class MoveEvaluatorBlockQuadratic {
   static const int QUADRATIC_A = MoveEvaluatorTetrisReady::NUM_FACTORS;
   static const int QUADRATIC_B = MoveEvaluatorTetrisReady::NUM_FACTORS + 1;
   static const int QUADRATIC_C = MoveEvaluatorTetrisReady::NUM_FACTORS + 2;
-   
-  constexpr int getNumFactors() { return NUM_FACTORS; }
 
   MoveEvaluatorBlockQuadratic(const Weighting &w): me_{w}, w_{w} {
     if (w.size() < NUM_FACTORS) {
