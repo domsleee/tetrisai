@@ -14,7 +14,6 @@ todo:
 write toString and fromString. then write tests that load states
 
 
-
 OK so:
 + Evaluate weightings
 
