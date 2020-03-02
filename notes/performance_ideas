@@ -1,14 +1,39 @@
-Desire:
+IDEAS TO DRASTICALLY IMPROVE PERFORMANCE
 
-MoveFinder:
-Board -> Moves
+IDEA 1 - Carried state
+
+  MoveFinder:
+  Board -> Moves
+
+  Can we write it more performantly using
+  X -> Board -> Moves
+
+  where X is info from the previous decision?
+
+  General idea:
+  * If a square has changed, it can only affect a certain area of the next board
+  * rewrite as a bottom up implementation to do this...
+  * complications when board is cleared
+
+  Seems difficult
 
 
-Can we write it more performantly using
-Board -> Board -> Moves
+IDEA 2 - GPU acceleration
 
-General idea:
-* If a square has changed, it can only affect a certain area of the next board
+  Can we use the GPU to parallelise processing?
+
+
+HOW TO PROGRESS
+
+  1. FINISH EXISTING EVALUATIONS
+    + 18_MoveEvaluator50
+    + 18_MoveEvaluatorLinear50
+    + 19_MoveEvaluatorLinear50
+
+  1.1. INCORPORATE LOOK-AHEAD IN SUMMARY DATA
+    + get_transition_evaluation can use MoveFinderFSM with lookahead AS WELL
+
+
 
 
 
@@ -17,5 +42,4 @@ MoveFinder optimisation:
 - No optimsation: ~38s
 - small change: 27s
 - several changes: 13s (34% of the original)
-
 
