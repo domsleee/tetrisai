@@ -3,7 +3,7 @@
 #include "src/shared/get_moves_utils.hpp"
 #include <chrono>
 
-#define MY_FN getBestMoveEvaluatorBlockLinear150
+#define MY_FN getBestMoveEvaluator_50
 
 const int MAXOUT_SCORE = 999999;
 
@@ -25,10 +25,10 @@ int main(int argc, char *argv[]) {
   auto me2 = MY_FN(true);
   Config cfg;
   cfg.numGames = 120;
-  cfg.startingLines = 130;
-  cfg.numLines = 230;
+  cfg.startingLines = 0;
+  cfg.numLines = 130;
   cfg.seed = 55;
-  cfg.maxDropRem = 2;
+  cfg.maxDropRem = 3;
   cfg.print(); 
   auto sms = get_transition_evaluation(me2, me2, cfg);
   auto endTime = std::chrono::system_clock::now();

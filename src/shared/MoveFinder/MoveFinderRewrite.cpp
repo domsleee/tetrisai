@@ -39,14 +39,14 @@ struct DoWork {
     runHolding(currentPiece, md, 0, maxDropRem_);
   }
 
-  void runHolding(const BitPieceInfo &currentPiece, MoveDirection md, int dasRem, int dropRem) {  
-    int m = std::min(dasRem, dropRem);
+  void runHolding(const BitPieceInfo &currentPiece, MoveDirection md, int8_t dasRem, int8_t dropRem) {  
+    int8_t m = std::min(dasRem, dropRem);
     if (m > 0) return runHolding(currentPiece, md, dasRem-m, dropRem-m);
 
     if (holdingSeen_[md][currentPiece.getRepId()]) return;
     holdingSeen_[md][currentPiece.getRepId()] = true;
 
-    const auto closedRotN = currentPiece.getClosedRotN();
+    const auto &closedRotN = currentPiece.getClosedRotN();
 
     if (dasRem == 0) {
       bool canMoveSideways = false;
@@ -96,7 +96,7 @@ struct DoWork {
     if (releasedSeen_[currentPiece.getRepId()]) return;
     releasedSeen_[currentPiece.getRepId()] = true;
 
-    const auto closedRotN = currentPiece.getClosedRotN();
+    const auto &closedRotN = currentPiece.getClosedRotN();
     for (const auto &nxPiece: closedRotN) {
       if (nxPiece.canMove(MoveDirection::DOWN)) {
         const auto &endPiece = nxPiece.move(MoveDirection::DOWN);

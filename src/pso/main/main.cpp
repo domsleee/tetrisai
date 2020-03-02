@@ -8,19 +8,20 @@
 
 
 #define NEW_METHOD 1
-const std::string moveEvaluatorGroup = MOVE_EVALUATOR_GROUP_BURNS;
+const std::string moveEvaluatorGroup = MOVE_EVALUATOR_GROUP_NORMAL;
 
 // for old method
-using MoveEvaluatorT = MoveEvaluatorBlockLinear;
+//using MoveEvaluatorT = MoveEvaluatorBlockLinear;
 
 void run(int argc, char ** argv, Config cfg);
 
 int main(int argc, char ** argv) {
   Config cfg;
-  cfg.numLines = 150;
+  cfg.numLines = 130;
   cfg.startingLines = 0;
   cfg.maxDropRem = 3;
   cfg.startingLevel = 18;
+  cfg.averageAmount = 50;
 
   if (argc == 2 && strcmp(argv[1], "-c") == 0) {
     cfg.print();

@@ -27,13 +27,13 @@ class NewEvaluateWeightings {
   void setNumLines(int numLines);
   void setStartingLines(int startingLines);
   void setMaxDropRem(int dropRem);
-  void setStartingLevel(int startingLevel) {
-    runPieceSet_handler_->setStartingLevel(startingLevel);
-  }
+  void setAverageAmount(int averageAmount) { averageAmount_ = averageAmount; }
+  void setStartingLevel(int startingLevel) { runPieceSet_handler_->setStartingLevel(startingLevel); }
   std::unique_ptr<MyRunPieceSet> runPieceSet_handler_;
  private:
   PieceSetGetter ps_;
   int num_games_ = NUM_GAMES;
+  int averageAmount_ = 30;
 };
 
 
@@ -41,7 +41,7 @@ template<typename MyRunPieceSet>
 double NewEvaluateWeightings<MyRunPieceSet>::runAllPieceSets() const {
   auto scoreInts = getSortedScoreInts();
   if (scoreInts.size() == 1) return scoreInts[0];
-  double score = average(scoreInts.cend()-30, scoreInts.cend());
+  double score = average(scoreInts.cend()-averageAmount_, scoreInts.cend());
   return score;
 }
 

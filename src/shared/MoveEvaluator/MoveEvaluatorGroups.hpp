@@ -12,6 +12,7 @@
 
 #define allFeatures(T) { std::make_shared<EvaluatorFactory<T>>(), MoveEvaluatorProperties<T>::getAllFeatures() }
 
+const std::string MOVE_EVALUATOR_GROUP_NORMAL = "Normal";
 const std::string MOVE_EVALUATOR_GROUP_BURNS = "Burns";
 const std::string MOVE_EVALUATOR_GROUP_LINEAR = "Linear";
 
@@ -29,6 +30,11 @@ std::map<std::string, MoveEvaluatorGroup> getMoveEvaluatorGroups() {
       allFeatures(MoveEvaluatorAdapter),
       allFeatures(MoveEvaluatorTetrisReady),
       allFeatures(MoveEvaluatorBlockLinear),
+    }
+  });
+  res.emplace(MOVE_EVALUATOR_GROUP_NORMAL, MoveEvaluatorGroup {
+    {
+      allFeatures(MoveEvaluatorAdapter)
     }
   });
   return res;
