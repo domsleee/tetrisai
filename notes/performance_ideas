@@ -16,5 +16,6 @@ General idea:
 MoveFinder optimisation:
 - No optimsation: ~38s
 - small change: 27s
+- several changes: 13s (34% of the original)
 
 

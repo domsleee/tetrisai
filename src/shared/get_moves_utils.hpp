@@ -93,6 +93,12 @@ MoveEvaluatorGroup getBestMoveEvaluator_50(bool is19) {
   return group;
 }
 
+MoveEvaluatorGroup getBestMoveEvaluator_50_2(bool is19) {
+  const std::string best18_50 = "[4.270736557215795 17.4876742661911 1.0124365677024993 10.545484922626969 15.975235961730736 5.645634312556749 23.4619885148801 -1.9636420140525264 12.326985403626992 24.626551041601818 12.436242857252045 -1.1834870873507204 -17.465682477513713 -10.020459353501025 -14.506189115960499 1.1013587679851335 3.850902912933613]";
+  auto group = getMoveEvaluatorGroups().at(MOVE_EVALUATOR_GROUP_NORMAL);
+  group.setWeights(WeightingFn::readFromString(best18_50));
+  return group;
+}
 
 MoveEvaluatorTetrisReady getBestMoveEvaluatorTetrisReady(bool is19) {
   return {WeightingFn::readFromString(is19 ? best19_tetris_ready : best18_tetris_ready)};
