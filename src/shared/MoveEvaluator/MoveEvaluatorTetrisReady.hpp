@@ -37,7 +37,7 @@ class MoveEvaluatorTetrisReady: public IEvaluator {
     return me_.evaluate(b, p) + evaluateMineGivenColHeights(b, p, colHeights);
   }
 
-  double evaluateMineGivenColHeights(const BitBoard b, const BitPieceInfo p, int *colHeights) const {
+  double evaluateMineGivenColHeights(const BitBoard b, const BitPieceInfo p, int *colHeights, int level=DEFAULT_LEVEL) const {
     double eval = 0;
     VacancyChecker vac(b);
 
@@ -60,7 +60,7 @@ class MoveEvaluatorTetrisReady: public IEvaluator {
         }
       }
     }
-    int tetrisReady = noHoles && fourDiff;
+    int tetrisReady = noHoles && fourDiff && isColAccessible(colHeights, level);
     eval += w_[TETRIS_READY] * tetrisReady;
     return eval;
   }

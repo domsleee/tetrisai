@@ -10,6 +10,9 @@
 #define dprintf(...)
 #endif
 
+// todo: get rid of this
+#define DEFAULT_LEVEL 19
+
 const int NUM_ROWS = 20;
 const int NUM_COLUMNS = 10;
 

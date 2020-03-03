@@ -108,4 +108,38 @@ SCENARIO("tetris ready when its ready") {
       }
     }
   }
+  AND_GIVEN("a tetris ready board because of height") {
+    const auto vs = leftWell(8);
+    BitBoard b(vs);
+    auto w = getWeightsFromEmptyPieceT<MoveEvaluatorTetrisReady>(b);
+    WHEN("we evaluate") {
+      THEN("we get the expected value") {
+        REQUIRE(w[MoveEvaluatorTetrisReady::TETRIS_READY] == 1);
+      }
+    }
+  }
+  AND_GIVEN("a NOT tetris ready board because of height") {
+    const auto vs = leftWell(9);
+    BitBoard b(vs);
+    auto w = getWeightsFromEmptyPieceT<MoveEvaluatorTetrisReady>(b);
+    WHEN("we evaluate") {
+      THEN("we get the expected value") {
+        REQUIRE(w[MoveEvaluatorTetrisReady::TETRIS_READY] == 0);
+      }
+    }
+  }
+  AND_GIVEN("a tetris ready board because of height") {
+    std::vector<std::string> vs;
+    const std::string emptyRow = "0000000000";
+    const std::string centerRow = "1111101111";
+    for (int i = 0; i < 4; ++i) vs.push_back(emptyRow);
+    for (int i = 0; i < 16; ++i) vs.push_back(centerRow);
+    BitBoard b = getBoardFromPartialStringVector(vs);
+    auto w = getWeightsFromEmptyPieceT<MoveEvaluatorTetrisReady>(b);
+    WHEN("we evaluate") {
+      THEN("we get the expected value") {
+        REQUIRE(w[MoveEvaluatorTetrisReady::TETRIS_READY] == 1);
+      }
+    }
+  }
 }
