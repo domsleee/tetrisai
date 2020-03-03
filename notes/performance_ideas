@@ -26,11 +26,14 @@ IDEA 2 - GPU acceleration
 HOW TO PROGRESS
 
   1. FINISH EXISTING EVALUATIONS
-    + 18_MoveEvaluator50
-    + 18_MoveEvaluatorLinear50
-    + 19_MoveEvaluatorLinear50
+    [x] 18_MoveEvaluator50
+    [ ] 18_MoveEvaluatorLinear50
+    [ ] 19_MoveEvaluatorLinear50
 
-  1.1. INCORPORATE LOOK-AHEAD IN SUMMARY DATA
+  1.1. Fix TetrisReady evaluation to include "accessible" at the current level (using utility)
+    - This can be done by changing IEvaluator interface. May not be best design, but can work
+
+  2. INCORPORATE LOOK-AHEAD IN SUMMARY DATA
     + get_transition_evaluation can use MoveFinderFSM with lookahead AS WELL
 
 

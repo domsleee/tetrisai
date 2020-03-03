@@ -8,7 +8,7 @@
 
 
 #define NEW_METHOD 1
-const std::string moveEvaluatorGroup = MOVE_EVALUATOR_GROUP_NORMAL;
+const std::string moveEvaluatorGroup = MOVE_EVALUATOR_GROUP_LINEAR;
 
 // for old method
 //using MoveEvaluatorT = MoveEvaluatorBlockLinear;

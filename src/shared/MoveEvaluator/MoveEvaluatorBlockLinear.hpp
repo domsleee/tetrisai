@@ -28,7 +28,7 @@ class MoveEvaluatorBlockLinear: public IEvaluator {
     }
   }
 
-  double evaluate(const BitBoard b, const BitPieceInfo p) const {
+  double evaluate(const BitBoard &b, const BitPieceInfo &p) const {
     BitBoard b2 = b;
     b2.applyPieceInfo(p);
     auto colHeights = getColHeights(b2);
