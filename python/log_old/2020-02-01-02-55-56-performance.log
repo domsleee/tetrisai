@@ -1,0 +1,1 @@
+RunnerSettings(num_particles=99, num_neighbours=99, iterations=6900, local=False, velocity_clamp=(-5, 5), optimizer_options={})

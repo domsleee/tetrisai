@@ -27,11 +27,16 @@ HOW TO PROGRESS
 
   1. FINISH EXISTING EVALUATIONS
     [x] 18_MoveEvaluator50
-    [ ] 18_MoveEvaluatorLinear50
-    [ ] 19_MoveEvaluatorLinear50
+    [x] 18_MoveEvaluatorLinear50_fixed
+    [x] 19_MoveEvaluatorLinear50_fixed
 
   1.1. Fix TetrisReady evaluation to include "accessible" at the current level (using utility)
-    - This can be done by changing IEvaluator interface. May not be best design, but can work
+    [x] Temporary fix with DEFAULT_LEVEL in common.hpp
+    [ ] Proper fix by changing IEvaluator interface (for passing the level). May not be best design, but can work
+      * Change NewGetNextMove to take in a level
+      * Change evaluateMine to take in EvaluateData
+
+  1.2. Get rid of old usages of evaluate()
 
   2. INCORPORATE LOOK-AHEAD IN SUMMARY DATA
     + get_transition_evaluation can use MoveFinderFSM with lookahead AS WELL

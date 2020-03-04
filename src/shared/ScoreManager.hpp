@@ -2,7 +2,9 @@
 
 struct ScoreManager {
   ScoreManager() {}
-  ScoreManager(int level): level_(level) {}
+  ScoreManager(int level): level_(level) {
+    updateLevel();
+  }
 
   void addLineClears(int lineClears) {
     switch(lineClears) {

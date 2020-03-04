@@ -38,7 +38,16 @@ bool isDeepWell(int smallestHeight, int secondSmallestHeight);
 bool wellIsTooHigh(PairT lowestColumn);
 
 
-
+int getMinColumn(int *colHeights) {
+  int index = 0, value = colHeights[0];
+  for (int c = 1; c < NUM_COLUMNS; ++c) {
+    if (colHeights[c] < value) {
+      value = colHeights[c];
+      index = c;
+    }
+  }
+  return index;
+}
 
 std::pair<int, int> getMinColumns(int *colHeights) {
   std::priority_queue<PairT, std::vector<PairT>, std::greater<PairT>> pq;
@@ -74,10 +83,8 @@ bool wellIsTooHigh(PairT lowestColumn) {
   return bottomColumnHeight > MAX_CLEAR_HEIGHTS[bottomColumn];
 }
 
-
-
 bool isColAccessible(int *colHeights, int level) {
-  auto [bottomColumn, secondColumn] = getMinColumns(colHeights);
+  auto bottomColumn = getMinColumn(colHeights);
   return isColAccessible(colHeights, level, bottomColumn);
 }
 

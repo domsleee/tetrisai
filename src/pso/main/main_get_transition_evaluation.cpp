@@ -3,7 +3,7 @@
 #include "src/shared/get_moves_utils.hpp"
 #include <chrono>
 
-#define MY_FN getBestMoveEvaluatorLinear_50_pre
+#define MY_FN getBestMoveEvaluatorLinear_50_fixed
 
 const int MAXOUT_SCORE = 999999;
 
@@ -21,14 +21,14 @@ int main(int argc, char *argv[]) {
   BitBoardPre::precompute();
   auto endTimePrecompute = std::chrono::system_clock::now();
  
-  auto me1 = MY_FN(false);
+  auto me1 = MY_FN(true);
   auto me2 = MY_FN(true);
   Config cfg;
   cfg.numGames = 120;
-  cfg.startingLines = 0;
-  cfg.numLines = 130;
+  cfg.startingLines = 130;
+  cfg.numLines = 230;
   cfg.seed = 55;
-  cfg.maxDropRem = 3;
+  cfg.maxDropRem = 2;
   cfg.print(); 
   auto sms = get_transition_evaluation(me2, me2, cfg);
   auto endTime = std::chrono::system_clock::now();

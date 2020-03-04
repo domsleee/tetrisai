@@ -106,24 +106,26 @@ BitPieceInfo BitBoard::getEmptyPiece() const {
 int BitBoard::getPileHeight() const {
   return height_;
 
-  // old method...
-  int my_height = height_;
-  static const int maskInt = (2 << (NUM_COLUMNS-1))-1;
-  B b(maskInt); // 1111111111
-  B zero;
-  int h = 20;
-  while (h > 0) {
-    if ((bitset_ & b) != zero) {
-      if (my_height != h) {
-        printf("my_height:%d, h:%d\n", my_height, h);
-        exit(1);
+  {
+    // old method...
+    int my_height = height_;
+    static const int maskInt = (2 << (NUM_COLUMNS-1))-1;
+    B b(maskInt); // 1111111111
+    B zero;
+    int h = 20;
+    while (h > 0) {
+      if ((bitset_ & b) != zero) {
+        if (my_height != h) {
+          printf("my_height:%d, h:%d\n", my_height, h);
+          exit(1);
+        }
+        return h;
       }
-      return h;
+      b <<= NUM_COLUMNS;
+      h--;
     }
-    b <<= NUM_COLUMNS;
-    h--;
+    return h;
   }
-  return h;
 };
 
 bool BitBoard::hasNoMoves(BlockType blockType) const {
