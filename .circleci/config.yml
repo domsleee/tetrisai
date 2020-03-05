@@ -53,7 +53,6 @@ jobs:
           cd .docker/get-move-service;
           python3.7 -m pip install pipenv --user;
           python3.7 -m pipenv install;
-          find /usr/local/include;
           python3.7 -m pipenv run sh -c "cd src/test; python -m unittest";
 workflows:
   version: 2
