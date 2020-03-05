@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string>
 #include "src/pso/ClientApi.hpp"
-#include "src/pso/main/all_evaluators.hpp"
 #include "src/shared/Config.hpp"
 #include "src/shared/MoveEvaluator/MoveEvaluatorGroups.hpp"
 

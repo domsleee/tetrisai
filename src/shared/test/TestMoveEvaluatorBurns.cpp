@@ -24,7 +24,6 @@ SCENARIO("burns are correct") {
     WHEN("we evaluate") {
       THEN("we get the expected value") {
         REQ_DELTA(3, me.evaluateMine(b, b.getPiece(position), EvaluatorInfo(19)));
-
       }
     }
   }
