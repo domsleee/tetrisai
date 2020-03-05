@@ -38,7 +38,6 @@ class MoveEvaluatorTetrisReady: public IEvaluator {
     return evaluateMineGivenColHeights(b, p, getColHeights(b).data(), evaluatorInfo.level);
   }
 
-
   double evaluateMineGivenColHeights(const BitBoard b, const BitPieceInfo p, int *colHeights, int level) const {
     double eval = 0;
     VacancyChecker vac(b);

@@ -47,9 +47,6 @@ Move NewGetNextMove<MyMoveFinder, MyMoveEvaluator>::getNextMove(const BitBoard &
       bestScore = score;
     }
     dprintf("NewGetNextMove: score: %0.2f\n", score);
-#ifdef MY_DEBUG
-    piece.print();
-#endif
   }
   dprintf("NewGetNextMove: bestScore: %.8f\n", bestScore);
   return bestPiece.getPosition();

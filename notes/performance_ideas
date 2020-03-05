@@ -37,10 +37,12 @@ HOW TO PROGRESS
       * Change evaluateMine to take in const EvaluateData&
 
   1.2. Get rid of old usages of evaluate()
+    [ ] replace existing tests with MoveEvaluatorGroup
 
   2. INCORPORATE LOOK-AHEAD IN SUMMARY DATA
     + get_transition_evaluation can use MoveFinderFSM with lookahead AS WELL
-
+    + probably should rewrite runPieceSet
+    + 
 
 
 
