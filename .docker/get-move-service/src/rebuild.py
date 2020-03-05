@@ -9,9 +9,9 @@ from pathlib import Path
 DIR = Path(__file__).parent.absolute()
 
 def main():
-  subprocess.check_call(["bazel", "build", "//src:ew_get_moves"])
+  subprocess.check_call(["bazel", "build", "//src/pso/main:ew_get_moves"])
   bazel_bin_path = get_bazel_bin_path()
-  my_bin = os.path.join(bazel_bin_path, "src", "ew_get_moves")
+  my_bin = os.path.join(bazel_bin_path, "src", "pso", "main", "ew_get_moves")
   out_bin = os.path.join(DIR, "external_bin", "ew_get_moves")
   os.remove(out_bin)
   shutil.copy(my_bin, out_bin)

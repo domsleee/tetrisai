@@ -9,7 +9,7 @@ jobs:
           keys:
             - build-{{ .Branch }}-1
       - run: >
-          bazel build //src:ew_get_moves;
+          bazel build //src/pso/main:ew_get_moves;
           mkdir persist;
           cp -r /usr/local/include/tbb_build persist/tbb_build;
           cp -r /usr/local/include/tbb persist/tbb;
@@ -41,7 +41,7 @@ jobs:
           mkdir -p /usr/local/include;
           cp -r /tmp/persist/tbb_build /usr/local/include/tbb_build;
           cp -r /tmp/persist/tbb /usr/local/include/tbb;
-          cp /tmp/persist/src/ew_get_moves .docker/get-move-service/src/external_bin/
+          cp /tmp/persist/src/pso/main/ew_get_moves .docker/get-move-service/src/external_bin/
       - run: >
           export LC_ALL=C.UTF-8;
           export LANG=C.UTF-8;
