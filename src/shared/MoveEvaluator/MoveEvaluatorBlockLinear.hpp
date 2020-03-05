@@ -28,24 +28,29 @@ class MoveEvaluatorBlockLinear: public IEvaluator {
     }
   }
 
+  // todo: deprecate
+  double evaluate(const BitBoard &b, const BitPieceInfo &p, int level) const {
+    return evaluate(b, p);
+  }
+
   double evaluate(const BitBoard &b, const BitPieceInfo &p) const {
     BitBoard b2 = b;
     b2.applyPieceInfo(p);
     auto colHeights = getColHeights(b2);
     auto eval = me_.evaluateGivenColHeights(b, p, colHeights.data());
-    return eval + evaluateMineGivenColHeights(b, p, colHeights.data());
+    return eval + evaluateMineGivenColHeights(b, p, colHeights.data(), DEFAULT_LEVEL);
   }
 
-  double evaluateMine(const BitBoard &b, const BitPieceInfo &p) const override {
+  double evaluateMine(const BitBoard &b, const BitPieceInfo &p, const EvaluatorInfo &evaluatorInfo) const override {
     BitBoard b2 = b;
     b2.applyPieceInfo(p);
     auto colHeights = getColHeights(b2);
-    return evaluateMineGivenColHeights(b, p, colHeights.data());
+    return evaluateMineGivenColHeights(b, p, colHeights.data(), evaluatorInfo.level);
   }
 
-  double evaluateMineGivenColHeights(const BitBoard &b, const BitPieceInfo &p, int *colHeights) const {
+  double evaluateMineGivenColHeights(const BitBoard &b, const BitPieceInfo &p, int *colHeights, int level) const {
     double eval = 0;
-    auto [valid, minBlock] = getMinBlock(colHeights);
+    auto [valid, minBlock] = getMinBlock(colHeights, level);
     if (valid) eval += w_[LINEAR_A] * minBlock + w_[LINEAR_B];
     return eval;
   }

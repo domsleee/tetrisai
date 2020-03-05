@@ -17,7 +17,7 @@ class MoveEvaluatorBurns: public IEvaluator {
     }
   }
 
-  double evaluateMine(const BitBoard &b, const BitPieceInfo &p) const override {
+  double evaluateMine(const BitBoard &b, const BitPieceInfo &p, const EvaluatorInfo &evaluatorInfo) const override {
     BitBoard b2 = b;
     int burns = b2.applyPieceInfo(p);
     return w_[BURNS] * (burns == 4 ? 0 : burns);

@@ -25,19 +25,21 @@ class MoveEvaluatorTetrisReady: public IEvaluator {
     }
   }
 
+  // todo. deprecate
   double evaluate(const BitBoard b, const BitPieceInfo p) const {
     return evaluateGivenColHeights(b, p, getColHeights(b).data());
   }
 
-  double evaluateMine(const BitBoard &b, const BitPieceInfo &p) const override {
-    return evaluateMineGivenColHeights(b, p, getColHeights(b).data());
-  }
-
   double evaluateGivenColHeights(const BitBoard b, const BitPieceInfo p, int *colHeights) const {
-    return me_.evaluate(b, p) + evaluateMineGivenColHeights(b, p, colHeights);
+    return me_.evaluate(b, p) + evaluateMineGivenColHeights(b, p, colHeights, DEFAULT_LEVEL);
   }
 
-  double evaluateMineGivenColHeights(const BitBoard b, const BitPieceInfo p, int *colHeights, int level=DEFAULT_LEVEL) const {
+  double evaluateMine(const BitBoard &b, const BitPieceInfo &p, const EvaluatorInfo &evaluatorInfo) const override {
+    return evaluateMineGivenColHeights(b, p, getColHeights(b).data(), evaluatorInfo.level);
+  }
+
+
+  double evaluateMineGivenColHeights(const BitBoard b, const BitPieceInfo p, int *colHeights, int level) const {
     double eval = 0;
     VacancyChecker vac(b);
 

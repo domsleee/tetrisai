@@ -22,6 +22,11 @@ class MoveEvaluatorPenalty {
     assert(w.size() == NUM_FACTORS_);
   }
 
+  // todo: deprecate
+  double evaluate(const BitBoard &b, const BitPieceInfo &p, int level) const {
+    return evaluate(b, p);
+  }
+
 
   double evaluate(const BitBoard &b, const BitPieceInfo &p) const {
     int colHeights[NUM_COLUMNS];

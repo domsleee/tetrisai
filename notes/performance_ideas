@@ -32,9 +32,9 @@ HOW TO PROGRESS
 
   1.1. Fix TetrisReady evaluation to include "accessible" at the current level (using utility)
     [x] Temporary fix with DEFAULT_LEVEL in common.hpp
-    [ ] Proper fix by changing IEvaluator interface (for passing the level). May not be best design, but can work
+    [ ] Proper fix by changing IEvaluator interface (for passing the level). May not be best design, but can work. Needed because the level can change
       * Change NewGetNextMove to take in a level
-      * Change evaluateMine to take in EvaluateData
+      * Change evaluateMine to take in const EvaluateData&
 
   1.2. Get rid of old usages of evaluate()
 

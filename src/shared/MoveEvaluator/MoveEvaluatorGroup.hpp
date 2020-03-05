@@ -2,6 +2,7 @@
 #include "src/shared/MoveEvaluator/IEvaluator.h"
 #include "src/shared/MoveEvaluator/IEvaluatorFactory.h"
 #include "src/common/Weighting.hpp"
+#include "src/shared/MoveEvaluator/EvaluatorInfo.hpp"
 #include <vector>
 #include <memory>
 
@@ -37,10 +38,11 @@ public:
     }
   }
 
-  double evaluate(const BitBoard &b, const BitPieceInfo &p) const {
+  double evaluate(const BitBoard &b, const BitPieceInfo &p, int level) const {
+    // todo.
     double res = 0;
     for (const auto &evaluator: evaluators_) {
-      res += evaluator->evaluateMine(b, p);
+      res += evaluator->evaluateMine(b, p, EvaluatorInfo(level));
     }
     return res;
   }

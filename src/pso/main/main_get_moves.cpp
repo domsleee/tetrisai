@@ -92,7 +92,7 @@ void handleGetMove(int num_lines, bool givenFirstMoveDirection) {
     return;
   }
   std::cout << "result: moves\n";
-  auto move = getNextMoveHandler.getNextMove(board, blockType);
+  auto move = getNextMoveHandler.getNextMove(board, blockType, 18); // todo
   
   const auto oldBoard = board;
   const auto lineClears = board.applyMove(move);

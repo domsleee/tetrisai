@@ -15,7 +15,11 @@ class MoveEvaluatorAdapter: public IEvaluator {
   double evaluate(const BitBoard &b, const BitPieceInfo &p) const {
     return mv_.evaluate(b, p, w_);
   }
-  double evaluateMine(const BitBoard &b, const BitPieceInfo &p) const override {
+  // todo: deprecated
+  double evaluate(const BitBoard &b, const BitPieceInfo &p, const int level) const {
+    return evaluate(b, p);
+  }
+  double evaluateMine(const BitBoard &b, const BitPieceInfo &p, const EvaluatorInfo &evaulatorInfo) const override {
     return evaluate(b, p);
   }
 

@@ -23,7 +23,7 @@ SCENARIO("burns are correct") {
 
     WHEN("we evaluate") {
       THEN("we get the expected value") {
-        REQ_DELTA(3, me.evaluateMine(b, b.getPiece(position)));
+        REQ_DELTA(3, me.evaluateMine(b, b.getPiece(position), EvaluatorInfo(19)));
 
       }
     }
@@ -38,7 +38,7 @@ SCENARIO("burns are correct") {
     const auto b = getBoardFromPartialStringVector(board);
     WHEN("we evaluate") {
       THEN("we get the expected value") {
-        REQ_DELTA(0, me.evaluateMine(b, b.getPiece(position)));
+        REQ_DELTA(0, me.evaluateMine(b, b.getPiece(position), EvaluatorInfo(19)));
       }
     }
   }

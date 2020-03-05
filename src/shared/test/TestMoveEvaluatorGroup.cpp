@@ -15,7 +15,7 @@
 
 
 SCENARIO("tetris ready when its ready") {
-  MoveEvaluatorGroup me{
+  MoveEvaluatorGroup me {
     {
       {
         std::make_shared<EvaluatorFactory<MoveEvaluatorTetrisReady>>(), { MoveEvaluatorTetrisReady::TETRIS_READY },
@@ -34,12 +34,10 @@ SCENARIO("tetris ready when its ready") {
         "1111111110",
     };
     const auto b = getBoardFromPartialStringVector(board);
-    auto w = getWeightsFromEmptyPieceT<MoveEvaluatorTetrisReady>(b);
-
-    auto eval = me.evaluate(b, b.getEmptyPiece());
+    auto eval = me.evaluate(b, b.getEmptyPiece(), 19);
     REQ_DELTA(0, eval);
     me.setWeights({0, 1});
-    eval = me.evaluate(b, b.getEmptyPiece());
+    eval = me.evaluate(b, b.getEmptyPiece(), 19);
     REQ_DELTA(3, eval);
   }
   AND_GIVEN("a tetris ready board") {
@@ -49,14 +47,27 @@ SCENARIO("tetris ready when its ready") {
         "1111111110",
         "1111111110",
     };
-    const auto b = getBoardFromPartialStringVector(board);
-    auto w = getWeightsFromEmptyPieceT<MoveEvaluatorTetrisReady>(b);
-    
-    auto eval = me.evaluate(b, b.getEmptyPiece());
+    const auto b = getBoardFromPartialStringVector(board);    
+    auto eval = me.evaluate(b, b.getEmptyPiece(), 19);
     REQ_DELTA(1, eval);
     me.setWeights({0, 1});
-    eval = me.evaluate(b, b.getEmptyPiece());
+    eval = me.evaluate(b, b.getEmptyPiece(), 19);
     REQ_DELTA(4, eval);
   }
-  
+  AND_GIVEN("a tetris ready level 18 board") {
+    auto vs = leftWell(9);
+    const auto b = BitBoard(vs);
+    me.setWeights({1, 0});
+
+    WHEN("we evaluate with level 18") {
+      THEN("the value is 1") {
+        REQ_DELTA(1, me.evaluate(b, b.getEmptyPiece(), 18));
+      }
+    }
+    AND_WHEN("we evaluate with level 19") {
+      THEN("the value is 0") {
+        REQ_DELTA(0, me.evaluate(b, b.getEmptyPiece(), 19));
+      }
+    }
+  }
 }

@@ -31,7 +31,7 @@ void PlayDemo<MyGetNextMove, MyBoard>::playDemo(const std::vector<BlockType> &pi
     if (hasNoMoves(b, blockType)) {
       break;
     };
-    auto move = getNextMoveHandler_.getNextMove(b, blockType);
+    auto move = getNextMoveHandler_.getNextMove(b, blockType, -1); // todo: deprecate
     auto pieceInfo = b.getPiece(blockType, move);
     printBoardWithPiece(b, pieceInfo);
     sm.addLineClears(b.applyPieceInfo(pieceInfo));
