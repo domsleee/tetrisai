@@ -1,7 +1,3 @@
-BENCHMARK_COPTS = ["-O2", "-DNDEBUG"]
-EXEC_COPTS = ["-O2", "-DNDEBUG"]
-EW_MOVE_FINDER_CACHE_COPTS = ["-O2", "-DMOVE_FINDER_CACHE"]
-
 load("//:defs.bzl", "shared_library")
 
 shared_library(

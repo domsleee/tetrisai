@@ -18,7 +18,7 @@ class MoveEvaluatorTetrisReady: public IEvaluator {
   static const int NUM_FACTORS = MoveEvaluator::NUM_FACTORS + 1;
   static const int TETRIS_READY = MoveEvaluator::NUM_FACTORS;
 
-  MoveEvaluatorTetrisReady(const Weighting &w): me_{MoveEvaluator(), w}, w_{w} {
+  MoveEvaluatorTetrisReady(const Weighting &w): me_{w}, w_{w} {
     if (w.size() < NUM_FACTORS) {
       printf("Bad weight vector size. Expected at least %d, got %lu", NUM_FACTORS, w.size());
       throw std::runtime_error("bad weight vector size");
@@ -67,6 +67,6 @@ class MoveEvaluatorTetrisReady: public IEvaluator {
   }
 
  private:
-  const MoveEvaluatorAdapter me_;
+  const MoveEvaluatorAdapter<MoveEvaluator> me_;
   const Weighting w_;
 };

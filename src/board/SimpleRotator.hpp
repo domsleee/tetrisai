@@ -32,8 +32,8 @@ struct SimpleRotator {
     assert(rotateState >= 0 && rotateState < 4);
     auto blocks = blockToOffsetMap[blockType][rotateState];
     std::vector<Coord> coords;
-    for (int r = 0; r < blocks.size(); r++) {
-      for (int c = 0; c < blocks[r].size(); c++) {
+    for (int r = 0; r < static_cast<int>(blocks.size()); r++) {
+      for (int c = 0; c < static_cast<int>(blocks[r].size()); c++) {
         if (blocks[r][c]) coords.push_back({r, c});
       }
     }

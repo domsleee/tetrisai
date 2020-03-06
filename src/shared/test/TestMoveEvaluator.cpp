@@ -17,7 +17,7 @@ SCENARIO("Metrics line up") {
   const auto testFile = TEST_FOLDER + "/test1.in";
   const auto weightFile = TEST_FOLDER + "/test1.exp";
   auto b = readBoard(testFile);
-  auto w = getWeightsFromEmptyPiece(b, MoveEvaluator());
+  auto w = getWeightsFromEmptyPieceT<MoveEvaluatorAdapter<MoveEvaluator>>(b);
   auto wExp = getExpectedWeights(weightFile);
 
 
@@ -48,7 +48,7 @@ SCENARIO("Metrics 2 line up") {
   const auto testFile = TEST_FOLDER + "/test2.in";
   const auto weightFile = TEST_FOLDER + "/test2.exp";
   auto b = readBoard(testFile);
-  auto w = getWeightsFromEmptyPiece(b, MoveEvaluator());
+  auto w = getWeightsFromEmptyPieceT<MoveEvaluatorAdapter<MoveEvaluator>>(b);
   auto wExp = getExpectedWeights(weightFile);
 
 
@@ -79,7 +79,7 @@ SCENARIO("lock height") {
   auto piece = b.getPiece(m);
   // 19 ==> 0
   // 6 ==> 13
-  auto w = getWeights(b, piece, MoveEvaluator());
+  auto w = getWeightsTemp<MoveEvaluatorAdapter<MoveEvaluator>>(b, piece);
   REQUIRE(w[MoveEvaluator::TOTAL_LOCK_HEIGHT] == 13);
 
 }
@@ -88,7 +88,7 @@ SCENARIO("lock height") {
 SCENARIO("strange O2 edge case") {
   const auto testFile = TEST_FOLDER + "/test3.in";
   auto b = readBoard(testFile);
-  auto me = MoveEvaluatorAdapter(MoveEvaluator(), w1);
+  auto me = MoveEvaluatorAdapter<MoveEvaluator>(w1);
   // (18, 8), (19, 7), (19, 8), (19, 9)
   auto move = Move({{18, 8}, {19, 7}, {19, 8}, {19, 9}});
   auto pieceInfo = b.getPiece(move);

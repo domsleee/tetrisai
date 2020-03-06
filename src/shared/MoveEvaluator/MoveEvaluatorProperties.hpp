@@ -32,7 +32,7 @@ struct MoveEvaluatorProperties<MoveEvaluatorBlockLinear> {
 };
 
 template <>
-struct MoveEvaluatorProperties<MoveEvaluatorAdapter> {
+struct MoveEvaluatorProperties<MoveEvaluatorAdapter<MoveEvaluator>> {
   static std::vector<int> getAllFeatures() {
     std::vector<int> res;
     for (int i = 0; i <= 16; ++i) res.push_back(i);

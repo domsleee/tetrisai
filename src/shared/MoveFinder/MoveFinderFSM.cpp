@@ -17,6 +17,18 @@ void safeInsert(std::unordered_set<MoveFinderState> &seen, const BitBoard &b, T&
   }
 }
 
+const std::vector<RotateDirection> &getRotateDirections(const BitPieceInfo &p) {
+  static const std::vector<RotateDirection> noRotations = {};
+  static const std::vector<RotateDirection> oneRotation = {RotateDirection::ROTATE_AC};
+  switch(p.getBlockType()) {
+    case BlockType::O_PIECE: return noRotations;
+    case BlockType::I_PIECE:
+    case BlockType::S_PIECE:
+    case BlockType::Z_PIECE: return oneRotation;
+    default: return allRotateDirections;
+  }
+}
+
 std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockType blockType) {
   pred_.clear();
   finalMoveToState_.clear();
@@ -152,7 +164,7 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
     }
 
     // rotations...
-    for (auto rotateDirection: allRotateDirections) {
+    for (auto rotateDirection: getRotateDirections(top.piece_)) {
       if (top.rotateCooldown_[rotateDirection] == 0 && top.piece_.canRotate(rotateDirection)) {
         auto nxRotate = top;
         nxRotate.piece_ = top.piece_.rotate(rotateDirection);

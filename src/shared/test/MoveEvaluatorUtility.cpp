@@ -2,9 +2,6 @@
 #include <iostream>
 #include <fstream>
 
-#define REQ_DELTA(a, b) REQUIRE_THAT(a, Catch::WithinAbs(b, 0.01f));
-
-
 BitBoard readBoard(const std::string &filePath) {
   std::ifstream fin{filePath};
   auto vs = std::vector<std::vector<int>>(NUM_ROWS, std::vector<int>(NUM_COLUMNS, 0));
@@ -28,27 +25,6 @@ Weighting getExpectedWeights(const std::string &filepath) {
 }
 
 
-Weighting getWeights2(const BitBoard &b, const BitPieceInfo &piece) {
-  int num_factors = MoveEvaluatorPenalty::NUM_FACTORS;
-  Weighting w(num_factors, 0);
-  Weighting res(num_factors, 0);
-  for (int i = 0; i < num_factors; i++) {
-    if (i > 0) w[i-1] = 0;
-    w[i] = 1;
-    MoveEvaluatorPenalty me(w);
-    res[i] = me.evaluate(b, piece);
-  }
-  return res;
-}
-
-// todo: fix this up
-Weighting getWeightsFromEmptyPiece2(const BitBoard &b) {
-  const auto m = BitBoardPre::idToMove(BitBoardPre::getEmptyMoveId());
-  auto piece = b.getPiece(m);
-  return getWeights2(b, piece);
-}
-
-
 BitBoard getBoardFromPartialStringVector(std::vector<std::string> strings) {
   auto vs = std::vector<std::vector<int>>(NUM_ROWS, std::vector<int>(NUM_COLUMNS, 0));
   int rOffset = NUM_ROWS - strings.size();
@@ -65,9 +41,6 @@ BitBoard getBoardFromPartialStringVector(std::vector<std::string> strings) {
   return {vs};
 }
 
-
-
-#define REQ_IND(w, wExp, ind) REQUIRE(w[ind] == wExp[ind])
 
 
 std::vector<std::vector<int>> leftWell(int height) {

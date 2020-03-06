@@ -17,10 +17,10 @@ class EvaluatorFactory: public IEvaluatorFactory {
 };
 
 template <>
-class EvaluatorFactory<MoveEvaluatorAdapter>: public IEvaluatorFactory {
+class EvaluatorFactory<MoveEvaluatorAdapter<MoveEvaluator>>: public IEvaluatorFactory {
  public:
   std::unique_ptr<IEvaluator> createNew(const Weighting &w) override {
-    return std::make_unique<MoveEvaluatorAdapter>(MoveEvaluator(), w);
+    return std::make_unique<MoveEvaluatorAdapter<MoveEvaluator>>(w);
   }
 };
 

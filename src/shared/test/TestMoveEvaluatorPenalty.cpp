@@ -30,7 +30,7 @@ SCENARIO("move penalty is calculated correctly (2)") {
     };
 
     const auto b = getBoardFromPartialStringVector(board);
-    auto w = getWeightsFromEmptyPiece2(b);
+    auto w = getWeightsFromEmptyPieceT<MoveEvaluatorPenalty>(b);
 
     WHEN("we evaluate") {
       THEN("we get the expected value") {
@@ -49,7 +49,7 @@ SCENARIO("move penalty is calculated correctly (2)") {
         "11111",
     };
     const auto b = getBoardFromPartialStringVector(board);
-    auto w = getWeightsFromEmptyPiece2(b);
+    auto w = getWeightsFromEmptyPieceT<MoveEvaluatorPenalty>(b);
 
     WHEN("we evaluate") {
       THEN("we get the expected value") {

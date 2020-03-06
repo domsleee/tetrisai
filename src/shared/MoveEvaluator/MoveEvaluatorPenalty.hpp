@@ -18,7 +18,7 @@ class MoveEvaluatorPenalty {
   static const int DAS_BLOCKED_LEFT = 17;
   static const int DAS_BLOCKED_RIGHT = 18;
 
-  MoveEvaluatorPenalty(const Weighting &w): me_{MoveEvaluator(), w}, w_{w} {
+  MoveEvaluatorPenalty(const Weighting &w): me_{w}, w_{w} {
     assert(w.size() == NUM_FACTORS_);
   }
 
@@ -70,7 +70,7 @@ class MoveEvaluatorPenalty {
   }
 
  private:
-  const MoveEvaluatorAdapter me_;
+  const MoveEvaluatorAdapter<MoveEvaluator> me_;
   const Weighting &w_;
 };
 

@@ -15,7 +15,7 @@ SCENARIO("Metrics line up") {
   const auto testFile = TEST_FOLDER + "/test_simple1.in";
   const auto weightFile = TEST_FOLDER + "/test_simple1.exp";
   auto b = readBoard(testFile);
-  auto w = getWeightsFromEmptyPiece(b, MoveEvaluatorSimple());
+  auto w = getWeightsFromEmptyPieceT<MoveEvaluatorAdapter<MoveEvaluatorSimple>>(b);
   auto wExp = getExpectedWeights(weightFile);
 
   REQ_IND(w, wExp, MoveEvaluatorSimple::AGGREGATE_HEIGHT);

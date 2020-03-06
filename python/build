@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-bazel build //src:ew
+bazel build //src/pso/main:ew

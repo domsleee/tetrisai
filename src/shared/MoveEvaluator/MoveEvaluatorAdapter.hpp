@@ -8,12 +8,13 @@
 #include "src/shared/MoveEvaluator/MoveEvaluator.hpp"
 #include "src/shared/MoveEvaluator/IEvaluator.h"
 
-
+template<typename MyMoveEvaluator>
 class MoveEvaluatorAdapter: public IEvaluator {
  public:
-  MoveEvaluatorAdapter(const MoveEvaluator &mv, const Weighting &w): mv_(mv), w_(w) {}
+  static const int NUM_FACTORS = MyMoveEvaluator::NUM_FACTORS;
+  MoveEvaluatorAdapter(const Weighting &w): w_(w) {}
   double evaluate(const BitBoard &b, const BitPieceInfo &p) const {
-    return mv_.evaluate(b, p, w_);
+    return me_.evaluate(b, p, w_);
   }
   // todo: deprecated
   double evaluate(const BitBoard &b, const BitPieceInfo &p, const int level) const {
@@ -24,7 +25,7 @@ class MoveEvaluatorAdapter: public IEvaluator {
   }
 
  private:
-  const MoveEvaluator mv_;
+  const MyMoveEvaluator me_;
   const Weighting w_;
 };
 

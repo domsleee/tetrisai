@@ -16,7 +16,7 @@
 
 template <typename MoveEvaluator>
 double get_score_regular(MoveEvaluator me, const Config &cfg, bool is19=true) {
-  auto moveFinder = MoveFinderRewrite();
+  auto moveFinder = MoveFinderFSM();
   auto ew_container = NewEvaluateWeightingsContainer(
     me,
     moveFinder
@@ -34,7 +34,7 @@ double get_score_regular(MoveEvaluator me, int seed=-1) {
 }
 
 double get_score_regular(const Weighting &w, int seed=-1) {
-  return get_score_regular(MoveEvaluatorAdapter(MoveEvaluator(), w), seed);
+  return get_score_regular(MoveEvaluatorAdapter<MoveEvaluator>(w), seed);
 }
 
 template <typename MoveEvaluator>

@@ -20,21 +20,21 @@ std::map<std::string, MoveEvaluatorGroup> getMoveEvaluatorGroups() {
   std::map<std::string, MoveEvaluatorGroup> res;
   res.emplace(MOVE_EVALUATOR_GROUP_BURNS, MoveEvaluatorGroup {
     {
-      allFeatures(MoveEvaluatorAdapter),
+      allFeatures(MoveEvaluatorAdapter<MoveEvaluator>),
       allFeatures(MoveEvaluatorTetrisReady),
       allFeatures(MoveEvaluatorBurns)
     }
   });
   res.emplace(MOVE_EVALUATOR_GROUP_LINEAR, MoveEvaluatorGroup {
     {
-      allFeatures(MoveEvaluatorAdapter),
+      allFeatures(MoveEvaluatorAdapter<MoveEvaluator>),
       allFeatures(MoveEvaluatorTetrisReady),
       allFeatures(MoveEvaluatorBlockLinear),
     }
   });
   res.emplace(MOVE_EVALUATOR_GROUP_NORMAL, MoveEvaluatorGroup {
     {
-      allFeatures(MoveEvaluatorAdapter)
+      allFeatures(MoveEvaluatorAdapter<MoveEvaluator>)
     }
   });
   return res;

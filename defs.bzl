@@ -1,6 +1,6 @@
-BENCHMARK_COPTS = ["-O2", "-DNDEBUG"]
-EXEC_COPTS = ["-O2", "-DNDEBUG"]
-EW_MOVE_FINDER_CACHE_COPTS = ["-O2", "-DMOVE_FINDER_CACHE"]
+BENCHMARK_COPTS = ["-O3", "-DNDEBUG"]
+EXEC_COPTS = ["-O3", "-DNDEBUG"]
+EW_MOVE_FINDER_CACHE_COPTS = ["-O3", "-DMOVE_FINDER_CACHE"]
 
 def shared_library(name, deps = []):
   return native.cc_library(

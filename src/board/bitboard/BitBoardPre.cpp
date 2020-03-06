@@ -193,7 +193,7 @@ namespace BitBoardPre {
 
   bool isValidId(int id) {
     //printf("id: %d [%d, %lu)\n", id, 0, moveToId_.size());
-    return id >= 0 && id < moveToId_.size();
+    return id >= 0 && id < static_cast<int>(moveToId_.size());
   }
 
   std::bitset<200> moveToBitset(const Move &move) {
@@ -218,7 +218,7 @@ namespace BitBoardPre {
   }
 
   void setupHeights() {
-    for (int i = 0; i < moveToId_.size(); ++i) {
+    for (int i = 0; i < static_cast<int>(moveToId_.size()); ++i) {
       auto piece = idToMove(i);
       idToHeight_[i] = 0;
       for (auto coord: piece.coords_) {
@@ -229,7 +229,7 @@ namespace BitBoardPre {
 
   void setupOpenRotN() {
     auto b = BitBoard();
-    for (int i = 0; i < moveToId_.size(); ++i) {
+    for (int i = 0; i < static_cast<int>(moveToId_.size()); ++i) {
       auto piece = b.getPieceFromId(i);
       std::unordered_set<int> s;
       static const std::vector<RotateDirection> rotDirs = {RotateDirection::ROTATE_C, RotateDirection::ROTATE_AC};
@@ -261,11 +261,8 @@ namespace BitBoardPre {
   }
 
   void setupRepIds(const std::vector<std::vector<int>> &idToOpenRotN) {
-    auto b = BitBoard();
     for (int i = 0; i < static_cast<int>(moveToId_.size()); ++i) {
-      auto piece = b.getPieceFromId(i);
       int repIdOverride = UNDEFINED;
-
       for (auto rotId: idToOpenRotN[i]) {
         if (idToRep_[rotId] != UNDEFINED) {
           if (repIdOverride != UNDEFINED && repIdOverride != idToRep_[rotId]) {
