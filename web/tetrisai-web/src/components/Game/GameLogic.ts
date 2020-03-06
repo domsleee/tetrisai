@@ -56,9 +56,6 @@ export class GameLogic implements ICapturable<string> {
     const bs = new GameBootstrap(this.demoPlayer);
     await bs.setupFromNewCanvas(this.frameAwaiter);
     this.addFluff();
-    this.demoPlayer.addEvent(
-      getDemoEntry(this.demoPlayer.getFrame() + 1, DemoButton.BUTTON_LEFT, true)
-    );
     await this.gr.onFirstPieceAppear();
     this.pa.init();
 
@@ -95,20 +92,24 @@ export class GameLogic implements ICapturable<string> {
 
   private async considerCaptureAndRestore() {
     const enterSloMo = () => {
-      this.demoPlayer.timer.stop();
+      this.demoPlayer.timer.freeze();
       this.gr.disableFpsControl();
       if (GameLogic.slowMoKeyHandler) {
         document.removeEventListener('keydown', GameLogic.slowMoKeyHandler);
         GameLogic.slowMoKeyHandler = false;
       }
       GameLogic.slowMoKeyHandler = (e: KeyboardEvent) => {
-        console.log('KEYPRESS');
+        console.log('KEYPRESS', e.code);
         if (e.code === 'ArrowRight') {
-          this.demoPlayer.timer.onTick();
+          this.demoPlayer.timer.onTick(true);
+        }
+        if (e.code === 'Space') {
+          this.demoPlayer.timer.toggleFreeze();
         }
       };
       document.addEventListener('keydown', GameLogic.slowMoKeyHandler);
     };
+    
 
     if (false && this.demoPlayer.getFrame() >= 2200) {
       download('problematic_placement', this.capture());
@@ -121,9 +122,9 @@ export class GameLogic implements ICapturable<string> {
       );
       GameLogic.myfirst = false;
     }
-    if (false && this.demoPlayer.getFrame() >= 2000 && GameLogic.myfirst) {
+    if (GameLogic.myfirst) {
       GameLogic.myfirst = false;
-      enterSloMo();
+      //enterSloMo();
     }
   }
 

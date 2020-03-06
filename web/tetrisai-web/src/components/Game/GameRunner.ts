@@ -6,7 +6,7 @@ import { IReadCurrentPiece } from '../GameRunner/ReadCurrentPiece';
 import { IGetNextMove, FirstMoveDirectionT } from './IGetNextMove';
 import { ICapturable } from './ICapturable';
 import { IReadNextPiece } from './IReadNextPiece';
-import { getDemoEntry } from './DemoEntryHelpers';
+import { getDemoEntry, getDemoEntryWithStartFrame } from './DemoEntryHelpers';
 import { Features } from './Features';
 
 function sleep(ms: number) {
@@ -78,9 +78,11 @@ export class GameRunner implements ICapturable<any> {
 
   public async onFirstPieceAppear() {
     const currFrame = this.demoPlayer.getFrame();
-    this.demoPlayer.addEvent(
-      getDemoEntry(currFrame + 2, DemoButton.BUTTON_LEFT, false)
-    );
+    this.demoPlayer.addEvents([
+      getDemoEntryWithStartFrame(currFrame + 1, 0, DemoButton.BUTTON_LEFT, true),
+      getDemoEntryWithStartFrame(currFrame + 2, 1, DemoButton.BUTTON_LEFT, false)
+    ]);
+    console.log(currFrame + 2);
 
     const currPiece = this.readCurrentPieceHandler.getPieceFromEmulator();
     let moveEntries;

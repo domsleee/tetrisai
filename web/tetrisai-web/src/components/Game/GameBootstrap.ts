@@ -20,13 +20,10 @@ export class GameBootstrap {
     }
     buttonAdder.addButtonPress(DemoButton.BUTTON_DOWN);
 
-    // 17 - 84k
-    // 22 - trash
-    // 23 - 355k
 
-    // 21 -- good for 19
-    // 22 - 346k @ 19
-    const chosenFrame = 23;
+    // 12 - also good
+    // 22 - 989k
+    const chosenFrame = 2;
     this.demoPlayer.addEvent(
       getDemoEntry(
         buttonAdder.frame + chosenFrame - 1,

@@ -16,7 +16,7 @@
 
 template <typename MoveEvaluator>
 double get_score_regular(MoveEvaluator me, const Config &cfg, bool is19=true) {
-  auto moveFinder = MoveFinderFSM();
+  auto moveFinder = MoveFinderRewrite();
   auto ew_container = NewEvaluateWeightingsContainer(
     me,
     moveFinder
