@@ -15,7 +15,7 @@ struct Di {
     return *moveRecorder_;
   }
 
-private:
+ private:
   static std::unique_ptr<IMoveRecorder> moveRecorder_;
 };
 
