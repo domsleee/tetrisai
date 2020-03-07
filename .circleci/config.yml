@@ -52,7 +52,7 @@ jobs:
           cd python;
           python3.7 -m pipenv install;
           python3.7 -m pipenv run sh -c "cd tetrisai/test; python -m unittest";
-  cppTest:
+    cppTest:
       - image: domslee/bazel:tbb2
     steps:
       - checkout
