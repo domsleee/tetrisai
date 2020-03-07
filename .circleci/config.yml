@@ -9,6 +9,7 @@ jobs:
           keys:
             - build-{{ .Branch }}-1
       - run: >
+          cd cpp;
           bazel build //src/pso/main:ew_get_moves;
           mkdir persist;
           cp -r /usr/local/include/tbb_build persist/tbb_build;
@@ -41,7 +42,7 @@ jobs:
           mkdir -p /usr/local/include;
           cp -r /tmp/persist/tbb_build /usr/local/include/tbb_build;
           cp -r /tmp/persist/tbb /usr/local/include/tbb;
-          cp /tmp/persist/src/pso/main/ew_get_moves .docker/get-move-service/src/external_bin/
+          cp /tmp/persist/src/pso/main/ew_get_moves get-move-service/src/external_bin/
       - run: >
           export LC_ALL=C.UTF-8;
           export LANG=C.UTF-8;
@@ -50,7 +51,7 @@ jobs:
           add-apt-repository ppa:deadsnakes/ppa -y;
           apt-get update;
           apt-get install python3.7 python3-pip -y;
-          cd .docker/get-move-service;
+          cd get-move-service;
           python3.7 -m pip install pipenv --user;
           python3.7 -m pipenv install;
           python3.7 -m pipenv run sh -c "cd src/test; python -m unittest";

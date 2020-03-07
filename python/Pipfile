@@ -1,0 +1,13 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+
+[packages]
+pyswarm = "==0.6"
+numpy = "*"
+
+[requires]
+python_version = "3.7"

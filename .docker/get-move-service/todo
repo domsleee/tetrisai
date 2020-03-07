@@ -1,5 +1,0 @@
-todo
-
-+ long interaction with process + closing
-+ docker with pipenv
-+ fix pipfile to use pythonpath for imports
