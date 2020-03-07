@@ -10,15 +10,11 @@ jobs:
           ./scripts/setup.sh;
           bazel build //src/pso/main:ew_get_moves;
           mkdir persist;
-          cp -r /usr/local/include/tbb_build persist/tbb_build;
-          cp -r /usr/local/include/tbb persist/tbb;
           cp -r bazel-bin/src persist/src;
       - persist_to_workspace:
           root: cpp/persist
           paths:
             - src
-            - tbb_build
-            - tbb
   getMoveServiceTest:
     docker:
       - image: domslee/bazel:tbb-pipenv
@@ -27,9 +23,6 @@ jobs:
       - attach_workspace:
           at: /tmp/persist
       - run: >
-          mkdir -p /usr/local/include;
-          cp -r /tmp/persist/tbb_build /usr/local/include/tbb_build;
-          cp -r /tmp/persist/tbb /usr/local/include/tbb;
           cp /tmp/persist/src/pso/main/ew_get_moves get-move-service/src/external_bin/
       - run: >
           cd get-move-service;
@@ -40,12 +33,6 @@ jobs:
       - image: domslee/bazel:tbb-pipenv
     steps:
       - checkout
-      - attach_workspace:
-          at: /tmp/persist
-      - run: >
-          mkdir -p /usr/local/include;
-          cp -r /tmp/persist/tbb_build /usr/local/include/tbb_build;
-          cp -r /tmp/persist/tbb /usr/local/include/tbb;
       - run: >
           cd python;
           python3.7 -m pipenv install;
@@ -55,12 +42,6 @@ jobs:
       - image: domslee/bazel:tbb2
     steps:
       - checkout
-      - attach_workspace:
-          at: /tmp/persist
-      - run: >
-          mkdir -p /usr/local/include;
-          cp -r /tmp/persist/tbb_build /usr/local/include/tbb_build;
-          cp -r /tmp/persist/tbb /usr/local/include/tbb;
       - run: >
           cd cpp;
           ./scripts/setup.sh;
@@ -70,10 +51,8 @@ workflows:
   build_and_test:
     jobs:
       - build
+      - pythonTest
       - getMoveServiceTest:
-          requires:
-            - build
-      - pythonTest:
           requires:
             - build
       - cppTest:
