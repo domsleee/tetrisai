@@ -13,7 +13,7 @@ jobs:
           cp -r /usr/local/include/tbb persist/tbb;
           cp -r bazel-bin/src persist/src;
       - persist_to_workspace:
-          root: persist
+          root: cpp/persist
           paths:
             - src
             - tbb_build
