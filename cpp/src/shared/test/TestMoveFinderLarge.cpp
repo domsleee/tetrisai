@@ -6,6 +6,7 @@
 SCENARIO("large data") {
   const auto file = TEST_FOLDER + "/big_data3.in";
   std::ifstream fin(file);
+  DISABLE_TEST;
 
   char boardStr[205];
   boardStr[200] = '\0';

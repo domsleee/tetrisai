@@ -37,8 +37,8 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
   auto cmp = [](const PairT &l, const PairT &r) {
     return l.first >= r.first;
   };
-  //std::priority_queue<PairT, std::vector<PairT>, decltype(cmp)> q(cmp);
-  std::queue<PairT> q;
+  std::priority_queue<PairT, std::vector<PairT>, decltype(cmp)> q(cmp);
+  //std::queue<PairT> q;
 
   std::set<BitPieceInfo> moves;
 
@@ -69,7 +69,7 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
     const int SCORE_FRAME_ENTERED = 10000;
     const int SCORE_ROTATED = 100;
 
-    const auto [topScore, top] = q.front(); q.pop();
+    const auto [topScore, top] = q.top(); q.pop();
     auto addNxFrame = [&, top=top, topScore=topScore]{
       auto nxFrame = top;
       nxFrame.nextFrame();

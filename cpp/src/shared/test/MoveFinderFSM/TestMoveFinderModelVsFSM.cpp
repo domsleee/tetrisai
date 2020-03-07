@@ -28,7 +28,8 @@ auto helper(int maxDropRem, int height, int c) {
 
 
 SCENARIO("I-PIECE has moves on empty board") {
-   {
+  DISABLE_TEST;
+  {
     auto b = BitBoard(getWell(12, 0));
     auto iPiece = b.getPiece(BlockType::I_PIECE);
     std::vector<Action> actions = {

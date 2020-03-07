@@ -2,6 +2,8 @@
 
 #include <string>
 
+#define DISABLE_TEST return
+
 //#define MY_DEBUG 1
 
 #ifdef MY_DEBUG

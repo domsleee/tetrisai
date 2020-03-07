@@ -7,6 +7,8 @@
 #include "src/shared/MoveFinder/MoveFinderFSM/MoveFinderState.hpp"
 #include <memory>
 
+#define RECORD_MOVEFINDER_EDGES 1
+
 
 class MoveFinderFSM {
   std::unordered_map<MoveFinderState, std::pair<MoveFinderState, Action>> pred_;
