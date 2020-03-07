@@ -7,6 +7,7 @@ jobs:
       - checkout
       - run: >
           cd cpp;
+          ./scripts/setup.sh;
           bazel build //src/pso/main:ew_get_moves;
           mkdir persist;
           cp -r /usr/local/include/tbb_build persist/tbb_build;
@@ -32,7 +33,6 @@ jobs:
           cp /tmp/persist/src/pso/main/ew_get_moves get-move-service/src/external_bin/
       - run: >
           cd get-move-service;
-          python3.7 -m pip install pipenv --user;
           python3.7 -m pipenv install;
           python3.7 -m pipenv run sh -c "cd src/test; python -m unittest";
   pythonTest:
@@ -50,9 +50,18 @@ jobs:
           cp /tmp/persist/src/pso/main/ew_get_moves get-move-service/src/external_bin/
       - run: >
           cd python;
-          python3.7 -m pip install pipenv --user;
           python3.7 -m pipenv install;
           python3.7 -m pipenv run sh -c "cd tetrisai/test; python -m unittest";
+  cppTest:
+      - image: domslee/bazel:tbb2
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp/persist
+      - run: >
+          cd cpp;
+          ./scripts/setup.sh;
+          ./test.sh;
 workflows:
   version: 2
   build_and_test:
@@ -62,6 +71,9 @@ workflows:
           requires:
             - build
       - pythonTest:
+          requires:
+            - build
+      - cppTest:
           requires:
             - build
 

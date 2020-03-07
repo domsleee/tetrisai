@@ -13,7 +13,11 @@
 #define REQ_IND(w, wExp, ind) REQUIRE(w[ind] == wExp[ind])
 #define REQ_DELTA(a, b) REQUIRE_THAT(a, Catch::WithinAbs(b, 0.01f));
 
-const std::string TEST_FOLDER = "/home/dom/tetrisai/src/shared/test/data";
+#ifndef WORKSPACE_DIR
+#define WORKSPACE_DIR "NO_WORKSPACE_DIR"
+#endif
+
+const std::string TEST_FOLDER = std::string(WORKSPACE_DIR) + std::string("/src/shared/test/data");
 
 BitBoard readBoard(const std::string &filePath);
 

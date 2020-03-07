@@ -1,5 +1,11 @@
-BENCHMARK_COPTS = ["-O3", "-DNDEBUG"]
-EXEC_COPTS = ["-O3", "-DNDEBUG"]
+load("//:path.bzl", "WORKSPACE_DIR")
+
+
+WORKSPACE_DIR_DEF = "-DWORKSPACE_DIR='\"" + WORKSPACE_DIR + "\"'"
+
+BENCHMARK_COPTS = ["-O3", "-DNDEBUG", WORKSPACE_DIR_DEF]
+EXEC_COPTS = ["-O3", "-DNDEBUG", WORKSPACE_DIR_DEF]
+TEST_COPTS = [WORKSPACE_DIR_DEF]
 EW_MOVE_FINDER_CACHE_COPTS = ["-O3", "-DMOVE_FINDER_CACHE"]
 
 def shared_library(name, deps = []):
@@ -17,7 +23,8 @@ def gen_test_rules(deps):
     native.cc_test(
       name=file.replace(".","_"),
       srcs=[file],
-      deps=deps
+      deps=deps,
+      copts=TEST_COPTS
     )
 
 
