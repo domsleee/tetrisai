@@ -5,9 +5,6 @@ jobs:
       - image: domslee/bazel:tbb2
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - build-{{ .Branch }}-1
       - run: >
           cd cpp;
           bazel build //src/pso/main:ew_get_moves;
@@ -21,19 +18,9 @@ jobs:
             - src
             - tbb_build
             - tbb
-      - save_cache:
-          key: build-{{ .Branch }}-1
-          paths:
-            - bazel-bin
-            - bazel-out
-            - bazel-genfiles
-            - bazel-tetrisai
-            - bazel-project
-            - bazel-testlogs
-            - /root/.cache/bazel
   getMoveServiceTest:
     docker:
-      - image: domslee/bazel:tbb2
+      - image: domslee/bazel:tbb-pipenv
     steps:
       - checkout
       - attach_workspace:
@@ -44,23 +31,37 @@ jobs:
           cp -r /tmp/persist/tbb /usr/local/include/tbb;
           cp /tmp/persist/src/pso/main/ew_get_moves get-move-service/src/external_bin/
       - run: >
-          export LC_ALL=C.UTF-8;
-          export LANG=C.UTF-8;
-          apt-get update;
-          apt-get install software-properties-common -y;
-          add-apt-repository ppa:deadsnakes/ppa -y;
-          apt-get update;
-          apt-get install python3.7 python3-pip -y;
           cd get-move-service;
           python3.7 -m pip install pipenv --user;
           python3.7 -m pipenv install;
           python3.7 -m pipenv run sh -c "cd src/test; python -m unittest";
+  pythonTest:
+    getMoveServiceTest:
+    docker:
+      - image: domslee/bazel:tbb-pipenv
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp/persist
+      - run: >
+          mkdir -p /usr/local/include;
+          cp -r /tmp/persist/tbb_build /usr/local/include/tbb_build;
+          cp -r /tmp/persist/tbb /usr/local/include/tbb;
+          cp /tmp/persist/src/pso/main/ew_get_moves get-move-service/src/external_bin/
+      - run: >
+          cd python;
+          python3.7 -m pip install pipenv --user;
+          python3.7 -m pipenv install;
+          python3.7 -m pipenv run sh -c "cd tetrisai/test; python -m unittest";
 workflows:
   version: 2
   build_and_test:
     jobs:
       - build
       - getMoveServiceTest:
+          requires:
+            - build
+      - pythonTest:
           requires:
             - build
 
