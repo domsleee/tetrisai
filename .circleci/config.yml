@@ -10,6 +10,7 @@ jobs:
           ./scripts/setup.sh;
           bazel build //src/pso/main:ew_get_moves;
           mkdir persist;
+          bazel run //src/shared/test:TestMoveFinderRewrite_cpp;
           cp -r bazel-bin/src persist/src;
       - persist_to_workspace:
           root: cpp/persist
