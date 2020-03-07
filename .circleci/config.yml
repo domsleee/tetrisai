@@ -45,7 +45,7 @@ jobs:
       - run: >
           cd cpp;
           ./scripts/setup.sh;
-          ./test.sh;
+          bazel query //... | xargs bazel test --local_resources=2360,1.0,1.0;
 workflows:
   version: 2
   build_and_test:
