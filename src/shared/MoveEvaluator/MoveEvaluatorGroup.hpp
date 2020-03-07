@@ -20,7 +20,7 @@ public:
       {}
 
 
-  void setWeights(const Weighting &w) {
+  MoveEvaluatorGroup& setWeights(const Weighting &w) {
     if (static_cast<int>(w.size()) != NUM_FACTORS) {
       printf("Given %lu, expected %d\n", w.size(), NUM_FACTORS);
       throw std::runtime_error("Unexpected weight size");
@@ -36,6 +36,7 @@ public:
       }
       evaluators_.push_back(pair.first->createNew(w2));
     }
+    return *this;
   }
 
   double evaluate(const BitBoard &b, const BitPieceInfo &p, int level) const {

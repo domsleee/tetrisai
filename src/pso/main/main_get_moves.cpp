@@ -130,52 +130,11 @@ void handleGetMoveGivenNextPiece(int num_lines) {
   auto [me, mf] = getMeMfPair(num_lines);
   mf.setFirstMoveDirectionChar(firstMoveDirectionChar);
 
-  using SetT = std::tuple<double, BitPieceInfo, BitPieceInfo>;
-  struct SetComp {
-    bool operator()(const SetT t1, const SetT t2) const {
-      if (std::get<0>(t1) != std::get<0>(t2)) {
-        return std::get<0>(t1) < std::get<0>(t2);
-      }
-      return std::get<2>(t1) < std::get<2>(t2);
-    }
-  };
-
-  std::set<SetT, SetComp> scores;
+  auto getNextMoveHandler = NewGetNextMove(me, mf);
+  
   const auto board = BitBoard(boardStr);
-  const auto moves = mf.findAllMoves(board, blockType1);
-  auto fn = [&](const auto nxPiece) -> std::vector<SetT> {
-    auto [nxBoard, lineClears] = applyPieceInfo(board, nxPiece);
-    int totalLineClears = num_lines + lineClears;
-    double scoreOffset = lineClears == 4 ? -1e9 : 0;
-    auto [me2, mf2] = getMeMfPair(totalLineClears);
-    auto innerMoves = mf2.findAllMoves(nxBoard, blockType2);
-    
-    auto innerFn = [&](const auto nxPiece2) -> SetT {
-      auto score = me2.evaluate(nxBoard, nxPiece2, totalLineClears >= 130 ? 19 : 18);
-      return {score + scoreOffset, nxPiece, nxPiece2};
-    };
-    std::vector<SetT> innerScores(innerMoves.size(), {0, board.getEmptyPiece(), board.getEmptyPiece()});
-    std::transform(std::execution::par_unseq, // par, seq, par_unseq
-                  innerMoves.begin(), innerMoves.end(), 
-                  innerScores.begin(), innerFn);
-    return innerScores;
-  };
-
-  std::vector<std::vector<SetT>> result(moves.size());
-  std::transform(std::execution::par_unseq, // par, seq, par_unseq
-                moves.begin(), moves.end(), 
-                result.begin(), fn);
-  for (auto vec: result) for (auto score: vec) scores.insert(score);
-
-  if (scores.size() == 0) {
-    std::cout << "result: no moves\n";
-    return;
-  }
-
-  auto bestScoreTup = *scores.begin();
-  dprintf("best score: %0.2f\n", std::get<0>(bestScoreTup));
-  auto bestPieceInfo = std::get<1>(bestScoreTup);
-  auto shortestPathStrings = mf.getShortestPath(bestPieceInfo);
+  auto bestPieceInfo = getNextMoveHandler.getNextMove(board, blockType1, blockType2, num_lines);
+  auto shortestPathStrings = getNextMoveHandler.getMoveFinder().getShortestPath(bestPieceInfo);
   auto ct = shortestPathStrings.size();
 
   auto [nxBoard, lineClears] = applyPieceInfo(board, bestPieceInfo);

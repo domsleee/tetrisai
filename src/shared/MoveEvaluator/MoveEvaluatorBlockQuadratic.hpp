@@ -21,23 +21,21 @@ class MoveEvaluatorBlockQuadratic {
   static const int QUADRATIC_B = MoveEvaluatorTetrisReady::NUM_FACTORS + 1;
   static const int QUADRATIC_C = MoveEvaluatorTetrisReady::NUM_FACTORS + 2;
 
-  MoveEvaluatorBlockQuadratic(const Weighting &w): me_{w}, w_{w} {
+  MoveEvaluatorBlockQuadratic(const Weighting &w): w_{w} {
     if (w.size() < NUM_FACTORS) {
       printf("Bad weight vector size. Needed at least %d, got %lu", NUM_FACTORS, w.size());
       throw std::runtime_error("bad weight vector size");
     }
   }
 
-  double evaluate(const BitBoard &b, const BitPieceInfo &p) const {
-    auto eval = me_.evaluate(b, p);
+  double evaluateMine(const BitBoard &b, const BitPieceInfo &p, int level) const {
     auto colHeights = getColHeights(b);
-
     auto [valid, minBlock] = getMinBlock(colHeights.data());
+    double eval = 0;
     if (valid) eval += w_[QUADRATIC_A] * minBlock * minBlock + w_[QUADRATIC_B] * minBlock + w_[QUADRATIC_C];
     return eval;
   }
 
  private:
-  const MoveEvaluatorTetrisReady me_;
   const Weighting w_;
 };

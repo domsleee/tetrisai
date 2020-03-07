@@ -8,7 +8,6 @@
 #include "src/shared/MoveEvaluator/MoveEvaluatorTetrisReady.hpp"
 #include "src/shared/MoveEvaluator/MoveEvaluatorBlockLinear.hpp"
 #include "src/shared/MoveEvaluator/MoveEvaluatorBlockQuadratic.hpp"
-#include "src/shared/MoveEvaluator/MoveEvaluatorBlockLinearNoTetrisReady.hpp"
 
 #include <chrono>
 
@@ -39,7 +38,7 @@ const auto w2 = WeightingFn::readFromString(best19_block_linear);
 MoveEvaluatorGroup getBestMoveEvaluatorLinear_50_fixed(bool is19);
 
 
-auto getMeMfPair(int num_lines) {
+std::pair<MoveEvaluatorGroup, MoveFinderFSM> getMeMfPair(int num_lines) {
   auto me1 = getBestMoveEvaluatorLinear_50_fixed(false);
   auto me2 = getBestMoveEvaluatorLinear_50_fixed(true);
 
@@ -152,14 +151,6 @@ MoveEvaluatorGroup gestBestMoveEvaluatorBurns_group(bool is19) {
 
 MoveEvaluatorBlockQuadratic getBestMoveEvaluatorBlockQuadratic(bool is19) {
   return {WeightingFn::readFromString(is19 ? best19_block_quadratic : best18_block_quadratic)};
-}
-
-MoveEvaluatorBlockLinearNoTetrisReady getBestMoveEvaluatorBlockLinearNoTetrisReady(bool is19) {
-  return {WeightingFn::readFromString(best19_block_linear_no_tetris_ready)};
-}
-
-MoveEvaluatorBlockLinearNoTetrisReady getBestMoveEvaluatorBlockLinearNoTetrisReady_FAST(bool is19) {
-  return {WeightingFn::readFromString(best19_block_linear_no_tetris_ready_fast)};
 }
 
 using Ms = std::chrono::duration<double>;

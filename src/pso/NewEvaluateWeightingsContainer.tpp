@@ -7,12 +7,12 @@
 
 // this is a weird factory thing
 
-template<typename MyMoveEvaluator, typename MyMoveFinder>
+template<typename MyMoveFinder>
 class NewEvaluateWeightingsContainer {
-  std::unique_ptr<MyMoveEvaluator> me_;
+  std::unique_ptr<MoveEvaluatorGroup> me_;
   std::unique_ptr<MyMoveFinder> mf_;
 
-  using MyGetNextMove = NewGetNextMove<MyMoveFinder, MyMoveEvaluator>;
+  using MyGetNextMove = NewGetNextMove<MyMoveFinder>;
   using MyRunPieceSet = RunPieceSet<MyGetNextMove>;
   using MyNewEvaluateWeightings = NewEvaluateWeightings<MyRunPieceSet>;
 
@@ -20,8 +20,8 @@ class NewEvaluateWeightingsContainer {
 
  public:
   std::unique_ptr<MyRunPieceSet> runPieceSet_;
-  NewEvaluateWeightingsContainer(const MyMoveEvaluator &me, const MyMoveFinder &mf) :
-    me_(std::make_unique<MyMoveEvaluator>(me)),
+  NewEvaluateWeightingsContainer(const MoveEvaluatorGroup &me, const MyMoveFinder &mf) :
+    me_(std::make_unique<MoveEvaluatorGroup>(me)),
     mf_(std::make_unique<MyMoveFinder>(mf))
   {}
   

@@ -13,19 +13,12 @@ class MoveEvaluatorAdapter: public IEvaluator {
  public:
   static const int NUM_FACTORS = MyMoveEvaluator::NUM_FACTORS;
   MoveEvaluatorAdapter(const Weighting &w): w_(w) {}
-  double evaluate(const BitBoard &b, const BitPieceInfo &p) const {
-    return me_.evaluate(b, p, w_);
-  }
-  // todo: deprecated
-  double evaluate(const BitBoard &b, const BitPieceInfo &p, const int level) const {
-    return evaluate(b, p);
-  }
   double evaluateMine(const BitBoard &b, const BitPieceInfo &p, const EvaluatorInfo &evaulatorInfo) const override {
-    return evaluate(b, p);
+    return me_.evaluate(b, p, w_);
   }
 
  private:
-  const MyMoveEvaluator me_;
+  const MyMoveEvaluator me_ = {};
   const Weighting w_;
 };
 

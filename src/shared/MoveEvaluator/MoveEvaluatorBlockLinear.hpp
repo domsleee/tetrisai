@@ -17,28 +17,12 @@
 
 class MoveEvaluatorBlockLinear: public IEvaluator {
  public:
-  static const int NUM_FACTORS = MoveEvaluatorTetrisReady::NUM_FACTORS + 2;
-  static const int LINEAR_A = MoveEvaluatorTetrisReady::NUM_FACTORS;
-  static const int LINEAR_B = MoveEvaluatorTetrisReady::NUM_FACTORS + 1;
+  static const int NUM_FACTORS = 2;
+  static const int LINEAR_A = 0;
+  static const int LINEAR_B = 1;
    
-  MoveEvaluatorBlockLinear(const Weighting &w): me_{w}, w_{w} {
-    if (w.size() < NUM_FACTORS) {
-      printf("Bad weight vector size. Needed at least %d, got %lu", NUM_FACTORS, w.size());
-      throw std::runtime_error("bad weight vector size");
-    }
-  }
-
-  // todo: deprecate
-  double evaluate(const BitBoard &b, const BitPieceInfo &p, int level) const {
-    return evaluate(b, p);
-  }
-
-  double evaluate(const BitBoard &b, const BitPieceInfo &p) const {
-    BitBoard b2 = b;
-    b2.applyPieceInfo(p);
-    auto colHeights = getColHeights(b2);
-    auto eval = me_.evaluateGivenColHeights(b, p, colHeights.data());
-    return eval + evaluateMineGivenColHeights(b, p, colHeights.data(), DEFAULT_LEVEL);
+  MoveEvaluatorBlockLinear(const Weighting &w): w_{w} {
+    assert(w.size() == NUM_FACTORS);
   }
 
   double evaluateMine(const BitBoard &b, const BitPieceInfo &p, const EvaluatorInfo &evaluatorInfo) const override {
@@ -56,6 +40,5 @@ class MoveEvaluatorBlockLinear: public IEvaluator {
   }
 
  private:
-  const MoveEvaluatorTetrisReady me_;
   const Weighting w_;
 };

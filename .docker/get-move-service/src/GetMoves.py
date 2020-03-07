@@ -104,6 +104,10 @@ class GetMoves(IGetMoves):
   def _process_line(self, s: str, lhs: str) -> str:
     col_split = s.split(':')
     if len(col_split) != 2:
+      while 1:
+        line = self._process.read_line()
+        if line != "":
+          print(line)
       raise ValueError("Invalid line (expected a colon) '%s'" % s)
     my_lhs = col_split[0].strip()
     if my_lhs != lhs:

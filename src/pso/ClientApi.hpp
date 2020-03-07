@@ -12,10 +12,10 @@
 #include "src/shared/MoveFinder/CacheMoveFinder.tpp"
 #include "src/pso/NewEvaluateWeightingsContainer.tpp"
 #include "src/shared/Config.hpp"
+#include "src/shared/MoveEvaluator/MoveEvaluatorGroups.hpp"
 
 
-template <typename MoveEvaluator>
-double get_score_regular(MoveEvaluator me, const Config &cfg, bool is19=true) {
+double get_score_regular(MoveEvaluatorGroup me, const Config &cfg, bool is19=true) {
   auto moveFinder = MoveFinderRewrite();
   auto ew_container = NewEvaluateWeightingsContainer(
     me,
@@ -26,19 +26,17 @@ double get_score_regular(MoveEvaluator me, const Config &cfg, bool is19=true) {
   return ew.runAllPieceSets();
 }
 
-template <typename MoveEvaluator>
-double get_score_regular(MoveEvaluator me, int seed=-1) {
+double get_score_regular(MoveEvaluatorGroup me, int seed=-1) {
   Config cfg;
   cfg.seed = seed;
   return get_score_regular(me, cfg);
 }
 
 double get_score_regular(const Weighting &w, int seed=-1) {
-  return get_score_regular(MoveEvaluatorAdapter<MoveEvaluator>(w), seed);
+  return get_score_regular(getMoveEvaluatorGroups().at(MOVE_EVALUATOR_GROUP_NORMAL).setWeights(w), seed);
 }
 
-template <typename MoveEvaluator>
-std::vector<ScoreManager> get_transition_evaluation(MoveEvaluator me1, MoveEvaluator me2, Config cfg, int moveEvaluatorLineTransition=100) {
+std::vector<ScoreManager> get_transition_evaluation(MoveEvaluatorGroup me1, MoveEvaluatorGroup me2, Config cfg, int moveEvaluatorLineTransition=100) {
   auto mf1 = MoveFinderRewrite();
   auto ew_container = NewEvaluateWeightingsContainer(
     me1,

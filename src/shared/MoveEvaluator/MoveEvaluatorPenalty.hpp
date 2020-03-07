@@ -13,24 +13,17 @@ int reachableHeight(int c, int framesPerDrop=2);
 
 class MoveEvaluatorPenalty {
  public:
-  static const int NUM_FACTORS_ = 19-1; // it must be this
-  static const int NUM_FACTORS = NUM_FACTORS_; // it must be this
-  static const int DAS_BLOCKED_LEFT = 17;
-  static const int DAS_BLOCKED_RIGHT = 18;
+  static const int NUM_FACTORS = 2;
+  static const int DAS_BLOCKED_LEFT = 0;
+  static const int DAS_BLOCKED_RIGHT = 1;
 
-  MoveEvaluatorPenalty(const Weighting &w): me_{w}, w_{w} {
-    assert(w.size() == NUM_FACTORS_);
+  MoveEvaluatorPenalty(const Weighting &w): w_{w} {
+    assert(w.size() == NUM_FACTORS);
   }
 
-  // todo: deprecate
-  double evaluate(const BitBoard &b, const BitPieceInfo &p, int level) const {
-    return evaluate(b, p);
-  }
-
-
-  double evaluate(const BitBoard &b, const BitPieceInfo &p) const {
+  double evaluateMine(const BitBoard &b, const BitPieceInfo &p, const EvaluatorInfo &evaluatorInfo) const {
     int colHeights[NUM_COLUMNS];
-    double eval = me_.evaluate(b, p);
+    double eval = 0;
     for (int c = 0; c < NUM_COLUMNS; ++c) {
       colHeights[c] = 0;
       for (int r = 0; r < NUM_ROWS; ++r) {
@@ -70,7 +63,6 @@ class MoveEvaluatorPenalty {
   }
 
  private:
-  const MoveEvaluatorAdapter<MoveEvaluator> me_;
   const Weighting &w_;
 };
 

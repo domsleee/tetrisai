@@ -32,7 +32,7 @@ Weighting getWeightsTemp(const BitBoard &b, const BitPieceInfo &piece) {
     if (i > 0) w[i-1] = 0;
     w[i] = 1;
     MyMoveEvaluator me(w);
-    res[i] = me.evaluate(b, piece);
+    res[i] = me.evaluateMine(b, piece, EvaluatorInfo(19));
   }
   return res;
 }

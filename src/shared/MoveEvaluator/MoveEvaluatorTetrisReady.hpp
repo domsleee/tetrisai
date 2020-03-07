@@ -15,23 +15,11 @@
 
 class MoveEvaluatorTetrisReady: public IEvaluator {
  public:
-  static const int NUM_FACTORS = MoveEvaluator::NUM_FACTORS + 1;
-  static const int TETRIS_READY = MoveEvaluator::NUM_FACTORS;
+  static const int NUM_FACTORS = 1;
+  static const int TETRIS_READY = 0;
 
-  MoveEvaluatorTetrisReady(const Weighting &w): me_{w}, w_{w} {
-    if (w.size() < NUM_FACTORS) {
-      printf("Bad weight vector size. Expected at least %d, got %lu", NUM_FACTORS, w.size());
-      throw std::runtime_error("bad weight vector size");
-    }
-  }
-
-  // todo. deprecate
-  double evaluate(const BitBoard b, const BitPieceInfo p) const {
-    return evaluateGivenColHeights(b, p, getColHeights(b).data());
-  }
-
-  double evaluateGivenColHeights(const BitBoard b, const BitPieceInfo p, int *colHeights) const {
-    return me_.evaluate(b, p) + evaluateMineGivenColHeights(b, p, colHeights, DEFAULT_LEVEL);
+  MoveEvaluatorTetrisReady(const Weighting &w): w_{w} {
+    assert(w.size() == NUM_FACTORS);
   }
 
   double evaluateMine(const BitBoard &b, const BitPieceInfo &p, const EvaluatorInfo &evaluatorInfo) const override {
@@ -67,6 +55,5 @@ class MoveEvaluatorTetrisReady: public IEvaluator {
   }
 
  private:
-  const MoveEvaluatorAdapter<MoveEvaluator> me_;
   const Weighting w_;
 };

@@ -11,10 +11,7 @@ class MoveEvaluatorBurns: public IEvaluator {
   static const int NUM_FACTORS = 1;
    
   MoveEvaluatorBurns(const Weighting &w): w_{w} {
-    if (w.size() < NUM_FACTORS) {
-      printf("Bad weight vector size. Needed at least %d, got %lu", NUM_FACTORS, w.size());
-      throw std::runtime_error("bad weight vector size");
-    }
+    assert(w.size() == NUM_FACTORS);
   }
 
   double evaluateMine(const BitBoard &b, const BitPieceInfo &p, const EvaluatorInfo &evaluatorInfo) const override {
