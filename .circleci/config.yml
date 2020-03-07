@@ -46,7 +46,6 @@ jobs:
           mkdir -p /usr/local/include;
           cp -r /tmp/persist/tbb_build /usr/local/include/tbb_build;
           cp -r /tmp/persist/tbb /usr/local/include/tbb;
-          cp /tmp/persist/src/pso/main/ew_get_moves get-move-service/src/external_bin/
       - run: >
           cd python;
           python3.7 -m pipenv install;
@@ -58,6 +57,10 @@ jobs:
       - checkout
       - attach_workspace:
           at: /tmp/persist
+      - run: >
+          mkdir -p /usr/local/include;
+          cp -r /tmp/persist/tbb_build /usr/local/include/tbb_build;
+          cp -r /tmp/persist/tbb /usr/local/include/tbb;
       - run: >
           cd cpp;
           ./scripts/setup.sh;
