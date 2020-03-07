@@ -16,10 +16,18 @@ class MoveFinderFSM {
   bool hasFirstMoveConstraint_ = false;
   void addEdge(const MoveFinderState &s1, const MoveFinderState &s2, Action action);
   void addEdge(const MoveFinderState &s1, const MoveFinderState &s2, MoveDirection md) {
+#ifdef RECORD_MOVEFINDER_EDGES
     addEdge(s1, s2, toAction(md));
+#else
+    return;
+#endif
   }
   void addEdge(const MoveFinderState &s1, const MoveFinderState &s2, RotateDirection rd) {
+#ifdef RECORD_MOVEFINDER_EDGES
     addEdge(s1, s2, toAction(rd));
+#else
+    return;
+#endif
   }
  public:
   std::vector<BitPieceInfo> findAllMoves(const BitBoard& b, BlockType blockType);

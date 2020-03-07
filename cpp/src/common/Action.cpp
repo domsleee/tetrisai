@@ -1,5 +1,5 @@
 
-#include "src/shared/MoveFinder/MoveFinderFSM/Action.h"
+#include "src/common/Action.h"
 #include <stdexcept>
 
 Action toAction(MoveDirection md) {

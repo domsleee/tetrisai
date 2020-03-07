@@ -43,17 +43,19 @@ BitBoard getBoardFromPartialStringVector(std::vector<std::string> strings) {
   return {vs};
 }
 
-
-
-std::vector<std::vector<int>> leftWell(int height) {
+std::vector<std::vector<int>> getWell(int height, int column) {
   std::vector<std::vector<int>> vs;
   for (int i = 0; i < NUM_ROWS-height; i++) {
     vs.push_back(std::vector<int>(NUM_COLUMNS, 0));
   }
-  std::vector<int> leftFree = std::vector<int>(NUM_COLUMNS, 1);
-  leftFree[0] = 0;
+  std::vector<int> rowWithOneFree = std::vector<int>(NUM_COLUMNS, 1);
+  rowWithOneFree[column] = 0;
   for (int i = 0; i < height; i++) {
-    vs.push_back(leftFree);
+    vs.push_back(rowWithOneFree);
   }
   return vs;
+}
+
+std::vector<std::vector<int>> leftWell(int height) {
+  return getWell(height, 0);
 }

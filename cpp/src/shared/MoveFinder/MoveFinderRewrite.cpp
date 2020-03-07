@@ -30,18 +30,30 @@ struct DoWork {
 
     runHolding(pieceInfo, MoveDirection::LEFT);
     runHolding(pieceInfo, MoveDirection::RIGHT);
+    runReleased(pieceInfo, false);
 
     //printf("solution space: %lu\n", seen_.size());
     return {moveSet_.begin(), moveSet_.end()};
   }
 
   void runHolding(const BitPieceInfo& currentPiece, MoveDirection md) {
-    runHolding(currentPiece, md, 0, maxDropRem_);
+    runHolding(currentPiece, md, 1, maxDropRem_);
   }
 
   void runHolding(const BitPieceInfo &currentPiece, MoveDirection md, int8_t dasRem, int8_t dropRem) {  
     int8_t m = std::min(dasRem, dropRem);
-    if (m > 0) return runHolding(currentPiece, md, dasRem-m, dropRem-m);
+    if (m > 0) {
+      if (dropRem <= 1) {
+        if (currentPiece.canMove(MoveDirection::DOWN)) {
+          runReleased(currentPiece.move(MoveDirection::DOWN), false);
+        }
+      } else {
+        runReleased(currentPiece, false);
+      }
+      return runHolding(currentPiece, md, dasRem-m, dropRem-m);
+    }
+    //printf("(dasRem: %d, dropRem: %d)\n", dasRem, dropRem);
+    //printBoardWithPiece(currentPiece.getBoard(), currentPiece);
 
     if (holdingSeen_[md][currentPiece.getRepId()]) return;
     holdingSeen_[md][currentPiece.getRepId()] = true;
@@ -52,10 +64,12 @@ struct DoWork {
       bool canMoveSideways = false;
       for (const auto &nxPiece: closedRotN) {
         if (nxPiece.canMove(md)) {
-          if (!canMoveSideways) runHolding(nxPiece.move(md), md, MAX_DAS_REM, dropRem);
+          if (!canMoveSideways) {
+            runHolding(nxPiece.move(md), md, MAX_DAS_REM, dropRem);
+          }
           canMoveSideways = true;
         }
-        else dropRem = 0; // canStay = true
+        else runHolding(nxPiece, md, MAX_DAS_REM, dropRem);
       }
     }
 
@@ -69,7 +83,14 @@ struct DoWork {
         else { moveSet_.insert(nxPiece); }
       }
     }
-    runReleased(currentPiece, false);
+
+    if (dropRem <= 1) {
+      if (currentPiece.canMove(MoveDirection::DOWN)) {
+        runReleased(currentPiece.move(MoveDirection::DOWN), false);
+      }
+    } else {
+      runReleased(currentPiece, false);
+    }
   }
 
   void runReleased(const BitPieceInfo &currentPiece, bool lastHitUsed) {

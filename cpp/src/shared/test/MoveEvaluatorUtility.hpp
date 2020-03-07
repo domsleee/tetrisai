@@ -25,6 +25,8 @@ Weighting getExpectedWeights(const std::string &filepath);
 
 BitBoard getBoardFromPartialStringVector(std::vector<std::string> strings);
 
+std::vector<std::vector<int>> getWell(int height, int column);
+
 std::vector<std::vector<int>> leftWell(int height);
 
 template<typename MyMoveEvaluator>

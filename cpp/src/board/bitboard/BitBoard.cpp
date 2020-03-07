@@ -160,6 +160,17 @@ BitPieceInfo BitPieceInfo::move(MoveDirection md) const {
   return {BitBoardPre::getMove(id_, md), b_};
 }
 
+BitPieceInfo BitPieceInfo::doAction(Action action) const {
+  switch(action) {
+    case Action::ROTATE_AC: return rotate(RotateDirection::ROTATE_AC);
+    case Action::ROTATE_C: return rotate(RotateDirection::ROTATE_C);
+    case Action::DOWN: return move(MoveDirection::DOWN);
+    case Action::UP: return move(MoveDirection::UP);
+    case Action::LEFT: return move(MoveDirection::LEFT);
+    case Action::RIGHT: return move(MoveDirection::RIGHT);
+  }
+}
+
 Move BitPieceInfo::getPosition() const {
   return BitBoardPre::idToMove(id_);
 }

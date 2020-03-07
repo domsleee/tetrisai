@@ -9,21 +9,22 @@ export class GameBootstrap {
     this.demoPlayer = demoPlayer;
   }
 
-  public async setupFromNewCanvas(frameAwaiter: IFrameAwaiter) {
+  public async setupFromNewCanvas(frameAwaiter: IFrameAwaiter, is19: boolean = true) {
     const buttonAdder = new ButtonAdder(this.demoPlayer);
 
     for (let i = 0; i < 3; ++i) {
       buttonAdder.addButtonPress(DemoButton.BUTTON_START);
     }
-    for (let i = 0; i < 3; ++i) {
+    for (let i = 0; i < 3 + (is19 ? 1 : 0); ++i) {
       buttonAdder.addButtonPress(DemoButton.BUTTON_RIGHT);
     }
     buttonAdder.addButtonPress(DemoButton.BUTTON_DOWN);
 
-
+    // 1 - line second piece
+    // 2 - maxout
     // 12 - also good
     // 22 - 989k
-    const chosenFrame = 2;
+    const chosenFrame = 1;
     this.demoPlayer.addEvent(
       getDemoEntry(
         buttonAdder.frame + chosenFrame - 1,

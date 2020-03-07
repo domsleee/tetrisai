@@ -1,5 +1,5 @@
 #pragma once
-#include "src/shared/MoveFinder/MoveFinderFSM/Action.h"
+#include "src/common/Action.h"
 #include "src/board/bitboard/BitBoard.h"
 
 enum FSMState {
@@ -21,9 +21,11 @@ class MoveFinderState {
   bool isLeftHolding_;
 
   BitPieceInfo piece_;
+
+  static const int NUM_MOVE_COOLDOWNS = 3;
   int rotateCooldown_[2] = {0, 0};
   int releaseCooldown_ = 0;
-  int moveCooldown_ = 0; // on release ==> 1
+  int moveCooldown_[NUM_MOVE_COOLDOWNS] = {0, 0, 0};
   int dropRem_;
   int maxDropRem_;
   int dasRem_ = 1; // on zero, can use das (indicated by FSMState::HOLDING)
@@ -45,13 +47,22 @@ class MoveFinderState {
     rotateCooldown_[1] = std::max(rotateCooldown_[1], cooldown);
   }
 
+  void setMoveCooldown(int cooldown) {
+    for (int i = 0; i < NUM_MOVE_COOLDOWNS; ++i) {
+      moveCooldown_[i] = std::max(moveCooldown_[i], cooldown);
+    }
+  }
+
   void nextFrame() {
     frameEntered_++;
     dasRem_ = std::max(dasRem_-1, 0);
     dropRem_ = std::max(dropRem_-1, 0);
-    moveCooldown_ = std::max(moveCooldown_-1, 0);
-    rotateCooldown_[(int)Action::ROTATE_AC] = std::max(rotateCooldown_[(int)Action::ROTATE_AC]-1, 0);
-    rotateCooldown_[(int)Action::ROTATE_C] = std::max(rotateCooldown_[(int)Action::ROTATE_C]-1, 0);
+    for (int i = 0; i < 3; ++i) {
+      moveCooldown_[i] = std::max(moveCooldown_[i]-1, 0);
+    }
+    for (int i = 0; i < 2; ++i) {
+      rotateCooldown_[i] = std::max(rotateCooldown_[i]-1, 0);
+    }
     releaseCooldown_ = std::max(releaseCooldown_-1, 0);
   }
 
@@ -61,7 +72,9 @@ class MoveFinderState {
     && s1.piece_ == s2.piece_
     && s1.rotateCooldown_[0] == s2.rotateCooldown_[0]
     && s1.rotateCooldown_[1] == s2.rotateCooldown_[1]
-    && s1.moveCooldown_ == s2.moveCooldown_
+    && s1.moveCooldown_[0] == s2.moveCooldown_[0]
+    && s1.moveCooldown_[1] == s2.moveCooldown_[1]
+    && s1.moveCooldown_[2] == s2.moveCooldown_[2]
     && s1.releaseCooldown_ == s2.releaseCooldown_
     && s1.dropRem_ == s2.dropRem_
     && s1.dasRem_ == s2.dasRem_

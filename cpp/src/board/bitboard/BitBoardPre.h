@@ -3,6 +3,7 @@
 #include "src/common/MoveDirection.hpp"
 #include "src/common/BlockType.hpp"
 #include "src/common/Move.hpp"
+#include "src/common/Action.h"
 #include <bitset>
 #include <unordered_map>
 
@@ -10,16 +11,6 @@
 class BitPieceInfo;
 
 namespace BitBoardPre {
-  // todo: union of type enums
-  enum Action {
-    MOVE_LEFT,
-    MOVE_RIGHT,
-    MOVE_DOWN,
-    MOVE_UP,
-    ROTATE_AC,
-    ROTATE_C
-  };
-
   void precompute();
 
   int getStartingPieceId(BlockType blockType);
@@ -43,9 +34,6 @@ namespace BitBoardPre {
   const std::vector<int>& getOpenRotN(int id);
 
   extern std::unordered_map<Move, int> moveToId_;
-
-  // throws exception if there is no path
-  const std::vector<Action>& getShortestPath(BitPieceInfo &p1, BitPieceInfo &p2);
 
   BlockType getBlockTypeFromId(int id);
 }

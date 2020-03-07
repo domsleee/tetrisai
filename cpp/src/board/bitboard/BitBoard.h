@@ -12,6 +12,7 @@
 #include <unordered_set>
 #include <cassert>
 #include "src/board/BoardPrinter.tpp"
+#include "src/common/Action.h"
 
 class BitBoard;
 class BitPieceInfo;
@@ -83,6 +84,7 @@ class BitPieceInfo {
   BitPieceInfo rotate(RotateDirection) const;
   bool canMove(MoveDirection) const;
   BitPieceInfo move(MoveDirection) const;
+  BitPieceInfo doAction(Action) const;
   Move getPosition() const;
   int getId() const { return id_; }
   int getRepId() const { return BitBoardPre::getRepIdFromId(id_); }
@@ -110,6 +112,9 @@ class BitPieceInfo {
 
   friend bool operator==(const BitPieceInfo& p1, const BitPieceInfo& p2) {
     return p1.id_ == p2.id_;
+  };
+  friend bool operator!=(const BitPieceInfo& p1, const BitPieceInfo& p2) {
+    return !(p1.id_ == p2.id_);
   };
   friend std::ostream& operator<<(std::ostream& os, const BitPieceInfo& p) {
     os << p.id_;

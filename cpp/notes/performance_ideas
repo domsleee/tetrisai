@@ -37,11 +37,13 @@ HOW TO PROGRESS
       [x]] Change evaluateMine to take in const EvaluateData&
 
   1.2. Get rid of old usages of evaluate()
-    [ ] replace existing tests with MoveEvaluatorGroup
+    [x] replace existing tests with MoveEvaluatorGroup
 
-  2. INCORPORATE LOOK-AHEAD IN SUMMARY DATA
+  2. FIX evaluators to be accurate to MoveFinderFSM
+
+  3. INCORPORATE LOOK-AHEAD IN SUMMARY DATA (convenience)
     + get_transition_evaluation can use MoveFinderFSM with lookahead AS WELL
-    + probably should rewrite runPieceSet
+    [ ] refactor Memf pair to newgetnextmove
     + 
 
 

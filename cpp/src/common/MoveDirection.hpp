@@ -5,8 +5,8 @@
 enum MoveDirection {
   LEFT=0,
   RIGHT,
-  UP,
-  DOWN
+  DOWN,
+  UP
 };
 
 static std::vector<MoveDirection> allMoveDirections = {

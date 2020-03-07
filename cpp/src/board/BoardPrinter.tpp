@@ -43,3 +43,5 @@ void printBoardWithPiece(const MyBoard &b, const MyBoardPiece &p) {
   printf("\n");
 }
 
+void printPiece(int id);
+

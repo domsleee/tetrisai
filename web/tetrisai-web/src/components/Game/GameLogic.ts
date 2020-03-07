@@ -11,7 +11,7 @@ import { GetOldCapture } from './GetOldCapture';
 import { GameRunner } from './GameRunner';
 import { IEmulator } from './Emulator/IEmulator';
 import { ICapturable } from './ICapturable';
-import { getDemoEntry } from './DemoEntryHelpers';
+import { getDemoEntry, getDemoEntryWithStartFrame } from './DemoEntryHelpers';
 
 function download(filename: any, text: any) {
   const FileSaver = require('file-saver');
@@ -56,8 +56,25 @@ export class GameLogic implements ICapturable<string> {
     const bs = new GameBootstrap(this.demoPlayer);
     await bs.setupFromNewCanvas(this.frameAwaiter);
     this.addFluff();
-    await this.gr.onFirstPieceAppear();
+
+    //this.demoPlayer.addEvent(getDemoEntryWithStartFrame(this.demoPlayer.getFrame() + 1, 0, DemoButton.BUTTON_LEFT, true))
     this.pa.init();
+
+    const press = (frame: number) => {
+      this.demoPlayer.addEvent(getDemoEntryWithStartFrame(frame, 0, DemoButton.BUTTON_LEFT, true))
+      this.demoPlayer.addEvent(getDemoEntryWithStartFrame(frame + 1, 0, DemoButton.BUTTON_LEFT, false))
+    }
+
+    press(465);
+    press(494);
+
+    this.enterSloMo();
+
+    while (true) {
+      await this.pa.awaitPiece();
+    }
+
+    await this.gr.onFirstPieceAppear();
 
     while (true) {
       await this.considerCaptureAndRestore();
@@ -90,27 +107,26 @@ export class GameLogic implements ICapturable<string> {
   static myfirst = true;
   static slowMoKeyHandler: any = null;
 
-  private async considerCaptureAndRestore() {
-    const enterSloMo = () => {
-      this.demoPlayer.timer.freeze();
-      this.gr.disableFpsControl();
-      if (GameLogic.slowMoKeyHandler) {
-        document.removeEventListener('keydown', GameLogic.slowMoKeyHandler);
-        GameLogic.slowMoKeyHandler = false;
+  enterSloMo = () => {
+    this.demoPlayer.timer.freeze();
+    this.gr.disableFpsControl();
+    if (GameLogic.slowMoKeyHandler) {
+      document.removeEventListener('keydown', GameLogic.slowMoKeyHandler);
+      GameLogic.slowMoKeyHandler = false;
+    }
+    GameLogic.slowMoKeyHandler = (e: KeyboardEvent) => {
+      console.log('KEYPRESS', e.code);
+      if (e.code === 'ArrowRight') {
+        this.demoPlayer.timer.onTick(true);
       }
-      GameLogic.slowMoKeyHandler = (e: KeyboardEvent) => {
-        console.log('KEYPRESS', e.code);
-        if (e.code === 'ArrowRight') {
-          this.demoPlayer.timer.onTick(true);
-        }
-        if (e.code === 'Space') {
-          this.demoPlayer.timer.toggleFreeze();
-        }
-      };
-      document.addEventListener('keydown', GameLogic.slowMoKeyHandler);
+      if (e.code === 'Space') {
+        this.demoPlayer.timer.toggleFreeze();
+      }
     };
-    
+    document.addEventListener('keydown', GameLogic.slowMoKeyHandler);
+  };
 
+  private async considerCaptureAndRestore() {
     if (false && this.demoPlayer.getFrame() >= 2200) {
       download('problematic_placement', this.capture());
       throw ErrorHandler.fatal('end.');

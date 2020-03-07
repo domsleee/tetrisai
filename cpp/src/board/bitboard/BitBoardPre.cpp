@@ -2,7 +2,6 @@
 #include "src/board/bitboard/BitBoardPre.h"
 #include "src/board/bitboard/BitBoard.h"
 #include "src/board/SimpleBoard.h"
-#include "src/board/bitboard/BitBoardPreExt.hpp"
 #include <bitset>
 #include <queue>
 #include <vector>
@@ -70,13 +69,6 @@ namespace BitBoardPre {
     setupHeights();
     setupOpenRotN();
     setupRepIds(idToOpenRotN_);
-
-    // external
-    shortestPathVec_ = BitBoardPreExt::setupAllShortestPaths();
-  }
-
-  const std::vector<Action>& getShortestPath(BitPieceInfo &p1, BitPieceInfo &p2) {
-    return shortestPathVec_.at(p1).at(p2);
   }
 
   void bfs(const SimplePieceInfo &p) {
