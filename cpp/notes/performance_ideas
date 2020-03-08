@@ -44,7 +44,7 @@ HOW TO PROGRESS
 
   3. RERUN evaluations for 18 and 19
     [ ] 18_MoveEvaluatorLinear50_again
-    [ ] 19_MoveEvaluatorLinear50_again
+    [x] 19_MoveEvaluatorLinear50_again
 
   4. INCORPORATE LOOK-AHEAD IN SUMMARY DATA (convenience)
     + get_transition_evaluation can use MoveFinderFSM with lookahead AS WELL

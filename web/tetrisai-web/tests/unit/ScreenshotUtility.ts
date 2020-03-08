@@ -1,7 +1,7 @@
 import { HEIGHT, WIDTH, PixelChecker, IPixelChecker } from '@/components/Game/PixelGetter';
 import jimp from 'jimp';
-
-export const SCREENSHOTS_FOLDER = '/Users/dom/Documents/git/tetrisAI/web/tetrisai-web/tests/data/screenshots';
+const pkgDir = require('pkg-dir');
+export const SCREENSHOTS_FOLDER = pkgDir.sync() + '/tests/data/screenshots';
 
 export async function setupWithScreenshot(filepath: string): Promise<IPixelChecker> {
   const mockScreen = {
