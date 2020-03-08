@@ -6,14 +6,14 @@
 
 static constexpr int MAX_CLEAR_HEIGHTS[NUM_COLUMNS] = {
   0, // unused
-  8,
-  11,
-  14,
-  17,
-  0, // unused
-  17,
-  14,
-  11,
+  8, // for 0
+  11, // for 1
+  14, // for 2
+  17, // for 3
+  17, // for 4/6
+  17, // for 7
+  14, // for 8
+  11, // for 9
   0 // unused
 };
 
@@ -22,9 +22,9 @@ static constexpr int MAX_CLEAR_HEIGHTS18[NUM_COLUMNS] = {
   12,
   14,
   16,
-  18,
-  0, // unused
-  18,
+  17,
+  17, // for 4/6
+  17,
   16,
   14,
   0 // unused
@@ -98,11 +98,11 @@ int getMaxColHeightMinusColLimit(int *colHeights, int level, int bottomColumn) {
 
   int maxColAboveLimit = -20;
   if (isRight) {
-    for (int c = 6; c < bottomColumn; ++c) {
+    for (int c = 5; c < bottomColumn; ++c) {
       maxColAboveLimit = std::max(maxColAboveLimit, colHeights[c] - maxClearHeights[c]);
     }
   } else {
-    for (int c = 4; c > bottomColumn; --c) {
+    for (int c = 5; c > bottomColumn; --c) {
       maxColAboveLimit = std::max(maxColAboveLimit, colHeights[c] - maxClearHeights[c]);
     }
   }

@@ -7,21 +7,19 @@ import shutil
 from pathlib import Path
 
 DIR = Path(__file__).parent.absolute()
+BAZEL_BIN_DIR = os.path.join(DIR, '..', '..', 'cpp', 'bazel-bin')
+
 
 def main():
-  subprocess.check_call(["bazel", "build", "//src/pso/main:ew_get_moves"])
   bazel_bin_path = get_bazel_bin_path()
+  subprocess.check_call(["bazel", "build", "//src/pso/main:ew_get_moves"], cwd=bazel_bin_path)
   my_bin = os.path.join(bazel_bin_path, "src", "pso", "main", "ew_get_moves")
   out_bin = os.path.join(DIR, "external_bin", "ew_get_moves")
   os.remove(out_bin)
   shutil.copy(my_bin, out_bin)
 
 def get_bazel_bin_path():
-  pr = subprocess.run(["bazel", "info"], stdout=subprocess.PIPE)
-  my_out = pr.stdout.decode("utf-8")
-  bazel_bin = my_out.split("\n")[0]
-  path = bazel_bin.split(" ")[1].strip()
-  return path
+  return BAZEL_BIN_DIR
 
 if __name__ == '__main__':
   main()

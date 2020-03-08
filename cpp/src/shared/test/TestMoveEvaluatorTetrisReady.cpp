@@ -6,6 +6,8 @@
 #include "src/common/Weighting.hpp"
 #include "src/shared/MoveEvaluator/MoveEvaluatorTetrisReady.hpp"
 #include "src/shared/test/MoveEvaluatorUtility.hpp"
+#include "src/shared/MoveFinder/MoveFinderFSM.h"
+#include "src/shared/MoveEvaluator/MoveEvaluatorBlockUtility.hpp"
 #include <vector>
 #include <iostream>
 #include <algorithm>
@@ -142,4 +144,26 @@ SCENARIO("tetris ready when its ready") {
       }
     }
   }
+}
+
+SCENARIO("TetrisReady matches MoveFinderFSM opinion") {
+  //REQUIRE(isColAccessible(colHeights, 19) == false);
+  for (int level = 18; level <= 19; ++level) {
+    for (int c = 0; c < NUM_COLUMNS; ++c) {
+      if (c == 5) continue;
+      auto move = Move({{16, c}, {17, c}, {18, c}, {19, c}});
+      auto piece = BitBoard().getPiece(move);
+      for (int height = 4; height < NUM_ROWS; ++height) {
+        BitBoard b = {getWell(height, c)};
+        auto tetrisReady = MoveEvaluatorTetrisReady({1}).evaluateMine(b, piece, EvaluatorInfo(level));
+        MoveFinderFSM mf;
+        mf.setMaxDropRem(level == 19 ? 2 : 3);
+        auto moves = mf.findAllMoves(b, BlockType::I_PIECE);
+        auto moveFinder = std::find(moves.begin(), moves.end(), piece) != moves.end() ? 1.0 : 0.0;
+        //printf("level: %d, c: %d, height: %d\n", level, c, height);
+        REQ_DELTA(tetrisReady, moveFinder);
+      }
+    }
+  }
+  
 }

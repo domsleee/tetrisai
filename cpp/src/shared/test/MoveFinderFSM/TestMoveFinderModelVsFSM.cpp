@@ -28,7 +28,6 @@ auto helper(int maxDropRem, int height, int c) {
 
 
 SCENARIO("I-PIECE has moves on empty board") {
-  DISABLE_TEST;
   {
     auto b = BitBoard(getWell(12, 0));
     auto iPiece = b.getPiece(BlockType::I_PIECE);
@@ -48,8 +47,8 @@ SCENARIO("I-PIECE has moves on empty board") {
     };
 
     for (auto action: actions) iPiece = iPiece.doAction(action);
-    printBoardWithPiece(b, iPiece);
-    printf("%d\n", iPiece.getId());
+    //printBoardWithPiece(b, iPiece);
+    //printf("%d\n", iPiece.getId());
   }
   //return;
 
@@ -58,10 +57,10 @@ SCENARIO("I-PIECE has moves on empty board") {
 
   
   for (int maxDropRem = 2; maxDropRem <= 3; ++maxDropRem) {
-    for (int height = 0; height < NUM_ROWS; ++height) {
+    for (int height = 0; height < 15; ++height) {
       for (int c = 0; c < NUM_COLUMNS; ++c) {
         auto [moves1, moves2] = helper(maxDropRem, height, c);
-        printf("maxDropRem: %d, height: %d, c: %d\n", maxDropRem, height, c);
+        // printf("maxDropRem: %d, height: %d, c: %d\n", maxDropRem, height, c);
         REQUIRE_THAT(moves1, Catch::Matchers::Equals(moves2));
       }
     }

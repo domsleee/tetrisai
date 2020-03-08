@@ -60,20 +60,6 @@ export class GameLogic implements ICapturable<string> {
     //this.demoPlayer.addEvent(getDemoEntryWithStartFrame(this.demoPlayer.getFrame() + 1, 0, DemoButton.BUTTON_LEFT, true))
     this.pa.init();
 
-    const press = (frame: number) => {
-      this.demoPlayer.addEvent(getDemoEntryWithStartFrame(frame, 0, DemoButton.BUTTON_LEFT, true))
-      this.demoPlayer.addEvent(getDemoEntryWithStartFrame(frame + 1, 0, DemoButton.BUTTON_LEFT, false))
-    }
-
-    press(465);
-    press(494);
-
-    this.enterSloMo();
-
-    while (true) {
-      await this.pa.awaitPiece();
-    }
-
     await this.gr.onFirstPieceAppear();
 
     while (true) {
