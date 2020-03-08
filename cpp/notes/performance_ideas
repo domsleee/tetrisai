@@ -40,11 +40,22 @@ HOW TO PROGRESS
     [x] replace existing tests with MoveEvaluatorGroup
 
   2. FIX evaluators to be accurate to MoveFinderFSM
+    [x] done most of it
 
-  3. INCORPORATE LOOK-AHEAD IN SUMMARY DATA (convenience)
+  3. RERUN evaluations for 18 and 19
+    [ ] 18_MoveEvaluatorLinear50_again
+    [ ] 19_MoveEvaluatorLinear50_again
+
+  4. INCORPORATE LOOK-AHEAD IN SUMMARY DATA (convenience)
     + get_transition_evaluation can use MoveFinderFSM with lookahead AS WELL
-    [ ] refactor Memf pair to newgetnextmove
-    + 
+    [ ] getTransitionEvaluationLookahead in ClientAPI
+      [ ] refactor Memf pair to newgetnextmove
+
+  5. getEvaluateResult(name)
+     getEvaluateResult(name1, name2, transitionLines)
+     getEvaluateResultFSM(name)
+     getEvaluateResultFSM(name1, name2, transitionLines)
+     getEvaluateResultLookahead(name1, name2)
 
 
 
