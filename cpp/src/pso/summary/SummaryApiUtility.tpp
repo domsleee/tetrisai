@@ -31,8 +31,8 @@ std::vector<int> getScoresTransition(const Weighting &w1, const Weighting &w2, c
   );
   auto ew = ewContainer.getInstance();
   config.applyConfig(ew);
-  mf2.setMaxDropRem(2);
 
+  mf2.setMaxDropRem(2);
   ew.runPieceSet_handler_->addMfTransition(0, mf1);
   ew.runPieceSet_handler_->addMeTransition(0, me1);
 
@@ -67,8 +67,14 @@ std::vector<int> getScoresLookahead(const Weighting &w1, const Weighting &w2, co
   );
 
   auto ew = NewEvaluateWeightingsFactory<MyMoveFinder>::getInstance(meMfPairProvider);
-  // applyConfig  
-  //ew.setLookahead(1);
-  ew.setNumLines(230);
+  // applyConfig
+  Config cfg = config;
+  cfg.startingLevel = Config::UNDEF;
+  cfg.maxDropRem = Config::UNDEF;
+  cfg.numLines = Config::UNDEF;
+  cfg.seed = 200;
+  cfg.numGames = 0;
+  ew.setLookahead(1);
+  cfg.applyConfig(ew);
   return ew.getSortedScoreInts();
 }

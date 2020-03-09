@@ -119,7 +119,6 @@ export class GameRunner implements ICapturable<any> {
     this.expFrame = currFrame + (this.extraInformation.lastFrame || 0);
     this.oldPiece = nextPiece;
     console.log('currFrame, expFrame', currFrame, this.expFrame);
-    //this.demoPlayer.addEvent({frame: 555, button: DemoButton.BUTTON_RIGHT, isDown: true});
   }
 
   /**
@@ -129,7 +128,7 @@ export class GameRunner implements ICapturable<any> {
 
   public async onNextPieceAppear() {
     const oldFps = this.demoPlayer.timer.getFps();
-    this.demoPlayer.timer.freeze();
+    this.demoPlayer.timer.stop();
     const currFrame = this.demoPlayer.getFrame();
     this.addRawDemoEventsToDemoPlayer(
       this.nextMoveEntries,
@@ -156,7 +155,7 @@ export class GameRunner implements ICapturable<any> {
 
     this.expFrame = currFrame + (this.extraInformation.lastFrame || 0);
     this.oldPiece = nextPiece;
-    this.demoPlayer.timer.unfreeze();
+    this.demoPlayer.timer.setFps(oldFps);
   }
 
   public capture(): any {
@@ -256,6 +255,7 @@ export class GameRunner implements ICapturable<any> {
     this.totalLineClears += lineClears - oldLineClears;
     this.debug['totalLineClears'] = this.totalLineClears;
 
+    console.log("FIRSTMOVEDIRECTION", firstMoveDirection, clearAmount);
     this.demoPlayer.clearEvents(clearAmount);
     this.demoPlayer.addEvents(demoEntries);
   }

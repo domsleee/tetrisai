@@ -8,7 +8,8 @@ template<typename MyMoveFinder>
 SummaryResult SummaryApi::getSummaryHelper(const std::string &name) const {
   auto info = readLogFile(name);
   auto w = info.weights;
-  auto config = info.config;
+  Config config = info.config;
+  config.seed = 200;
   auto scores = getScores<MyMoveFinder>(w, config, info.group);
 
   return {
@@ -23,8 +24,11 @@ template<typename MyMoveFinder>
 SummaryResult SummaryApi::getSummaryHelper(const std::string &name1, const std::string &name2, int transitionLines) const {
   auto info1 = readLogFile(name1);
   auto info2 = readLogFile(name2);
-  auto config = info1.config;
-  config.numLines = 230;
+  Config config = info1.config;
+  config.startingLevel = Config::UNDEF;
+  config.maxDropRem = Config::UNDEF;
+  config.numLines = Config::UNDEF;
+  config.seed = 200;
   auto scores = getScoresTransition<MyMoveFinder>(info1.weights, info2.weights, config, info1.group, transitionLines);
 
   return {

@@ -6,11 +6,7 @@
 #include "src/shared/MoveEvaluator/MoveEvaluatorGroups.hpp"
 
 
-#define NEW_METHOD 1
 const std::string moveEvaluatorGroup = MOVE_EVALUATOR_GROUP_EDGE;
-
-// for old method
-//using MoveEvaluatorT = MoveEvaluatorBlockLinear;
 
 void run(int argc, char ** argv, Config cfg);
 
@@ -24,11 +20,7 @@ int main(int argc, char ** argv) {
 
   if (argc == 2 && strcmp(argv[1], "-c") == 0) {
     cfg.print();
-#ifdef NEW_METHOD
     std::cout << "MoveEvaluatorGroup used: " << moveEvaluatorGroup << '\n';
-#else
-    std::cout << "MoveEvaluator used: " << typeid(MoveEvaluatorT).name() << '\n';
-#endif
     exit(0);
   }
 
@@ -36,12 +28,8 @@ int main(int argc, char ** argv) {
 }
 
 void run(int argc, char ** argv, Config cfg) {
-#ifdef NEW_METHOD
   auto me = getMoveEvaluatorGroups().at(moveEvaluatorGroup);
   int numFactors = me.NUM_FACTORS;
-#else
-  int numFactors = MoveEvaluatorT::NUM_FACTORS;
-#endif
 
   if (argc != numFactors+1) {
     printf("Expected exactly %d arguments (i.e. %d factors), given %d\n", numFactors+1, numFactors, argc);
@@ -56,11 +44,7 @@ void run(int argc, char ** argv, Config cfg) {
     cfg.seed = atoi(argv[numFactors+1]);
   }
 
-#ifdef NEW_METHOD
   me.setWeights(weightings);
-#else
-  MoveEvaluatorT me(weightings);
-#endif
   std::cout << get_score_regular(me, cfg) << '\n';
 }
 

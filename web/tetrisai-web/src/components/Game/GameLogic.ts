@@ -126,7 +126,7 @@ export class GameLogic implements ICapturable<string> {
     }
     if (GameLogic.myfirst) {
       GameLogic.myfirst = false;
-      //enterSloMo();
+      this.enterSloMo();
     }
   }
 

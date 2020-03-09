@@ -40,8 +40,13 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
   auto cmp = [](const PairT &l, const PairT &r) {
     return l.first >= r.first;
   };
+  
+#if MOVE_FINDER_FSM_PERFORMANCE == 1
+  std::queue<PairT> q;
+#else
   std::priority_queue<PairT, std::vector<PairT>, decltype(cmp)> q(cmp);
-  //std::queue<PairT> q;
+#endif
+  
 
   std::set<BitPieceInfo> moves;
 
@@ -52,6 +57,7 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
   onEnterReleased(s3);
   s3.fsmState_ = FSMState::RELEASED;
   s3.releaseCooldown_ = 0;
+  s3.frameEntered_ = 1;
 
   if (!hasFirstMoveConstraint_) {
     safeInsert(seen, b, q, s1);
@@ -72,7 +78,11 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
     const int SCORE_FRAME_ENTERED = 10000;
     const int SCORE_ROTATED = 100;
 
+#if MOVE_FINDER_FSM_PERFORMANCE == 1
+    const auto [topScore, top] = q.front(); q.pop();
+#else
     const auto [topScore, top] = q.top(); q.pop();
+#endif
     auto addNxFrame = [&, top=top, topScore=topScore]{
       auto nxFrame = top;
       nxFrame.nextFrame();

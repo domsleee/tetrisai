@@ -8,16 +8,18 @@ std::pair<MoveEvaluatorGroup, MyMoveFinder> MeMfPairProvider<MyMoveFinder>::getM
   for (auto it = mePairs_.begin(); it != mePairs_.end(); ++it) {
     if (numLines < it->first) {
       me = &(*it->second);
+      break;
     }
   }
 
   for (auto it = mfPairs_.begin(); it != mfPairs_.end(); ++it) {
     if (numLines < it->first) {
       mf = &(*it->second);
+      break;
     }
   }
 
-  assert(me != NULL && mf != NULL);
+  if(me == NULL || mf == NULL) throw std::runtime_error("ree");
   return {*me, *mf};
   /*
   for (auto it = pairs_.begin(); it != pairs_.end(); ++it) {

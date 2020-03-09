@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-cd ../cpp; bazel build //src/pso/main:ew
+cd ../cpp; bazel build //src/pso/main:ew --cxxopt="-O3" --cxxopt="-NDEBUG"

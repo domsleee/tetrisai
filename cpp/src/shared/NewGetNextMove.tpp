@@ -14,30 +14,22 @@
 template<typename MyMoveFinder>
 class NewGetNextMove {
  public:
- NewGetNextMove(const MoveEvaluatorGroup &me, const MyMoveFinder &mf):
-    me_(std::make_unique<MoveEvaluatorGroup>(me)),
-    mf_(std::make_unique<MyMoveFinder>(mf))
-  {
-    meMfPairProvider_ = std::make_unique<MeMfPairProvider<MyMoveFinder>>();
-  }
 
   NewGetNextMove(const MoveEvaluatorGroup &me, const MyMoveFinder &mf, const MeMfPairProvider<MyMoveFinder> &meMfPairProvider):
     me_(std::make_unique<MoveEvaluatorGroup>(me)),
     mf_(std::make_unique<MyMoveFinder>(mf)),
     meMfPairProvider_(std::make_unique<MeMfPairProvider<MyMoveFinder>>(meMfPairProvider))
     {};
+
+  NewGetNextMove(const MoveEvaluatorGroup &me, const MyMoveFinder &mf):
+    NewGetNextMove(me, mf, MeMfPairProvider<MyMoveFinder>()) {};
   
   NewGetNextMove(const MeMfPairProvider<MyMoveFinder> &meMfPairProvider):
-    me_(std::make_unique<MoveEvaluatorGroup>(meMfPairProvider.getMeMfPair(0).first)),
-    mf_(std::make_unique<MyMoveFinder>(meMfPairProvider.getMeMfPair(0).second)),
-    meMfPairProvider_{std::make_unique<MeMfPairProvider<MyMoveFinder>>(meMfPairProvider)}
-    {};
+    NewGetNextMove(meMfPairProvider.getMeMfPair(0).first, meMfPairProvider.getMeMfPair(0).second, meMfPairProvider) {};
 
   NewGetNextMove(const NewGetNextMove &getNextMove):
-    me_(std::make_unique<MoveEvaluatorGroup>(*getNextMove.me_)),
-    mf_(std::make_unique<MyMoveFinder>(*getNextMove.mf_)),
-    meMfPairProvider_{std::make_unique<MeMfPairProvider<MyMoveFinder>>(*getNextMove.meMfPairProvider_)}
-    {};
+    NewGetNextMove(*(getNextMove.me_), *(getNextMove.mf_), *(getNextMove.meMfPairProvider_)) {};
+
 
   Move getNextMove(const BitBoard& board, BlockType blockType, int level) const;
   BitPieceInfo getNextMove(const BitBoard &board, const BlockType blockType1, const BlockType blockType2, int currentLineClears) const;

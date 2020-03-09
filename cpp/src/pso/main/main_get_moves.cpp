@@ -63,6 +63,8 @@ void run() {
   }
 }
 
+MeMfPairProvider<MoveFinderFSM> getMeMfPairProvider(char firstMoveDirectionChar='.');
+
 auto getNextMoveHandlerFactory(int num_lines) {
   auto [me, mf] = getMeMfPair(num_lines);
   return NewGetNextMove(me, mf);
@@ -83,10 +85,11 @@ void handleGetMove(int num_lines, bool givenFirstMoveDirection) {
 
   BlockType blockType = static_cast<BlockType>(piece);
   auto board = BitBoard(boardStr);
-  auto [me, mf] = getMeMfPair(num_lines);
-  mf.setRecordEdges(true);
-  if (givenFirstMoveDirection) mf.setFirstMoveDirectionChar(firstMoveDirectionChar);
-  auto getNextMoveHandler = NewGetNextMove(me, mf);
+  //auto [me, mf] = getMeMfPair(num_lines);
+  //if (givenFirstMoveDirection) mf.setFirstMoveDirectionChar(firstMoveDirectionChar);
+  auto zz = getMeMfPairProvider(givenFirstMoveDirection ? firstMoveDirectionChar : '.');
+
+  auto getNextMoveHandler = NewGetNextMove(zz);
   if (board.hasNoMoves(blockType)) {
     std::cout << "result: no moves\n";
     return;
@@ -96,10 +99,11 @@ void handleGetMove(int num_lines, bool givenFirstMoveDirection) {
   
   const auto oldBoard = board;
   const auto lineClears = board.applyMove(move);
-  const auto &mf_ = getNextMoveHandler.getMoveFinder();
 
+  auto mf2 = getNextMoveHandler.getMoveFinder();
+  mf2.findAllMoves(oldBoard, blockType);
   const auto pieceInfo = oldBoard.getPiece(move);
-  auto shortestPathStrings = mf_.getShortestPath(pieceInfo);
+  auto shortestPathStrings = mf2.getShortestPath(pieceInfo);
   auto ct = shortestPathStrings.size();
 
   std::cout << "num moves: " << ct << '\n';
@@ -128,9 +132,11 @@ MeMfPairProvider<MoveFinderFSM> getMeMfPairProvider(char firstMoveDirectionChar)
   mf2.setMaxDropRem(2);
   mf3.setMaxDropRem(1);
 
-  mf1.setFirstMoveDirectionChar(firstMoveDirectionChar);
-  mf2.setFirstMoveDirectionChar(firstMoveDirectionChar);
-  mf3.setFirstMoveDirectionChar(firstMoveDirectionChar);
+  if (firstMoveDirectionChar != '.') {
+    mf1.setFirstMoveDirectionChar(firstMoveDirectionChar);
+    mf2.setFirstMoveDirectionChar(firstMoveDirectionChar);
+    mf3.setFirstMoveDirectionChar(firstMoveDirectionChar);
+  }
   
   return MeMfPairProvider<MoveFinderFSM> (
     {
