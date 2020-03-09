@@ -3,8 +3,7 @@ load("//:path.bzl", "WORKSPACE_DIR")
 
 WORKSPACE_DIR_DEF = "-DWORKSPACE_DIR='\"" + WORKSPACE_DIR + "\"'"
 
-BENCHMARK_COPTS = ["-O3", "-DNDEBUG", WORKSPACE_DIR_DEF]
-EXEC_COPTS = ["-O3", "-DNDEBUG", WORKSPACE_DIR_DEF]
+EXEC_COPTS = [WORKSPACE_DIR_DEF]
 TEST_COPTS = [WORKSPACE_DIR_DEF]
 EW_MOVE_FINDER_CACHE_COPTS = ["-O3", "-DMOVE_FINDER_CACHE"]
 
@@ -39,5 +38,5 @@ def get_hdr_list(my_str):
   arr = [my_str + "/*." + x for x in ext] + [my_str + "/**/*." + x for x in ext]
   return native.glob(
     arr,
-    exclude = ["board/test/**"]
+    exclude = [my_str + "/test/**"]
   )

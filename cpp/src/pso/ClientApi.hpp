@@ -15,7 +15,7 @@
 #include "src/shared/MoveEvaluator/MoveEvaluatorGroups.hpp"
 
 
-double get_score_regular(MoveEvaluatorGroup me, const Config &cfg, bool is19=true) {
+double get_score_regular(MoveEvaluatorGroup me, const Config &cfg) {
   auto moveFinder = MoveFinderRewrite();
   auto ew_container = NewEvaluateWeightingsContainer(
     me,

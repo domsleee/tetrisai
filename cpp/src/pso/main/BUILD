@@ -27,3 +27,10 @@ cc_binary(
     deps = ["//src:pso"],
     copts = EXEC_COPTS + ["-DPARALLEL=seq"]
 )
+
+cc_binary(
+    name = "summary",
+    srcs = ["main_summary.cpp"],
+    deps = ["//src:pso", "//third_party:libfort"],
+    copts = EXEC_COPTS
+)

@@ -1,6 +1,8 @@
 #pragma once
 #include "src/board/bitboard/BitBoard.h"
 #include "src/shared/MoveEvaluator/IEvaluator.h"
+#include "src/shared/MoveEvaluator/MoveEvaluatorAdapter.hpp"
+#include "src/shared/MoveEvaluator/MoveEvaluator.hpp"
 
 
 class IEvaluatorFactory {

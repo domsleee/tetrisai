@@ -34,7 +34,6 @@ static constexpr int MAX_CLEAR_HEIGHTS18[NUM_COLUMNS] = {
 using PairT = std::pair<int, int>;
 int getMaxColHeightMinusColLimit(int *colHeights, int level, int bottomColumn);
 bool isColAccessible(int *colHeights, int level, int bottomColumn);
-bool isDeepWell(int smallestHeight, int secondSmallestHeight);
 bool wellIsTooHigh(PairT lowestColumn);
 
 

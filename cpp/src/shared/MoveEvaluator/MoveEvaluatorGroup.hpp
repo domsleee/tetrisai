@@ -40,7 +40,6 @@ public:
   }
 
   double evaluate(const BitBoard &b, const BitPieceInfo &p, int level) const {
-    // todo.
     double res = 0;
     for (const auto &evaluator: evaluators_) {
       res += evaluator->evaluateMine(b, p, EvaluatorInfo(level));

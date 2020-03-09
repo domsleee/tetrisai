@@ -155,7 +155,7 @@ SCENARIO("TetrisReady matches MoveFinderFSM opinion") {
       auto piece = BitBoard().getPiece(move);
       for (int height = 4; height < NUM_ROWS; ++height) {
         BitBoard b = {getWell(height, c)};
-        auto tetrisReady = MoveEvaluatorTetrisReady({1}).evaluateMine(b, piece, EvaluatorInfo(level));
+        auto tetrisReady = MoveEvaluatorTetrisReady({1}).evaluateMine(b, b.getEmptyPiece(), EvaluatorInfo(level));
         MoveFinderFSM mf;
         mf.setMaxDropRem(level == 19 ? 2 : 3);
         auto moves = mf.findAllMoves(b, BlockType::I_PIECE);
@@ -165,5 +165,13 @@ SCENARIO("TetrisReady matches MoveFinderFSM opinion") {
       }
     }
   }
-  
+}
+
+SCENARIO("TetrisReady works AFTER the piece is applied") {
+  BitBoard b = {getWell(4, 0)};
+  auto p = b.getPiece(Move({{16, 0}, {17, 0}, {18, 0}, {19, 0}}));
+  auto clearBoard = MoveEvaluatorTetrisReady({1}).evaluateMine(b, p, EvaluatorInfo(19));
+  auto tetrisReadyBoard = MoveEvaluatorTetrisReady({1}).evaluateMine(b, b.getEmptyPiece(), EvaluatorInfo(19));
+  REQ_DELTA(0, clearBoard);
+  REQ_DELTA(1, tetrisReadyBoard);
 }

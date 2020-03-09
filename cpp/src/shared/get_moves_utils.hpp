@@ -2,7 +2,6 @@
 #pragma once
 #include "src/common/Weighting.hpp"
 #include "src/common/common.hpp"
-#include "src/pso/ClientApi.hpp"
 #include "src/shared/MoveEvaluator/MoveEvaluatorGroups.hpp"
 #include "src/shared/MoveFinder/MoveFinderFSM.h"
 #include "src/shared/MoveEvaluator/MoveEvaluatorTetrisReady.hpp"
@@ -38,125 +37,35 @@ const auto w2 = WeightingFn::readFromString(best19_block_linear);
 MoveEvaluatorGroup getBestMoveEvaluatorLinear_50_fixed(bool is19);
 
 
-std::pair<MoveEvaluatorGroup, MoveFinderFSM> getMeMfPair(int num_lines) {
-  auto me1 = getBestMoveEvaluatorLinear_50_fixed(false);
-  auto me2 = getBestMoveEvaluatorLinear_50_fixed(true);
+std::pair<MoveEvaluatorGroup, MoveFinderFSM> getMeMfPair(int num_lines);
 
-  //auto me1 = MoveEvaluatorTetrisReady(w1);
-  //auto me2 = MoveEvaluatorTetrisReady(w2);
-  //auto me1 = MoveEvaluatorAdapter(MoveEvaluator(), w1);
-  //auto me2 = MoveEvaluatorAdapter(MoveEvaluator(), w2);
-  
-  auto mf1 = MoveFinderFSM();
-  auto mf2 = MoveFinderFSM();
-  auto mf3 = MoveFinderFSM();
-  mf2.setMaxDropRem(2);
-  mf3.setMaxDropRem(1);
+MoveEvaluatorAdapter<MoveEvaluator> getBestMoveEvaluator(bool is19);
 
-  /*if (num_lines >= LINE_ON_LEVEL_29) {
-    return std::pair(me2, mf3);
-  }*/
-  if (num_lines >= LINE_ON_LEVEL_19) {
-    return std::pair(me2, mf2);
-  }
-  else if (num_lines >= LINE_TRANSITION) {
-    return std::pair(me2, mf1);
-  }
-  return std::pair(me1, mf1);
-}
+MoveEvaluatorAdapter<MoveEvaluator> getBestMoveEvaulator_pre(bool is19);
 
-MoveEvaluatorAdapter<MoveEvaluator> getBestMoveEvaluator(bool is19) {
-  return {WeightingFn::readFromString(is19 ? best19 : best18)};
-}
+MoveEvaluatorAdapter<MoveEvaluator> getBestMoveEvaluator_new(bool is19);
 
-MoveEvaluatorAdapter<MoveEvaluator> getBestMoveEvaulator_pre(bool is19) {
-  const std::string best18_pre = "[20.166656589746427 14.220441680899071 3.665482078162414 16.887450261453463 17.663564226527015 14.611433088612399 27.4741106208661 -4.301043476849422 4.058027613961025 14.784901050441466 9.713052126217072 -9.928252216678256 3.309295819541866 -18.205870875416814 -12.560690818282715 2.061356834811534 5.925891250494889]";
-  return {WeightingFn::readFromString(best18_pre)};  
-}
+MoveEvaluatorAdapter<MoveEvaluator> getBestMoveEvaluator_new150(bool is19);
 
-MoveEvaluatorAdapter<MoveEvaluator> getBestMoveEvaluator_new(bool is19) {
-  const std::string best18_new = "[17.91557397284577 19.234060208604703 3.9477626983810397 16.950604914743824 21.04451563244532 12.036651508385495 29.93111956103606 1.3208565838200261 0.36075055605568807 18.33799128302757 7.750898400682315 -6.179328973910755 1.4738268600787334 -21.669895329799747 -15.148867990387304 1.680914608745685 8.492456119161027]";
-  return {WeightingFn::readFromString(best18_new)};  
-}
+MoveEvaluatorAdapter<MoveEvaluator> getBestMoveEvaluator_new150_2(bool is19);
 
-MoveEvaluatorAdapter<MoveEvaluator> getBestMoveEvaluator_new150(bool is19) {
-  const std::string best18_new = "[6.225367152220381 13.35302754977615 6.754560910740577 7.853481288048731 -2.5839900618128073 9.412957924444445 24.069522097707697 -6.274471402706898 5.872464760450191 14.829636307525053 11.771131300483619 4.83948192222902 -11.619893183386413 -2.5210086247929127 -21.815185540375893 1.278566430210831 2.2445828800802046]";
-  return {WeightingFn::readFromString(best18_new)};  
-}
+MoveEvaluatorGroup getBestMoveEvaluator50_pre(bool is19);
 
-MoveEvaluatorAdapter<MoveEvaluator> getBestMoveEvaluator_new150_2(bool is19) {
-  const std::string best18_newer = "[9.10554324662879 16.33272672337681 7.659334929794515 -0.17738063798801162 1.4431754323967005 9.14967481691832 25.71910405058426 -3.048831867883436 4.166935801800855 13.398191682495897 10.841440453217457 1.7076583213067085 -13.414900126903408 -4.735266508284329 -15.332255747813349 0.9403243652360014 3.2323102893588045]";
-  return {WeightingFn::readFromString(best18_newer)};  
-}
+MoveEvaluatorGroup getBestMoveEvaluatorNew50(bool is19);
 
-MoveEvaluatorGroup getBestMoveEvaluator50_pre(bool is19) {
-  const std::string best18_50 = "[10.609686112351946 14.11586094649425 5.869929297041267 5.7085612643884165 16.587973564773193 8.056094348128898 13.252440488821513 -3.228528567660408 11.119785137232405 11.964257556805087 6.332576936574517 0.07169108916441014 -16.087622069974685 -4.205152528762122 -12.907722375749508 1.2749441908096484 3.0088897254901426]";
-  auto group = getMoveEvaluatorGroups().at(MOVE_EVALUATOR_GROUP_NORMAL);
-  group.setWeights(WeightingFn::readFromString(best18_50));
-  return group;
-}
+MoveEvaluatorGroup getBestMoveEvaluatorLinear_50_pre(bool is19);
 
-MoveEvaluatorGroup getBestMoveEvaluatorNew50(bool is19) {
-  const std::string best18_50 = "[4.270736557215795 17.4876742661911 1.0124365677024993 10.545484922626969 15.975235961730736 5.645634312556749 23.4619885148801 -1.9636420140525264 12.326985403626992 24.626551041601818 12.436242857252045 -1.1834870873507204 -17.465682477513713 -10.020459353501025 -14.506189115960499 1.1013587679851335 3.850902912933613]";
-  auto group = getMoveEvaluatorGroups().at(MOVE_EVALUATOR_GROUP_NORMAL);
-  group.setWeights(WeightingFn::readFromString(best18_50));
-  return group;
-}
+MoveEvaluatorGroup getBestMoveEvaluatorLinear_50_fixed(bool is19);
 
-MoveEvaluatorGroup getBestMoveEvaluatorLinear_50_pre(bool is19) {
-  const std::string best18_50 = "[-14.783522673093575 12.484042471279608 2.2073769618900396 18.42953006248597 19.86779833267367 5.784969099962861 15.506793479369492 -2.3132776985777874 -7.779104226218222 16.92431405636064 8.204808394538661 1.72953928857963 -13.904354505340876 4.407106525507256 -13.018888131619775 0.5907956703740204 0.13573654529796986 16.289593499099418 -1.0862972371890847 -1.3523576961169077]";
-  auto group = getMoveEvaluatorGroups().at(MOVE_EVALUATOR_GROUP_LINEAR);
-  group.setWeights(WeightingFn::readFromString(best18_50));
-  return group;
-}
+MoveEvaluatorTetrisReady getBestMoveEvaluatorTetrisReady(bool is19);
 
-MoveEvaluatorGroup getBestMoveEvaluatorLinear_50_fixed(bool is19) {
-  const std::string best18_50 = "[9.012721607559758 24.831640612330535 2.8785019222512402 20.71645093032459 -5.990259104721105 8.760096359380986 20.319772084037705 0.9634554214809312 13.44999656367468 23.0675175571021 10.696643393613279 1.7700204421758916 -19.969802219638947 -12.986711698408799 -21.191910628707696 1.7196662221779748 5.618677097249391 -1.033137253834985 -1.6881808827495592 13.604590202685163]";
-  //const std::string best19_50 = "[-3.027444831076945 16.831794071083003 10.655878431478477 -4.171568858869294 11.147852294990525 12.578127059769304 4.9041939104197265 1.6234266511073496 14.148444462871586 0.5819982990758139 17.922740377203183 -5.45420372384668 -10.160130903325404 -11.988579028512016 -13.489535495310037 1.839892585343157 -2.542984715158172 -2.1900993854205404 1.6009459517609277 -5.590542300189999]";
-  const std::string best19_50 = "[11.168515750219997 17.880030254829695 8.057354379725318 16.1742508132353 4.475653488140333 2.627786125399987 36.30075791982009 -0.6029710573510325 2.5474907051545053 23.627323832831422 11.54409930344456 -4.452635299294852 -12.92889253551203 -13.922090948986359 -9.164186790910597 1.1626741627935304 0.3400275469211964 -5.566135648100815 0.8224289507219256 -18.209201788870317]";
-  auto group = getMoveEvaluatorGroups().at(MOVE_EVALUATOR_GROUP_LINEAR);
-  group.setWeights(WeightingFn::readFromString(is19 ? best19_50 : best18_50));
-  return group;
-}
+MoveEvaluatorBlockLinear getBestMoveEvaluatorBlockLinear(bool is19);
 
+MoveEvaluatorBlockLinear getBestMoveEvaluatorBlockLinear150(bool is19);
 
+MoveEvaluatorGroup getBestMoveEvaluatorBlockLinear150_group(bool is19);
 
-MoveEvaluatorTetrisReady getBestMoveEvaluatorTetrisReady(bool is19) {
-  return {WeightingFn::readFromString(is19 ? best19_tetris_ready : best18_tetris_ready)};
-}
+MoveEvaluatorGroup gestBestMoveEvaluatorBurns_group(bool is19);
 
-MoveEvaluatorBlockLinear getBestMoveEvaluatorBlockLinear(bool is19) {
-  return {WeightingFn::readFromString(is19 ? best19_block_linear : best18_block_linear)};
-}
+MoveEvaluatorBlockQuadratic getBestMoveEvaluatorBlockQuadratic(bool is19);
 
-MoveEvaluatorBlockLinear getBestMoveEvaluatorBlockLinear150(bool is19) {
-  const std::string best19_150 = "[-1.213190652899402 15.155370393116664 5.539277259093075 7.87895803392151 0.5963372408623584 7.777769843374156 10.958901782213673 -3.166021592225589 5.89740402033439 4.686896282572464 10.33961422803624 -6.318664556610852 -6.132288613130479 -6.80583626650054 -8.039554456886911 1.4747493335975275 -2.4731734335843756 -7.379553764921042 -6.186751554574753 -8.386796945868232]";
-  return { WeightingFn::readFromString(best19_150) };
-}
-
-MoveEvaluatorGroup getBestMoveEvaluatorBlockLinear150_group(bool is19) {
-  const std::string best19_150 = "[-1.213190652899402 15.155370393116664 5.539277259093075 7.87895803392151 0.5963372408623584 7.777769843374156 10.958901782213673 -3.166021592225589 5.89740402033439 4.686896282572464 10.33961422803624 -6.318664556610852 -6.132288613130479 -6.80583626650054 -8.039554456886911 1.4747493335975275 -2.4731734335843756 -7.379553764921042 -6.186751554574753 -8.386796945868232]";
-  auto group = getMoveEvaluatorGroups().at(MOVE_EVALUATOR_GROUP_LINEAR);
-  group.setWeights(WeightingFn::readFromString(best19_150));
-  return group;
-}
-
-MoveEvaluatorGroup gestBestMoveEvaluatorBurns_group(bool is19) {
-  const std::string best18_150 = "[-4.6437083157287 20.006165811087673 3.7150428456718134 14.055867138357229 15.80778883671229 10.774266169257713 24.35074570603681 -2.58228185879174 -1.9368448190716643 7.1509715118623305 7.634563886505738 -1.8891271629776507 -14.1034961860709 -10.157981457917142 -21.308238737895685 1.8177764508587355 5.35325997968149 -13.871221996411933 -9.017482259878406]";
-  auto group = getMoveEvaluatorGroups().at(MOVE_EVALUATOR_GROUP_BURNS);
-  group.setWeights(WeightingFn::readFromString(best18_150));
-  return group;
-}
-
-
-MoveEvaluatorBlockQuadratic getBestMoveEvaluatorBlockQuadratic(bool is19) {
-  return {WeightingFn::readFromString(is19 ? best19_block_quadratic : best18_block_quadratic)};
-}
-
-using Ms = std::chrono::duration<double>;
-using Seconds = std::chrono::duration<double>;
-
-template <typename B>
-long getMs(B s1) {
-  return std::chrono::duration<double, std::milli>(s1).count();
-}

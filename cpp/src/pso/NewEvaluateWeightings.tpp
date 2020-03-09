@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <numeric>
 #include "src/common/common.hpp"
+#include "src/board/bitboard/BitBoardPre.h"
 #include "src/pso/PieceSetGetter.hpp"
 #include "src/shared/ScoreManager.hpp"
 #include <execution>
@@ -27,6 +28,7 @@ class NewEvaluateWeightings {
   void setNumLines(int numLines);
   void setStartingLines(int startingLines);
   void setMaxDropRem(int dropRem);
+  void setLookahead(int lookahead) { lookahead_ = lookahead; }
   void setAverageAmount(int averageAmount) { averageAmount_ = averageAmount; }
   void setStartingLevel(int startingLevel) { runPieceSet_handler_->setStartingLevel(startingLevel); }
   std::unique_ptr<MyRunPieceSet> runPieceSet_handler_;
@@ -34,6 +36,7 @@ class NewEvaluateWeightings {
   PieceSetGetter ps_;
   int num_games_ = NUM_GAMES;
   int averageAmount_ = 30;
+  int lookahead_ = 0;
 };
 
 
@@ -65,13 +68,22 @@ std::vector<ScoreManager> NewEvaluateWeightings<MyRunPieceSet>::getScoreManagers
   BitBoardPre::precompute();
 
   auto fn = [runPieceSet](const std::vector<BlockType> &pieceSet) -> ScoreManager {
-    //BitBoardPre::precompute();
     return runPieceSet.runGame(pieceSet);
   };
-  
-  std::transform(std::execution::PARALLEL, // par, seq, par_unseq
+  auto fn2 = [runPieceSet](const std::vector<BlockType> &pieceSet) -> ScoreManager {
+    return runPieceSet.runGameWithLookahead(pieceSet);
+  };
+
+  if (lookahead_ > 0) {
+    std::transform(std::execution::PARALLEL, // par, seq, par_unseq
+               pieceSets.begin(), pieceSets.end(), 
+               scores.begin(), fn2);
+  } else {
+    std::transform(std::execution::PARALLEL, // par, seq, par_unseq
                pieceSets.begin(), pieceSets.end(), 
                scores.begin(), fn);
+  }
+
   return scores;
 }
 

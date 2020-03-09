@@ -7,15 +7,40 @@
 #include "src/shared/di/di.h"
 #include "src/shared/get_moves_utils.hpp"
 #include "src/shared/MoveEvaluator/MoveEvaluatorGroup.hpp"
+#include "src/shared/MeMfPairProvider.h"
+
+#define LOOKAHEAD_PARALLEL par_unseq
 
 template<typename MyMoveFinder>
 class NewGetNextMove {
  public:
-  NewGetNextMove(const MoveEvaluatorGroup &me, MyMoveFinder &mf): me_(std::make_unique<MoveEvaluatorGroup>(me)), mf_(std::make_unique<MyMoveFinder>(mf)) {}
-  NewGetNextMove(const NewGetNextMove &getNextMove): me_(std::make_unique<MoveEvaluatorGroup>(*getNextMove.me_)), mf_(std::make_unique<MyMoveFinder>(*getNextMove.mf_)) {}
+ NewGetNextMove(const MoveEvaluatorGroup &me, const MyMoveFinder &mf):
+    me_(std::make_unique<MoveEvaluatorGroup>(me)),
+    mf_(std::make_unique<MyMoveFinder>(mf))
+  {
+    meMfPairProvider_ = std::make_unique<MeMfPairProvider<MyMoveFinder>>();
+  }
+
+  NewGetNextMove(const MoveEvaluatorGroup &me, const MyMoveFinder &mf, const MeMfPairProvider<MyMoveFinder> &meMfPairProvider):
+    me_(std::make_unique<MoveEvaluatorGroup>(me)),
+    mf_(std::make_unique<MyMoveFinder>(mf)),
+    meMfPairProvider_(std::make_unique<MeMfPairProvider<MyMoveFinder>>(meMfPairProvider))
+    {};
+  
+  NewGetNextMove(const MeMfPairProvider<MyMoveFinder> &meMfPairProvider):
+    me_(std::make_unique<MoveEvaluatorGroup>(meMfPairProvider.getMeMfPair(0).first)),
+    mf_(std::make_unique<MyMoveFinder>(meMfPairProvider.getMeMfPair(0).second)),
+    meMfPairProvider_{std::make_unique<MeMfPairProvider<MyMoveFinder>>(meMfPairProvider)}
+    {};
+
+  NewGetNextMove(const NewGetNextMove &getNextMove):
+    me_(std::make_unique<MoveEvaluatorGroup>(*getNextMove.me_)),
+    mf_(std::make_unique<MyMoveFinder>(*getNextMove.mf_)),
+    meMfPairProvider_{std::make_unique<MeMfPairProvider<MyMoveFinder>>(*getNextMove.meMfPairProvider_)}
+    {};
+
   Move getNextMove(const BitBoard& board, BlockType blockType, int level) const;
   BitPieceInfo getNextMove(const BitBoard &board, const BlockType blockType1, const BlockType blockType2, int currentLineClears) const;
-  auto getMeMfPair(int numLines) const;
 
   void setMoveEvaluator(const MoveEvaluatorGroup &me) {
     me_ = std::make_unique<MoveEvaluatorGroup>(me);
@@ -27,9 +52,13 @@ class NewGetNextMove {
     mf_->setMaxDropRem(maxDropRem);
   }
   const MyMoveFinder& getMoveFinder() { return *mf_; }
+  MyMoveFinder getMoveFinder(int numLines) {
+    return meMfPairProvider_->getMeMfPair(numLines).second;
+  }
  private:
   std::unique_ptr<MoveEvaluatorGroup> me_;
   std::unique_ptr<MyMoveFinder> mf_;
+  std::unique_ptr<MeMfPairProvider<MyMoveFinder>> meMfPairProvider_;
 };
 
 
@@ -68,12 +97,19 @@ BitPieceInfo NewGetNextMove<MyMoveFinder>::getNextMove(const BitBoard &board, co
   };
   
   std::set<SetT, SetComp> scores;
-  const auto moves = mf_->findAllMoves(board, blockType1);
+  auto [me, mf] = meMfPairProvider_->getMeMfPair(currentLineClears);
+  assert(!board.hasNoMoves(blockType1));
+
+  const auto moves = mf.findAllMoves(board, blockType1);
   auto fn = [&, this](const auto nxPiece) -> std::vector<SetT> {
-    auto [nxBoard, lineClears] = applyPieceInfo(board, nxPiece);
+    auto [nxBoard, lineClears] = board.applyPieceInfoCopy(nxPiece);
     int totalLineClears = currentLineClears + lineClears;
     double scoreOffset = lineClears == 4 ? -1e9 : 0;
-    auto [me2, mf2] = this->getMeMfPair(totalLineClears);
+    auto [me2, mf2] = meMfPairProvider_->getMeMfPair(totalLineClears);
+    if (nxBoard.hasNoMoves(blockType2)) {
+      return {{0, nxPiece, nxBoard.getEmptyPiece()}};
+    }
+    assert(!nxBoard.hasNoMoves(blockType2));
     auto innerMoves = mf2.findAllMoves(nxBoard, blockType2);
     
     auto innerFn = [&](const auto nxPiece2) -> SetT {
@@ -81,44 +117,17 @@ BitPieceInfo NewGetNextMove<MyMoveFinder>::getNextMove(const BitBoard &board, co
       return {score + scoreOffset, nxPiece, nxPiece2};
     };
     std::vector<SetT> innerScores(innerMoves.size(), {0, board.getEmptyPiece(), board.getEmptyPiece()});
-    std::transform(std::execution::par_unseq, // par, seq, par_unseq
+    std::transform(std::execution::LOOKAHEAD_PARALLEL, // par, seq, par_unseq
                   innerMoves.begin(), innerMoves.end(), 
                   innerScores.begin(), innerFn);
     return innerScores;
   };
 
   std::vector<std::vector<SetT>> result(moves.size());
-  std::transform(std::execution::par_unseq, // par, seq, par_unseq
+  std::transform(std::execution::LOOKAHEAD_PARALLEL, // par, seq, par_unseq
                 moves.begin(), moves.end(), 
                 result.begin(), fn);
   for (auto vec: result) for (auto score: vec) scores.insert(score);
   return std::get<1>(*scores.begin());
-}
-
-template<typename MyMoveFinder>
-auto NewGetNextMove<MyMoveFinder>::getMeMfPair(int numLines) const {
-  static const int LINE_TRANSITION = 90;
-  static const int LINE_ON_LEVEL_19 = 130;
-  static const int LINE_ON_LEVEL_29 = 230;
-  
-  auto me1 = getBestMoveEvaluatorLinear_50_fixed(false);
-  auto me2 = getBestMoveEvaluatorLinear_50_fixed(true);
-  
-  auto mf1 = MoveFinderFSM();
-  auto mf2 = MoveFinderFSM();
-  auto mf3 = MoveFinderFSM();
-  mf2.setMaxDropRem(2);
-  mf3.setMaxDropRem(1);
-
-  /*if (num_lines >= LINE_ON_LEVEL_29) {
-    return std::pair(me2, mf3);
-  }*/
-  if (numLines >= LINE_ON_LEVEL_19) {
-    return std::pair(me2, mf2);
-  }
-  else if (numLines >= LINE_TRANSITION) {
-    return std::pair(me2, mf1);
-  }
-  return std::pair(me1, mf1);
 }
 

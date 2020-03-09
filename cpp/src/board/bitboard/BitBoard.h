@@ -28,7 +28,15 @@ class BitBoard {
  public:
   using B = std::bitset<NUM_ROWS*NUM_COLUMNS>;
   BitBoard() { BitBoardPre::precompute(); };
+
+  // whoever thought this was a good idea should be shot
   int applyPieceInfo(const BitPieceInfo&);
+  
+  std::pair<BitBoard, int> applyPieceInfoCopy(const BitPieceInfo &nxPiece) const {
+    BitBoard nb = *this;
+    int lineClears = nb.applyPieceInfo(nxPiece);
+    return {nb, lineClears};
+  }
   BitPieceInfo getPiece(BlockType blockType) const;
   bool vacant(const BitPieceInfo&) const;
 

@@ -23,7 +23,9 @@ class MoveEvaluatorTetrisReady: public IEvaluator {
   }
 
   double evaluateMine(const BitBoard &b, const BitPieceInfo &p, const EvaluatorInfo &evaluatorInfo) const override {
-    return evaluateMineGivenColHeights(b, p, getColHeights(b).data(), evaluatorInfo.level);
+    BitBoard b2(b);
+    b2.applyPieceInfo(p);
+    return evaluateMineGivenColHeights(b2, p, getColHeights(b).data(), evaluatorInfo.level);
   }
 
   double evaluateMineGivenColHeights(const BitBoard b, const BitPieceInfo p, int *colHeights, int level) const {
