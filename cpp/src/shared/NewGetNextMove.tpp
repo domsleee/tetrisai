@@ -99,7 +99,7 @@ BitPieceInfo NewGetNextMove<MyMoveFinder>::getNextMove(const BitBoard &board, co
     double scoreOffset = lineClears == 4 ? -1e9 : 0;
     auto [me2, mf2] = meMfPairProvider_->getMeMfPair(totalLineClears);
     if (nxBoard.hasNoMoves(blockType2)) {
-      return {{0, nxPiece, nxBoard.getEmptyPiece()}};
+      return {{1e9, nxPiece, nxBoard.getEmptyPiece()}};
     }
     assert(!nxBoard.hasNoMoves(blockType2));
     auto innerMoves = mf2.findAllMoves(nxBoard, blockType2);

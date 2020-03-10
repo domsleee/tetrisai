@@ -4,6 +4,8 @@
 #include "src/common/common.hpp"
 #include "src/pso/ClientApi.hpp"
 #include "src/shared/MoveFinder/MoveFinderFSM.h"
+#include "src/pso/defs.h"
+#include "src/pso/summary/SummaryApi.h"
 
 #include <iostream>
 #include <stdexcept>
@@ -21,6 +23,7 @@ const char INSTRUCTION_GET_NUM_LINES = 'L';
 void handleGetMove(int num_lines, bool givenFirstMoveDirection=false);
 void handleGetMoveGivenNextPiece(int num_lines);
 std::pair<int, std::string> getImmediateNeighbourStr(const BitPieceInfo &p1, const BitPieceInfo &p2, int frame);
+MeMfPairProvider<MoveFinderFSM> getMeMfPairProvider(char firstMoveDirectionChar='.');
 
 // notes
 // - does drop come before das?
@@ -63,13 +66,6 @@ void run() {
   }
 }
 
-MeMfPairProvider<MoveFinderFSM> getMeMfPairProvider(char firstMoveDirectionChar='.');
-
-auto getNextMoveHandlerFactory(int num_lines) {
-  auto [me, mf] = getMeMfPair(num_lines);
-  return NewGetNextMove(me, mf);
-}
-
 void handleGetMove(int num_lines, bool givenFirstMoveDirection) {
   int piece;
   char firstMoveDirectionChar;
@@ -85,11 +81,10 @@ void handleGetMove(int num_lines, bool givenFirstMoveDirection) {
 
   BlockType blockType = static_cast<BlockType>(piece);
   auto board = BitBoard(boardStr);
-  //auto [me, mf] = getMeMfPair(num_lines);
-  //if (givenFirstMoveDirection) mf.setFirstMoveDirectionChar(firstMoveDirectionChar);
   auto zz = getMeMfPairProvider(givenFirstMoveDirection ? firstMoveDirectionChar : '.');
+  auto [me, mf] = zz.getMeMfPair(num_lines);
+  auto getNextMoveHandler = NewGetNextMove(me, mf);
 
-  auto getNextMoveHandler = NewGetNextMove(zz);
   if (board.hasNoMoves(blockType)) {
     std::cout << "result: no moves\n";
     return;
@@ -119,37 +114,6 @@ std::pair<BitBoard, int> applyPieceInfo(const BitBoard &b, const BitPieceInfo &n
   return {nb, lineClears};
 }
 
-
-MeMfPairProvider<MoveFinderFSM> getMeMfPairProvider(char firstMoveDirectionChar) {
-  auto me1 = getBestMoveEvaluatorLinear_50_fixed(false);
-  auto me2 = getBestMoveEvaluatorLinear_50_fixed(true);
-
-  auto mf1 = MoveFinderFSM();
-  auto mf2 = MoveFinderFSM();
-  auto mf3 = MoveFinderFSM();
-
-  mf1.setMaxDropRem(3);
-  mf2.setMaxDropRem(2);
-  mf3.setMaxDropRem(1);
-
-  if (firstMoveDirectionChar != '.') {
-    mf1.setFirstMoveDirectionChar(firstMoveDirectionChar);
-    mf2.setFirstMoveDirectionChar(firstMoveDirectionChar);
-    mf3.setFirstMoveDirectionChar(firstMoveDirectionChar);
-  }
-  
-  return MeMfPairProvider<MoveFinderFSM> (
-    {
-      {90, std::make_shared<MoveEvaluatorGroup>(me1)},
-      {1000, std::make_shared<MoveEvaluatorGroup>(me2)}
-    },
-    {
-      {130, std::make_shared<MoveFinderFSM>(mf1)},
-      {230, std::make_shared<MoveFinderFSM>(mf2)},
-      {1000, std::make_shared<MoveFinderFSM>(mf3)}
-    }
-  );
-}
 
 void handleGetMoveGivenNextPiece(int num_lines) {
   int blockTypeInt1, blockTypeInt2;
@@ -182,4 +146,51 @@ void handleGetMoveGivenNextPiece(int num_lines) {
   std::cout << "board: " << nxBoard << '\n';
   std::cout << "line clears: " << lineClears << '\n';
   std::cout << "OK\n";
+}
+
+
+
+MeMfPairProvider<MoveFinderFSM> getMeMfPairProvider(char firstMoveDirectionChar) {
+  static std::map<bool, MoveEvaluatorGroup> cache;
+
+  if (cache.count(false) == 0) {
+    SummaryApi s(DATA_FOLDER);
+    auto summary1 = s.readLogFile("18_MoveEvaluatorBlockLinear50_fixed.log");
+    auto summary2 = s.readLogFile("19_MoveEvaluatorBlockLinear50_fixed.log");
+
+    auto me1 = getMoveEvaluatorGroups().at(summary1.group).setWeights(summary1.weights);
+    auto me2 = getMoveEvaluatorGroups().at(summary2.group).setWeights(summary2.weights);
+
+    cache.insert({false, me1});
+    cache.insert({true, me2});
+  }
+  
+  auto me1 = cache.at(0);
+  auto me2 = cache.at(1);
+
+  auto mf1 = MoveFinderFSM();
+  auto mf2 = MoveFinderFSM();
+  auto mf3 = MoveFinderFSM();
+
+  mf1.setMaxDropRem(3);
+  mf2.setMaxDropRem(2);
+  mf3.setMaxDropRem(1);
+
+  if (firstMoveDirectionChar != '.') {
+    mf1.setFirstMoveDirectionChar(firstMoveDirectionChar);
+    mf2.setFirstMoveDirectionChar(firstMoveDirectionChar);
+    mf3.setFirstMoveDirectionChar(firstMoveDirectionChar);
+  }
+  
+  return MeMfPairProvider<MoveFinderFSM> (
+    {
+      {90, std::make_shared<MoveEvaluatorGroup>(me1)},
+      {1000, std::make_shared<MoveEvaluatorGroup>(me2)}
+    },
+    {
+      {130, std::make_shared<MoveFinderFSM>(mf1)},
+      {230, std::make_shared<MoveFinderFSM>(mf2)},
+      {1000, std::make_shared<MoveFinderFSM>(mf3)}
+    }
+  );
 }

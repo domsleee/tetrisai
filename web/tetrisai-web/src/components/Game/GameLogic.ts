@@ -61,6 +61,7 @@ export class GameLogic implements ICapturable<string> {
     this.pa.init();
 
     await this.gr.onFirstPieceAppear();
+    this.activateSlowMoKeyboard();
 
     while (true) {
       await this.considerCaptureAndRestore();
@@ -93,9 +94,8 @@ export class GameLogic implements ICapturable<string> {
   static myfirst = true;
   static slowMoKeyHandler: any = null;
 
-  enterSloMo = () => {
-    this.demoPlayer.timer.freeze();
-    this.gr.disableFpsControl();
+
+  activateSlowMoKeyboard = () => {
     if (GameLogic.slowMoKeyHandler) {
       document.removeEventListener('keydown', GameLogic.slowMoKeyHandler);
       GameLogic.slowMoKeyHandler = false;
@@ -110,6 +110,12 @@ export class GameLogic implements ICapturable<string> {
       }
     };
     document.addEventListener('keydown', GameLogic.slowMoKeyHandler);
+  }
+
+  enterSloMo = () => {
+    this.demoPlayer.timer.freeze();
+    this.gr.disableFpsControl();
+    
   };
 
   private async considerCaptureAndRestore() {
@@ -126,7 +132,7 @@ export class GameLogic implements ICapturable<string> {
     }
     if (GameLogic.myfirst) {
       GameLogic.myfirst = false;
-      this.enterSloMo();
+      //this.enterSloMo();
     }
   }
 

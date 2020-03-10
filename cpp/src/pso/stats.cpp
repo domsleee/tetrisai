@@ -8,5 +8,6 @@ double getTopAverage(std::vector<int> scores, int percentage) {
 
 double getPercentile(std::vector<int> scores, int percentile) {
   int amount = scores.size() * percentile / 100;
+  if (amount == 0) return -1;
   return scores.at(amount-1);
 }

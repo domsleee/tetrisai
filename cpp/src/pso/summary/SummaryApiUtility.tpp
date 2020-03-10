@@ -73,7 +73,7 @@ std::vector<int> getScoresLookahead(const Weighting &w1, const Weighting &w2, co
   cfg.maxDropRem = Config::UNDEF;
   cfg.numLines = Config::UNDEF;
   cfg.seed = 200;
-  cfg.numGames = 0;
+  cfg.numGames = 5;
   ew.setLookahead(1);
   cfg.applyConfig(ew);
   return ew.getSortedScoreInts();

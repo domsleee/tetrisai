@@ -237,7 +237,7 @@ export class GameRunner implements ICapturable<any> {
       oldBoard,
       oldPiece,
       nextPiece,
-      this.totalLineClears,
+      oldLineClears,
       firstMoveDirection
     );
 

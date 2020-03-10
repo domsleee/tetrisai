@@ -7,8 +7,8 @@
 #include "src/shared/MoveFinder/MoveFinderFSM/MoveFinderState.hpp"
 #include <memory>
 
-#define MOVE_FINDER_FSM_PERFORMANCE 1
-#define RECORD_MOVEFINDER_EDGES 0
+#define MOVE_FINDER_FSM_PERFORMANCE 0
+#define RECORD_MOVEFINDER_EDGES 1
 
 
 class MoveFinderFSM {

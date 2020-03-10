@@ -1,6 +1,6 @@
 export class FrameTimer {
   public onTick: (force?: boolean) => void;
-  private fps: number = 60.0;
+  private fps: number = 2000.0;
   private timer: any = null;
   private frozen: boolean = false;
 

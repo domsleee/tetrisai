@@ -58,6 +58,7 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
   s3.fsmState_ = FSMState::RELEASED;
   s3.releaseCooldown_ = 0;
   s3.frameEntered_ = 1;
+  s3.dropRem_ -= 1;
 
   if (!hasFirstMoveConstraint_) {
     safeInsert(seen, b, q, s1);
@@ -145,6 +146,7 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
   
     switch(top.fsmState_) {
       case FSMState::HOLDING: {
+        if (considerMovingDown()) break;
         // either keep holding or release.
         // you MUST move across if dasRem is zero when you're holding
         auto moveDirection = top.isLeftHolding_ ? MoveDirection::LEFT : MoveDirection::RIGHT;
@@ -179,10 +181,10 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
           }
         }
         considerRotate();
-        if (considerMovingDown()) break;
         addNxFrame();
       } break;
       case FSMState::RELEASED: {
+        if (considerMovingDown()) break;
         for (auto moveDirection: sidewaysMoveDirections) {
           if (top.moveCooldown_[static_cast<int>(moveDirection)] != 0) continue;
           if (top.piece_.canMove(moveDirection)) {
@@ -198,13 +200,12 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
           }
         }
         considerRotate();
-        if (considerMovingDown()) break;
         addNxFrame();
       } break;
       case FSMState::TAPPED_ONCE: {
         // nothing to do here, lol.
-        considerRotate();
         if (considerMovingDown()) break;
+        considerRotate();
         addNxFrame();
       } break;
     }
