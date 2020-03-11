@@ -74,7 +74,11 @@ export class DemoPlayer implements IDemoPlayer {
     this.printEvents();
   }
 
-  public clearEvents(amount?: number) {
+  public deleteAll() {
+    this.deleteAllExceptFirstN(0);
+  }
+
+  public deleteAllExceptFirstN(amount?: number) {
     console.log('CLEARNING EVENTS', this.getFrame());
     console.log('before...');
     this.printEvents();
@@ -88,6 +92,25 @@ export class DemoPlayer implements IDemoPlayer {
     }
     console.log('after...');
     this.printEvents();
+  }
+
+  public deleteEvents(events: DemoEntry[]) {
+    for (const event of events) {
+      this.events.delete(event);
+    }
+  }
+
+  public deleteAllExcept(events: DemoEntry[]) {
+    let toDelete = [];
+    let s = new Set<DemoEntry>();
+    for (const event of events) s.add(event);
+
+    for (const event of this.events) {
+      if (!s.has(event)) {
+        toDelete.push(event);
+      }
+    }
+    this.deleteEvents(toDelete);
   }
 
   public getEventsRep() {

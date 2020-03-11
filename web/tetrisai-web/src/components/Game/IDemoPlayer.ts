@@ -32,7 +32,10 @@ export interface IDemoPlayer extends ICapturable<string> {
   addEvent(entry: DemoEntry): void;
   addEvents(entry: DemoEntry[]): void;
   getEventsRep(): DemoEntry[];
-  clearEvents(amount?: number): void;
+  deleteAll(): void;
+  deleteAllExceptFirstN(amount?: number): void;
+  deleteEvents(entries: DemoEntry[]): void;
+  deleteAllExcept(events: DemoEntry[]): void;
   goBack(numFrames: number): void;
   destroy(): void;
   getFrame(): number;

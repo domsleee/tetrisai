@@ -65,7 +65,7 @@ void run() {
   }
 }
 
-void handleGetMove(int num_lines, bool givenFirstMoveDirection) {
+void handleGetMove(int numLines, bool givenFirstMoveDirection) {
   int piece;
   char firstMoveDirectionChar = '.';
   std::string boardStr;
@@ -89,12 +89,14 @@ void handleGetMove(int num_lines, bool givenFirstMoveDirection) {
     return;
   }
   std::cout << "result: moves\n";
-  auto pieceInfo = getNextMoveHandler.getNextMove(board, blockType, num_lines >= 130 ? 19 : 18, firstMoveDirectionChar); // todo
+  ScoreManager sm;
+  sm.setLines(numLines);
+  auto pieceInfo = getNextMoveHandler.getNextMove(board, blockType, sm, firstMoveDirectionChar); // todo
   
   const auto oldBoard = board;
   const auto lineClears = board.applyPieceInfo(pieceInfo);
 
-  auto mf2 = getNextMoveHandler.getMoveFinder(num_lines);
+  auto mf2 = getNextMoveHandler.getMoveFinder(numLines);
   mf2.setFirstMoveDirectionChar(firstMoveDirectionChar);
   mf2.findAllMoves(oldBoard, blockType);
   auto shortestPathStrings = mf2.getShortestPath(pieceInfo);
@@ -114,7 +116,7 @@ std::pair<BitBoard, int> applyPieceInfo(const BitBoard &b, const BitPieceInfo &n
 }
 
 
-void handleGetMoveGivenNextPiece(int num_lines) {
+void handleGetMoveGivenNextPiece(int numLines) {
   int blockTypeInt1, blockTypeInt2;
   char firstMoveDirectionChar;
   std::string boardStr;
@@ -131,9 +133,11 @@ void handleGetMoveGivenNextPiece(int num_lines) {
   auto getNextMoveHandler = NewGetNextMove(v);
   
   const auto board = BitBoard(boardStr);
-  auto bestPieceInfo = getNextMoveHandler.getNextMove(board, blockType1, blockType2, num_lines, firstMoveDirectionChar);
+  ScoreManager sm;
+  sm.setLines(numLines);
+  auto bestPieceInfo = getNextMoveHandler.getNextMove(board, blockType1, blockType2, sm, firstMoveDirectionChar);
   
-  auto mf = getNextMoveHandler.getMoveFinder(num_lines);
+  auto mf = getNextMoveHandler.getMoveFinder(numLines);
   mf.setFirstMoveDirectionChar(firstMoveDirectionChar);
   mf.findAllMoves(board, blockType1);
   auto shortestPathStrings = mf.getShortestPath(bestPieceInfo);

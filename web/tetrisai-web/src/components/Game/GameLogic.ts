@@ -120,7 +120,6 @@ export class GameLogic implements ICapturable<string> {
   }
 
   public restoreFromCapture(capture: string) {
-    const oldFps = this.demoPlayer.timer.getFps();
     this.demoPlayer.timer.stop();
     console.log('no fps anymore...');
     const json = JSON.parse(capture);
@@ -128,7 +127,7 @@ export class GameLogic implements ICapturable<string> {
     this.pa.restoreFromCapture(json.pa);
     this.screen.restoreFromCapture(json.screen);
     this.pa.countDiff();
-    this.demoPlayer.timer.setFps(oldFps);
+    this.demoPlayer.timer.resume();
     console.log('GAMELOGIC RESTORED');
   }
 
@@ -142,11 +141,14 @@ export class GameLogic implements ICapturable<string> {
       if (e.code === 'KeyK') {
         this.demoPlayer.timer.onTick(true);
       }
-      if (e.code === 'Space') {
+      else if (e.code === 'Space') {
         this.demoPlayer.timer.toggleFreeze();
       }
-      if (e.code === 'ShiftLeft') {
+      else if (e.code === 'ShiftLeft') {
         this.demoPlayer.timer.setFps(15);
+      }
+      else if (e.code === 'ShiftRight') {
+        this.demoPlayer.timer.setFps(2000);
       }
     };
     document.addEventListener('keydown', this.slowMoKeyHandler);

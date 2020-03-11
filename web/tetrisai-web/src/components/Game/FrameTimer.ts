@@ -1,20 +1,20 @@
 export class FrameTimer {
-  public onTick: (force?: boolean) => void;
+  public onTick: (ignoreFreeze?: boolean) => void;
   private fps: number = 2000;
   private timer: any = null;
   private frozen: boolean = false;
+  private stopped: boolean = false;
 
   public constructor(onTick: () => void) {
-    this.onTick = (force: boolean = false) => {
-      if (this.timer && (force || !this.frozen)) onTick();
+    this.onTick = (ignoreFreeze: boolean = false) => {
+      if (this.stopped) return;
+      if (this.timer && (ignoreFreeze || !this.frozen)) onTick();
     };
     this.setFps(this.fps);
   }
 
   public setFps(fps: number) {
-    if (this.timer) {
-      clearInterval(this.timer);
-    }
+    this.clearTimer();
     this.timer = setInterval(() => {
       this.onTick();
     }, 1000.0 / fps);
@@ -26,11 +26,15 @@ export class FrameTimer {
   }
 
   public stop() {
-    if (this.timer === null) {
-      return;
+    this.stopped = true;
+    this.clearTimer();
+  }
+
+  public resume() {
+    this.stopped = false;
+    if (!this.timer) {
+      this.setFps(this.fps);
     }
-    clearInterval(this.timer);
-    this.timer = null;
   }
 
   public isFrozen() {
@@ -48,5 +52,12 @@ export class FrameTimer {
 
   public unfreeze() {
     this.frozen = false;
+  }
+
+  private clearTimer() {
+    if (this.timer) {
+      clearInterval(this.timer);
+    }
+    this.timer = null;
   }
 }

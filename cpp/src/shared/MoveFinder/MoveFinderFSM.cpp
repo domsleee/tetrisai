@@ -53,6 +53,7 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
   auto s1 = MoveFinderState(b.getPiece(blockType), true, maxDropRem_);
   auto s2 = MoveFinderState(b.getPiece(blockType), false, maxDropRem_);
   s1.releaseCooldown_ = s2.releaseCooldown_ = 2;
+  s1.dasRem_ = s2.dasRem_ = 2;
   auto s3(s2);
   onEnterReleased(s3);
   s3.fsmState_ = FSMState::RELEASED;
@@ -158,7 +159,7 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
           if (top.piece_.canMove(moveDirection)) {
             auto nxMoved = top;
             nxMoved.piece_ = top.piece_.move(moveDirection);
-            nxMoved.dasRem_ = MAX_DAS_REM;
+            nxMoved.dasRem_ = MAX_DAS_REM - (nxMoved.frameEntered_ == 2);
             //nxMoved.setRotateCooldown(1);
             if (seen.count(nxMoved)) continue;
             seen.insert(nxMoved);

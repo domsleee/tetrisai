@@ -160,7 +160,7 @@ SCENARIO("TetrisReady matches MoveFinderFSM opinion") {
         mf.setMaxDropRem(level == 19 ? 2 : 3);
         auto moves = mf.findAllMoves(b, BlockType::I_PIECE);
         auto moveFinder = std::find(moves.begin(), moves.end(), piece) != moves.end() ? 1.0 : 0.0;
-        //printf("level: %d, c: %d, height: %d\n", level, c, height);
+        // printf("level: %d, c: %d, height: %d\n", level, c, height);
         REQ_DELTA(tetrisReady, moveFinder);
       }
     }

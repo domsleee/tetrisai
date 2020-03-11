@@ -8,11 +8,11 @@ static constexpr int MAX_CLEAR_HEIGHTS[NUM_COLUMNS] = {
   0, // unused
   8, // for 0
   11, // for 1
-  14, // for 2
+  15, // for 2
   17, // for 3
   17, // for 4/6
   17, // for 7
-  14, // for 8
+  15, // for 8
   11, // for 9
   0 // unused
 };
@@ -21,11 +21,11 @@ static constexpr int MAX_CLEAR_HEIGHTS18[NUM_COLUMNS] = {
   0, // unused
   12,
   14,
-  16,
+  17,
   17,
   17, // for 4/6
   17,
-  16,
+  17,
   14,
   0 // unused
 };

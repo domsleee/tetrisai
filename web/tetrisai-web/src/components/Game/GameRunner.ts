@@ -135,7 +135,6 @@ export class GameRunner implements ICapturable<any> {
    */
 
   public async onNextPieceAppear() {
-    const oldFps = this.demoPlayer.timer.getFps();
     this.demoPlayer.timer.stop();
 
     const currFrame = this.demoPlayer.getFrame();
@@ -171,7 +170,7 @@ export class GameRunner implements ICapturable<any> {
 
     this.expFrame = currFrame + (this.extraInformation.lastFrame || 0);
     this.oldPiece = nextPiece;
-    this.demoPlayer.timer.setFps(oldFps);
+    this.demoPlayer.timer.resume();
   }
 
   private assertBoardIsCorrect() {
@@ -264,7 +263,26 @@ export class GameRunner implements ICapturable<any> {
     this.debug['totalLineClears'] = this.totalLineClears;
 
     console.log("FIRSTMOVEDIRECTION", firstMoveDirection, clearAmount);
-    this.demoPlayer.clearEvents(clearAmount);
+    console.log("before adapting...");
+    console.log(this.demoPlayer.getEventsRep());
+    if (clearAmount > 0) {
+      const events = this.demoPlayer.getEventsRep();
+      const ev1 = events[0];
+      let delEvents = [ev1];
+      for (let i = 1; i < events.length; ++i) {
+        if (events[i].button === ev1.button) {
+          delEvents.push(events[i]);
+          break;
+        }
+      }
+      if (delEvents.length !== 2) {
+        throw ErrorHandler.fatal("unexpected deleting of events");
+      }
+      this.demoPlayer.deleteAllExcept(delEvents);
+    } else {
+      this.demoPlayer.deleteAll();
+    }
+    //this.demoPlayer.clearEvents(clearAmount);
     this.demoPlayer.addEvents(demoEntries);
 
     console.log("after adapting");
@@ -276,7 +294,7 @@ export class GameRunner implements ICapturable<any> {
   ): FirstMoveDirectionT {
     console.log("GETFIRSTMOVEDIRECTION");
     console.log(demoEntries[0]);
-    if (demoEntries.length === 0 || demoEntries[0].startFrame !== 1) {
+    if (demoEntries.length === 0 || demoEntries[0].startFrame !== 2) {
       return 'NONE';
     }
     switch (demoEntries[0].button) {
