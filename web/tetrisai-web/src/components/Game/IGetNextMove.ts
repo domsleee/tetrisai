@@ -9,6 +9,7 @@ export interface OptionalNextMoveParams {
   totalLineClears?: number;
 }
 export interface NextTwoPiecesReturnT {
+  isGameOver: boolean;
   demoEntries: DemoEntry[];
   board: IBoard;
   extraInformation: ExtraInformation;
@@ -19,7 +20,7 @@ export interface IGetNextMove {
     board: IBoard,
     nextPiece: Piece,
     optional: OptionalNextMoveParams
-  ): Promise<[DemoEntry[], IBoard, ExtraInformation]>;
+  ): Promise<[boolean, DemoEntry[], IBoard, ExtraInformation]>;
 
   getNextMoveEntriesGivenNextPiece(
     board: IBoard,

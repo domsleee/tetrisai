@@ -7,7 +7,6 @@
 #include "src/shared/MoveFinder/MoveFinderRewrite.h"
 #include "src/shared/MoveFinder/MoveFinderFSM.h"
 #include "src/shared/MoveEvaluator/MoveEvaluatorGroups.hpp"
-#include "src/pso/NewEvaluateWeightingsContainer.tpp"
 #include "src/pso/summary/SummaryApiUtility.tpp"
 #include <filesystem>
 namespace fs = std::filesystem;

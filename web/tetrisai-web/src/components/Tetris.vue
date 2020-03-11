@@ -37,7 +37,7 @@ import jsnes from 'jsnes';
 // @ts-ignore
 import Screen from './Game/Screen';
 import TableBoard from './TableBoard.vue';
-import { GameLogic } from './Game/GameLogic';
+import { GameLogic, GameLogicMode } from './Game/GameLogic';
 
 const ROM_LOCAL_STORAGE_KEY = 'romlocalstorage';
 
@@ -103,15 +103,23 @@ export default Vue.extend({
       return localStorage.getItem(ROM_LOCAL_STORAGE_KEY);
     },
     onScreenMounted() {
+      let startFrame: number = 1;
       const screen: Screen = this.$refs.screen;
       const tableBoard: any = this.$refs.tableboard;
-      const gl = new GameLogic(
-        screen,
-        this.loadRomFromLocalStorage(),
-        tableBoard,
-        this.debug
-      );
-      gl.run();
+
+      const setupAndRunGameLogic = () => {
+        if (startFrame > 30) return;
+        const gl = new GameLogic(
+          screen,
+          this.loadRomFromLocalStorage(),
+          tableBoard,
+          this.debug
+        );
+        gl.setOnStop(setupAndRunGameLogic);
+        gl.run(GameLogicMode.NORMAL, startFrame++);
+      };
+      setupAndRunGameLogic();
+
     }
   }
 });

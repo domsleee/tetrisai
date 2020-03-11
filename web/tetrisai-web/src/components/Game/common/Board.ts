@@ -1,4 +1,6 @@
 import BitSet from '@marsraptor/bitset';
+import { IReadBoard } from '@/components/GameRunner/ReadBoard';
+import { Coord } from '@/components/GameRunner/PieceCoords';
 
 export const NUM_COLUMNS = 10;
 export const NUM_ROWS = 20;
@@ -12,6 +14,30 @@ export class Board implements IBoard {
   public static fromNormalBoard(vs: string[]): Board {
     const bitstring = vs.join('');
     return new Board(bitstring);
+  }
+
+  public static fromBoardReader(boardReader: IReadBoard): Board {
+    return Board.fromBoardReaderMinusCoords(boardReader, []);
+  }
+
+  public static fromBoardReaderMinusCoords(boardReader: IReadBoard, coords: Coord[]): Board {
+    let str = "";
+    let ignore: Record<number, Set<number>> = {};
+    for (let coord of coords) {
+      if (!(coord.r in ignore)) {
+        ignore[coord.r] = new Set();
+      }
+      ignore[coord.r].add(coord.c);
+    }
+
+    for (let r = 0; r < NUM_ROWS; r++) {
+      for (let c = 0; c < NUM_COLUMNS; ++c) {
+        if (r in ignore && ignore[r].has(c)) {
+          str += "0";
+        } else str += boardReader.vacant(r, c) ? "0" : "1";
+      }
+    }
+    return new Board(str);
   }
 
   private b: BitSet = new BitSet(200);

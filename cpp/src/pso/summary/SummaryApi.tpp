@@ -1,7 +1,6 @@
 #include "src/pso/summary/SummaryApi.h"
 #include "src/shared/MoveFinder/MoveFinderRewrite.h"
 #include "src/shared/MoveFinder/MoveFinderFSM.h"
-#include "src/pso/NewEvaluateWeightingsContainer.tpp"
 #include "src/pso/summary/SummaryApiUtility.tpp"
 
 template<typename MyMoveFinder>

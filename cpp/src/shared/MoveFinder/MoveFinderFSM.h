@@ -32,6 +32,7 @@ class MoveFinderFSM {
  
   std::vector<BitPieceInfo> findAllMoves(const BitBoard& b, BlockType blockType);
   void setFirstMoveDirectionChar(char firstMoveDirectionChar) {
+    if (firstMoveDirectionChar == '.') return;
     hasFirstMoveConstraint_ = true;
     firstMoveDirectionChar_ = firstMoveDirectionChar;
   }

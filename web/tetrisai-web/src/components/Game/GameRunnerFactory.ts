@@ -21,6 +21,7 @@ export class GameRunnerFactory {
       new GetNextMove(),
       new ReadNextPiece(pixelChecker),
       new ReadCurrentPiece(readBoard),
+      readBoard,
       debug
     );
   }

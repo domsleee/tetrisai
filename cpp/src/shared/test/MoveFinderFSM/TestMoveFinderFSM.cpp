@@ -126,6 +126,7 @@ SCENARIO("Demo Recording - prefer no quicktap (short)") {
 }
 
 
+
 SCENARIO("Demo Recording - prefer early quicktap") {
   GIVEN("a board with a 7 high well on the LHS") {
     auto vs = leftWell(7);
@@ -149,4 +150,13 @@ SCENARIO("Demo Recording - prefer early quicktap") {
       }
     }
   }
+}
+
+
+
+SCENARIO("reee") {
+  BitBoard b("00000000000000000000000001100000000100000001111000000011111011001111111111111110110111111011111111101111111110111111111011111111101111111110111111111011111111101111111110111111111011111111101111111110");
+  MoveFinderFSM mf;
+  auto moves = mf.findAllMoves(b, BlockType::Z_PIECE);
+  REQUIRE(moves.size() != 8);
 }

@@ -22,6 +22,7 @@ class NewEvaluateWeightings {
 
   double runAllPieceSets() const;
   std::vector<int> getSortedScoreInts() const;
+  std::vector<ScoreManager> getSortedScoreManagers() const;
   std::vector<ScoreManager> getScoreManagers() const;
   void setSeed(int seed);
   void setNumGames(int numGames);
@@ -50,13 +51,19 @@ double NewEvaluateWeightings<MyRunPieceSet>::runAllPieceSets() const {
 
 template<typename MyRunPieceSet>
 std::vector<int> NewEvaluateWeightings<MyRunPieceSet>::getSortedScoreInts() const {
+  auto scores = getSortedScoreManagers();
+  std::vector<int> scoreInts;
+  for (auto sm: scores) scoreInts.push_back(sm.getScore());
+  return scoreInts;
+}
+
+template<typename MyRunPieceSet>
+std::vector<ScoreManager> NewEvaluateWeightings<MyRunPieceSet>::getSortedScoreManagers() const {
   auto scores = getScoreManagers();
   std::sort(scores.begin(), scores.end(), [](auto &s1, auto &s2) {
     return s1.getScore() < s2.getScore();
   });
-  std::vector<int> scoreInts;
-  for (auto sm: scores) scoreInts.push_back(sm.getScore());
-  return scoreInts;
+  return scores;
 }
 
 template<typename MyRunPieceSet>

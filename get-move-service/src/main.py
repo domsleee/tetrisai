@@ -58,6 +58,10 @@ def get_move_handler():
     print(payload)
     result = get_moves_service.get_moves(
         board, piece, first_move_direction)
+    if result.result == "n":
+      return {}
+    print(result.result)
+
     ret = {
       'board': result.nx_board,
       'demo_entries': [str(demo_entry.frame) + " " + demo_entry.action for demo_entry in result.demo_entries],

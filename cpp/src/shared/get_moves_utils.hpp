@@ -37,8 +37,6 @@ const auto w2 = WeightingFn::readFromString(best19_block_linear);
 MoveEvaluatorGroup getBestMoveEvaluatorLinear_50_fixed(bool is19);
 
 
-std::pair<MoveEvaluatorGroup, MoveFinderFSM> getMeMfPair(int num_lines);
-
 MoveEvaluatorAdapter<MoveEvaluator> getBestMoveEvaluator(bool is19);
 
 MoveEvaluatorAdapter<MoveEvaluator> getBestMoveEvaulator_pre(bool is19);

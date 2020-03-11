@@ -1,9 +1,9 @@
 #include <iostream>
 #include <stdlib.h>
 #include <string>
-#include "src/pso/ClientApi.hpp"
 #include "src/shared/Config.hpp"
 #include "src/shared/MoveEvaluator/MoveEvaluatorGroups.hpp"
+#include "src/pso/SimpleApi.tpp"
 
 
 const std::string moveEvaluatorGroup = MOVE_EVALUATOR_GROUP_EDGE;
@@ -45,7 +45,7 @@ void run(int argc, char ** argv, Config cfg) {
   }
 
   me.setWeights(weightings);
-  std::cout << get_score_regular(me, cfg) << '\n';
+  std::cout << getEvaluateWeightings(me, cfg).runAllPieceSets() << '\n';
 }
 
 

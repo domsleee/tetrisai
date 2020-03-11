@@ -1,5 +1,8 @@
 import { ICapturable } from './ICapturable';
 import { FrameTimer } from './FrameTimer';
+import { IDemoPlayerObserver } from './IDemoPlayerObserver';
+import { EmulatorCaptureLast } from './Emulator/IEmulator';
+
 
 // from jsnes controller constants
 export enum DemoButton {
@@ -20,10 +23,15 @@ export interface DemoEntry {
   isDown: boolean;
 }
 
+export interface DemoPlayerCaptureLast {
+  emu: EmulatorCaptureLast;
+};
+
 export interface IDemoPlayer extends ICapturable<string> {
   timer: FrameTimer;
   addEvent(entry: DemoEntry): void;
   addEvents(entry: DemoEntry[]): void;
+  getEventsRep(): DemoEntry[];
   clearEvents(amount?: number): void;
   goBack(numFrames: number): void;
   destroy(): void;
@@ -32,4 +40,8 @@ export interface IDemoPlayer extends ICapturable<string> {
   isEmpty(): boolean;
   addFrameListener(fn: (frame: number) => void): void;
   removeFrameListener(fn: (frame: number) => void): void;
+  attachObserver(observer: IDemoPlayerObserver): void;
+
+  captureLast(): DemoPlayerCaptureLast;
+  restoreLast(a: DemoPlayerCaptureLast): void;
 }

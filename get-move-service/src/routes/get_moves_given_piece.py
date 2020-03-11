@@ -17,7 +17,7 @@ def get_moves_given_piece():
     abort("failed to get lock")
 
   try:
-    print("get-moves-given-piece PAYLOAD")
+    print("get-moves-given-piece REQUEST")
     print(payload)
     board = payload['board']
     piece = piece_to_int(payload['piece'])

@@ -14,70 +14,46 @@
 template<typename MyMoveFinder>
 class NewGetNextMove {
  public:
-
-  NewGetNextMove(const MoveEvaluatorGroup &me, const MyMoveFinder &mf, const MeMfPairProvider<MyMoveFinder> &meMfPairProvider):
-    me_(std::make_unique<MoveEvaluatorGroup>(me)),
-    mf_(std::make_unique<MyMoveFinder>(mf)),
-    meMfPairProvider_(std::make_unique<MeMfPairProvider<MyMoveFinder>>(meMfPairProvider))
-    {};
-
-  NewGetNextMove(const MoveEvaluatorGroup &me, const MyMoveFinder &mf):
-    NewGetNextMove(me, mf, MeMfPairProvider<MyMoveFinder>()) {};
-  
   NewGetNextMove(const MeMfPairProvider<MyMoveFinder> &meMfPairProvider):
-    NewGetNextMove(meMfPairProvider.getMeMfPair(0).first, meMfPairProvider.getMeMfPair(0).second, meMfPairProvider) {};
+    meMfPairProvider_(std::make_unique<MeMfPairProvider<MyMoveFinder>>(meMfPairProvider)) {};
 
   NewGetNextMove(const NewGetNextMove &getNextMove):
-    NewGetNextMove(*(getNextMove.me_), *(getNextMove.mf_), *(getNextMove.meMfPairProvider_)) {};
+    NewGetNextMove(*(getNextMove.meMfPairProvider_)) {};
 
+  BitPieceInfo getNextMove(const BitBoard& board, BlockType blockType, int level, char firstMoveChar='.') const;
+  BitPieceInfo getNextMove(const BitBoard &board, const BlockType blockType1, const BlockType blockType2, int currentLineClears, char firstMoveChar='.') const;
 
-  Move getNextMove(const BitBoard& board, BlockType blockType, int level) const;
-  BitPieceInfo getNextMove(const BitBoard &board, const BlockType blockType1, const BlockType blockType2, int currentLineClears) const;
-
-  void setMoveEvaluator(const MoveEvaluatorGroup &me) {
-    me_ = std::make_unique<MoveEvaluatorGroup>(me);
-  }
-  void setMoveFinder(const MyMoveFinder &mf) {
-    mf_ = std::make_unique<MyMoveFinder>(mf);
-  }
-  void setMaxDropRem(int maxDropRem) {
-    mf_->setMaxDropRem(maxDropRem);
-  }
-  const MyMoveFinder& getMoveFinder() { return *mf_; }
   MyMoveFinder getMoveFinder(int numLines) {
     return meMfPairProvider_->getMeMfPair(numLines).second;
   }
  private:
-  std::unique_ptr<MoveEvaluatorGroup> me_;
-  std::unique_ptr<MyMoveFinder> mf_;
   std::unique_ptr<MeMfPairProvider<MyMoveFinder>> meMfPairProvider_;
 };
 
 
 template<typename MyMoveFinder>
-Move NewGetNextMove<MyMoveFinder>::getNextMove(const BitBoard &board, const BlockType blockType, int level) const {
-  auto allMoves = mf_->findAllMoves(board, blockType);
+BitPieceInfo NewGetNextMove<MyMoveFinder>::getNextMove(const BitBoard &board, const BlockType blockType, int level, char firstMoveChar) const {
+  auto [me, mf] = meMfPairProvider_->getMeMfPair(level == 18 ? 129 : 130);
+  if (firstMoveChar != '.') mf.setFirstMoveDirectionChar(firstMoveChar);
+  auto allMoves = mf.findAllMoves(board, blockType);
 #ifdef RECORD_MOVES
   Di::getMoveRecorder().recordMoves(board, blockType, allMoves);
 #endif
   assert(allMoves.size() > 0);
   auto bestPiece = allMoves[0];
   double bestScore = 6e60;
-  dprintf("NewGetNextMove: numMoves: %lu\n", allMoves.size());
   for (const auto& piece: allMoves) {
-    double score = me_->evaluate(board, piece, level);
+    double score = me.evaluate(board, piece, level);
     if (score < bestScore || (score == bestScore && piece < bestPiece)) {
       bestPiece = piece;
       bestScore = score;
     }
-    dprintf("NewGetNextMove: score: %0.2f\n", score);
   }
-  dprintf("NewGetNextMove: bestScore: %.8f\n", bestScore);
-  return bestPiece.getPosition();
+  return bestPiece;
 }
 
 template<typename MyMoveFinder>
-BitPieceInfo NewGetNextMove<MyMoveFinder>::getNextMove(const BitBoard &board, const BlockType blockType1, const BlockType blockType2, int currentLineClears) const {
+BitPieceInfo NewGetNextMove<MyMoveFinder>::getNextMove(const BitBoard &board, const BlockType blockType1, const BlockType blockType2, int currentLineClears, char firstMoveChar) const {
   using SetT = std::tuple<double, BitPieceInfo, BitPieceInfo>;
   struct SetComp {
     bool operator()(const SetT t1, const SetT t2) const {
@@ -90,6 +66,7 @@ BitPieceInfo NewGetNextMove<MyMoveFinder>::getNextMove(const BitBoard &board, co
   
   std::set<SetT, SetComp> scores;
   auto [me, mf] = meMfPairProvider_->getMeMfPair(currentLineClears);
+  if (firstMoveChar != '.') mf.setFirstMoveDirectionChar(firstMoveChar);
   assert(!board.hasNoMoves(blockType1));
 
   const auto moves = mf.findAllMoves(board, blockType1);

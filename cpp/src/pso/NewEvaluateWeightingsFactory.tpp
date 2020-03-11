@@ -10,10 +10,7 @@
 template<typename MyMoveFinder>
 struct NewEvaluateWeightingsFactory {
   static auto getInstance(const MeMfPairProvider<MyMoveFinder> &meMfPairProvider) {
-    auto p = meMfPairProvider.getMeMfPair(0);
-    const auto &me = p.first;
-    const auto &mf = p.second;
-    auto getNextMove = NewGetNextMove(me, mf, meMfPairProvider);
+    auto getNextMove = NewGetNextMove(meMfPairProvider);
     return NewEvaluateWeightings(RunPieceSet(getNextMove));
   }
 };

@@ -1,9 +1,10 @@
 import { IPixelChecker } from './PixelGetter';
-import { IDemoPlayer, DemoButton } from './IDemoPlayer';
+import { IDemoPlayer, DemoButton, DemoPlayerCaptureLast } from './IDemoPlayer';
 import { IFrameAwaiter } from './FrameAwaiter';
 import { ICapturable } from './ICapturable';
 import { NUM_COLUMNS } from './common/Board';
 import { getDemoEntry } from './DemoEntryHelpers';
+import { ErrorHandler } from './common/ErrorHandler';
 
 interface CaptureT {
   matrix: string;
@@ -91,9 +92,10 @@ export class PieceAwaiter implements ICapturable<CaptureT> {
     return [diff, total];
   }
 
-  public async awaitPiece() {
+  public async awaitPiece(): Promise<DemoPlayerCaptureLast> {
     console.log('awaiting piece...');
     let frame = this.demoPlayer.getFrame();
+    let captureLast = this.demoPlayer.captureLast();
     while (true) {
       const [diff, total] = this.countDiff();
       const greyPixelColour = this.pixelChecker.getPixel(
@@ -110,6 +112,7 @@ export class PieceAwaiter implements ICapturable<CaptureT> {
         console.log('diff!', diff);
         break;
       }
+      captureLast = this.demoPlayer.captureLast();
       if (this.demoPlayer.isEmpty()) {
         this.demoPlayer.addEvent(
           getDemoEntry(
@@ -122,5 +125,9 @@ export class PieceAwaiter implements ICapturable<CaptureT> {
       await this.frameAwaiter.awaitFrame(frame + 1);
       frame++;
     }
+    if (captureLast.emu.frameCt + 1 !== this.demoPlayer.getFrame()) {
+      ErrorHandler.fatal("capture doesnt match" + captureLast.emu.frameCt + "," + this.demoPlayer.getFrame());
+    }
+    return captureLast;
   }
 }
