@@ -157,13 +157,12 @@ export class GameRunner implements ICapturable<any> {
 
     this.assertBoardIsCorrect();
 
-    const currentLineClears = this.extraInformation.lineClears;
     if (Features.adaptBasedOnNextPiece) {
       await this.adaptBasedOnNextPieceAndUpdateExtraInformation(
         this.currentBoard,
         this.currentPiece,
         nextPiece,
-        currentLineClears
+        this.totalLineClears
       );
     }
 

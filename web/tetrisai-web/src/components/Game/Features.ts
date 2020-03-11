@@ -1,3 +1,3 @@
 export const Features = {
-  adaptBasedOnNextPiece: false
+  adaptBasedOnNextPiece: true
 };
