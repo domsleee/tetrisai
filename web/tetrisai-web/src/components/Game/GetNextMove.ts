@@ -9,6 +9,9 @@ import {
   FirstMoveDirectionT,
   NextTwoPiecesReturnT
 } from './IGetNextMove';
+import { default as loglevel } from 'loglevel';
+
+const log = loglevel.getLogger('GetNextMove');
 
 const URL = 'http://localhost:5000/get-moves';
 const URL2 = 'http://localhost:5000/get-moves-given-piece';
@@ -33,7 +36,7 @@ interface GetMovesGivenPieceRequestT {
 interface GetMovesGivenPieceResponseT {
   board: string;
   demo_entries: string[];
-  line_clears: number;
+  line_clears: string;
 }
 
 export class GetNextMove implements IGetNextMove {
@@ -58,8 +61,8 @@ export class GetNextMove implements IGetNextMove {
     }
 
     const nxBoard = new Board(resp.data.board);
-    console.log('REQUEST');
-    console.log(data);
+    log.debug('REQUEST');
+    log.debug(data);
     //console.log('resp.data');
     //console.log(resp.data);
     if (optional.firstMoveDirection) {
@@ -109,7 +112,7 @@ export class GetNextMove implements IGetNextMove {
       demoEntries,
       board: nxBoard,
       extraInformation: {
-        lineClears: resp.data.line_clears
+        lineClears: parseInt(resp.data.line_clears, 10)
       }
     };
   }
@@ -117,7 +120,7 @@ export class GetNextMove implements IGetNextMove {
   private parseDemoEntries(demo_entries: string[]): [DemoEntry[], number] {
     let demoEntries: DemoEntry[] = [];
     let lastFrame = 0;
-    console.log(demo_entries);
+    log.debug("parseDemoEntries", demo_entries);
     for (const str of demo_entries) {
       const [frameStr, action, ...rest] = str.split(' ');
       lastFrame = parseInt(frameStr, 10);

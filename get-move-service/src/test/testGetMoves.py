@@ -5,7 +5,7 @@ from utility.BitBoard import BitBoard
 from common import piece_to_int
 import asyncio
 import logging
-from test.testDefs import FIRST_MOVE_FRAME
+from test.defs import FIRST_MOVE_FRAME
 
 
 class TestGetMoves(unittest.TestCase):

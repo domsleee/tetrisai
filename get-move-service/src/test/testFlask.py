@@ -5,7 +5,7 @@ from main import app
 import logging
 import json
 
-from test.testDefs import FIRST_MOVE_FRAME
+from test.defs import FIRST_MOVE_FRAME
 
 
 class TestFlask(unittest.TestCase):

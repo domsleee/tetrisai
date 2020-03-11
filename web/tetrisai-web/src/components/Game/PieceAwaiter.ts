@@ -6,6 +6,10 @@ import { NUM_COLUMNS } from './common/Board';
 import { getDemoEntry } from './DemoEntryHelpers';
 import { ErrorHandler } from './common/ErrorHandler';
 
+import { default as loglevel } from 'loglevel';
+
+const log = loglevel.getLogger('PieceAwaiter');
+
 interface CaptureT {
   matrix: string;
   isTetrisingCooldown: number;
@@ -92,10 +96,9 @@ export class PieceAwaiter implements ICapturable<CaptureT> {
     return [diff, total];
   }
 
-  public async awaitPiece(): Promise<DemoPlayerCaptureLast> {
-    console.log('awaiting piece...');
+  public async awaitPiece() {
+    log.debug('awaiting piece...');
     let frame = this.demoPlayer.getFrame();
-    let captureLast = this.demoPlayer.captureLast();
     while (true) {
       const [diff, total] = this.countDiff();
       const greyPixelColour = this.pixelChecker.getPixel(
@@ -109,10 +112,9 @@ export class PieceAwaiter implements ICapturable<CaptureT> {
         this.isTetrisingCooldown = this.IS_TETRISING_COOLDOWN_MAX;
       }
       if (diff > 0 && !isTetrising) {
-        console.log('diff!', diff);
+        log.debug('diff!', diff);
         break;
       }
-      captureLast = this.demoPlayer.captureLast();
       if (this.demoPlayer.isEmpty()) {
         this.demoPlayer.addEvent(
           getDemoEntry(
@@ -125,9 +127,5 @@ export class PieceAwaiter implements ICapturable<CaptureT> {
       await this.frameAwaiter.awaitFrame(frame + 1);
       frame++;
     }
-    if (captureLast.emu.frameCt + 1 !== this.demoPlayer.getFrame()) {
-      ErrorHandler.fatal("capture doesnt match" + captureLast.emu.frameCt + "," + this.demoPlayer.getFrame());
-    }
-    return captureLast;
   }
 }

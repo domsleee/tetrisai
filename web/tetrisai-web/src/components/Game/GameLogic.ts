@@ -8,7 +8,7 @@ import { FrameAwaiter, IFrameAwaiter } from './FrameAwaiter';
 import { DemoButton, IDemoPlayer } from './IDemoPlayer';
 import { ErrorHandler } from './common/ErrorHandler';
 import { GetOldCapture } from './GetOldCapture';
-import { GameRunner } from './GameRunner';
+import { GameRunner, GameRunnerResult } from './GameRunner';
 import { IEmulator } from './Emulator/IEmulator';
 import { ICapturable } from './ICapturable';
 import { getDemoEntry, getDemoEntryWithStartFrame } from './DemoEntryHelpers';
@@ -18,6 +18,7 @@ import { getRightVsDown } from './cases/eventsRightVsDown';
 import { start } from 'repl';
 import { getDownVsRotate } from './cases/eventsDownVsRotate';
 import { getSidewaysVsRotate } from './cases/sidewaysVsRotate';
+import { IScreen } from './IScreen';
 
 
 export enum GameLogicMode {
@@ -35,14 +36,14 @@ function download(filename: any, text: any) {
 export class GameLogic implements ICapturable<string> {
   private readonly pa: PieceAwaiter;
   private readonly gr: GameRunner;
-  private readonly screen: any;
+  private readonly screen: IScreen;
   private readonly demoPlayer: IDemoPlayer;
   private readonly debug: any;
   private readonly emu: IEmulator;
   private readonly frameAwaiter: IFrameAwaiter;
   private onStop?: (() => void) = undefined;
 
-  constructor(screen: any, rom: any, tableBoard: any, debug: any) {
+  constructor(screen: IScreen, rom: any, tableBoard: any, debug: any) {
     this.screen = screen;
     this.debug = debug;
 
@@ -67,12 +68,12 @@ export class GameLogic implements ICapturable<string> {
     );
   }
 
-  public async run(gameLogicMode: GameLogicMode = GameLogicMode.NORMAL, startFrame: number = 1) {
+  public async run(gameLogicMode: GameLogicMode = GameLogicMode.NORMAL, startFrame: number = 1): Promise<GameRunnerResult | undefined> {
     this.addFluff(startFrame);
 
     if (gameLogicMode === GameLogicMode.PLAYBACK) {
-      return await this.doPlayback(get19_9HighRight());
-      
+      await this.doPlayback(get19_9HighRight());
+      return;
     }
 
     const bs = new GameBootstrap(this.demoPlayer);
@@ -94,7 +95,8 @@ export class GameLogic implements ICapturable<string> {
       await this.pa.awaitPiece();
       let isGameOver = await this.gr.onNextPieceAppear();
       if (isGameOver) {
-        return this.stop();
+        this.stop();
+        return this.gr.getResult()
       }
     }
   }
@@ -115,7 +117,6 @@ export class GameLogic implements ICapturable<string> {
     return JSON.stringify({
       gr: this.gr.capture(),
       pa: this.pa.capture(),
-      screen: this.screen.capture()
     });
   }
 
@@ -125,7 +126,6 @@ export class GameLogic implements ICapturable<string> {
     const json = JSON.parse(capture);
     this.gr.restoreFromCapture(json.gr);
     this.pa.restoreFromCapture(json.pa);
-    this.screen.restoreFromCapture(json.screen);
     this.pa.countDiff();
     this.demoPlayer.timer.resume();
     console.log('GAMELOGIC RESTORED');
@@ -134,8 +134,7 @@ export class GameLogic implements ICapturable<string> {
   static myfirst = true;
   slowMoKeyHandler: any = null;
 
-
-  activateSlowMoKeyboard = () => {
+  private activateSlowMoKeyboard() {
     this.slowMoKeyHandler = (e: KeyboardEvent) => {
       console.log('KEYPRESS', e.code);
       if (e.code === 'KeyK') {
@@ -153,7 +152,6 @@ export class GameLogic implements ICapturable<string> {
     };
     document.addEventListener('keydown', this.slowMoKeyHandler);
   }
-
 
   keyboardUpControls: any = null;
   keyboardDownControls: any = null;
@@ -187,11 +185,6 @@ export class GameLogic implements ICapturable<string> {
     document.addEventListener('keyup', this.keyboardUpControls);
   }
 
-  enterSloMo = () => {
-    this.demoPlayer.timer.freeze();
-    this.gr.disableFpsControl();
-  };
-
   private async considerCaptureAndRestore() {
     if (false && this.demoPlayer.getFrame() >= 2200) {
       download('problematic_placement', this.capture());
@@ -206,12 +199,10 @@ export class GameLogic implements ICapturable<string> {
     }
     if (GameLogic.myfirst) {
       GameLogic.myfirst = false;
-      //this.enterSloMo();
     }
   }
 
   private addFluff(startFrame: number) {
-    this.debug['ok'] = 'DFLSJFLSK';
     this.debug['startFrame'] = startFrame;
 
     // @ts-ignore
@@ -233,7 +224,6 @@ export class GameLogic implements ICapturable<string> {
       this.debug['keyboardControls'] = (this.keyboardDownControls ? true : false);
       this.debug['slowMo'] = (this.slowMoKeyHandler ? true : false)
     });
-    
 
     this.activateSlowMoKeyboard();
   }
