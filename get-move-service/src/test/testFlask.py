@@ -5,6 +5,9 @@ from main import app
 import logging
 import json
 
+from test.testDefs import FIRST_MOVE_FRAME
+
+
 class TestFlask(unittest.TestCase):
   def setUp(self):
     app.config['TESTING'] = True
@@ -23,7 +26,7 @@ class TestFlask(unittest.TestCase):
     resp = self.app.post('/get-moves-given-piece', json=payload)
     data = json.loads(resp.get_data(as_text=True))
     demo_entries = data['demo_entries']
-    self.assertEqual('1 RIGHT', demo_entries[0])
+    self.assertEqual(str(FIRST_MOVE_FRAME) + ' RIGHT', demo_entries[0])
 
   def test_broken_payload2(self):
     payload = {
@@ -36,7 +39,7 @@ class TestFlask(unittest.TestCase):
     resp = self.app.post('/get-moves-given-piece', json=payload)
     data = json.loads(resp.get_data(as_text=True))
     demo_entries = data['demo_entries']
-    self.assertEqual('1 LEFT', demo_entries[0])
+    self.assertEqual(str(FIRST_MOVE_FRAME) + ' LEFT', demo_entries[0])
 
 if __name__ == '__main__':
   unittest.main()

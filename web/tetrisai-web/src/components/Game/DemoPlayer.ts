@@ -27,8 +27,9 @@ export class DemoPlayer implements IDemoPlayer {
       const boolOrder = (b: boolean) => (b ? 1 : 0);
       return boolOrder(a.isDown) - boolOrder(b.isDown);
     }
+    // higher button (e.g. LEFT/RIGHT preferred)
     if (a.button !== b.button) {
-      return a.button - b.button;
+      return -(a.button - b.button);
     }
     return 0;
   });
