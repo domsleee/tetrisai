@@ -11,6 +11,7 @@ import { Features } from './Features';
 import { ErrorHandler } from './common/ErrorHandler';
 import { ReadBoard, IReadBoard } from '../GameRunner/ReadBoard';
 import { PieceCoords } from '../GameRunner/PieceCoords';
+import { arraySubtract } from './utils';
 
 function sleep(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -251,8 +252,7 @@ export class GameRunner implements ICapturable<any> {
     if (res.isGameOver) return true;
 
     const clearAmount = firstMoveDirection !== 'NONE' ? 2 : 0;
-    const demoEntries = res.demoEntries.slice(clearAmount, res.demoEntries.length);
-    this.fixDemoEvents(demoEntries);
+    let demoEntries = res.demoEntries;
 
     this.nextMoveBoard = res.board;
     if (this.tableBoard) this.tableBoard['board'] = this.nextMoveBoard;
@@ -267,26 +267,35 @@ export class GameRunner implements ICapturable<any> {
     console.log(this.demoPlayer.getEventsRep());
     if (clearAmount > 0) {
       const events = this.demoPlayer.getEventsRep();
-      const ev1 = events[0];
-      let delEvents = [ev1];
-      for (let i = 1; i < events.length; ++i) {
-        if (events[i].button === ev1.button) {
-          delEvents.push(events[i]);
-          break;
-        }
-      }
-      if (delEvents.length !== 2) {
-        throw ErrorHandler.fatal("unexpected deleting of events");
-      }
+      let delEvents = this.getDelEvents(events);
       this.demoPlayer.deleteAllExcept(delEvents);
+
+      let otherDelEvents = this.getDelEvents(demoEntries);
+      demoEntries = arraySubtract(demoEntries, otherDelEvents);
     } else {
       this.demoPlayer.deleteAll();
     }
     //this.demoPlayer.clearEvents(clearAmount);
+    this.fixDemoEvents(demoEntries);
     this.demoPlayer.addEvents(demoEntries);
 
     console.log("after adapting");
     console.log(this.demoPlayer.getEventsRep());
+  }
+
+  private getDelEvents(events: DemoEntry[]) {
+    const ev1 = events[0];
+    let delEvents = [ev1];
+    for (let i = 1; i < events.length; ++i) {
+      if (events[i].button === ev1.button) {
+        delEvents.push(events[i]);
+        break;
+      }
+    }
+    if (delEvents.length !== 2) {
+      throw ErrorHandler.fatal("unexpected deleting of events");
+    }
+    return delEvents;
   }
 
   private getFirstMoveDirection(

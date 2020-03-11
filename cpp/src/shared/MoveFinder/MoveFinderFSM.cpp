@@ -54,13 +54,13 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
   auto s2 = MoveFinderState(b.getPiece(blockType), false, maxDropRem_);
   s1.releaseCooldown_ = s2.releaseCooldown_ = 2;
   s1.dasRem_ = s2.dasRem_ = 2;
+  s1.setRotateCooldown(2);
+  s2.setRotateCooldown(2);
   auto s3(s2);
   onEnterReleased(s3);
   s3.fsmState_ = FSMState::RELEASED;
-  s3.releaseCooldown_ = 0;
-  s3.frameEntered_ = 1;
-  s3.dropRem_ -= 1;
-  s3.dasRem_ = 0;
+  s3.setRotateCooldown(2);
+  s3.setSidewaysMoveCooldown(2);
 
   if (!hasFirstMoveConstraint_) {
     safeInsert(seen, b, q, s1);
