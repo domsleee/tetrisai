@@ -12,10 +12,10 @@ const auto EDGE_RELEASED_TO_LAST_HIT_USED = 2;
 const auto EDGE_RELEASED_NO_LAST_HIT = 3;
 
 struct DoWork {
-  std::unordered_map<int, int> holdingSeen_[2];
-  std::unordered_map<int, int> releasedSeen_ = {};
+  std::unordered_map<int, bool> holdingSeen_[2];
+  std::unordered_map<int, bool> releasedSeen_ = {};
   std::unordered_set<BitPieceInfo> moveSet_ = {};
-  std::unordered_map<int, int> tappedSeen_ = {};
+  std::unordered_map<int, bool> tappedSeen_ = {};
   const int maxDropRem_;
 
   DoWork(int maxDropRem): maxDropRem_(maxDropRem) {}
@@ -98,7 +98,7 @@ struct DoWork {
       auto myPiece = currentPiece;
       while (true) {
         if (tappedSeen_.count(myPiece.getRepId()) || releasedSeen_.count(myPiece.getRepId())) return;
-        tappedSeen_.insert({myPiece.getRepId(), 1});
+        tappedSeen_.insert({myPiece.getRepId(), true});
         bool canMove = false;
         auto movePiece = myPiece;
         for (const auto &nxPiece: myPiece.getClosedRotN()) {

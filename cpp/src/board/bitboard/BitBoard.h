@@ -87,6 +87,7 @@ class BitPieceInfo {
   friend BitBoard;
  public:
   BlockType getBlockType() const { return BitBoardPre::getBlockTypeFromId(id_); }
+  BitPieceInfo(const BitPieceInfo &other) : BitPieceInfo(other.id_, other.b_) {}
   bool canRotate(RotateDirection) const;
   BitPieceInfo rotate(RotateDirection) const;
   bool canMove(MoveDirection) const;
@@ -134,9 +135,9 @@ class BitPieceInfo {
   friend size_t std::hash<BitPieceInfo>::operator ()(const BitPieceInfo&) const;
 
  private:
-  BitPieceInfo(int id, const BitBoard &b) : id_(id), b_(std::make_shared<BitBoard>(b)) {}
+  BitPieceInfo(int id, const BitBoard *b) : id_(id), b_(b) {}
   int id_;
-  std::shared_ptr<BitBoard> b_;
+  const BitBoard* b_;
 
   inline std::vector<BitPieceInfo> getClosedRotNTwoPossibleRots() const {
     if (canRotate(RotateDirection::ROTATE_AC)) {
