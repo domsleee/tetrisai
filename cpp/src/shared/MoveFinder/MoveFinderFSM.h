@@ -28,7 +28,6 @@ class MoveFinderFSM {
   }
  public:
   MoveFinderFSM() {};
- std::vector<BitPieceInfo> findAllMovesConst(const BitBoard& b, BlockType blockType) const;
  
   std::vector<BitPieceInfo> findAllMoves(const BitBoard& b, BlockType blockType);
   void setFirstMoveDirectionChar(char firstMoveDirectionChar) {
