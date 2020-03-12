@@ -36,7 +36,8 @@ class MoveFinderFSM {
     hasFirstMoveConstraint_ = true;
     firstMoveDirectionChar_ = firstMoveDirectionChar;
   }
-  std::vector<std::string> getShortestPath(const BitPieceInfo piece) const;
+  std::vector<std::string> getShortestPath(const BitPieceInfo &piece) const;
+  std::vector<std::pair<int, Action>> getShortestPathActions(const BitPieceInfo &piece) const;
   void setMaxDropRem(int maxDropRem) { maxDropRem_ = maxDropRem; }
   void setRecordEdges(bool ok) {}
 };

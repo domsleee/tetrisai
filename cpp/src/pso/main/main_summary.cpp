@@ -5,11 +5,14 @@
 #include <iomanip>
 #include <sstream>
 #include "src/pso/defs.h"
+#include "src/pso/main/RowGenerator/RowGenerator.h"
+#include "src/pso/main/RowGenerator/rows/AllRows.h"
+
 
 fort::char_table getData(const SummaryApi &s, const std::vector<std::string> &names);
+fort::char_table getTransitionLinesComparison(const SummaryApi &s, const std::vector<std::string> &names);
 fort::char_table getPairsData(const SummaryApi &s, const std::vector<std::string> &names);
 fort::char_table getLookaheadData(const SummaryApi &s, const std::vector<std::string> &names);
-std::string toFixed(double val, int dp);
 
 int main() {
   SummaryApi s(DATA_FOLDER);
@@ -18,31 +21,51 @@ int main() {
   std::sort(names.begin(), names.end());
 
   
-  std::cout << getData(s, names).to_string() << std::endl;
-  std::cout << getPairsData(s, names).to_string() << '\n';
-  std::cout << getLookaheadData(s, names).to_string() << '\n';
+  std::cout << getData(s, names).to_string() << '\n';
+  //std::cout << getTransitionLinesComparison(s, names).to_string() << '\n';
+  //std::cout << getPairsData(s, names).to_string() << '\n';
+  //std::cout << getLookaheadData(s, names).to_string() << '\n';
   
 }
 
 fort::char_table getData(const SummaryApi &s, const std::vector<std::string> &names) {
   std::cout << "STRAIGHT DATA\n";
   fort::char_table table;
-  table << fort::header << "name" << "group" << "top50Average" << "70th perc" << "median" << fort::endr;
+
+  auto r = RowGenerator(table, {
+    std::make_shared<Name>(),
+    std::make_shared<Group>(),
+    std::make_shared<Seed>(),
+    std::make_shared<NumGames>(),
+    std::make_shared<TopAverage>(50),
+    std::make_shared<PercentileRow>(70),
+    std::make_shared<PercentileRow>(50)
+  });
+  r.applyHeader();
+
   for (auto name: names) {
     eprintf("processing: %s\n", name.c_str());
-    auto summary = s.getSummary(name);
-    auto top50Avg = getTopAverage(summary.getScores(), 50);
-    auto median = getPercentile(summary.getScores(), 50);
-    auto perc70 = getPercentile(summary.getScores(), 70);
-    table << name << summary.getGroup() << top50Avg << perc70 << median << fort::endr;
+    r.setFn([&]{ return s.getSummary(name); });
+    r.calculateAndApplyFeatures();
   }
-  return table;
+  return r.getTable();
 }
 
 fort::char_table getPairsData(const SummaryApi &s, const std::vector<std::string> &names) {
-  std::cout << "FSM DATA\n";
+  std::cout << "FSM vs Rewrite TRANSITION DATA\n";
   fort::char_table table;
-  table << fort::header << "name" << "group" << "top50Average" << "70th perc" << "median" << "maxout %" << fort::endr;
+
+  auto r = RowGenerator(table, {
+    std::make_shared<Name>(),
+    std::make_shared<Group>(),
+    std::make_shared<Seed>(),
+    std::make_shared<NumGames>(),
+    std::make_shared<TopAverage>(50),
+    std::make_shared<PercentileRow>(70),
+    std::make_shared<PercentileRow>(50),
+    std::make_shared<MaxoutRate>()
+  });
+  r.applyHeader();
 
   for (auto name: names) {
     if (name[1] == '8') {
@@ -50,36 +73,64 @@ fort::char_table getPairsData(const SummaryApi &s, const std::vector<std::string
       otherName[1] = '9';
       if (std::find(names.begin(), names.end(), otherName) != names.end()) {
         eprintf("processing: %s\n", name.c_str());
-        auto summary = s.getSummaryFSM(name, otherName, 90);
-        auto summary2 = s.getSummary(name, otherName, 90);
-
-        auto top50Avg = getTopAverage(summary.getScores(), 50);
-        auto top50Avg2 = getTopAverage(summary2.getScores(), 50);
-
-        auto median = getPercentile(summary.getScores(), 50);
-        auto median2 = getPercentile(summary2.getScores(), 50);
-
-        auto perc70 = getPercentile(summary.getScores(), 70);
-        auto perc702 = getPercentile(summary2.getScores(), 70);
-
-        auto numMaxouts = 0;
-        for (auto score: summary.getScores()) numMaxouts += score >= 999999;
-        auto maxoutRate = 100 * (double)numMaxouts / summary.getScores().size();
-        table << name << summary.getGroup()
-          << (toFixed(top50Avg, 0) + "," + toFixed(top50Avg2, 0))
-          << (toFixed(perc70, 0) + "," + toFixed(perc702, 0))
-          << (toFixed(median, 0) + "," + toFixed(median2, 0))
-          << toFixed(maxoutRate, 2) << fort::endr;
+        r.setFns({
+          [&]() { return s.getSummaryFSM(name, otherName, 90); },
+          [&]() { return s.getSummary(name, otherName, 90); }
+        });
+        r.calculateAndApplyFeatures();
       }
     }
   }
-  return table;
+  return r.getTable();
+}
+
+fort::char_table getTransitionLinesComparison(const SummaryApi &s, const std::vector<std::string> &names) {
+  std::cout << "Transition lines COMPARISON\n";
+  fort::char_table table;
+
+  auto r = RowGenerator(table, {
+    std::make_shared<Name>(),
+    std::make_shared<Group>(),
+    std::make_shared<Seed>(),
+    std::make_shared<NumGames>(),
+    std::make_shared<TopAverage>(50),
+    std::make_shared<PercentileRow>(70),
+    std::make_shared<PercentileRow>(50),
+    std::make_shared<MaxoutRate>()
+  });
+  r.applyHeader();
+
+  for (auto name: names) {
+    if (name[1] == '8') {
+      auto otherName = name;
+      otherName[1] = '9';
+      if (std::find(names.begin(), names.end(), otherName) != names.end()) {
+        eprintf("processing: %s\n", name.c_str());
+        for (int i = 0; i <= 230; i += 5) {
+          eprintf("processing: %d\n", i);
+          r.setFn([&]() { return s.getSummary(name, otherName, i); });
+          r.calculateAndApplyFeatures();
+        }
+      }
+    }
+  }
+  return r.getTable();
 }
 
 fort::char_table getLookaheadData(const SummaryApi &s, const std::vector<std::string> &names) {
   std::cout << "LOOKAHEAD DATA\n";
   fort::char_table table;
-  table << fort::header << "name" << "group" << "top50Average" << "70th perc" << "median" << "maxout %" << fort::endr;
+  auto r = RowGenerator(table, {
+    std::make_shared<Name>(),
+    std::make_shared<Group>(),
+    std::make_shared<Seed>(),
+    std::make_shared<NumGames>(),
+    std::make_shared<TopAverage>(50),
+    std::make_shared<PercentileRow>(70),
+    std::make_shared<PercentileRow>(50),
+    std::make_shared<MaxoutRate>()
+  });
+  r.applyHeader();
 
   for (auto name: names) {
     if (name[1] == '8') {
@@ -87,22 +138,12 @@ fort::char_table getLookaheadData(const SummaryApi &s, const std::vector<std::st
       otherName[1] = '9';
       if (std::find(names.begin(), names.end(), otherName) != names.end()) {
         eprintf("processing: %s\n", name.c_str());
-        auto summary = s.getSummaryLookahead(name, otherName, 90);
-        auto top50Avg = getTopAverage(summary.getScores(), 50);
-        auto median = getPercentile(summary.getScores(), 50);
-        auto perc70 = getPercentile(summary.getScores(), 70);
-        auto numMaxouts = 0;
-        for (auto score: summary.getScores()) numMaxouts += score >= 999999;
-        auto maxoutRate = 100 * (double)numMaxouts / summary.getScores().size();
-        table << name << summary.getGroup() << top50Avg << perc70 << median << toFixed(maxoutRate, 2) << fort::endr;
+        r.setFns({
+          [&]() { return s.getSummaryLookahead(name, otherName, 90); },
+        });
+        r.calculateAndApplyFeatures();
       }
     }
   }
-  return table;
-}
-
-std::string toFixed(double val, int dp) {
-  std::stringstream ss;
-  ss << std::fixed << std::setprecision(dp) << val;
-  return ss.str();
+  return r.getTable();
 }

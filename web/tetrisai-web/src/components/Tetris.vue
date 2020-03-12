@@ -106,7 +106,7 @@ export default Vue.extend({
       return localStorage.getItem(ROM_LOCAL_STORAGE_KEY);
     },
     onScreenMounted() {
-      let startFrame: number = 1;
+      let startFrame: number = 8;
       const screen: Screen = this.$refs.screen;
       const tableBoard: any = this.$refs.tableboard;
 

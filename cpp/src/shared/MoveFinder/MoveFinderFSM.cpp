@@ -386,7 +386,7 @@ void onEnterTapped(MoveFinderState &s) {
 }
 
 
-std::vector<std::string> MoveFinderFSM::getShortestPath(const BitPieceInfo piece) const {
+std::vector<std::pair<int, Action>> MoveFinderFSM::getShortestPathActions(const BitPieceInfo &piece) const {
   assert(finalMoveToState_.count(piece));
   auto [state, numMoves] = finalMoveToState_.at(piece);
   std::vector<std::pair<MoveFinderState, Action>> backwards;
@@ -398,12 +398,23 @@ std::vector<std::string> MoveFinderFSM::getShortestPath(const BitPieceInfo piece
   auto forwards = backwards;
   std::reverse(forwards.begin(), forwards.end());
 
-  std::vector<std::string> result;
+  std::vector<std::pair<int, Action>> result;
   for (int i = 0; i < forwards.size(); ++i) {
     const auto &[state, action] = forwards[i];
     std::stringstream ss;
     if (action == Action::NONE) continue;
-    ss << state.frameEntered_ << ' ' << toString(action) << '\n';
+    result.push_back({state.frameEntered_, action});
+  }
+  return result;
+}
+
+std::vector<std::string> MoveFinderFSM::getShortestPath(const BitPieceInfo &piece) const {
+  auto actionPairs = getShortestPathActions(piece);
+
+  std::vector<std::string> result;
+  for (const auto [frameEntered, action]: actionPairs) {
+    std::stringstream ss;
+    ss << frameEntered << ' ' << toString(action) << '\n';
     result.push_back(ss.str());
   }
   return result;

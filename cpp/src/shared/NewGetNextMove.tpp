@@ -8,6 +8,7 @@
 #include "src/shared/get_moves_utils.hpp"
 #include "src/shared/MoveEvaluator/MoveEvaluatorGroup.hpp"
 #include "src/shared/MeMfPairProvider.h"
+#include "src/shared/MoveFinder/MoveFinderConstraints.h"
 
 #define LOOKAHEAD_PARALLEL par_unseq
 
@@ -35,7 +36,7 @@ template<typename MyMoveFinder>
 BitPieceInfo NewGetNextMove<MyMoveFinder>::getNextMove(const BitBoard &board, const BlockType blockType, const ScoreManager &sm, char firstMoveChar) const {
   int level = sm.getLevel() < 19 ? 18 : 19;
   auto [me, mf] = meMfPairProvider_->getMeMfPair(sm.getTotalLines());
-  if (firstMoveChar != '.') mf.setFirstMoveDirectionChar(firstMoveChar);
+  if (firstMoveChar != NO_CONSTRAINT) mf.setFirstMoveDirectionChar(firstMoveChar);
   auto allMoves = mf.findAllMoves(board, blockType);
 #ifdef RECORD_MOVES
   Di::getMoveRecorder().recordMoves(board, blockType, allMoves);
@@ -67,9 +68,16 @@ BitPieceInfo NewGetNextMove<MyMoveFinder>::getNextMove(const BitBoard &board, co
   
   std::set<SetT, SetComp> scores;
   auto [me, mf] = meMfPairProvider_->getMeMfPair(sm.getTotalLines());
-  if (firstMoveChar != '.') mf.setFirstMoveDirectionChar(firstMoveChar);
-  assert(!board.hasNoMoves(blockType1));
+  if (firstMoveChar != NO_CONSTRAINT) mf.setFirstMoveDirectionChar(firstMoveChar);
 
+  // when the piece appears, the person has already chosen a move (pieceInfo)
+  // the person can change this move, but they must preserve the constraint (firstMoveDirection)
+  auto chosenPieceInfo = getNextMove(board, blockType1, sm, firstMoveChar);
+  mf.findAllMoves(board, blockType1);
+  auto constraint = MoveFinderConstraintResolver<MyMoveFinder>::getConstraint(mf, chosenPieceInfo);
+
+  if (constraint != NO_CONSTRAINT) mf.setFirstMoveDirectionChar(constraint);
+  assert(!board.hasNoMoves(blockType1));
   const auto moves = mf.findAllMoves(board, blockType1);
   auto fn = [&, this](const auto nxPiece) -> std::vector<SetT> {
     auto [nxBoard, lineClears] = board.applyPieceInfoCopy(nxPiece);

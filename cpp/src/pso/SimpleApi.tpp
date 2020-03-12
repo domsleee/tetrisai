@@ -43,7 +43,7 @@ auto getEvaluateWeightings(const MeMfPairProvider<MyMoveFinder> &meMfPairProvide
 
 template<typename MyMoveFinder=SIMPLE_API_DEFAULT_MF>
 auto getEvaluateWeightings(const MoveEvaluatorGroup &me1, const MoveEvaluatorGroup &me2, const Config &config, int transitionLines) {
-  MeMfPairProvider<MyMoveFinder> meMfPairProvider = getMeMfPairProvider<MyMoveFinder>(me1, me2, 90);
+  MeMfPairProvider<MyMoveFinder> meMfPairProvider = getMeMfPairProvider<MyMoveFinder>(me1, me2, transitionLines);
   return getEvaluateWeightings(meMfPairProvider, config, transitionLines);
 }
 

@@ -29,7 +29,6 @@ class MoveEvaluatorEdgeWell: public IEvaluator {
   }
 
   double evaluateMineGivenColHeights(const BitBoard &b, const BitPieceInfo &p, int *colHeights, int level) const {
-    double eval = 0;
     auto [bottomColumn, secondColumn] = getMinColumns(colHeights);
     if (!isDeepWell(colHeights[bottomColumn], colHeights[secondColumn])) return 0;
     if (bottomColumn == 0 || bottomColumn == 9) return w_[EDGE_WELL];

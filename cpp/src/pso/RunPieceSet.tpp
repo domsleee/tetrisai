@@ -65,7 +65,7 @@ ScoreManager RunPieceSet<MyGetNextMove>::runGameWithLookahead(const std::vector<
   auto getNextMoveHandler = getNextMoveHandler_;
   
   int moves = 0;
-  for (auto i = 0; i < pieceSet.size()-1; ++i) {
+  for (auto i = 0; i < static_cast<int>(pieceSet.size()-1); ++i) {
     auto blockType1 = pieceSet[i];
     auto blockType2 = pieceSet[i+1];
     if (b.hasNoMoves(blockType1)) {

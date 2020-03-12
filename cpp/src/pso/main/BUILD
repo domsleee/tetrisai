@@ -1,4 +1,10 @@
-load("//:defs.bzl", "EXEC_COPTS")
+load("//:defs.bzl", "EXEC_COPTS", "shared_library")
+
+shared_library(
+    name = "RowGenerator",
+    deps = ["//src:pso", "//src:shared", "//src:common", "//third_party:libfort"]
+)
+
 
 cc_binary(
     name = "ew",
@@ -31,6 +37,7 @@ cc_binary(
 cc_binary(
     name = "summary",
     srcs = ["main_summary.cpp"],
-    deps = ["//src:pso", "//third_party:libfort"],
+    deps = ["//src:pso", "//third_party:libfort", ":RowGenerator"],
     copts = EXEC_COPTS
 )
+

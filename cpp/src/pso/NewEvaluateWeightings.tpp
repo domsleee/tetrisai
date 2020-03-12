@@ -10,7 +10,7 @@
 #include <execution>
 
 #ifndef PARALLEL
-#define PARALLEL par_unseq
+#define PARALLEL seq
 #endif
 
 template<typename MyRunPieceSet>
@@ -71,7 +71,7 @@ std::vector<ScoreManager> NewEvaluateWeightings<MyRunPieceSet>::getScoreManagers
   auto pieceSets = ps_.getPieceSets(num_games_);
   std::vector<ScoreManager> scores(pieceSets.size());
 
-  auto &runPieceSet = *runPieceSet_handler_;
+  MyRunPieceSet runPieceSet = *runPieceSet_handler_;
   BitBoardPre::precompute();
 
   auto fn = [runPieceSet](const std::vector<BlockType> &pieceSet) -> ScoreManager {

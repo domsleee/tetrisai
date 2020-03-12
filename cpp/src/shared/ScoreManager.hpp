@@ -7,6 +7,8 @@ struct ScoreManager {
   }
 
   void addLineClears(int lineClears) {
+    totalLines_ += lineClears;
+    updateLevel();
     switch(lineClears) {
       case 0: break;
       case 1: { score_ += 40 * (level_+1); } break;
@@ -14,8 +16,6 @@ struct ScoreManager {
       case 3: { score_ += 300 * (level_+1); } break;
       case 4: { score_ += 1200 * (level_+1); } break;
     }
-    totalLines_ += lineClears;
-    updateLevel();
   }
   int getScore() const {
     return score_;

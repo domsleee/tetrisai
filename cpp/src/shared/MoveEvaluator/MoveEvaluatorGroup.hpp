@@ -27,7 +27,7 @@ public:
     }
     evaluators_.clear();
     int i = 0;
-    for (auto &pair: features_) {
+    for (const auto &pair: features_) {
       const auto &vec = pair.second;
       Weighting w2;
       for (int feature: vec) {

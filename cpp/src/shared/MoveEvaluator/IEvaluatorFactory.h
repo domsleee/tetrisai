@@ -7,6 +7,7 @@
 
 class IEvaluatorFactory {
  public:
+  virtual ~IEvaluatorFactory() {}
   virtual std::unique_ptr<IEvaluator> createNew(const Weighting &w) = 0;
 };
 
