@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e;
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 cd ../cpp; bazel build //src/pso/main:ew --cxxopt="-O3" --cxxopt="-DNDEBUG"
 frompath="${DIR}/../cpp/bazel-bin/src/pso/main/ew" 

@@ -46,6 +46,7 @@ BitPieceInfo NewGetNextMove<MyMoveFinder>::getNextMove(const BitBoard &board, co
   double bestScore = 6e60;
   for (const auto& piece: allMoves) {
     double score = me.evaluate(board, piece, level);
+    //printf("score: %0.2f\n", score);
     if (score < bestScore || (score == bestScore && piece < bestPiece)) {
       bestPiece = piece;
       bestScore = score;

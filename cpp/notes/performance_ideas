@@ -54,8 +54,10 @@ HOW TO PROGRESS
     getEvaluateResultLookahead(name1, name2)
   
   6. Remaining IDEAS
-    [ ] edge well
-    [ ] left/right well
+    [x] edge well
+    [x] left/right well
+    [ ] well location (linear)
+    [ ] bottom column location
 
 
 

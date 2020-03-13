@@ -6,3 +6,5 @@
 #include "src/shared/MoveEvaluator/MoveEvaluatorBurns.hpp"
 #include "src/shared/MoveEvaluator/MoveEvaluatorEdgeWell.hpp"
 #include "src/shared/MoveEvaluator/MoveEvaluatorWellVeryLeft.hpp"
+#include "src/shared/MoveEvaluator/MoveEvaluatorWellLoc.hpp"
+#include "src/shared/MoveEvaluator/MoveEvaluatorBottomLoc.hpp"

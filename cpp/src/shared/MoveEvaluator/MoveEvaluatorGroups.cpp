@@ -47,5 +47,19 @@ std::map<std::string, MoveEvaluatorGroup> getMoveEvaluatorGroups() {
       {std::make_shared<MoveEvaluatorAugmentFactory>(res.at(MOVE_EVALUATOR_GROUP_LINEAR), WeightingFn::readFromString(b19_linearAgain)), {}}
     }
   });
+
+  res.emplace(MOVE_EVALUATOR_AUGMENTED_LOC, MoveEvaluatorGroup {
+    {
+      allFeatures(MoveEvaluatorWellLoc),
+      {std::make_shared<MoveEvaluatorAugmentFactory>(res.at(MOVE_EVALUATOR_GROUP_LINEAR), WeightingFn::readFromString(b19_linearAgain)), {}}
+    }
+  });
+
+  res.emplace(MOVE_EVALUATOR_AUGMENTED_BOTTOM_LOC, MoveEvaluatorGroup {
+    {
+      allFeatures(MoveEvaluatorBottomLoc),
+      {std::make_shared<MoveEvaluatorAugmentFactory>(res.at(MOVE_EVALUATOR_GROUP_LINEAR), WeightingFn::readFromString(b19_linearAgain)), {}}
+    }
+  });
   return res;
 }

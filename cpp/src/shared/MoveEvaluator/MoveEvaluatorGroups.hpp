@@ -14,5 +14,8 @@ const std::string MOVE_EVALUATOR_GROUP_LINEAR = "Linear";
 const std::string MOVE_EVALUATOR_GROUP_EDGE = "Edge";
 const std::string MOVE_EVALUATOR_GROUP_WELL_VERY_LEFT = "WellVeryLeft";
 const std::string MOVE_EVALUATOR_AUGMENTED = "Augmented";
+const std::string MOVE_EVALUATOR_AUGMENTED_LOC = "AugmentedLoc";
+const std::string MOVE_EVALUATOR_AUGMENTED_BOTTOM_LOC = "AugmentedBottomLoc";
+
 
 std::map<std::string, MoveEvaluatorGroup> getMoveEvaluatorGroups();

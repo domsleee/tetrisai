@@ -13,6 +13,24 @@ struct MoveEvaluatorProperties {
 };
 
 template <>
+struct MoveEvaluatorProperties<MoveEvaluatorBottomLoc> {
+  static std::vector<int> getAllFeatures() {
+    std::vector<int> res;
+    for (int i = 0; i < NUM_COLUMNS; ++i) res.push_back(i);
+    return res;
+  }
+};
+
+template <>
+struct MoveEvaluatorProperties<MoveEvaluatorWellLoc> {
+  static std::vector<int> getAllFeatures() {
+    std::vector<int> res;
+    for (int i = 0; i < NUM_COLUMNS; ++i) res.push_back(i);
+    return res;
+  }
+};
+
+template <>
 struct MoveEvaluatorProperties<MoveEvaluatorWellVeryLeft> {
   static std::vector<int> getAllFeatures() {
     return { MoveEvaluatorWellVeryLeft::WELL_VERY_LEFT };

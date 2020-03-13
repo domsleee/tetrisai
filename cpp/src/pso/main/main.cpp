@@ -6,7 +6,7 @@
 #include "src/pso/SimpleApi.tpp"
 
 
-const std::string moveEvaluatorGroup = MOVE_EVALUATOR_AUGMENTED;
+const std::string moveEvaluatorGroup = MOVE_EVALUATOR_AUGMENTED_BOTTOM_LOC;
 
 void run(int argc, char ** argv, Config cfg);
 
@@ -17,6 +17,7 @@ int main(int argc, char ** argv) {
   cfg.maxDropRem = 2;
   cfg.startingLevel = 19;
   cfg.averageAmount = 50;
+  cfg.seed = 800;
 
   if (argc == 2 && strcmp(argv[1], "-c") == 0) {
     cfg.print();
