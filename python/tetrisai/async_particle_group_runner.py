@@ -4,6 +4,7 @@ import typing
 from tetrisai.interfaces.i_run_particle_group import IRunParticleGroup, ParticleGroup
 from tetrisai.interfaces.i_run_particle import IRunParticle
 from common.common import Particle
+import logging
 
 import numpy as np
 
@@ -14,6 +15,7 @@ class AsyncParticleGroupRunner(IRunParticleGroup):
   def __init__(self, run_evaluator: IRunParticle):
     self._seen = {}
     self._run_evaluator = run_evaluator
+    self._logger = logging.getLogger("async_particle_group_runner")
 
   async def run(self, particle_vs: ParticleGroup, seed:int = None) -> typing.List[float]:
     result = {'result_arr': np.zeros(len(particle_vs))}

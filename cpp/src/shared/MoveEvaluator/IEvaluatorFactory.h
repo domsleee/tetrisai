@@ -27,4 +27,5 @@ class EvaluatorFactory<MoveEvaluatorAdapter<MoveEvaluator>>: public IEvaluatorFa
   }
 };
 
+// MoveEvaluatorAugmenter(MoveEvaluatorGroup, weights)
 

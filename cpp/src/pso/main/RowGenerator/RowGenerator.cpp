@@ -21,7 +21,7 @@ void RowGenerator::calculateAndApplyFeatures() {
     auto endTime = std::chrono::system_clock::now();
     bool firstSummaryResult = results.empty();
 
-    for (int i = 0; i < features_.size(); ++i) {
+    for (int i = 0; i < static_cast<int>(features_.size()); ++i) {
       const auto &feature = features_[i];
       if (firstSummaryResult) {
         results.push_back(feature->getValue(summaryResult));

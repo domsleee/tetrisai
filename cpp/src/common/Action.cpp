@@ -28,6 +28,7 @@ std::string toString(Action a) {
     case Action::RIGHT: return "RIGHT"; break;
     case Action::UP: return "UP"; break;
     case Action::DOWN: return "DOWN"; break;
+    default: break;
   }
   throw std::runtime_error("unable to convert action to string");
 }

@@ -6,7 +6,7 @@
 #include "src/pso/SimpleApi.tpp"
 
 
-const std::string moveEvaluatorGroup = MOVE_EVALUATOR_GROUP_WELL_VERY_LEFT;
+const std::string moveEvaluatorGroup = MOVE_EVALUATOR_AUGMENTED;
 
 void run(int argc, char ** argv, Config cfg);
 
