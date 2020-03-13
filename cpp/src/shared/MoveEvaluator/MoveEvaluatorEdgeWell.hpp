@@ -3,7 +3,6 @@
 //
 
 #pragma once
-#include "src/shared/MoveEvaluator/MoveEvaluatorTetrisReady.hpp"
 #include "src/shared/MoveEvaluator/MoveEvaluatorBlockUtility.hpp"
 #include "src/shared/MoveEvaluator/IEvaluator.h"
 

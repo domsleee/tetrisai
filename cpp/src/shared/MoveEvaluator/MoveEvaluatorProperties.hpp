@@ -1,16 +1,21 @@
 #pragma once
 #include "src/shared/MoveEvaluator/MoveEvaluatorGroup.hpp"
-#include "src/shared/MoveEvaluator/MoveEvaluator.hpp"
-#include "src/shared/MoveEvaluator/MoveEvaluatorAdapter.hpp"
-#include "src/shared/MoveEvaluator/MoveEvaluatorTetrisReady.hpp"
-#include "src/shared/MoveEvaluator/MoveEvaluatorBlockLinear.hpp"
-#include "src/shared/MoveEvaluator/MoveEvaluatorBurns.hpp"
-#include "src/shared/MoveEvaluator/MoveEvaluatorEdgeWell.hpp"
+#include "src/shared/MoveEvaluator/AllMoveEvaluators.h"
 
-template <typename T>
+// note: we don't need this anymore. We can just use numbers [0, NUM_FACTORS)
+
+template <typename T, size_t S = sizeof(T)>
 struct MoveEvaluatorProperties {
   static std::vector<int> getAllFeatures() {
-    throw std::runtime_error("MoveEvaluatorProperties: not implemented");
+    static_assert(sizeof(T) == -1, "You have to have a specialization for Helper!");
+    throw std::runtime_error("compiler");
+  }
+};
+
+template <>
+struct MoveEvaluatorProperties<MoveEvaluatorWellVeryLeft> {
+  static std::vector<int> getAllFeatures() {
+    return { MoveEvaluatorWellVeryLeft::WELL_VERY_LEFT };
   }
 };
 

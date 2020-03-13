@@ -3,24 +3,21 @@
 //
 
 #pragma once
+#include "src/shared/MoveEvaluator/MoveEvaluatorTetrisReady.hpp"
 #include "src/shared/MoveEvaluator/MoveEvaluatorBlockUtility.hpp"
 #include "src/shared/MoveEvaluator/IEvaluator.h"
 
 #include "src/common/common.hpp"
 #include <cassert>
-#include <cstdio>
-#include <cstring>
-#include <queue>
 #include <vector>
 #include <algorithm>
 
-class MoveEvaluatorBlockLinear: public IEvaluator {
+class MoveEvaluatorWellVeryLeft: public IEvaluator {
  public:
-  static const int NUM_FACTORS = 2;
-  static const int LINEAR_A = 0;
-  static const int LINEAR_B = 1;
+  static const int NUM_FACTORS = 1;
+  static const int WELL_VERY_LEFT = 0; // in columns 0,1,2
    
-  MoveEvaluatorBlockLinear(const Weighting &w): w_{w} {
+  MoveEvaluatorWellVeryLeft(const Weighting &w): w_{w} {
     assert(w.size() == NUM_FACTORS);
   }
 
@@ -32,10 +29,10 @@ class MoveEvaluatorBlockLinear: public IEvaluator {
   }
 
   double evaluateMineGivenColHeights(const BitBoard &b, const BitPieceInfo &p, int *colHeights, int level) const {
-    double eval = 0;
-    auto [valid, minBlock] = getMinBlock(colHeights, level);
-    if (valid) eval += w_[LINEAR_A] * minBlock + w_[LINEAR_B];
-    return eval;
+    auto [bottomColumn, secondColumn] = getMinColumns(colHeights);
+    if (!isDeepWell(colHeights[bottomColumn], colHeights[secondColumn])) return 0;
+    if (bottomColumn <= 2) return w_[WELL_VERY_LEFT];
+    return -w_[WELL_VERY_LEFT];
   }
 
  private:

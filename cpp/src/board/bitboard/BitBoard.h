@@ -99,21 +99,20 @@ class BitPieceInfo {
   const BitBoard& getBoard() const { return *b_; };
 
   std::vector<BitPieceInfo> getClosedRotN() const {
-    {
-      switch(getBlockType()) {
-        case BlockType::O_PIECE: return {*this};
-        case BlockType::I_PIECE:
-        case BlockType::S_PIECE:
-        case BlockType::Z_PIECE: {
-          return getClosedRotNTwoPossibleRots();
-        }
-        case BlockType::J_PIECE:
-        case BlockType::L_PIECE:
-        case BlockType::T_PIECE: {
-          return getClosedRotNFourPossibleRots();
-        }
+    switch(getBlockType()) {
+      case BlockType::O_PIECE: return {*this};
+      case BlockType::I_PIECE:
+      case BlockType::S_PIECE:
+      case BlockType::Z_PIECE: {
+        return getClosedRotNTwoPossibleRots();
+      }
+      case BlockType::J_PIECE:
+      case BlockType::L_PIECE:
+      case BlockType::T_PIECE: {
+        return getClosedRotNFourPossibleRots();
       }
     }
+    throw std::runtime_error("getClosedRotN");
   }
 
   void print() const;

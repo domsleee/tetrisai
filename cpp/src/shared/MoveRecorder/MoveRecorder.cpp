@@ -8,9 +8,9 @@ void MoveRecorder::recordMoves(const BitBoard &board, const BlockType blockType,
     fout_.open("/tmp/hello.out");
   }
   fout_ << board << ',' << blockType << ',' << '[';
-  for (auto i = 0; i < allMoves.size(); ++i) {
+  for (auto i = 0; i < static_cast<int>(allMoves.size()); ++i) {
     fout_ << allMoves[i].getId();
-    if (i != allMoves.size() - 1) fout_ << ',';
+    if (i != static_cast<int>(allMoves.size()) - 1) fout_ << ',';
   }
   fout_ << "]\n";
 }

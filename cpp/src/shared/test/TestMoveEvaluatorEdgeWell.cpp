@@ -13,11 +13,6 @@
 #include <algorithm>
 #include <iostream>
 
-template <typename T>
-double evaluateWithEmptyPiece(const T& me, const BitBoard &b) {
-  return me.evaluateMine(b, b.getEmptyPiece(), EvaluatorInfo(19));
-}
-
 SCENARIO("Edge well cases") {
   MoveEvaluatorEdgeWell me({2});
   GIVEN("wells on the edge") {

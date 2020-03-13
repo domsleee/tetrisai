@@ -24,6 +24,14 @@ std::map<std::string, MoveEvaluatorGroup> getMoveEvaluatorGroups() {
       allFeatures(MoveEvaluatorEdgeWell)
     }
   });
+  res.emplace(MOVE_EVALUATOR_GROUP_WELL_VERY_LEFT, MoveEvaluatorGroup {
+    {
+      allFeatures(MoveEvaluatorAdapter<MoveEvaluator>),
+      allFeatures(MoveEvaluatorTetrisReady),
+      allFeatures(MoveEvaluatorBlockLinear),
+      allFeatures(MoveEvaluatorWellVeryLeft)
+    }
+  });
   res.emplace(MOVE_EVALUATOR_GROUP_NORMAL, MoveEvaluatorGroup {
     {
       allFeatures(MoveEvaluatorAdapter<MoveEvaluator>)
