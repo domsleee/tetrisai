@@ -95,7 +95,7 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
       q.push({topScore, nxFrame});
     };
 
-    auto considerRotate = [&]() {
+    auto considerRotate = [&, top=top, topScore=topScore]() {
       for (auto rotateDirection: rotateDirections) {
         if (top.rotateCooldown_[rotateDirection] == 0 && top.piece_.canRotate(rotateDirection)) {
           auto nxRotate = top;
@@ -111,7 +111,7 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
       }
     };
 
-    auto considerMovingDown = [&]() -> bool {
+    auto considerMovingDown = [&, top=top, topScore=topScore]() -> bool {
       // if drop rem is zero, you MUST move down
       if (top.dropRem_ == 0) {
         if (top.moveCooldown_[static_cast<int>(MoveDirection::DOWN)] != 0) return true; // cant proceed

@@ -75,9 +75,12 @@ BitPieceInfo NewGetNextMove<MyMoveFinder>::getNextMove(const BitBoard &board, co
   // the person can change this move, but they must preserve the constraint (firstMoveDirection)
   auto chosenPieceInfo = getNextMove(board, blockType1, sm, firstMoveChar);
   mf.findAllMoves(board, blockType1);
-  auto constraint = MoveFinderConstraintResolver<MyMoveFinder>::getConstraint(mf, chosenPieceInfo);
+  
+  if (firstMoveChar == NO_CONSTRAINT) {
+    auto constraint = MoveFinderConstraintResolver<MyMoveFinder>::getConstraint(mf, chosenPieceInfo);
+    if (constraint != NO_CONSTRAINT) mf.setFirstMoveDirectionChar(constraint);
+  }
 
-  if (constraint != NO_CONSTRAINT) mf.setFirstMoveDirectionChar(constraint);
   assert(!board.hasNoMoves(blockType1));
   const auto moves = mf.findAllMoves(board, blockType1);
   auto fn = [&, this](const auto nxPiece) -> std::vector<SetT> {

@@ -24,8 +24,7 @@ class MoveEvaluatorWellVeryLeft: public IEvaluator {
   double evaluateMine(const BitBoard &b, const BitPieceInfo &p, const EvaluatorInfo &evaluatorInfo) const override {
     BitBoard b2 = b;
     b2.applyPieceInfo(p);
-    auto colHeights = getColHeights(b2);
-    return evaluateMineGivenColHeights(b, p, colHeights.data(), evaluatorInfo.level);
+    return evaluateMineGivenColHeights(b2, p, getColHeights(b2).data(), evaluatorInfo.level);
   }
 
   double evaluateMineGivenColHeights(const BitBoard &b, const BitPieceInfo &p, int *colHeights, int level) const {

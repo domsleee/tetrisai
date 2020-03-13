@@ -168,10 +168,28 @@ SCENARIO("TetrisReady matches MoveFinderFSM opinion") {
 }
 
 SCENARIO("TetrisReady works AFTER the piece is applied") {
-  BitBoard b = {getWell(4, 0)};
-  auto p = b.getPiece(Move({{16, 0}, {17, 0}, {18, 0}, {19, 0}}));
-  auto clearBoard = MoveEvaluatorTetrisReady({1}).evaluateMine(b, p, EvaluatorInfo(19));
-  auto tetrisReadyBoard = MoveEvaluatorTetrisReady({1}).evaluateMine(b, b.getEmptyPiece(), EvaluatorInfo(19));
-  REQ_DELTA(0, clearBoard);
-  REQ_DELTA(1, tetrisReadyBoard);
+  GIVEN("a clearing piece") {
+    BitBoard b = {getWell(4, 0)};
+    auto p = b.getPiece(Move({{16, 0}, {17, 0}, {18, 0}, {19, 0}}));
+    WHEN("the board is cleared") {
+      auto clearBoard = MoveEvaluatorTetrisReady({1}).evaluateMine(b, p, EvaluatorInfo(19));
+      auto tetrisReadyBoard = MoveEvaluatorTetrisReady({1}).evaluateMine(b, b.getEmptyPiece(), EvaluatorInfo(19));
+      REQ_DELTA(0, clearBoard);
+      REQ_DELTA(1, tetrisReadyBoard);
+    }
+  }
+  AND_GIVEN("a piece that makes the board tetris ready") {
+    std::vector<std::vector<int>> vs(NUM_ROWS, std::vector<int>(NUM_COLUMNS, 0));
+    for (int r = 16; r <= 19; ++r) {
+      for (int c = 2; c < NUM_COLUMNS; ++c) vs[r][c] = 1;
+    }
+    BitBoard b = {vs};
+    auto p = b.getPiece(Move({{16, 1}, {17, 1}, {18, 1}, {19, 1}}));
+    WHEN("the piece is applied") {
+      auto notTetrisREady = MoveEvaluatorTetrisReady({1}).evaluateMine(b, b.getEmptyPiece(), EvaluatorInfo(19));
+      auto tetrisReadyBoard = MoveEvaluatorTetrisReady({1}).evaluateMine(b, p, EvaluatorInfo(19));
+      REQ_DELTA(0, notTetrisREady);
+      REQ_DELTA(1, tetrisReadyBoard);
+    }
+  }
 }

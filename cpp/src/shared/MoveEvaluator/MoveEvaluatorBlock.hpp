@@ -37,7 +37,8 @@ class MoveEvaluatorBlock {
 
   double evaluateMine(const BitBoard &b, const BitPieceInfo &p, const EvaluatorInfo &evaulatorInfo) const {
     double eval = 0;
-    auto colHeights = getColHeights(b);
+    auto [b2, lineClears] = b.applyPieceInfoCopy(p);
+    auto colHeights = getColHeights(b2);
 
     auto [valid, minBlock] = getMinBlock(colHeights.data());
     if (!valid) return eval;

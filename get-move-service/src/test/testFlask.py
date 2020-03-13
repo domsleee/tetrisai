@@ -41,5 +41,19 @@ class TestFlask(unittest.TestCase):
     demo_entries = data['demo_entries']
     self.assertEqual(str(FIRST_MOVE_FRAME) + ' LEFT', demo_entries[0])
 
+  def test_broken_payload3(self):
+    payload = {
+      'board': '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000011011100001111111000111111110011111111001111111101111111',
+      'piece': 'T_PIECE',
+      'next_piece': 'J_PIECE',
+      'first_move_direction': 'LEFT',
+      'line_clears': 230
+    }
+    resp = self.app.post('/get-moves-given-piece', json=payload)
+    data = json.loads(resp.get_data(as_text=True))
+    demo_entries = data['demo_entries']
+    self.assertEqual(str(FIRST_MOVE_FRAME) + ' LEFT', demo_entries[0])
+
+
 if __name__ == '__main__':
   unittest.main()
