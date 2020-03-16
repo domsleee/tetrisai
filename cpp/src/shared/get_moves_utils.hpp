@@ -4,9 +4,7 @@
 #include "src/common/common.hpp"
 #include "src/shared/MoveEvaluator/MoveEvaluatorGroups.hpp"
 #include "src/shared/MoveFinder/MoveFinderFSM.h"
-#include "src/shared/MoveEvaluator/MoveEvaluatorTetrisReady.hpp"
-#include "src/shared/MoveEvaluator/MoveEvaluatorBlockLinear.hpp"
-#include "src/shared/MoveEvaluator/MoveEvaluatorBlockQuadratic.hpp"
+#include "src/shared/MoveEvaluator/Evaluators/AllMoveEvaluators.h"
 
 #include <chrono>
 

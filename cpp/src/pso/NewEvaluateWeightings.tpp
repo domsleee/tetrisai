@@ -10,7 +10,7 @@
 #include <execution>
 
 #ifndef PARALLEL
-#define PARALLEL seq
+#define PARALLEL par_unseq
 #endif
 
 template<typename MyRunPieceSet>

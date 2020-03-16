@@ -4,8 +4,10 @@
 
 #ifndef TETRISAI_MOVEEVALUATORPENALTY_HPP
 #define TETRISAI_MOVEEVALUATORPENALTY_HPP
-#include "src/shared/MoveEvaluator/MoveEvaluatorAdapter.hpp"
 #include "src/common/common.hpp"
+#include "src/common/Weighting.hpp"
+#include "src/board/bitboard/BitBoard.h"
+#include "src/shared/MoveEvaluator/EvaluatorInfo.hpp"
 #include <cassert>
 
 

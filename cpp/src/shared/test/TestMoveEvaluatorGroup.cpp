@@ -4,7 +4,7 @@
 #include "src/common/BlockType.hpp"
 #include "src/common/common.hpp"
 #include "src/common/Weighting.hpp"
-#include "src/shared/MoveEvaluator/MoveEvaluatorTetrisReady.hpp"
+#include "src/shared/MoveEvaluator/Evaluators/MoveEvaluatorTetrisReady.hpp"
 #include "src/shared/MoveEvaluator/MoveEvaluatorGroup.hpp"
 #include "src/shared/MoveEvaluator/IEvaluatorFactory.h"
 #include "src/shared/test/MoveEvaluatorUtility.hpp"

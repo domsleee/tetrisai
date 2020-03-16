@@ -1,16 +1,9 @@
-//
-// Created by Dom on 2019-11-25.
-//
-
 #pragma once
-#include "src/shared/MoveEvaluator/MoveEvaluatorAdapter.hpp"
-#include "src/shared/MoveEvaluator/MoveEvaluator.hpp"
-#include "src/shared/MoveEvaluator/VacancyChecker.hpp"
 #include "src/shared/MoveEvaluator/MoveEvaluatorBlockUtility.hpp"
+#include "src/shared/MoveEvaluator/IEvaluator.h"
 
 #include "src/common/common.hpp"
 #include <cassert>
-#include <cstdio>
 #include <cstring>
 
 class MoveEvaluatorBottomLoc: public IEvaluator {

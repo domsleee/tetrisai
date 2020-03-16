@@ -2,7 +2,6 @@
 #include "src/common/Move.hpp"
 #include "src/common/BlockType.hpp"
 #include "src/board/bitboard/BitBoard.h"
-#include "src/shared/MoveEvaluator/MoveEvaluator.hpp"
 #include "src/board/BoardPrinter.tpp"
 #include "src/shared/di/di.h"
 #include "src/shared/get_moves_utils.hpp"
@@ -10,7 +9,7 @@
 #include "src/shared/MeMfPairProvider.h"
 #include "src/shared/MoveFinder/MoveFinderConstraints.h"
 
-#define LOOKAHEAD_PARALLEL seq
+#define LOOKAHEAD_PARALLEL par_unseq
 
 template<typename MyMoveFinder>
 class NewGetNextMove {

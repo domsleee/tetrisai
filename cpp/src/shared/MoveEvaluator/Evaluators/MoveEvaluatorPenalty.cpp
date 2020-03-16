@@ -1,4 +1,4 @@
-#include "src/shared/MoveEvaluator/MoveEvaluatorPenalty.hpp"
+#include "src/shared/MoveEvaluator/Evaluators/MoveEvaluatorPenalty.hpp"
 
 // todo: issue when framesPerDrop is not a factor of DAS_FRAMES_PER_MOVE
 const int DAS_FRAMES_PER_MOVE = 6;

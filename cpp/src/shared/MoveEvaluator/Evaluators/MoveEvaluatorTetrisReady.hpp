@@ -3,9 +3,8 @@
 //
 
 #pragma once
-#include "src/shared/MoveEvaluator/MoveEvaluatorAdapter.hpp"
-#include "src/shared/MoveEvaluator/MoveEvaluator.hpp"
 #include "src/shared/MoveEvaluator/VacancyChecker.hpp"
+#include "src/shared/MoveEvaluator/IEvaluator.h"
 #include "src/shared/MoveEvaluator/MoveEvaluatorBlockUtility.hpp"
 
 #include "src/common/common.hpp"

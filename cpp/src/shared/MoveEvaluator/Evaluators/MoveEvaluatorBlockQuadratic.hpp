@@ -3,8 +3,8 @@
 //
 
 #pragma once
-#include "src/shared/MoveEvaluator/MoveEvaluatorTetrisReady.hpp"
 #include "src/shared/MoveEvaluator/MoveEvaluatorBlockUtility.hpp"
+#include "src/shared/MoveEvaluator/IEvaluator.h"
 
 #include "src/common/common.hpp"
 #include <cassert>
@@ -16,10 +16,10 @@
 
 class MoveEvaluatorBlockQuadratic {
  public:
-  static const int NUM_FACTORS = MoveEvaluatorTetrisReady::NUM_FACTORS + 3;
-  static const int QUADRATIC_A = MoveEvaluatorTetrisReady::NUM_FACTORS;
-  static const int QUADRATIC_B = MoveEvaluatorTetrisReady::NUM_FACTORS + 1;
-  static const int QUADRATIC_C = MoveEvaluatorTetrisReady::NUM_FACTORS + 2;
+  static const int NUM_FACTORS = 3;
+  static const int QUADRATIC_A = 0;
+  static const int QUADRATIC_B = 1;
+  static const int QUADRATIC_C = 2;
 
   MoveEvaluatorBlockQuadratic(const Weighting &w): w_{w} {
     if (w.size() < NUM_FACTORS) {

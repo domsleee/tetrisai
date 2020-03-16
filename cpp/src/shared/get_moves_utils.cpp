@@ -76,14 +76,6 @@ MoveEvaluatorGroup getBestMoveEvaluatorBlockLinear150_group(bool is19) {
   return group;
 }
 
-MoveEvaluatorGroup gestBestMoveEvaluatorBurns_group(bool is19) {
-  const std::string best18_150 = "[-4.6437083157287 20.006165811087673 3.7150428456718134 14.055867138357229 15.80778883671229 10.774266169257713 24.35074570603681 -2.58228185879174 -1.9368448190716643 7.1509715118623305 7.634563886505738 -1.8891271629776507 -14.1034961860709 -10.157981457917142 -21.308238737895685 1.8177764508587355 5.35325997968149 -13.871221996411933 -9.017482259878406]";
-  auto group = getMoveEvaluatorGroups().at(MOVE_EVALUATOR_GROUP_BURNS);
-  group.setWeights(WeightingFn::readFromString(best18_150));
-  return group;
-}
-
-
 MoveEvaluatorBlockQuadratic getBestMoveEvaluatorBlockQuadratic(bool is19) {
   return {WeightingFn::readFromString(is19 ? best19_block_quadratic : best18_block_quadratic)};
 }

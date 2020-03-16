@@ -4,7 +4,7 @@
 #include "src/common/BlockType.hpp"
 #include "src/common/common.hpp"
 #include "src/common/Weighting.hpp"
-#include "src/shared/MoveEvaluator/MoveEvaluatorEdgeWell.hpp"
+#include "src/shared/MoveEvaluator/Evaluators/MoveEvaluatorEdgeWell.hpp"
 #include "src/shared/test/MoveEvaluatorUtility.hpp"
 #include "src/shared/MoveFinder/MoveFinderFSM.h"
 #include "src/shared/MoveEvaluator/MoveEvaluatorBlockUtility.hpp"

@@ -5,7 +5,7 @@
 #include "src/common/Weighting.hpp"
 #include <algorithm>
 #include <numeric>
-#include "src/shared/MoveEvaluator/MoveEvaluator.hpp"
+#include "src/shared/MoveEvaluator/Evaluators/MoveEvaluator.hpp"
 #include "src/shared/MoveEvaluator/IEvaluator.h"
 
 template<typename MyMoveEvaluator>
