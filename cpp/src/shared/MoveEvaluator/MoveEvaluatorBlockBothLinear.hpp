@@ -14,24 +14,24 @@
 #include <vector>
 #include <algorithm>
 
-class MoveEvaluatorBlockLinear: public IEvaluator {
+class MoveEvaluatorBlockBothLinear: public IEvaluator {
  public:
   static const int NUM_FACTORS = 2;
   static const int LINEAR_A = 0;
   static const int LINEAR_B = 1;
    
-  MoveEvaluatorBlockLinear(const Weighting &w): w_{w} {
+  MoveEvaluatorBlockBothLinear(const Weighting &w): w_{w} {
     assert(w.size() == NUM_FACTORS);
   }
 
   double evaluateMine(const BitBoard &b, const BitPieceInfo &p, const EvaluatorInfo &evaluatorInfo) const override {
-    return evaluateMineGivenColHeights(evaluatorInfo.getAppliedBoard(), evaluatorInfo.getMyColHeights(), evaluatorInfo.getMaxDropRem());
+    return evaluateMineGivenColHeights(evaluatorInfo.getAppliedBoard(), p, evaluatorInfo.getMyColHeights(), evaluatorInfo.getMaxDropRem());
   }
 
-  double evaluateMineGivenColHeights(const BitBoard &b, const int *colHeights, int maxDropRem) const {
+  double evaluateMineGivenColHeights(const BitBoard &b, const BitPieceInfo &p, const int *colHeights, int maxDropRem) const {
     double eval = 0;
-    auto [valid, minBlock] = getMinBlock(colHeights, maxDropRem);
-    if (valid) eval += w_[LINEAR_A] * minBlock + w_[LINEAR_B];
+    auto minBlock = getMaxColHeightsMinusClearHeightsAll(colHeights, maxDropRem);
+    eval += w_[LINEAR_A] * minBlock + w_[LINEAR_B];
     return eval;
   }
 

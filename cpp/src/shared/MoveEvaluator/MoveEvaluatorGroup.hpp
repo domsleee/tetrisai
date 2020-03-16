@@ -43,17 +43,17 @@ class MoveEvaluatorGroup: public IEvaluator {
     return *this;
   }
 
-  double evaluate(const BitBoard &b, const BitPieceInfo &p, int level) const {
-    if (!setWeightsCalled_) throw std::runtime_error("setWeights must be called before evaluate");
-    double res = 0;
-    for (const auto &evaluator: evaluators_) {
-      res += evaluator->evaluateMine(b, p, EvaluatorInfo(level));
-    }
-    return res;
+  double evaluate(const BitBoard &b, const BitPieceInfo &p, const ScoreManager &sm) const {
+    return evaluateMine(b, p, {b, p, sm});
   }
 
   double evaluateMine(const BitBoard &b, const BitPieceInfo &p, const EvaluatorInfo &evaluatorInfo) const override {
-    return evaluate(b, p, evaluatorInfo.level);
+    if (!setWeightsCalled_) throw std::runtime_error("setWeights must be called before evaluate");
+    double res = 0;
+    for (const auto &evaluator: evaluators_) {
+      res += evaluator->evaluateMine(b, p, evaluatorInfo);
+    }
+    return res;
   }
 
 private:

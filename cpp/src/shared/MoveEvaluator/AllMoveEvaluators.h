@@ -8,3 +8,4 @@
 #include "src/shared/MoveEvaluator/MoveEvaluatorWellVeryLeft.hpp"
 #include "src/shared/MoveEvaluator/MoveEvaluatorWellLoc.hpp"
 #include "src/shared/MoveEvaluator/MoveEvaluatorBottomLoc.hpp"
+#include "src/shared/MoveEvaluator/MoveEvaluatorBlockBothLinear.hpp"

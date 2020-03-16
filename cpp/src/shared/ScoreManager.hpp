@@ -1,4 +1,5 @@
 #pragma once
+#include <algorithm>
 
 struct ScoreManager {
   ScoreManager() {}

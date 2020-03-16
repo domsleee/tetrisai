@@ -8,6 +8,7 @@
 #include "src/shared/test/MoveEvaluatorUtility.hpp"
 #include "src/shared/MoveFinder/MoveFinderFSM.h"
 #include "src/shared/MoveEvaluator/MoveEvaluatorBlockUtility.hpp"
+#include "src/shared/ScoreManager.hpp"
 #include <vector>
 #include <iostream>
 #include <algorithm>
@@ -150,12 +151,11 @@ SCENARIO("TetrisReady matches MoveFinderFSM opinion") {
   //REQUIRE(isColAccessible(colHeights, 19) == false);
   for (int level = 18; level <= 19; ++level) {
     for (int c = 0; c < NUM_COLUMNS; ++c) {
-      if (c == 5) continue;
       auto move = Move({{16, c}, {17, c}, {18, c}, {19, c}});
       auto piece = BitBoard().getPiece(move);
       for (int height = 4; height < NUM_ROWS; ++height) {
         BitBoard b = {getWell(height, c)};
-        auto tetrisReady = MoveEvaluatorTetrisReady({1}).evaluateMine(b, b.getEmptyPiece(), EvaluatorInfo(level));
+        auto tetrisReady = MoveEvaluatorTetrisReady({1}).EVAL(b, b.getEmptyPiece(), level);
         MoveFinderFSM mf;
         mf.setMaxDropRem(level == 19 ? 2 : 3);
         auto moves = mf.findAllMoves(b, BlockType::I_PIECE);
@@ -172,8 +172,8 @@ SCENARIO("TetrisReady works AFTER the piece is applied") {
     BitBoard b = {getWell(4, 0)};
     auto p = b.getPiece(Move({{16, 0}, {17, 0}, {18, 0}, {19, 0}}));
     WHEN("the board is cleared") {
-      auto clearBoard = MoveEvaluatorTetrisReady({1}).evaluateMine(b, p, EvaluatorInfo(19));
-      auto tetrisReadyBoard = MoveEvaluatorTetrisReady({1}).evaluateMine(b, b.getEmptyPiece(), EvaluatorInfo(19));
+      auto clearBoard = MoveEvaluatorTetrisReady({1}).EVAL(b, p, 19);
+      auto tetrisReadyBoard = MoveEvaluatorTetrisReady({1}).EVAL(b, b.getEmptyPiece(), 19);
       REQ_DELTA(0, clearBoard);
       REQ_DELTA(1, tetrisReadyBoard);
     }
@@ -186,8 +186,8 @@ SCENARIO("TetrisReady works AFTER the piece is applied") {
     BitBoard b = {vs};
     auto p = b.getPiece(Move({{16, 1}, {17, 1}, {18, 1}, {19, 1}}));
     WHEN("the piece is applied") {
-      auto notTetrisREady = MoveEvaluatorTetrisReady({1}).evaluateMine(b, b.getEmptyPiece(), EvaluatorInfo(19));
-      auto tetrisReadyBoard = MoveEvaluatorTetrisReady({1}).evaluateMine(b, p, EvaluatorInfo(19));
+      auto notTetrisREady = MoveEvaluatorTetrisReady({1}).EVAL(b, b.getEmptyPiece(), 19);
+      auto tetrisReadyBoard = MoveEvaluatorTetrisReady({1}).EVAL(b, p, 19);
       REQ_DELTA(0, notTetrisREady);
       REQ_DELTA(1, tetrisReadyBoard);
     }

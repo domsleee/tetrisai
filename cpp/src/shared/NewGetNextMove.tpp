@@ -10,7 +10,7 @@
 #include "src/shared/MeMfPairProvider.h"
 #include "src/shared/MoveFinder/MoveFinderConstraints.h"
 
-#define LOOKAHEAD_PARALLEL par_unseq
+#define LOOKAHEAD_PARALLEL seq
 
 template<typename MyMoveFinder>
 class NewGetNextMove {
@@ -34,7 +34,6 @@ class NewGetNextMove {
 
 template<typename MyMoveFinder>
 BitPieceInfo NewGetNextMove<MyMoveFinder>::getNextMove(const BitBoard &board, const BlockType blockType, const ScoreManager &sm, char firstMoveChar) const {
-  int level = sm.getLevel() < 19 ? 18 : 19;
   auto [me, mf] = meMfPairProvider_->getMeMfPair(sm.getTotalLines());
   if (firstMoveChar != NO_CONSTRAINT) mf.setFirstMoveDirectionChar(firstMoveChar);
   auto allMoves = mf.findAllMoves(board, blockType);
@@ -45,7 +44,7 @@ BitPieceInfo NewGetNextMove<MyMoveFinder>::getNextMove(const BitBoard &board, co
   auto bestPiece = allMoves[0];
   double bestScore = 6e60;
   for (const auto& piece: allMoves) {
-    double score = me.evaluate(board, piece, level);
+    double score = me.evaluate(board, piece, sm);
     //printf("score: %0.2f\n", score);
     if (score < bestScore || (score == bestScore && piece < bestPiece)) {
       bestPiece = piece;
@@ -85,9 +84,10 @@ BitPieceInfo NewGetNextMove<MyMoveFinder>::getNextMove(const BitBoard &board, co
   const auto moves = mf.findAllMoves(board, blockType1);
   auto fn = [&, this](const auto nxPiece) -> std::vector<SetT> {
     auto [nxBoard, lineClears] = board.applyPieceInfoCopy(nxPiece);
-    int totalLineClears = sm.getTotalLines() + lineClears;
+    auto sm2 = sm;
+    sm2.addLineClears(lineClears);
     double scoreOffset = lineClears == 4 ? -1e9 : 0;
-    auto [me2, mf2] = meMfPairProvider_->getMeMfPair(totalLineClears);
+    auto [me2, mf2] = meMfPairProvider_->getMeMfPair(sm2.getTotalLines());
     if (nxBoard.hasNoMoves(blockType2)) {
       return {{1e9, nxPiece, nxBoard.getEmptyPiece()}};
     }
@@ -95,7 +95,7 @@ BitPieceInfo NewGetNextMove<MyMoveFinder>::getNextMove(const BitBoard &board, co
     auto innerMoves = mf2.findAllMoves(nxBoard, blockType2);
     
     auto innerFn = [&](const auto nxPiece2) -> SetT {
-      auto score = me2.evaluate(nxBoard, nxPiece2, totalLineClears >= 130 ? 19 : 18);
+      auto score = me2.evaluate(nxBoard, nxPiece2, sm2);
       return {score + scoreOffset, nxPiece, nxPiece2};
     };
     std::vector<SetT> innerScores(innerMoves.size(), {0, board.getEmptyPiece(), board.getEmptyPiece()});

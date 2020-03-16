@@ -7,8 +7,9 @@
 template <typename T, size_t S = sizeof(T)>
 struct MoveEvaluatorProperties {
   static std::vector<int> getAllFeatures() {
-    static_assert(sizeof(T) == -1, "You have to have a specialization for Helper!");
-    throw std::runtime_error("compiler");
+    std::vector<int> res;
+    for (int i = 0; i < T::NUM_FACTORS; ++i) res.push_back(i);
+    return res;
   }
 };
 

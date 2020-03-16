@@ -44,6 +44,6 @@ SCENARIO("well after tetris is played") {
   MoveEvaluatorEdgeWell me({2});
   BitBoard b(getWell(4, 0));
   auto p = b.getPiece(Move({{16, 0}, {17, 0}, {18, 0}, {19, 0}}));
-  auto clearBoard = me.evaluateMine(b, p, EvaluatorInfo(19));
+  auto clearBoard = me.EVAL(b, p, 19);
   REQ_DELTA(0, clearBoard);
 }

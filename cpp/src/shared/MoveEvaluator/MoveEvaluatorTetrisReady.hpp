@@ -23,12 +23,10 @@ class MoveEvaluatorTetrisReady: public IEvaluator {
   }
 
   double evaluateMine(const BitBoard &b, const BitPieceInfo &p, const EvaluatorInfo &evaluatorInfo) const override {
-    BitBoard b2(b);
-    b2.applyPieceInfo(p);
-    return evaluateMineGivenColHeights(b2, p, getColHeights(b2).data(), evaluatorInfo.level);
+    return evaluateMineGivenColHeights(evaluatorInfo.getAppliedBoard(), p, evaluatorInfo.getMyColHeights(), evaluatorInfo.getMaxDropRem());
   }
 
-  double evaluateMineGivenColHeights(const BitBoard b, const BitPieceInfo p, int *colHeights, int level) const {
+  double evaluateMineGivenColHeights(const BitBoard b, const BitPieceInfo p, const int *colHeights, int dropRem) const {
     double eval = 0;
     VacancyChecker vac(b);
 
@@ -51,7 +49,7 @@ class MoveEvaluatorTetrisReady: public IEvaluator {
         }
       }
     }
-    int tetrisReady = noHoles && fourDiff && isColAccessible(colHeights, level);
+    int tetrisReady = noHoles && fourDiff && isBottomColAccessible(colHeights, dropRem);
     eval += w_[TETRIS_READY] * tetrisReady;
     return eval;
   }

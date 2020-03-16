@@ -22,12 +22,10 @@ class MoveEvaluatorBottomLoc: public IEvaluator {
   }
 
   double evaluateMine(const BitBoard &b, const BitPieceInfo &p, const EvaluatorInfo &evaluatorInfo) const override {
-    BitBoard b2(b);
-    b2.applyPieceInfo(p);
-    return evaluateMineGivenColHeights(b2, p, getColHeights(b2).data(), evaluatorInfo.level);
+    return evaluateMineGivenColHeights(evaluatorInfo.getAppliedBoard(), p, evaluatorInfo.getMyColHeights());
   }
 
-  double evaluateMineGivenColHeights(const BitBoard b, const BitPieceInfo p, int *colHeights, int level) const {
+  double evaluateMineGivenColHeights(const BitBoard b, const BitPieceInfo p, const int *colHeights) const {
     auto [bottomColumn, secondColumn] = getMinColumns(colHeights);
     if (colHeights[bottomColumn] == colHeights[secondColumn]) return 0;
     return w_[bottomColumn];

@@ -21,12 +21,10 @@ class MoveEvaluatorEdgeWell: public IEvaluator {
   }
 
   double evaluateMine(const BitBoard &b, const BitPieceInfo &p, const EvaluatorInfo &evaluatorInfo) const override {
-    BitBoard b2 = b;
-    b2.applyPieceInfo(p);
-    return evaluateMineGivenColHeights(b2, p, getColHeights(b2).data(), evaluatorInfo.level);
+    return evaluateMineGivenColHeights(evaluatorInfo.getAppliedBoard(), evaluatorInfo.getMyColHeights());
   }
 
-  double evaluateMineGivenColHeights(const BitBoard &b, const BitPieceInfo &p, int *colHeights, int level) const {
+  double evaluateMineGivenColHeights(const BitBoard &b, const int *colHeights) const {
     auto [bottomColumn, secondColumn] = getMinColumns(colHeights);
     if (!isDeepWell(colHeights[bottomColumn], colHeights[secondColumn])) return 0;
     if (bottomColumn == 0 || bottomColumn == 9) return w_[EDGE_WELL];

@@ -6,23 +6,25 @@
 #include "src/pso/SimpleApi.tpp"
 
 
-const std::string moveEvaluatorGroup = MOVE_EVALUATOR_AUGMENTED_LOC;
+const std::string moveEvaluatorGroup = MOVE_EVALUATOR_GROUP_BOTH_LINEAR;
 
 void run(int argc, char ** argv, Config cfg);
 
 int main(int argc, char ** argv) {
   Config cfg;
-  cfg.numLines = 230;
-  cfg.startingLines = 130;
-  cfg.maxDropRem = 2;
-  cfg.startingLevel = 19;
-  cfg.averageAmount = 250;
-  cfg.seed = 800;
-  cfg.numGames = 500;
+  cfg.numLines = 1000;
+  cfg.startingLines = 230;
+  cfg.maxDropRem = 1;
+  cfg.startingLevel = 29;
+  cfg.averageAmount = 50;
 
   if (argc == 2 && strcmp(argv[1], "-c") == 0) {
     cfg.print();
     std::cout << "MoveEvaluatorGroup used: " << moveEvaluatorGroup << '\n';
+    exit(0);
+  }
+  else if (argc == 2 && strcmp(argv[1], "-d") == 0) {
+    std::cout << getMoveEvaluatorGroups().at(moveEvaluatorGroup).NUM_FACTORS << '\n';
     exit(0);
   }
 

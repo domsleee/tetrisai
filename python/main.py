@@ -11,9 +11,9 @@ from tetrisai.performance_logger import PerformanceLogger
 logging.basicConfig()
 
 def main(args):
-  runner_settings = RunnerSettings(dimensions=10)
-  print(runner_settings)
   run_particle = RunParticle(args.binary)
+  runner_settings = RunnerSettings(dimensions=run_particle.get_num_dimensions())
+  print(runner_settings)
   run_particle.print_config()
   performance_logger = PerformanceLogger(run_particle)
   performance_logger.log_settings(runner_settings)
