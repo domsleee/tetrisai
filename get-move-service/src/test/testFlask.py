@@ -52,7 +52,7 @@ class TestFlask(unittest.TestCase):
     resp = self.app.post('/get-moves-given-piece', json=payload)
     data = json.loads(resp.get_data(as_text=True))
     demo_entries = data['demo_entries']
-    self.assertEqual(str(FIRST_MOVE_FRAME) + ' LEFT', demo_entries[0])
+    self.assertEqual('1 DOWN', demo_entries[0])
 
 
 if __name__ == '__main__':
