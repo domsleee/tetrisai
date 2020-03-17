@@ -45,7 +45,7 @@ static constexpr int MAX_CLEAR_HEIGHTS29[NUM_COLUMNS] = {
 
 const int* getMaxClearHeights(int dropRem) {
   switch(dropRem) {
-    case 3:  return MAX_CLEAR_HEIGHTS18;
+    case 3: return MAX_CLEAR_HEIGHTS18;
     case 2: return MAX_CLEAR_HEIGHTS;
     case 1: return MAX_CLEAR_HEIGHTS29;
     default: throw std::runtime_error("unknown droprem");
@@ -130,7 +130,7 @@ std::array<bool, NUM_COLUMNS> getIsColAccessible(const int *colHeights, int drop
 }
 
 int getMaxColHeightsMinusClearHeightsAll(const int *colHeights, int dropRem) {
-  return getMaxColHeightsMinusClearHeightsRange(colHeights, dropRem, 1, NUM_COLUMNS-1);
+  return getMaxColHeightsMinusClearHeightsRange(colHeights, dropRem, 1, NUM_COLUMNS-2);
 }
 
 bool isDeepWell(int smallestHeight, int secondSmallestHeight) {

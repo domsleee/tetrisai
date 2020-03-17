@@ -80,6 +80,7 @@ class MoveEvaluatorBlockBothAdvLinearVar: public IEvaluator {
       }
     }
     eval += w_[NUM_BLOCKED_ROWS] * numBlockedRows;
+    //printf("eval: %0.2f\n", eval);
     return eval;
   }
 

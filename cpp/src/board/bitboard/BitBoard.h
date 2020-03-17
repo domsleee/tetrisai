@@ -134,10 +134,9 @@ class BitPieceInfo {
   friend size_t std::hash<BitPieceInfo>::operator ()(const BitPieceInfo&) const;
 
  private:
-  BitPieceInfo(int id, const BitBoard *b) : id_(id), b_(b) {}
+  BitPieceInfo(int id, const std::shared_ptr<BitBoard> b) : id_(id), b_(b) {}
   int id_;
-  // NOTE: using a shared_ptr here is more correct, but its ~20% slower. See //src/main/pso:bench_time
-  const BitBoard* b_;
+  std::shared_ptr<BitBoard> b_;
 
   inline std::vector<BitPieceInfo> getClosedRotNTwoPossibleRots() const {
     if (canRotate(RotateDirection::ROTATE_AC)) {

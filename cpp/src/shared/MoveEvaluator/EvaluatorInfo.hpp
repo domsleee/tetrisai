@@ -29,9 +29,9 @@ struct EvaluatorInfo {
 
  private:
   std::array<int, NUM_COLUMNS> colHeights_;
-  const BitBoard &oldB_;
-  const BitPieceInfo &p_;
-  const ScoreManager &oldSm_;
+  const BitBoard oldB_;
+  const BitPieceInfo p_;
+  const ScoreManager oldSm_;
   ScoreManager newSm_;
   BitBoard newB_;
   int lineClears_;

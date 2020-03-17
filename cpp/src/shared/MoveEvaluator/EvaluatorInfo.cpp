@@ -5,7 +5,7 @@ EvaluatorInfo::EvaluatorInfo(const BitBoard &b, const BitPieceInfo &p, const Sco
     p_{p},
     oldSm_{sm}
   {
-    auto r = b.applyPieceInfoCopy(p);
+    auto r = oldB_.applyPieceInfoCopy(p);
     newB_ = r.first;
     newSm_ = oldSm_;
     newSm_.addLineClears(r.second);

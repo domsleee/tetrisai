@@ -61,7 +61,7 @@ int BitBoard::applyPieceInfo(const BitPieceInfo& p) {
 }
 
 BitPieceInfo BitBoard::getPiece(BlockType blockType) const {
-  return {BitBoardPre::getStartingPieceId(blockType), this};
+  return {BitBoardPre::getStartingPieceId(blockType), std::make_shared<BitBoard>(*this)};
 }
 
 bool BitBoard::vacant(const BitPieceInfo& p) const {
@@ -88,7 +88,7 @@ int BitBoard::applyMove(const Move& move) {
 }
 
 BitPieceInfo BitBoard::getPiece(BlockType blockType, const Move& position) const {
-  return {BitBoardPre::getMoveFromId(position), this};
+  return {BitBoardPre::getMoveFromId(position), std::make_shared<BitBoard>(*this)};
 }
 
 BitPieceInfo BitBoard::getPiece(const Move& position) const {
@@ -96,11 +96,11 @@ BitPieceInfo BitBoard::getPiece(const Move& position) const {
 }
 
 BitPieceInfo BitBoard::getPieceFromId(int id) const {
-  return BitPieceInfo(id, this);
+  return {id, std::make_shared<BitBoard>(*this)};
 }
 
 BitPieceInfo BitBoard::getEmptyPiece() const {
-  return {BitBoardPre::getEmptyMoveId(), this};
+  return {BitBoardPre::getEmptyMoveId(), std::make_shared<BitBoard>(*this)};
 }
 
 int BitBoard::getPileHeight() const {
