@@ -23,7 +23,7 @@ int main() {
   
   // std::cout << getData(s, names).to_string() << '\n';
   // std::cout << getTransitionLinesComparison(s, names).to_string() << '\n';
- //  std::cout << getPairsData(s, names).to_string() << '\n';
+  // std::cout << getPairsData(s, names).to_string() << '\n';
   std::cout << getLookaheadData(s, names).to_string() << '\n';  
 }
 
