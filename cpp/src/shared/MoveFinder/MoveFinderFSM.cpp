@@ -1,5 +1,6 @@
 #include "src/shared/MoveFinder/MoveFinderFSM.h"
 #include "src/common/MoveDirection.hpp"
+#include "src/shared/MoveFinder/MoveFinderConstraints.h"
 #include <queue>
 #include <vector>
 #include <sstream>
@@ -68,9 +69,9 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
     safeInsert(seen, b, q, s3);
   } else {
     switch(firstMoveDirectionChar_) {
-      case 'L': { safeInsert(seen, b, q, s1); } break;
-      case 'R': { safeInsert(seen, b, q, s2); } break;
-      case 'N': { safeInsert(seen, b, q, s3); } break;
+      case FIRST_MOVE_DIRECTION_LEFT: { safeInsert(seen, b, q, s1); } break;
+      case FIRST_MOVE_DIRECTION_RIGHT: { safeInsert(seen, b, q, s2); } break;
+      case FIRST_MOVE_DIRECTION_NEITHER: { safeInsert(seen, b, q, s3); } break;
       default: throw std::runtime_error("Unknown firstMoveDirectionChar_");
     }
   }

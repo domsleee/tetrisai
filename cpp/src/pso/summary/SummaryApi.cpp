@@ -97,7 +97,7 @@ LogFileResult SummaryApi::readLogFile(const std::string &name) const {
   }
 
   if (config.numLines == Config::UNDEF) {
-    throw std::runtime_error("error parsing config");
+    throw std::runtime_error("error parsing config (numLines)");
   }
   if (group == "") {
     throw std::runtime_error("error parsing group");

@@ -21,7 +21,7 @@ class NewGetNextMove {
     NewGetNextMove(*(getNextMove.meMfPairProvider_)) {};
 
   BitPieceInfo getNextMove(const BitBoard& board, BlockType blockType, const ScoreManager &sm, char firstMoveChar='.') const;
-  BitPieceInfo getNextMove(const BitBoard &board, const BlockType blockType1, const BlockType blockType2, const ScoreManager &sm, char firstMoveChar='.') const;
+  BitPieceInfo getNextMove(const BitBoard &board, const BlockType blockType1, const BlockType blockType2, const ScoreManager &sm, char firstMoveChar=NO_CONSTRAINT) const;
 
   MyMoveFinder getMoveFinder(int numLines) {
     return meMfPairProvider_->getMeMfPair(numLines).second;

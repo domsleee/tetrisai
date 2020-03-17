@@ -157,8 +157,9 @@ std::pair<MoveEvaluatorGroup, MoveEvaluatorGroup> getMePair() {
   static std::map<bool, MoveEvaluatorGroup> cache;
   if (cache.count(false) == 0) {
     SummaryApi s(DATA_FOLDER);
-    auto summary1 = s.readLogFile("18_MoveEvaluatorBlockLinear50_fixed.log");
-    auto summary2 = s.readLogFile("19_MoveEvaluatorBlockLinear50_fixed.log");
+    const std::string h = "MoveEvaluatorBoth"; // MoveEvaluatorBlockLinear50_fixed
+    auto summary1 = s.readLogFile("18_" + h + ".log");
+    auto summary2 = s.readLogFile("19_" + h + ".log");
 
     auto me1 = getMoveEvaluatorGroups().at(summary1.group).setWeights(summary1.weights);
     auto me2 = getMoveEvaluatorGroups().at(summary2.group).setWeights(summary2.weights);

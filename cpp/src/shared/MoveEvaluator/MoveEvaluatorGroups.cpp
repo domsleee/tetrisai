@@ -18,6 +18,23 @@ std::map<std::string, MoveEvaluatorGroup> getMoveEvaluatorGroups() {
       allFeatures(MoveEvaluatorBlockBothLinear),
     }
   });
+
+  res.emplace(MOVE_EVALUATOR_GROUP_BOTH_LINEAR_ADV, MoveEvaluatorGroup {
+    {
+      allFeatures(MoveEvaluatorAdapter<MoveEvaluator>),
+      allFeatures(MoveEvaluatorTetrisReady),
+      allFeatures(MoveEvaluatorBlockBothAdvLinear),
+    }
+  });
+
+  res.emplace(MOVE_EVALUATOR_GROUP_BOTH_LINEAR_ADV_VAR, MoveEvaluatorGroup {
+    {
+      allFeatures(MoveEvaluatorAdapter<MoveEvaluator>),
+      allFeatures(MoveEvaluatorTetrisReady),
+      allFeatures(MoveEvaluatorBlockBothAdvLinearVar),
+    }
+  });
+
   res.emplace(MOVE_EVALUATOR_GROUP_EDGE, MoveEvaluatorGroup {
     {
       allFeatures(MoveEvaluatorAdapter<MoveEvaluator>),

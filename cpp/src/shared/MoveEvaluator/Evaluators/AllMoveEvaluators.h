@@ -9,3 +9,6 @@
 #include "src/shared/MoveEvaluator/Evaluators/MoveEvaluatorWellLoc.hpp"
 #include "src/shared/MoveEvaluator/Evaluators/MoveEvaluatorBottomLoc.hpp"
 #include "src/shared/MoveEvaluator/Evaluators/MoveEvaluatorBlockBothLinear.hpp"
+#include "src/shared/MoveEvaluator/Evaluators/MoveEvaluatorBlockBothAdvLinear.hpp"
+#include "src/shared/MoveEvaluator/Evaluators/MoveEvaluatorBlockBothAdvLinearVar.hpp"
+

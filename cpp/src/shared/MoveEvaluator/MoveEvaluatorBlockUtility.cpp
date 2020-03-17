@@ -94,13 +94,43 @@ std::pair<bool, int> getMinBlock(const int *colHeights, int level) {
   return {true, -getMaxColHeightMinusColLimit(colHeights, level, bottomColumn)};
 }
 
-int getMaxColHeightsMinusClearHeightsAll(const int *colHeights, int dropRem) {
+int getMaxColHeightsMinusClearHeightsRange(const int *colHeights, int dropRem, int l, int r) {
   int M = -20;
   const int *maxClearHeights = getMaxClearHeights(dropRem);
-  for (int c = 1; c < NUM_COLUMNS-1; ++c) {
+  for (int c = l; c <= r; ++c) {
     M = std::max(M, colHeights[c] - maxClearHeights[c]);
   }
   return M;
+}
+
+std::array<bool, NUM_COLUMNS> getIsColAccessible(const int *colHeights, int dropRem) {
+  const int *maxClearHeights = getMaxClearHeights(dropRem);
+  std::array<bool, NUM_COLUMNS> res;
+  if (colHeights[5] > maxClearHeights[5]) {
+    for (int i = 0; i < NUM_COLUMNS; ++i) res[i] = false;
+    return res;
+  }
+  res[5] = true;
+  bool leftOk = true;
+  for (int c = 4; c >= 0; --c) {
+    if (colHeights[c] > maxClearHeights[c]) {
+      leftOk = false;
+    }
+    res[c] = leftOk;
+  }
+
+  bool rightOk = true;
+  for (int c = 6; c < NUM_COLUMNS; ++c) {
+    if (colHeights[c] > maxClearHeights[c]) {
+      rightOk = false;
+    }
+    res[c] = rightOk;
+  }
+  return res;
+}
+
+int getMaxColHeightsMinusClearHeightsAll(const int *colHeights, int dropRem) {
+  return getMaxColHeightsMinusClearHeightsRange(colHeights, dropRem, 1, NUM_COLUMNS-1);
 }
 
 bool isDeepWell(int smallestHeight, int secondSmallestHeight) {

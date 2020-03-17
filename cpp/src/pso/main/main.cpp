@@ -6,16 +6,16 @@
 #include "src/pso/SimpleApi.tpp"
 
 
-const std::string moveEvaluatorGroup = MOVE_EVALUATOR_GROUP_BOTH_LINEAR;
+const std::string moveEvaluatorGroup = MOVE_EVALUATOR_GROUP_BOTH_LINEAR_ADV_VAR;
 
 void run(int argc, char ** argv, Config cfg);
 
 int main(int argc, char ** argv) {
   Config cfg;
-  cfg.numLines = 1000;
-  cfg.startingLines = 230;
-  cfg.maxDropRem = 1;
-  cfg.startingLevel = 29;
+  cfg.numLines = 230;
+  cfg.startingLines = 130;
+  cfg.maxDropRem = 2;
+  cfg.startingLevel = 19;
   cfg.averageAmount = 50;
 
   if (argc == 2 && strcmp(argv[1], "-c") == 0) {

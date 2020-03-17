@@ -16,6 +16,8 @@ const std::string MOVE_EVALUATOR_AUGMENTED = "Augmented";
 const std::string MOVE_EVALUATOR_AUGMENTED_LOC = "AugmentedLoc";
 const std::string MOVE_EVALUATOR_AUGMENTED_BOTTOM_LOC = "AugmentedBottomLoc";
 const std::string MOVE_EVALUATOR_GROUP_BOTH_LINEAR = "BothLinear";
+const std::string MOVE_EVALUATOR_GROUP_BOTH_LINEAR_ADV = "BothLinearAdv";
+const std::string MOVE_EVALUATOR_GROUP_BOTH_LINEAR_ADV_VAR = "BothLinearAdvVar";
 
 
 std::map<std::string, MoveEvaluatorGroup> getMoveEvaluatorGroups();

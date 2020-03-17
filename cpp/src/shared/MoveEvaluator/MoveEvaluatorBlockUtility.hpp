@@ -7,7 +7,9 @@
 
 std::pair<bool, int> getMinBlock(const int *colHeights, int maxDropRem=2);
 int getMaxColHeightsMinusClearHeightsAll(const int *colHeights, int maxDropRem);
+int getMaxColHeightsMinusClearHeightsRange(const int *colHeights, int dropRem, int l, int r);
 std::array<int, NUM_COLUMNS> getColHeights(const BitBoard &b);
+std::array<bool, NUM_COLUMNS> getIsColAccessible(const int *colHeights, int dropRem);
 bool isBottomColAccessible(const int *colHeights, int maxDropRem);
 std::pair<int, int> getMinColumns(const int *colHeights);
 bool isDeepWell(int smallestHeight, int secondSmallestHeight);
