@@ -8,7 +8,7 @@ struct PercentileRow: public IRow {
   PercentileRow(int perc): perc_{perc} {}
 
   std::string getHeader() const override {
-    return "perc"+std::to_string(perc_);
+    return std::to_string(perc_)+"P";
   }
 
   std::string getValue(const SummaryResult &summaryResult) const override {

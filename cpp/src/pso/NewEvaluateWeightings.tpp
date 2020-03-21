@@ -52,9 +52,9 @@ double NewEvaluateWeightings<MyRunPieceSet>::runAllPieceSets() const {
 
 template<typename MyRunPieceSet>
 std::vector<int> NewEvaluateWeightings<MyRunPieceSet>::getSortedScoreInts() const {
-  auto scores = getSortedScoreManagers();
+  auto scoreManagers = getSortedScoreManagers();
   std::vector<int> scoreInts;
-  for (auto sm: scores) scoreInts.push_back(sm.getScore());
+  for (auto sm: scoreManagers) scoreInts.push_back(sm.getScore());
   return scoreInts;
 }
 

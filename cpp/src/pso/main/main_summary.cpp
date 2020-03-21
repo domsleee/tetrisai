@@ -38,7 +38,8 @@ fort::char_table getData(const SummaryApi &s, const std::vector<std::string> &na
     std::make_shared<NumGames>(),
     std::make_shared<TopAverage>(50),
     std::make_shared<PercentileRow>(70),
-    std::make_shared<PercentileRow>(50)
+    std::make_shared<PercentileRow>(50),
+    std::make_shared<PercGamesCleared>()
   });
   r.applyHeader();
 
@@ -127,6 +128,8 @@ fort::char_table getLookaheadData(const SummaryApi &s, const std::vector<std::st
     std::make_shared<TopAverage>(50),
     std::make_shared<PercentileRow>(70),
     std::make_shared<PercentileRow>(50),
+    std::make_shared<PercGamesCleared>(130),
+    std::make_shared<PercGamesCleared>(230),
     std::make_shared<MaxoutRate>()
   });
   r.applyHeader();

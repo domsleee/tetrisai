@@ -10,12 +10,12 @@ SummaryResult SummaryApi::getSummaryHelper(const std::string &name) const {
   Config config = info.config;
   config.seed = 200;
   config.numGames = 500;
-  auto scores = getScores<MyMoveFinder>(w, config, info.group);
+  auto scoreManagers = getScores<MyMoveFinder>(w, config, info.group);
 
   return {
     name,
     info.group,
-    scores,
+    scoreManagers,
     config
   };
 }
@@ -28,12 +28,12 @@ SummaryResult SummaryApi::getSummaryHelper(const std::string &name1, const std::
   config.setupForLongPlay();
   config.seed = 200;
   config.numGames = 500;
-  auto scores = getScoresTransition<MyMoveFinder>(info1.weights, info2.weights, config, info1.group, transitionLines);
+  auto scoreManagers = getScoresTransition<MyMoveFinder>(info1.weights, info2.weights, config, info1.group, transitionLines);
 
   return {
     name1 + "_" + name2 + "_" + std::to_string(transitionLines),
     info1.group + "_" + info2.group,
-    scores,
+    scoreManagers,
     config
   };
 }

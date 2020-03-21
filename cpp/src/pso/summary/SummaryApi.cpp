@@ -50,11 +50,11 @@ SummaryResult SummaryApi::getSummaryLookahead(const std::string &name1, const st
   config.seed = 200;
   auto me1 = getMoveEvaluatorGroups().at(info1.group).setWeights(info1.weights);
   auto me2 = getMoveEvaluatorGroups().at(info2.group).setWeights(info2.weights);
-  auto scores = getScoresLookahead(config, me1, me2, transitionLines);
+  auto scoreManagers = getScoresLookahead(config, me1, me2, transitionLines);
   return {
     name1 + "_" + name2 + "_Lookahead",
     info1.group + "_" + info2.group,
-    scores,
+    scoreManagers,
     config
   };
 }

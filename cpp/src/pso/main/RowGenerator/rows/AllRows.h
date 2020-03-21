@@ -6,4 +6,5 @@
 #include "src/pso/main/RowGenerator/rows/TopAverage.hpp"
 #include "src/pso/main/RowGenerator/rows/NumGames.hpp"
 #include "src/pso/main/RowGenerator/rows/Seed.hpp"
+#include "src/pso/main/RowGenerator/rows/PercGamesCleared.hpp"
 
