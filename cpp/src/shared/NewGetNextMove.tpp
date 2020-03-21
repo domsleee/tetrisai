@@ -71,9 +71,7 @@ BitPieceInfo NewGetNextMove<MyMoveFinder>::getNextMove(const BitBoard &board, co
 
   // when the piece appears, the person has already chosen a move (pieceInfo)
   // the person can change this move, but they must preserve the constraint (firstMoveDirection)
-  auto chosenPieceInfo = getNextMove(board, blockType1, sm, firstMoveChar);
-  mf.findAllMoves(board, blockType1);
-  
+  auto chosenPieceInfo = getNextMove(board, blockType1, sm, firstMoveChar);  
   if (firstMoveChar == NO_CONSTRAINT) {
     auto constraint = MoveFinderConstraintResolver<MyMoveFinder>::getConstraint(mf, chosenPieceInfo);
     if (constraint != NO_CONSTRAINT) mf.setFirstMoveDirectionChar(constraint);
@@ -92,23 +90,30 @@ BitPieceInfo NewGetNextMove<MyMoveFinder>::getNextMove(const BitBoard &board, co
     }
     assert(!nxBoard.hasNoMoves(blockType2));
     auto innerMoves = mf2.findAllMoves(nxBoard, blockType2);
-    
+
     auto innerFn = [&](const auto nxPiece2) -> SetT {
       auto score = me2.evaluate(nxBoard, nxPiece2, sm2);
+      // printf("scoreOffset: %0.2f, eval: %0.2f\n", scoreOffset, score);
       return {score + scoreOffset, nxPiece, nxPiece2};
     };
     std::vector<SetT> innerScores(innerMoves.size(), {0, board.getEmptyPiece(), board.getEmptyPiece()});
-    std::transform(std::execution::LOOKAHEAD_PARALLEL, // par, seq, par_unseq
-                  innerMoves.begin(), innerMoves.end(), 
-                  innerScores.begin(), innerFn);
+    std::transform(std::execution::LOOKAHEAD_PARALLEL, innerMoves.begin(), innerMoves.end(), 
+                   innerScores.begin(), innerFn);
     return innerScores;
   };
 
   std::vector<std::vector<SetT>> result(moves.size());
-  std::transform(std::execution::LOOKAHEAD_PARALLEL, // par, seq, par_unseq
-                moves.begin(), moves.end(), 
-                result.begin(), fn);
+  std::transform(std::execution::LOOKAHEAD_PARALLEL, moves.begin(), moves.end(), 
+                 result.begin(), fn);
+
   for (auto vec: result) for (auto score: vec) scores.insert(score);
+
+  /*printf("SCORES\n======================\n");
+  printf("init score: %0.2f (move: %d)\n", me.evaluate(board, chosenPieceInfo, sm), chosenPieceInfo.getId());
+  for (auto score: scores) {
+    printf("score: %0.2f, move1: %d, move2: %d\n", std::get<0>(score), std::get<1>(score).getId(), std::get<2>(score).getId());
+  }
+  printf("=========================\n");*/
   return std::get<1>(*scores.begin());
 }
 

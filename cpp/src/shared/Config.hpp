@@ -63,6 +63,13 @@ struct Config {
     fromMap(m);
   }
 
+  void setupForLongPlay() {
+    startingLevel = Config::UNDEF;
+    startingLines = Config::UNDEF;
+    maxDropRem = Config::UNDEF;
+    numLines = 1000;
+  }
+
   template <typename MyEvaluateWeightings>
   void applyConfig(MyEvaluateWeightings &ew) const {
     if (seed != Config::UNDEF) ew.setSeed(seed);

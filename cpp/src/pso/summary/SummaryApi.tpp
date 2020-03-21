@@ -25,9 +25,7 @@ SummaryResult SummaryApi::getSummaryHelper(const std::string &name1, const std::
   auto info1 = readLogFile(name1);
   auto info2 = readLogFile(name2);
   Config config = info1.config;
-  config.startingLevel = Config::UNDEF;
-  config.maxDropRem = Config::UNDEF;
-  config.numLines = Config::UNDEF;
+  config.setupForLongPlay();
   config.seed = 200;
   config.numGames = 500;
   auto scores = getScoresTransition<MyMoveFinder>(info1.weights, info2.weights, config, info1.group, transitionLines);

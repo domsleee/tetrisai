@@ -1,0 +1,162 @@
+ MOCHA  Testing...
+
+
+
+  Generate Report
+stop called
+{ lineClears: 144, score: 548680, level: 20 }
+stop called
+{ lineClears: 231, score: 1006960, level: 29 }
+stop called
+{ lineClears: 86, score: 346560, level: 18 }
+stop called
+{ lineClears: 48, score: 157320, level: 18 }
+stop called
+{ lineClears: 14, score: 50540, level: 18 }
+stop called
+{ lineClears: 191, score: 742420, level: 25 }
+stop called
+{ lineClears: 192, score: 800800, level: 25 }
+stop called
+{ lineClears: 232, score: 962520, level: 29 }
+stop called
+{ lineClears: 232, score: 1015860, level: 29 }
+stop called
+{ lineClears: 237, score: 898260, level: 29 }
+stop called
+{ lineClears: 25, score: 60040, level: 18 }
+stop called
+{ lineClears: 33, score: 144400, level: 18 }
+stop called
+{ lineClears: 231, score: 919600, level: 29 }
+stop called
+{ lineClears: 231, score: 1097180, level: 29 }
+stop called
+{ lineClears: 153, score: 602180, level: 21 }
+stop called
+{ lineClears: 23, score: 77520, level: 18 }
+stop called
+{ lineClears: 168, score: 599600, level: 22 }
+stop called
+{ lineClears: 138, score: 475200, level: 19 }
+stop called
+{ lineClears: 155, score: 602440, level: 21 }
+stop called
+{ lineClears: 235, score: 1007560, level: 29 }
+stop called
+{ lineClears: 233, score: 1025580, level: 29 }
+stop called
+{ lineClears: 231, score: 986780, level: 29 }
+stop called
+{ lineClears: 72, score: 276640, level: 18 }
+stop called
+{ lineClears: 230, score: 954600, level: 29 }
+stop called
+{ lineClears: 224, score: 835360, level: 28 }
+[
+  { lineClears: 144, score: 548680, level: 20 },
+  { lineClears: 231, score: 1006960, level: 29 },
+  { lineClears: 86, score: 346560, level: 18 },
+  { lineClears: 48, score: 157320, level: 18 },
+  { lineClears: 14, score: 50540, level: 18 },
+  { lineClears: 191, score: 742420, level: 25 },
+  { lineClears: 192, score: 800800, level: 25 },
+  { lineClears: 232, score: 962520, level: 29 },
+  { lineClears: 232, score: 1015860, level: 29 },
+  { lineClears: 237, score: 898260, level: 29 },
+  { lineClears: 25, score: 60040, level: 18 },
+  { lineClears: 33, score: 144400, level: 18 },
+  { lineClears: 231, score: 919600, level: 29 },
+  { lineClears: 231, score: 1097180, level: 29 },
+  { lineClears: 153, score: 602180, level: 21 },
+  { lineClears: 23, score: 77520, level: 18 },
+  { lineClears: 168, score: 599600, level: 22 },
+  { lineClears: 138, score: 475200, level: 19 },
+  { lineClears: 155, score: 602440, level: 21 },
+  { lineClears: 235, score: 1007560, level: 29 },
+  { lineClears: 233, score: 1025580, level: 29 },
+  { lineClears: 231, score: 986780, level: 29 },
+  { lineClears: 72, score: 276640, level: 18 },
+  { lineClears: 230, score: 954600, level: 29 },
+  { lineClears: 224, score: 835360, level: 28 }
+]
+    ✓ adaptBasedOnNextPiece = true (2163191ms)
+stop called
+{ lineClears: 59, score: 228000, level: 18 }
+stop called
+{ lineClears: 125, score: 391400, level: 18 }
+stop called
+{ lineClears: 155, score: 496840, level: 21 }
+stop called
+{ lineClears: 58, score: 193040, level: 18 }
+stop called
+{ lineClears: 12, score: 9880, level: 18 }
+stop called
+{ lineClears: 193, score: 700080, level: 25 }
+stop called
+{ lineClears: 81, score: 330600, level: 18 }
+stop called
+{ lineClears: 136, score: 458160, level: 19 }
+stop called
+{ lineClears: 175, score: 601920, level: 23 }
+stop called
+{ lineClears: 61, score: 248900, level: 18 }
+stop called
+{ lineClears: 234, score: 929760, level: 29 }
+stop called
+{ lineClears: 13, score: 69160, level: 18 }
+stop called
+{ lineClears: 9, score: 26600, level: 18 }
+stop called
+{ lineClears: 24, score: 62320, level: 18 }
+stop called
+{ lineClears: 158, score: 597340, level: 21 }
+stop called
+{ lineClears: 146, score: 540580, level: 20 }
+stop called
+{ lineClears: 20, score: 55100, level: 18 }
+stop called
+{ lineClears: 39, score: 72200, level: 18 }
+stop called
+{ lineClears: 17, score: 14060, level: 18 }
+stop called
+{ lineClears: 211, score: 792660, level: 27 }
+stop called
+{ lineClears: 23, score: 80560, level: 18 }
+stop called
+{ lineClears: 65, score: 189620, level: 18 }
+stop called
+{ lineClears: 233, score: 1022200, level: 29 }
+stop called
+{ lineClears: 172, score: 693960, level: 23 }
+stop called
+{ lineClears: 38, score: 110200, level: 18 }
+[
+  { lineClears: 59, score: 228000, level: 18 },
+  { lineClears: 125, score: 391400, level: 18 },
+  { lineClears: 155, score: 496840, level: 21 },
+  { lineClears: 58, score: 193040, level: 18 },
+  { lineClears: 12, score: 9880, level: 18 },
+  { lineClears: 193, score: 700080, level: 25 },
+  { lineClears: 81, score: 330600, level: 18 },
+  { lineClears: 136, score: 458160, level: 19 },
+  { lineClears: 175, score: 601920, level: 23 },
+  { lineClears: 61, score: 248900, level: 18 },
+  { lineClears: 234, score: 929760, level: 29 },
+  { lineClears: 13, score: 69160, level: 18 },
+  { lineClears: 9, score: 26600, level: 18 },
+  { lineClears: 24, score: 62320, level: 18 },
+  { lineClears: 158, score: 597340, level: 21 },
+  { lineClears: 146, score: 540580, level: 20 },
+  { lineClears: 20, score: 55100, level: 18 },
+  { lineClears: 39, score: 72200, level: 18 },
+  { lineClears: 17, score: 14060, level: 18 },
+  { lineClears: 211, score: 792660, level: 27 },
+  { lineClears: 23, score: 80560, level: 18 },
+  { lineClears: 65, score: 189620, level: 18 },
+  { lineClears: 233, score: 1022200, level: 29 },
+  { lineClears: 172, score: 693960, level: 23 },
+  { lineClears: 38, score: 110200, level: 18 }
+]
+    ✓ adaptBasedOnNextPiece = false (1307749ms)
+

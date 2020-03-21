@@ -41,7 +41,7 @@ class MoveEvaluator {
     double offset = (deltaLines == 4) ? -1e9 : 0;
     double eval = offset;
     VacancyChecker vac(b);
-    eval += w[TOTAL_LINES_CLEARED] * deltaLines;
+    if (true || deltaLines != 4) eval += w[TOTAL_LINES_CLEARED] * deltaLines;
     eval += w[TOTAL_LOCK_HEIGHT] * (NUM_ROWS - p.getPosition().maxR - 1);
 
     int lockHeights[NUM_COLUMNS];
@@ -56,8 +56,6 @@ class MoveEvaluator {
         }
       }
     }
-    //int lockHeight = std::accumulate(lockHeights, lockHeights + NUM_COLUMNS, 0);
-    //eval += w[TOTAL_LOCK_HEIGHT] * lockHeight;
 
     int totalWellCells = 0, totalDeepWells = 0, totalWeightedColumnHoles = 0, totalColumnHeights = 0;
     for (int c = 0; c < NUM_COLUMNS; c++) {

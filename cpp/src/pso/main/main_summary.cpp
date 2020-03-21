@@ -131,7 +131,7 @@ fort::char_table getLookaheadData(const SummaryApi &s, const std::vector<std::st
   });
   r.applyHeader();
 
-  for (auto name: names) {
+  /*for (auto name: names) {
     if (name[1] == '8') {
       auto otherName = name;
       otherName[1] = '9';
@@ -139,6 +139,18 @@ fort::char_table getLookaheadData(const SummaryApi &s, const std::vector<std::st
         eprintf("processing: %s\n", name.c_str());
         r.setFns({
           [&]() { return s.getSummaryLookahead(name, otherName, 90); },
+        });
+        r.calculateAndApplyFeatures();
+      }
+    }
+  }*/
+  for (auto name1: names) {
+    for (auto name2: names) {
+      if (name1 == name2) continue;
+      if (name1[1] == '8' && name2[1] == '9') {
+        eprintf("processing: %s\n", name1.c_str());
+        r.setFns({
+          [&]() { return s.getSummaryLookahead(name1, name2, 90); },
         });
         r.calculateAndApplyFeatures();
       }

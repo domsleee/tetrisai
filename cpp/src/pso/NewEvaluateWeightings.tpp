@@ -35,7 +35,7 @@ class NewEvaluateWeightings {
   std::unique_ptr<MyRunPieceSet> runPieceSet_handler_;
  private:
   PieceSetGetter ps_;
-  int num_games_ = NUM_GAMES;
+  int numGames_ = NUM_GAMES;
   int averageAmount_ = 30;
   int lookahead_ = 0;
 };
@@ -45,7 +45,8 @@ template<typename MyRunPieceSet>
 double NewEvaluateWeightings<MyRunPieceSet>::runAllPieceSets() const {
   auto scoreInts = getSortedScoreInts();
   if (scoreInts.size() == 1) return scoreInts[0];
-  double score = average(scoreInts.cend()-averageAmount_, scoreInts.cend());
+  int amt = scoreInts.size() * averageAmount_ / 100;
+  double score = average(scoreInts.cend()-amt, scoreInts.cend());
   return score;
 }
 
@@ -68,7 +69,7 @@ std::vector<ScoreManager> NewEvaluateWeightings<MyRunPieceSet>::getSortedScoreMa
 
 template<typename MyRunPieceSet>
 std::vector<ScoreManager> NewEvaluateWeightings<MyRunPieceSet>::getScoreManagers() const {
-  auto pieceSets = ps_.getPieceSets(num_games_);
+  auto pieceSets = ps_.getPieceSets(numGames_);
   std::vector<ScoreManager> scores(pieceSets.size());
 
   MyRunPieceSet runPieceSet = *runPieceSet_handler_;
@@ -100,8 +101,8 @@ void NewEvaluateWeightings<MyRunPieceSet>::setSeed(int seed) {
 }
 
 template<typename MyRunPieceSet>
-void NewEvaluateWeightings<MyRunPieceSet>::setNumGames(int num_games) {
-  num_games_ = num_games;
+void NewEvaluateWeightings<MyRunPieceSet>::setNumGames(int numGames) {
+  numGames_ = numGames;
 }
 
 template<typename MyRunPieceSet>
