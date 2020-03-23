@@ -11,4 +11,4 @@
 #include "src/shared/MoveEvaluator/Evaluators/MoveEvaluatorBlockBothLinear.hpp"
 #include "src/shared/MoveEvaluator/Evaluators/MoveEvaluatorBlockBothAdvLinear.hpp"
 #include "src/shared/MoveEvaluator/Evaluators/MoveEvaluatorBlockBothAdvLinearVar.hpp"
-
+#include "src/shared/MoveEvaluator/Evaluators/MoveEvaluatorWellLocations.hpp"

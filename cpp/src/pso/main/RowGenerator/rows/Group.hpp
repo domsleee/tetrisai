@@ -12,4 +12,8 @@ struct Group: public IRow {
   std::string getValue(const SummaryResult &summaryResult) const override {
     return summaryResult.getGroup();
   }
+
+  bool considerMultiple() const override {
+    return false;
+  }
 };

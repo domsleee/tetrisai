@@ -18,6 +18,8 @@ const std::string MOVE_EVALUATOR_AUGMENTED_BOTTOM_LOC = "AugmentedBottomLoc";
 const std::string MOVE_EVALUATOR_GROUP_BOTH_LINEAR = "BothLinear";
 const std::string MOVE_EVALUATOR_GROUP_BOTH_LINEAR_ADV = "BothLinearAdv";
 const std::string MOVE_EVALUATOR_GROUP_BOTH_LINEAR_ADV_VAR = "BothLinearAdvVar";
+const std::string MOVE_EVALUATOR_GROUP_WELL_LOCATIONS = "WellLocations";
+const std::string MOVE_EVALUATOR_GROUP_WELL_LOCATIONS_NOT_BOTH = "WellLocationsNotBoth";
 
 
 std::map<std::string, MoveEvaluatorGroup> getMoveEvaluatorGroups();

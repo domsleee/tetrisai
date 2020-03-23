@@ -19,6 +19,24 @@ std::map<std::string, MoveEvaluatorGroup> getMoveEvaluatorGroups() {
     }
   });
 
+  res.emplace(MOVE_EVALUATOR_GROUP_WELL_LOCATIONS, MoveEvaluatorGroup {
+    {
+      allFeatures(MoveEvaluatorAdapter<MoveEvaluator>),
+      allFeatures(MoveEvaluatorTetrisReady),
+      allFeatures(MoveEvaluatorBlockBothLinear),
+      allFeatures(MoveEvaluatorWellLocations)
+    }
+  });
+
+  res.emplace(MOVE_EVALUATOR_GROUP_WELL_LOCATIONS_NOT_BOTH, MoveEvaluatorGroup {
+    {
+      allFeatures(MoveEvaluatorAdapter<MoveEvaluator>),
+      allFeatures(MoveEvaluatorTetrisReady),
+      allFeatures(MoveEvaluatorBlockLinear),
+      allFeatures(MoveEvaluatorWellLocations)
+    }
+  });
+
   res.emplace(MOVE_EVALUATOR_GROUP_BOTH_LINEAR_ADV, MoveEvaluatorGroup {
     {
       allFeatures(MoveEvaluatorAdapter<MoveEvaluator>),
