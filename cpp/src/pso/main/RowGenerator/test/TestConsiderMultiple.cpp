@@ -5,8 +5,8 @@
 
 SCENARIO("ConsiderMultiple polymorphism") {
   auto nameRow = std::make_shared<Name>();
-  auto groupRow = std::make_shared<Group>();
+  auto maxoutRateRow = std::make_shared<MaxoutRate>();
 
   REQUIRE(false == nameRow->considerMultiple());
-  REQUIRE(true == groupRow->considerMultiple());
+  REQUIRE(true == maxoutRateRow->considerMultiple());
 }
