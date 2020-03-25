@@ -83,7 +83,7 @@ class MoveEvaluator: public IEvaluator {
           minColumnHoleDepth = std::min(minColumnHoleDepth, holeDepth);
           maxColumnHoleDepth = std::max(maxColumnHoleDepth, holeDepth);
         }
-        if (r > 0 && r > LOCK_HEIGHT(c)) { // r != LOCK_HEIGHT(c)
+        if (r > LOCK_HEIGHT(c)) { // r != LOCK_HEIGHT(c)
           totalColumnTransitions += vac.is_vacant({r,c}) != vac.is_vacant({r-1,c});
         }
         if (!vac.is_vacant({r, c})) {
@@ -105,10 +105,8 @@ class MoveEvaluator: public IEvaluator {
     eval += w[TOTAL_WEIGHTED_SOLID_CELLS] * totalWeightedSolidCells;
 
     int columnHeightVariance = 0;
-    for (int c = 0; c < NUM_COLUMNS; c++) {
-      if (c < NUM_COLUMNS-1) {
-        columnHeightVariance += abs(colHeights[c]-colHeights[c+1]);
-      }
+    for (int c = 0; c < NUM_COLUMNS-1; c++) {
+      columnHeightVariance += abs(colHeights[c]-colHeights[c+1]);
     }
 
     int columnHeightSpread = MColHeight-mColHeight;
