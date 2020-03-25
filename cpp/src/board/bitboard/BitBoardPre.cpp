@@ -13,7 +13,6 @@
 
 
 namespace BitBoardPre {
-  const int MAX_IND = 12000; // NUM_BLOCKS * NUM_ROWS * NUM_COLUMNS * NUM_ROTATIONS
   const int NUM_BLOCKS = 8;
   const int NUM_MOVES = 4;
   const int NUM_ROTATIONS = 2;

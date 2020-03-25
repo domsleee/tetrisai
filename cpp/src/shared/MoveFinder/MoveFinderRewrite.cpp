@@ -13,9 +13,9 @@ const auto EDGE_RELEASED_NO_LAST_HIT = 3;
 
 struct DoWork {
   std::unordered_map<int, bool> holdingSeen_[2];
-  std::unordered_map<int, bool> releasedSeen_ = {};
+  std::vector<bool> releasedSeen_ = std::vector<bool>(BitBoardPre::NUM_INDEXES, false);
   std::unordered_set<BitPieceInfo> moveSet_ = {};
-  std::unordered_map<int, bool> tappedSeen_ = {};
+  std::vector<bool> tappedSeen_ = std::vector<bool>(BitBoardPre::NUM_INDEXES, false);
   const int maxDropRem_;
 
   DoWork(int maxDropRem): maxDropRem_(maxDropRem) {}
@@ -23,8 +23,6 @@ struct DoWork {
   std::vector<BitPieceInfo> findAllMoves(const BitBoard& b, BlockType blockType) {
     holdingSeen_[MoveDirection::LEFT].clear();
     holdingSeen_[MoveDirection::RIGHT].clear();
-    releasedSeen_.clear();
-    tappedSeen_.clear();
     moveSet_.clear();
     auto pieceInfo = b.getPiece(blockType);
 
@@ -95,8 +93,8 @@ struct DoWork {
     if (lastHitUsed) {
       auto myPiece = currentPiece;
       while (true) {
-        if (tappedSeen_.count(myPiece.getRepId()) || releasedSeen_.count(myPiece.getRepId())) return;
-        tappedSeen_.insert({myPiece.getRepId(), true});
+        if (tappedSeen_[myPiece.getRepId()] || releasedSeen_[myPiece.getRepId()]) return;
+        tappedSeen_[myPiece.getRepId()] =  true;
         bool canMove = false;
         auto movePiece = myPiece;
         for (const auto &nxPiece: myPiece.getClosedRotN()) {
@@ -112,8 +110,8 @@ struct DoWork {
       return;
     }
 
-    if (releasedSeen_.count(currentPiece.getRepId())) return;
-    releasedSeen_.insert({currentPiece.getRepId(), true});
+    if (releasedSeen_[currentPiece.getRepId()]) return;
+    releasedSeen_[currentPiece.getRepId()] = true;
 
     const auto &closedRotN = currentPiece.getClosedRotN();
     for (const auto &nxPiece: closedRotN) {
