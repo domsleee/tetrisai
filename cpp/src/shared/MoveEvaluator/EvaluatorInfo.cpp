@@ -8,6 +8,7 @@ EvaluatorInfo::EvaluatorInfo(const BitBoard &b, const BitPieceInfo &p, const Sco
     auto r = oldB_.applyPieceInfoCopy(p);
     newB_ = r.first;
     newSm_ = oldSm_;
+    lineClears_ = r.second;
     newSm_.addLineClears(r.second);
     colHeights_ = std::move(getColHeights(newB_));
   };

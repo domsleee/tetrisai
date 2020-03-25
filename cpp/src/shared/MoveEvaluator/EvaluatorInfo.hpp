@@ -27,6 +27,10 @@ struct EvaluatorInfo {
     return oldB_;
   }
 
+  int getLineClears() const {
+    return lineClears_;
+  }
+
  private:
   std::array<int, NUM_COLUMNS> colHeights_;
   const BitBoard oldB_;

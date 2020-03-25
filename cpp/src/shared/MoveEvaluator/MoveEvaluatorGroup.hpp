@@ -33,9 +33,8 @@ class MoveEvaluatorGroup: public IEvaluator {
     int i = 0;
     for (const auto &pair: features_) {
       const auto &vec = pair.second;
-      Weighting w2;
+      Weighting w2(pair.first->getNumFactors());
       for (int feature: vec) {
-        if (static_cast<int>(w2.size()) <= feature) w2.resize(feature+1, 0);
         w2[feature] = w[i++];
       }
       evaluators_.push_back(pair.first->createNew(w2));

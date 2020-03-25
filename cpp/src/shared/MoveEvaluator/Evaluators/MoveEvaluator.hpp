@@ -7,7 +7,9 @@
 #include <algorithm>
 #include <numeric>
 
-class MoveEvaluator {
+#include "src/shared/MoveEvaluator/IEvaluator.h"
+
+class MoveEvaluator: public IEvaluator {
   const int INF = 30; // clearly not infinitely lmao
 
  public:
@@ -31,7 +33,15 @@ class MoveEvaluator {
 
   static const int NUM_FACTORS = 17;
 
-  double evaluate2(const BitBoard& b, const BitPieceInfo& p, const Weighting &w) const {
+  MoveEvaluator(const Weighting &w): w_{w} {
+    assert(w.size() == NUM_FACTORS);
+  }
+
+  double evaluateMine(const BitBoard &b, const BitPieceInfo &p, const EvaluatorInfo &evaluatorInfo) const override {
+    return myEvaluate(evaluatorInfo.getAppliedBoard(), p, w_, evaluatorInfo.getLineClears());
+  }
+
+  double evaluate2333(const BitBoard& b, const BitPieceInfo& p, const Weighting &w) const {
     auto nxBoard = b;
     auto deltaLines = nxBoard.applyPieceInfo(p);
     return myEvaluate(nxBoard, p, w, deltaLines);
@@ -137,5 +147,7 @@ class MoveEvaluator {
     }
     return res;
   }
+
+  const Weighting w_;
 };
 

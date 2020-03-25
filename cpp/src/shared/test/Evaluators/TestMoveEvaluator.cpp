@@ -17,7 +17,7 @@ SCENARIO("Metrics line up") {
   const auto testFile = TEST_FOLDER + "/test1.in";
   const auto weightFile = TEST_FOLDER + "/test1.exp";
   auto b = readBoard(testFile);
-  auto w = getWeightsFromEmptyPieceT<MoveEvaluatorAdapter<MoveEvaluator>>(b);
+  auto w = getWeightsFromEmptyPieceT<MoveEvaluator>(b);
   auto wExp = getExpectedWeights(weightFile);
 
 
@@ -48,7 +48,7 @@ SCENARIO("Metrics 2 line up") {
   const auto testFile = TEST_FOLDER + "/test2.in";
   const auto weightFile = TEST_FOLDER + "/test2.exp";
   auto b = readBoard(testFile);
-  auto w = getWeightsFromEmptyPieceT<MoveEvaluatorAdapter<MoveEvaluator>>(b);
+  auto w = getWeightsFromEmptyPieceT<MoveEvaluator>(b);
   auto wExp = getExpectedWeights(weightFile);
 
 
@@ -79,6 +79,6 @@ SCENARIO("lock height") {
   auto piece = b.getPiece(m);
   // 19 ==> 0
   // 6 ==> 13
-  auto w = getWeightsTemp<MoveEvaluatorAdapter<MoveEvaluator>>(b, piece);
+  auto w = getWeightsTemp<MoveEvaluator>(b, piece);
   REQUIRE(w[MoveEvaluator::TOTAL_LOCK_HEIGHT] == 13);
 }
