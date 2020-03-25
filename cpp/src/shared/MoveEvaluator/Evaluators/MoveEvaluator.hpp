@@ -76,7 +76,6 @@ class MoveEvaluator: public IEvaluator {
         if (r > 0 && takenUp && vac.is_vacant({r,c})) {
           totalColumnHoles++;
           totalWeightedColumnHoles += r+1;
-          // r - (NUM_COLUMNS - colHeights[c]) = colHeights[c] + r - NUM_COLUMNS
           int holeDepth = r - LOCK_HEIGHT(c);
           totalColumnHolesDepth += holeDepth;
           minColumnHoleDepth = std::min(minColumnHoleDepth, holeDepth);
