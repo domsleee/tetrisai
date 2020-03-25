@@ -203,3 +203,18 @@ std::array<int, NUM_COLUMNS> getColHeights(const BitBoard &b) {
   }
   return colHeights;
 }
+
+std::array<int, NUM_COLUMNS> getColHeights(const VacancyChecker &vac) {
+  std::array<int, NUM_COLUMNS> colHeights;
+  for (int c = 0; c < NUM_COLUMNS; ++c) {
+    colHeights[c] = 0;
+    for (int r = 0; r < NUM_ROWS; ++r) {
+      if (!vac.is_vacant({r, c})) {
+        colHeights[c] = NUM_ROWS - r;
+        break;
+      }
+    }
+  }
+  return colHeights;
+}
+

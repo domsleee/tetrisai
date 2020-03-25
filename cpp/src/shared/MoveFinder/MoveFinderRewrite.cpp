@@ -44,7 +44,6 @@ struct DoWork {
     int8_t m = std::min(dasRem, dropRem);
     if (m > 0) {
       // this is messy and confusing
-      // SIDEWAYS --> ROTATE --> DOWN
       // there is a two frame cooldown when you release
       // if you are moving down within the next frame, you MUST move down before sideways
       if (dropRem <= 1) {

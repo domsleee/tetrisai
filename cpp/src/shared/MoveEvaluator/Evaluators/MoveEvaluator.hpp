@@ -41,13 +41,12 @@ class MoveEvaluator: public IEvaluator {
   }
 
   double evaluateMine(const BitBoard &b, const BitPieceInfo &p, const EvaluatorInfo &evaluatorInfo) const override {
-    return myEvaluate(evaluatorInfo.getAppliedBoard(), p, w_, evaluatorInfo.getArrColHeights(), evaluatorInfo.getLineClears());
+    return myEvaluate(evaluatorInfo.getAppliedBoard(), p, w_, evaluatorInfo.getArrColHeights(), evaluatorInfo.getLineClears(), evaluatorInfo.getAppliedBoardVac());
   }
   
-  double myEvaluate(const BitBoard &b, const BitPieceInfo& p, const Weighting &w, const std::array<int, NUM_COLUMNS> &colHeights, int deltaLines) const {
+  double myEvaluate(const BitBoard &b, const BitPieceInfo& p, const Weighting &w, const std::array<int, NUM_COLUMNS> &colHeights, int deltaLines, const VacancyChecker &vac) const {
     double offset = (deltaLines == 4) ? -1e9 : 0;
     double eval = offset;
-    VacancyChecker vac(b);
     if (true || deltaLines != 4) eval += w[TOTAL_LINES_CLEARED] * deltaLines;
     eval += w[TOTAL_LOCK_HEIGHT] * (NUM_ROWS - p.getPosition().maxR - 1);
 
@@ -121,10 +120,10 @@ class MoveEvaluator: public IEvaluator {
   }
 
  private:
-  int calculateRowTransitions(VacancyChecker &vac, int minR) const {
+  int calculateRowTransitions(const VacancyChecker &vac, int minR) const {
     int res = 0;
     for (int r = minR; r < NUM_ROWS; r++) {
-      if (vac.is_vacant(Coord{r, 0})) res++;
+      if (vac.is_vacant({r, 0})) res++;
       if (vac.is_vacant({r, NUM_COLUMNS-1})) res++;
       for (int c = 0; c < NUM_COLUMNS-1; c++) {
         if (vac.is_vacant({r,c}) != vac.is_vacant({r, c+1})) res++;

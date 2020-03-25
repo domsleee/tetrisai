@@ -1,7 +1,7 @@
 #pragma once
 struct Coord {
   int r, c;
-  Coord(int r, int c) : r(r), c(c) {}
+  Coord(int r, int c): r(r), c(c) {}
   Coord& operator+=(const Coord &coord) {
     r += coord.r;
     c += coord.c;
