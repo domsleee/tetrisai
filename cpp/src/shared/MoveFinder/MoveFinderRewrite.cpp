@@ -40,12 +40,19 @@ struct DoWork {
     runHolding(currentPiece, md, 1, maxDropRem_);
   }
 
-  void runHolding(const BitPieceInfo &currentPiece, MoveDirection md, int8_t dasRem, int8_t dropRem) {  
+  void runHolding(const BitPieceInfo &currentPiece, MoveDirection md, const int8_t dasRem, const int8_t dropRem) {  
     int8_t m = std::min(dasRem, dropRem);
     if (m > 0) {
+      // this is messy and confusing
+      // SIDEWAYS --> ROTATE --> DOWN
+      // there is a two frame cooldown when you release
+      // if you are moving down within the next frame, you MUST move down before sideways
       if (dropRem <= 1) {
-        if (currentPiece.canMove(MoveDirection::DOWN)) {
-          runReleased(currentPiece.move(MoveDirection::DOWN), false);
+        for (const auto &nxPiece: currentPiece.getClosedRotN()) {
+          if (nxPiece.canMove(MoveDirection::DOWN)) {
+            runReleased(currentPiece.move(MoveDirection::DOWN), false);
+          }
+          break;
         }
       } else {
         runReleased(currentPiece, false);
@@ -83,14 +90,6 @@ struct DoWork {
         else { moveSet_.insert(nxPiece); }
       }
     }
-
-    if (dropRem <= 1) {
-      if (currentPiece.canMove(MoveDirection::DOWN)) {
-        runReleased(currentPiece.move(MoveDirection::DOWN), false);
-      }
-    } else {
-      runReleased(currentPiece, false);
-    }
   }
 
   void runReleased(const BitPieceInfo &currentPiece, bool lastHitUsed) {
@@ -103,7 +102,7 @@ struct DoWork {
         auto movePiece = myPiece;
         for (const auto &nxPiece: myPiece.getClosedRotN()) {
           if (!nxPiece.canMove(MoveDirection::DOWN)) moveSet_.insert(nxPiece);
-          else if (!canMove) {canMove = true, movePiece = nxPiece.move(MoveDirection::DOWN); };
+          else if (!canMove) { canMove = true, movePiece = nxPiece.move(MoveDirection::DOWN); };
         }
         if (canMove) {
           myPiece = movePiece;

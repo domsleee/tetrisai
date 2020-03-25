@@ -51,7 +51,10 @@ class MoveEvaluator: public IEvaluator {
     if (true || deltaLines != 4) eval += w[TOTAL_LINES_CLEARED] * deltaLines;
     eval += w[TOTAL_LOCK_HEIGHT] * (NUM_ROWS - p.getPosition().maxR - 1);
 
-    int minR = NUM_ROWS - *std::max_element(colHeights.begin(), colHeights.end());
+    auto [it1, it2] = std::minmax_element(colHeights.begin(), colHeights.end());
+    int mColHeight = *it1;
+    int MColHeight = *it2;
+    int minR = NUM_ROWS - MColHeight;
     int totalWellCells = 0, totalDeepWells = 0, totalWeightedColumnHoles = 0, totalColumnHeights = 0;
     for (int c = 0; c < NUM_COLUMNS; c++) {
       int l = c == 0 ? INF : colHeights[c-1] - colHeights[c];
@@ -80,11 +83,11 @@ class MoveEvaluator: public IEvaluator {
           minColumnHoleDepth = std::min(minColumnHoleDepth, holeDepth);
           maxColumnHoleDepth = std::max(maxColumnHoleDepth, holeDepth);
         }
-        if (r > 0 && r != LOCK_HEIGHT(c)) {
+        if (r > 0 && r > LOCK_HEIGHT(c)) { // r != LOCK_HEIGHT(c)
           totalColumnTransitions += vac.is_vacant({r,c}) != vac.is_vacant({r-1,c});
         }
         if (!vac.is_vacant({r, c})) {
-          totalSolidCells++;
+          ++totalSolidCells;
           totalWeightedSolidCells += (NUM_ROWS-r);
         }
       }
@@ -102,16 +105,14 @@ class MoveEvaluator: public IEvaluator {
     eval += w[TOTAL_WEIGHTED_SOLID_CELLS] * totalWeightedSolidCells;
 
     int columnHeightVariance = 0;
-    int mColumnHeight = LOCK_HEIGHT(0), MColumnHeight = LOCK_HEIGHT(0);
     for (int c = 0; c < NUM_COLUMNS; c++) {
       if (c < NUM_COLUMNS-1) {
-        columnHeightVariance += abs(LOCK_HEIGHT(c)-LOCK_HEIGHT(c+1));
+        columnHeightVariance += abs(colHeights[c]-colHeights[c+1]);
       }
-      mColumnHeight = std::min(mColumnHeight, LOCK_HEIGHT(c));
-      MColumnHeight = std::max(MColumnHeight, LOCK_HEIGHT(c));
     }
-    int columnHeightSpread = MColumnHeight-mColumnHeight;
-    int pileHeight = (NUM_ROWS - mColumnHeight);
+
+    int columnHeightSpread = MColHeight-mColHeight;
+    int pileHeight = MColHeight;
     eval += w[COLUMN_HEIGHT_VARIANCE] * columnHeightVariance;
     eval += w[PILE_HEIGHT] * pileHeight;
     eval += w[COLUMN_HEIGHT_SPREAD] * columnHeightSpread;

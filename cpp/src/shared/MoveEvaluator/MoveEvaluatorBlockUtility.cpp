@@ -71,13 +71,23 @@ int getMinColumn(const int *colHeights) {
 }
 
 std::pair<int, int> getMinColumns(const int *colHeights) {
-  std::priority_queue<PairT, std::vector<PairT>, std::greater<PairT>> pq;
-  for (int c = 0; c < NUM_COLUMNS; ++c) {
-    pq.push({colHeights[c], c});
+  int firstC = -1, secondC = -1;
+  if (colHeights[0] < colHeights[1]) {
+    firstC = 0, secondC = 1;
+  } else {
+    firstC = 1, secondC = 0;
   }
-  auto [bottomColumnHeight, bottomColumn] = pq.top(); pq.pop();
-  auto [secondColumnHeight, secondColumn] = pq.top(); pq.pop();
-  return {bottomColumn, secondColumn};
+
+  for (int c = 2; c < NUM_COLUMNS; ++c) {
+    if (colHeights[c] <= colHeights[firstC]) {
+      secondC = firstC;
+      firstC = c;
+    }
+    else if (colHeights[c] <= colHeights[secondC]) {
+      secondC = c;
+    }
+  }
+  return {firstC, secondC};
 }
 
 // todo: use std::array to enforce array size.
