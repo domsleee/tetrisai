@@ -5,6 +5,7 @@ from utility.BitBoard import BitBoard
 from common import piece_to_int
 import asyncio
 import logging
+from testUtility.defs import FIRST_MOVE_FRAME
 
 
 class TestGetMoves(unittest.TestCase):
@@ -49,7 +50,7 @@ class TestGetMoves(unittest.TestCase):
     result = self.gm.get_moves(board, piece)
     self.assertEqual(exp_nx_board, result.nx_board)
     self.assertGreater(len(result.demo_entries), 0)
-    self.assertEqual(1, result.demo_entries[0].frame)
+    self.assertEqual(FIRST_MOVE_FRAME, result.demo_entries[0].frame)
     self.assertEqual("RIGHT", result.demo_entries[0].action)
 
   def test_i_piece_given_first_move(self):
@@ -61,7 +62,7 @@ class TestGetMoves(unittest.TestCase):
     result = self.gm.get_moves(board, piece, "LEFT")
     self.assertNotEqual(not_exp_nx_board, result.nx_board)
     self.assertGreater(len(result.demo_entries), 0)
-    self.assertEqual(1, result.demo_entries[0].frame)
+    self.assertEqual(FIRST_MOVE_FRAME, result.demo_entries[0].frame)
     self.assertEqual("LEFT", result.demo_entries[0].action)
 
   def test_set_num_lines(self):
@@ -79,7 +80,7 @@ class TestGetMoves(unittest.TestCase):
     result = self.gm.get_moves_given_piece(board, piece, piece, "RIGHT")
     self.assertEqual(exp_nx_board, result.nx_board)
     self.assertGreater(len(result.demo_entries), 0)
-    self.assertEqual(1, result.demo_entries[0].frame)
+    self.assertEqual(FIRST_MOVE_FRAME, result.demo_entries[0].frame)
     self.assertEqual("RIGHT", result.demo_entries[0].action)
   
   def test_given_next_piece_into_tetris(self):
@@ -96,7 +97,7 @@ class TestGetMoves(unittest.TestCase):
     result = self.gm.get_moves_given_piece(board, piece1, piece2, first_move_direction)
     self.assertEqual(exp_nx_board, result.nx_board)
     self.assertGreater(len(result.demo_entries), 0)
-    self.assertEqual(1, result.demo_entries[0].frame)
+    self.assertEqual(FIRST_MOVE_FRAME, result.demo_entries[0].frame)
     self.assertEqual(first_move_direction, result.demo_entries[0].action)
 
   def test_get_moves_given_piece_broken_case(self):
@@ -105,7 +106,7 @@ class TestGetMoves(unittest.TestCase):
     piece2 = piece_to_int('O_PIECE')
     first_move_direction = 'LEFT'
     result = self.gm.get_moves_given_piece(board, piece1, piece2, first_move_direction)
-    self.assertEqual(1, result.demo_entries[0].frame)
+    self.assertEqual(FIRST_MOVE_FRAME, result.demo_entries[0].frame)
     self.assertEqual(first_move_direction, result.demo_entries[0].action)
 
 

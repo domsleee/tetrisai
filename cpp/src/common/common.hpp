@@ -4,6 +4,11 @@
 
 #define DISABLE_TEST return
 
+#ifndef WORKSPACE_DIR
+#define WORKSPACE_DIR "NO_WORKSPACE_DIR"
+#endif
+const std::string TEST_FOLDER = std::string(WORKSPACE_DIR) + std::string("/src/shared/test/data");
+
 //#define MY_DEBUG 1
 
 #ifdef MY_DEBUG

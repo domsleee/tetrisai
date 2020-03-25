@@ -11,7 +11,7 @@ shared_library(
 
 shared_library(
     name = "pso",
-    deps = [":common", "//src:board", ":shared", "//third_party:optim", "@boost//:random"],
+    deps = [":common", "//src:board", ":shared", "//third_party:optim", "@boost//:random", "@boost//:algorithm"],
 )
 
 shared_library(

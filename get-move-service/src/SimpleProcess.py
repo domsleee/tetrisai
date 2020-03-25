@@ -14,6 +14,11 @@ class SimpleProcess:
   
   def read_line(self):
     async def fn():
+      try:
+        await self._process.stdin.drain()
+      except Exception as e:
+        print(self._process.returncode)
+        raise e
       return await asyncio.wait_for(self._process.stdout.readline(), self._timeout)
     line = self._loop.run_until_complete(fn())
     return line.decode('utf-8').strip('\n')

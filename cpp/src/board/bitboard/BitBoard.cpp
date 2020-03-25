@@ -61,7 +61,7 @@ int BitBoard::applyPieceInfo(const BitPieceInfo& p) {
 }
 
 BitPieceInfo BitBoard::getPiece(BlockType blockType) const {
-  return {BitBoardPre::getStartingPieceId(blockType), this};
+  return {BitBoardPre::getStartingPieceId(blockType), *this};
 }
 
 bool BitBoard::vacant(const BitPieceInfo& p) const {
@@ -88,7 +88,7 @@ int BitBoard::applyMove(const Move& move) {
 }
 
 BitPieceInfo BitBoard::getPiece(BlockType blockType, const Move& position) const {
-  return {BitBoardPre::getMoveFromId(position), this};
+  return {BitBoardPre::getMoveFromId(position), *this};
 }
 
 BitPieceInfo BitBoard::getPiece(const Move& position) const {
@@ -96,11 +96,11 @@ BitPieceInfo BitBoard::getPiece(const Move& position) const {
 }
 
 BitPieceInfo BitBoard::getPieceFromId(int id) const {
-  return BitPieceInfo(id, this);
+  return {id, *this};
 }
 
 BitPieceInfo BitBoard::getEmptyPiece() const {
-  return {BitBoardPre::getEmptyMoveId(), this};
+  return {BitBoardPre::getEmptyMoveId(), *this};
 }
 
 int BitBoard::getPileHeight() const {
@@ -141,7 +141,7 @@ std::size_t std::hash<BitPieceInfo>::operator()(const BitPieceInfo& p) const {
 bool BitPieceInfo::canRotate(RotateDirection rd) const {
   auto nxId = BitBoardPre::getRotate(id_, rd);
   const BitPieceInfo &p = {nxId, b_};
-  return b_->vacant(p);
+  return b_.vacant(p);
 }
 
 BitPieceInfo BitPieceInfo::rotate(RotateDirection rd) const {
@@ -152,7 +152,7 @@ BitPieceInfo BitPieceInfo::rotate(RotateDirection rd) const {
 bool BitPieceInfo::canMove(MoveDirection md) const {
   auto nxId = BitBoardPre::getMove(id_, md);
   const BitPieceInfo &p = {nxId, b_};
-  return b_->vacant(p);
+  return b_.vacant(p);
 }
 
 BitPieceInfo BitPieceInfo::move(MoveDirection md) const {
@@ -168,7 +168,9 @@ BitPieceInfo BitPieceInfo::doAction(Action action) const {
     case Action::UP: return move(MoveDirection::UP);
     case Action::LEFT: return move(MoveDirection::LEFT);
     case Action::RIGHT: return move(MoveDirection::RIGHT);
+    default: throw std::runtime_error("unknown action");
   }
+  throw std::runtime_error("suppress compiler");
 }
 
 Move BitPieceInfo::getPosition() const {

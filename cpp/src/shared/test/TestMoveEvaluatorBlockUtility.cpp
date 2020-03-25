@@ -36,3 +36,14 @@ SCENARIO("valid cases") {
     REQUIRE(-1 == minBlock.second);
   }
 }
+
+SCENARIO("getMaxColHeightsMinusClearHeightsAll") {
+  GIVEN("left-side well, blocked by minBlock: 1") {
+    int columns[NUM_COLUMNS] = {};
+    for (int i = 0; i < NUM_COLUMNS; ++i) columns[i] = 9;
+    columns[0] = 0;
+    REQUIRE(9 == getMaxColHeightsMinusClearHeightsAll(columns, 1));
+    REQUIRE(1 == getMaxColHeightsMinusClearHeightsAll(columns, 2));
+    REQUIRE(-3 == getMaxColHeightsMinusClearHeightsAll(columns, 3));
+  }
+}

@@ -28,7 +28,15 @@ class BitBoard {
  public:
   using B = std::bitset<NUM_ROWS*NUM_COLUMNS>;
   BitBoard() { BitBoardPre::precompute(); };
+
+  // whoever thought this was a good idea should be shot
   int applyPieceInfo(const BitPieceInfo&);
+  
+  std::pair<BitBoard, int> applyPieceInfoCopy(const BitPieceInfo &nxPiece) const {
+    BitBoard nb = *this;
+    int lineClears = nb.applyPieceInfo(nxPiece);
+    return {nb, lineClears};
+  }
   BitPieceInfo getPiece(BlockType blockType) const;
   bool vacant(const BitPieceInfo&) const;
 
@@ -88,24 +96,23 @@ class BitPieceInfo {
   Move getPosition() const;
   int getId() const { return id_; }
   int getRepId() const { return BitBoardPre::getRepIdFromId(id_); }
-  const BitBoard& getBoard() const { return *b_; };
+  const BitBoard& getBoard() const { return b_; };
 
   std::vector<BitPieceInfo> getClosedRotN() const {
-    {
-      switch(getBlockType()) {
-        case BlockType::O_PIECE: return {*this};
-        case BlockType::I_PIECE:
-        case BlockType::S_PIECE:
-        case BlockType::Z_PIECE: {
-          return getClosedRotNTwoPossibleRots();
-        }
-        case BlockType::J_PIECE:
-        case BlockType::L_PIECE:
-        case BlockType::T_PIECE: {
-          return getClosedRotNFourPossibleRots();
-        }
+    switch(getBlockType()) {
+      case BlockType::O_PIECE: return {*this};
+      case BlockType::I_PIECE:
+      case BlockType::S_PIECE:
+      case BlockType::Z_PIECE: {
+        return getClosedRotNTwoPossibleRots();
+      }
+      case BlockType::J_PIECE:
+      case BlockType::L_PIECE:
+      case BlockType::T_PIECE: {
+        return getClosedRotNFourPossibleRots();
       }
     }
+    throw std::runtime_error("getClosedRotN");
   }
 
   void print() const;
@@ -127,9 +134,9 @@ class BitPieceInfo {
   friend size_t std::hash<BitPieceInfo>::operator ()(const BitPieceInfo&) const;
 
  private:
-  BitPieceInfo(int id, const BitBoard *b) : id_(id), b_(b) {}
+  BitPieceInfo(int id, const BitBoard &b) : id_(id), b_(b) {}
   int id_;
-  const BitBoard* b_;
+  BitBoard b_;
 
   inline std::vector<BitPieceInfo> getClosedRotNTwoPossibleRots() const {
     if (canRotate(RotateDirection::ROTATE_AC)) {
@@ -141,8 +148,8 @@ class BitPieceInfo {
   inline std::vector<BitPieceInfo> getClosedRotNFourPossibleRots() const {
     std::vector<BitPieceInfo> vs{*this};
     for (int id: BitBoardPre::getOpenRotN(id_)) {
-      auto piece = b_->getPieceFromId(id);
-      if (b_->vacant(piece)) {
+      auto piece = b_.getPieceFromId(id);
+      if (b_.vacant(piece)) {
         vs.push_back(piece);
       }
     }
@@ -154,11 +161,11 @@ class BitPieceInfo {
 
   std::vector<BitPieceInfo> __UNUSED_getClosedRotN_e() const {
     static std::unordered_map<int, std::unordered_map<BitBoard, std::vector<BitPieceInfo>>> my_m_ = {};
-    if (my_m_.count(getRepId()) && my_m_[getRepId()].count(*b_)) {
-      return my_m_[getRepId()][*b_];
+    if (my_m_.count(getRepId()) && my_m_[getRepId()].count(b_)) {
+      return my_m_[getRepId()][b_];
     }
     if (!my_m_.count(getRepId())) my_m_[getRepId()] = {};
-    return my_m_[getRepId()][*b_] = getClosedRotN();
+    return my_m_[getRepId()][b_] = getClosedRotN();
   }
 
   bool __UNUSED_assertSizes(const std::vector<BitPieceInfo> &r1, const std::vector<BitPieceInfo> &r2) const {

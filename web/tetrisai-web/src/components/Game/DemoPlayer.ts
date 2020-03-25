@@ -1,8 +1,19 @@
-import { IDemoPlayer, DemoEntry, DemoButton } from './IDemoPlayer';
-import { IEmulator } from './Emulator/IEmulator';
+import { IDemoPlayer, DemoEntry, DemoButton, DemoPlayerCaptureLast } from './IDemoPlayer';
+import { IEmulator, EmulatorCaptureLast } from './Emulator/IEmulator';
 import SortedSet from 'sortedset';
 import { ErrorHandler } from './common/ErrorHandler';
 import { FrameTimer } from './FrameTimer';
+import { IDemoPlayerObserver } from './IDemoPlayerObserver';
+import { default as loglevel } from 'loglevel';
+
+const log = loglevel.getLogger('DemoPlayer');
+/*
+const log = {
+  info: (...args: any[]) => {
+    return;
+    console.log(...args);
+  }
+}*/
 
 type ListenerFn = (frame: number) => void;
 
@@ -15,18 +26,20 @@ export class DemoPlayer implements IDemoPlayer {
   public timer: FrameTimer;
   private emu: IEmulator;
   private events: any = new SortedSet([], (a: DemoEntry, b: DemoEntry) => {
-    if (a.startFrame !== b.startFrame) {
-      return a.startFrame - b.startFrame;
-    }
     if (a.frame !== b.frame) {
       return a.frame - b.frame;
     }
+    if (a.startFrame !== b.startFrame) {
+      return a.startFrame - b.startFrame;
+    }
     // up is preferred
     if (a.isDown !== b.isDown) {
-      return (a.isDown ? 0 : 1) - (b.isDown ? 0 : 1);
+      const boolOrder = (b: boolean) => (b ? 1 : 0);
+      return boolOrder(a.isDown) - boolOrder(b.isDown);
     }
+    // higher button (e.g. LEFT/RIGHT preferred)
     if (a.button !== b.button) {
-      return a.button - b.button;
+      return -(a.button - b.button);
     }
     return 0;
   });
@@ -34,6 +47,7 @@ export class DemoPlayer implements IDemoPlayer {
   private latestFrame: number = 0;
   private frameListeners: Set<ListenerFn>;
   private buttonIsDown: any = {};
+  private observers: IDemoPlayerObserver[] = [];
 
   public constructor(emu: any) {
     this.emu = emu;
@@ -57,23 +71,27 @@ export class DemoPlayer implements IDemoPlayer {
   public addEvent(entry: DemoEntry): void {
     this.events.add(entry);
     if (entry.frame === 1409) {
-      console.log(entry);
+      log.info(entry);
       // return ErrorHandler.fatal("what");
     }
     this.latestFrame = Math.max(this.latestFrame, entry.frame);
   }
 
   public addEvents(entries: DemoEntry[]): void {
-    console.log('Adding entries', entries.length, entries);
+    log.info('Adding entries', entries.length, entries);
     for (const event of entries) {
       this.addEvent(event);
     }
     this.printEvents();
   }
 
-  public clearEvents(amount?: number) {
-    console.log('CLEARNING EVENTS', this.getFrame());
-    console.log('before...');
+  public deleteAll() {
+    this.deleteAllExceptFirstN(0);
+  }
+
+  public deleteAllExceptFirstN(amount?: number) {
+    log.info('CLEARNING EVENTS', this.getFrame());
+    log.info('before...');
     this.printEvents();
     if (amount === undefined) this.events.clear();
     else {
@@ -83,8 +101,35 @@ export class DemoPlayer implements IDemoPlayer {
       }
       for (const event of toDelete) this.events.delete(event);
     }
-    console.log('after...');
+    log.info('after...');
     this.printEvents();
+  }
+
+  public deleteEvents(events: DemoEntry[]) {
+    for (const event of events) {
+      this.events.delete(event);
+    }
+  }
+
+  public deleteAllExcept(events: DemoEntry[]) {
+    let toDelete = [];
+    let s = new Set<DemoEntry>();
+    for (const event of events) s.add(event);
+
+    for (const event of this.events) {
+      if (!s.has(event)) {
+        toDelete.push(event);
+      }
+    }
+    this.deleteEvents(toDelete);
+  }
+
+  public getEventsRep() {
+    let ret: DemoEntry[] = [];
+    for (let event of this.events) {
+      ret.push(event);
+    }
+    return ret;
   }
 
   public destroy() {
@@ -123,6 +168,16 @@ export class DemoPlayer implements IDemoPlayer {
 
   public removeFrameListener(fn: (frame: number) => void): void {
     this.frameListeners.delete(fn);
+  }
+
+  public captureLast(): DemoPlayerCaptureLast {
+    return {
+      emu: this.emu.captureLast()
+    }
+  }
+
+  public restoreLast(a: DemoPlayerCaptureLast) {
+    this.emu.restoreLast(a.emu);
   }
 
   public capture(): string {
@@ -195,29 +250,36 @@ export class DemoPlayer implements IDemoPlayer {
         event.button in this.buttonIsDown &&
         this.buttonIsDown[event.button]
       ) {
-        console.log(event);
-        console.warn(
+        log.info(event);
+        log.warn(
           `button ${
             DemoButton[event.button]
           } was down, cannot go down again! (frame: ${this.getFrame()})`
         );
         this.buttonIsDown[event.button] = false;
         this.emu.buttonUp(event.button);
+        for (const observer of this.observers) observer.observeNote(event.frame, "cannot go down again" + event.button);
         return;
       }
       this.buttonIsDown[event.button] = true;
       this.emu.buttonDown(event.button);
-      // console.log(`${event.frame}: D: ${DemoButton[event.button]}`);
+      log.debug(`${event.frame}: D: ${DemoButton[event.button]}`);
     } else {
       this.buttonIsDown[event.button] = false;
       this.emu.buttonUp(event.button);
-      // if (event.button !== DemoButton.BUTTON_SELECT) { console.log(`${event.frame}: U: ${DemoButton[event.button]}`); }
+      if (event.button !== DemoButton.BUTTON_SELECT) { log.debug(`${event.frame}: U: ${DemoButton[event.button]}`); }
     }
+    for (const observer of this.observers) observer.observeEvent(event);
+
+  }
+
+  public attachObserver(observer: IDemoPlayerObserver) {
+    this.observers.push(observer);
   }
 
   private printEvents() {
     const arr = [];
     for (const event of this.events) arr.push(event);
-    console.log(arr);
+    log.info('printEvents', arr);
   }
 }

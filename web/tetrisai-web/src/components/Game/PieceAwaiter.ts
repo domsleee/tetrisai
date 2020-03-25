@@ -1,9 +1,14 @@
 import { IPixelChecker } from './PixelGetter';
-import { IDemoPlayer, DemoButton } from './IDemoPlayer';
+import { IDemoPlayer, DemoButton, DemoPlayerCaptureLast } from './IDemoPlayer';
 import { IFrameAwaiter } from './FrameAwaiter';
 import { ICapturable } from './ICapturable';
 import { NUM_COLUMNS } from './common/Board';
 import { getDemoEntry } from './DemoEntryHelpers';
+import { ErrorHandler } from './common/ErrorHandler';
+
+import { default as loglevel } from 'loglevel';
+
+const log = loglevel.getLogger('PieceAwaiter');
 
 interface CaptureT {
   matrix: string;
@@ -92,7 +97,7 @@ export class PieceAwaiter implements ICapturable<CaptureT> {
   }
 
   public async awaitPiece() {
-    console.log('awaiting piece...');
+    log.debug('awaiting piece...');
     let frame = this.demoPlayer.getFrame();
     while (true) {
       const [diff, total] = this.countDiff();
@@ -107,7 +112,7 @@ export class PieceAwaiter implements ICapturable<CaptureT> {
         this.isTetrisingCooldown = this.IS_TETRISING_COOLDOWN_MAX;
       }
       if (diff > 0 && !isTetrising) {
-        console.log('diff!', diff);
+        log.debug('diff!', diff);
         break;
       }
       if (this.demoPlayer.isEmpty()) {

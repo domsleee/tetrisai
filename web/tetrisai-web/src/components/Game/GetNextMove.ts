@@ -9,6 +9,9 @@ import {
   FirstMoveDirectionT,
   NextTwoPiecesReturnT
 } from './IGetNextMove';
+import { default as loglevel } from 'loglevel';
+
+const log = loglevel.getLogger('GetNextMove');
 
 const URL = 'http://localhost:5000/get-moves';
 const URL2 = 'http://localhost:5000/get-moves-given-piece';
@@ -33,7 +36,7 @@ interface GetMovesGivenPieceRequestT {
 interface GetMovesGivenPieceResponseT {
   board: string;
   demo_entries: string[];
-  line_clears: number;
+  line_clears: string;
 }
 
 export class GetNextMove implements IGetNextMove {
@@ -41,7 +44,7 @@ export class GetNextMove implements IGetNextMove {
     board: IBoard,
     nextPiece: Piece,
     optional: OptionalNextMoveParams
-  ): Promise<[DemoEntry[], IBoard, ExtraInformation]> {
+  ): Promise<[boolean, DemoEntry[], IBoard, ExtraInformation]> {
     const data: GetMovesRequestT = {
       board: board.getBitstring(),
       piece: nextPiece.toString()
@@ -53,11 +56,15 @@ export class GetNextMove implements IGetNextMove {
       data.line_clears = optional.totalLineClears;
     }
     const resp = await axios.post(URL, data);
+    if (!('board' in resp.data)) {
+      return [true, [], new Board(), {lineClears: 0}];
+    }
+
     const nxBoard = new Board(resp.data.board);
-    console.log('REQUEST');
-    console.log(data);
-    console.log('resp.data');
-    console.log(resp.data);
+    log.debug('REQUEST');
+    log.debug(data);
+    //console.log('resp.data');
+    //console.log(resp.data);
     if (optional.firstMoveDirection) {
       resp.data.demo_entries = resp.data.demo_entries.slice(1);
     }
@@ -65,6 +72,7 @@ export class GetNextMove implements IGetNextMove {
       resp.data.demo_entries
     );
     return [
+      false,
       demoEntries,
       nxBoard,
       {
@@ -92,15 +100,19 @@ export class GetNextMove implements IGetNextMove {
       URL2,
       req
     );
+    if (!('board' in resp.data)) {
+      return {isGameOver: true, demoEntries: [], board: new Board(), extraInformation: { lineClears: 0 }};
+    }
     const [demoEntries, lastFrame] = this.parseDemoEntries(
       resp.data.demo_entries
     );
     const nxBoard = new Board(resp.data.board);
     return {
+      isGameOver: false,
       demoEntries,
       board: nxBoard,
       extraInformation: {
-        lineClears: resp.data.line_clears
+        lineClears: parseInt(resp.data.line_clears, 10)
       }
     };
   }
@@ -108,6 +120,7 @@ export class GetNextMove implements IGetNextMove {
   private parseDemoEntries(demo_entries: string[]): [DemoEntry[], number] {
     let demoEntries: DemoEntry[] = [];
     let lastFrame = 0;
+    log.debug("parseDemoEntries", demo_entries);
     for (const str of demo_entries) {
       const [frameStr, action, ...rest] = str.split(' ');
       lastFrame = parseInt(frameStr, 10);
@@ -133,8 +146,8 @@ export class GetNextMove implements IGetNextMove {
       }
 
       const frame = parseInt(frameStr, 10);
-      const fr1 = frame - 1;
-      const fr2 = frame;
+      const fr1 = frame;
+      const fr2 = frame+1;
       demoEntries.push({
         frame: fr1,
         startFrame: fr1,

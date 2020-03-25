@@ -1,0 +1,183 @@
+
+> tetrisai-web@0.1.0 report /home/dom/tetrisai/web/tetrisai-web
+> vue-cli-service test:unit -- tests/report/**/*
+
+ WEBPACK  Compiling...
+
+Starting type checking service...
+Using 1 worker with 2048MB memory limit
+  [=========================] 98% (after emitting)
+
+ DONE  Compiled successfully in 2501ms
+
+  [=========================] 100% (completed)
+
+ WEBPACK  Compiled successfully in 2501ms
+
+ MOCHA  Testing...
+
+
+
+  Generate Report
+stop called
+{ lineClears: 202, score: 817800, level: 26 }
+stop called
+{ lineClears: 36, score: 127680, level: 18 }
+stop called
+{ lineClears: 236, score: 973160, level: 29 }
+stop called
+{ lineClears: 221, score: 897720, level: 28 }
+stop called
+{ lineClears: 230, score: 858260, level: 29 }
+stop called
+{ lineClears: 32, score: 107540, level: 18 }
+stop called
+{ lineClears: 232, score: 864120, level: 29 }
+stop called
+{ lineClears: 239, score: 1115480, level: 29 }
+stop called
+{ lineClears: 30, score: 122360, level: 18 }
+stop called
+{ lineClears: 232, score: 870220, level: 29 }
+stop called
+{ lineClears: 238, score: 964800, level: 29 }
+stop called
+{ lineClears: 230, score: 885100, level: 29 }
+stop called
+{ lineClears: 2, score: 1520, level: 18 }
+stop called
+{ lineClears: 232, score: 836660, level: 29 }
+stop called
+{ lineClears: 1, score: 760, level: 18 }
+stop called
+{ lineClears: 234, score: 919820, level: 29 }
+stop called
+{ lineClears: 236, score: 1041480, level: 29 }
+stop called
+{ lineClears: 32, score: 124260, level: 18 }
+stop called
+{ lineClears: 62, score: 265240, level: 18 }
+stop called
+{ lineClears: 19, score: 54720, level: 18 }
+stop called
+{ lineClears: 217, score: 880240, level: 27 }
+stop called
+{ lineClears: 170, score: 596840, level: 23 }
+stop called
+{ lineClears: 172, score: 604140, level: 23 }
+stop called
+{ lineClears: 134, score: 502980, level: 19 }
+stop called
+{ lineClears: 193, score: 789500, level: 25 }
+[
+  { lineClears: 202, score: 817800, level: 26 },
+  { lineClears: 36, score: 127680, level: 18 },
+  { lineClears: 236, score: 973160, level: 29 },
+  { lineClears: 221, score: 897720, level: 28 },
+  { lineClears: 230, score: 858260, level: 29 },
+  { lineClears: 32, score: 107540, level: 18 },
+  { lineClears: 232, score: 864120, level: 29 },
+  { lineClears: 239, score: 1115480, level: 29 },
+  { lineClears: 30, score: 122360, level: 18 },
+  { lineClears: 232, score: 870220, level: 29 },
+  { lineClears: 238, score: 964800, level: 29 },
+  { lineClears: 230, score: 885100, level: 29 },
+  { lineClears: 2, score: 1520, level: 18 },
+  { lineClears: 232, score: 836660, level: 29 },
+  { lineClears: 1, score: 760, level: 18 },
+  { lineClears: 234, score: 919820, level: 29 },
+  { lineClears: 236, score: 1041480, level: 29 },
+  { lineClears: 32, score: 124260, level: 18 },
+  { lineClears: 62, score: 265240, level: 18 },
+  { lineClears: 19, score: 54720, level: 18 },
+  { lineClears: 217, score: 880240, level: 27 },
+  { lineClears: 170, score: 596840, level: 23 },
+  { lineClears: 172, score: 604140, level: 23 },
+  { lineClears: 134, score: 502980, level: 19 },
+  { lineClears: 193, score: 789500, level: 25 }
+]
+    ✓ adaptBasedOnNextPiece = true (2217722ms)
+stop called
+{ lineClears: 230, score: 837880, level: 29 }
+stop called
+{ lineClears: 220, score: 851680, level: 28 }
+stop called
+{ lineClears: 236, score: 1002640, level: 29 }
+stop called
+{ lineClears: 31, score: 64600, level: 18 }
+stop called
+{ lineClears: 31, score: 68400, level: 18 }
+stop called
+{ lineClears: 81, score: 301340, level: 18 }
+stop called
+{ lineClears: 64, score: 193040, level: 18 }
+stop called
+{ lineClears: 38, score: 151240, level: 18 }
+stop called
+{ lineClears: 35, score: 87020, level: 18 }
+stop called
+{ lineClears: 15, score: 51300, level: 18 }
+stop called
+{ lineClears: 152, score: 497100, level: 21 }
+stop called
+{ lineClears: 66, score: 215080, level: 18 }
+stop called
+{ lineClears: 24, score: 80940, level: 18 }
+stop called
+{ lineClears: 81, score: 279300, level: 18 }
+stop called
+{ lineClears: 12, score: 49020, level: 18 }
+stop called
+{ lineClears: 236, score: 892440, level: 29 }
+stop called
+{ lineClears: 11, score: 31540, level: 18 }
+stop called
+{ lineClears: 37, score: 127680, level: 18 }
+stop called
+{ lineClears: 37, score: 112480, level: 18 }
+stop called
+{ lineClears: 54, score: 190760, level: 18 }
+stop called
+{ lineClears: 156, score: 529500, level: 21 }
+stop called
+{ lineClears: 184, score: 717520, level: 24 }
+stop called
+{ lineClears: 110, score: 310840, level: 18 }
+stop called
+{ lineClears: 13, score: 30400, level: 18 }
+stop called
+{ lineClears: 5, score: 23560, level: 18 }
+[
+  { lineClears: 230, score: 837880, level: 29 },
+  { lineClears: 220, score: 851680, level: 28 },
+  { lineClears: 236, score: 1002640, level: 29 },
+  { lineClears: 31, score: 64600, level: 18 },
+  { lineClears: 31, score: 68400, level: 18 },
+  { lineClears: 81, score: 301340, level: 18 },
+  { lineClears: 64, score: 193040, level: 18 },
+  { lineClears: 38, score: 151240, level: 18 },
+  { lineClears: 35, score: 87020, level: 18 },
+  { lineClears: 15, score: 51300, level: 18 },
+  { lineClears: 152, score: 497100, level: 21 },
+  { lineClears: 66, score: 215080, level: 18 },
+  { lineClears: 24, score: 80940, level: 18 },
+  { lineClears: 81, score: 279300, level: 18 },
+  { lineClears: 12, score: 49020, level: 18 },
+  { lineClears: 236, score: 892440, level: 29 },
+  { lineClears: 11, score: 31540, level: 18 },
+  { lineClears: 37, score: 127680, level: 18 },
+  { lineClears: 37, score: 112480, level: 18 },
+  { lineClears: 54, score: 190760, level: 18 },
+  { lineClears: 156, score: 529500, level: 21 },
+  { lineClears: 184, score: 717520, level: 24 },
+  { lineClears: 110, score: 310840, level: 18 },
+  { lineClears: 13, score: 30400, level: 18 },
+  { lineClears: 5, score: 23560, level: 18 }
+]
+    ✓ adaptBasedOnNextPiece = false (1277580ms)
+
+
+  2 passing (58m)
+
+ MOCHA  Tests completed successfully
+

@@ -23,7 +23,8 @@ class MoveFinderState {
   BitPieceInfo piece_;
 
   static const int NUM_MOVE_COOLDOWNS = 3;
-  int rotateCooldown_[2] = {0, 0};
+  static const int NUM_ROTATE_COOLDOWNS = 2;
+  int rotateCooldown_[NUM_ROTATE_COOLDOWNS] = {0, 0};
   int releaseCooldown_ = 0;
   int moveCooldown_[NUM_MOVE_COOLDOWNS] = {0, 0, 0};
   int dropRem_;
@@ -38,13 +39,12 @@ class MoveFinderState {
     piece_(piece),
     dropRem_(maxDropRem),
     maxDropRem_(maxDropRem)
-  {
-    dasRem_ = 1;
-  }
+  {}
 
   void setRotateCooldown(int cooldown) {
-    rotateCooldown_[0] = std::max(rotateCooldown_[0], cooldown);
-    rotateCooldown_[1] = std::max(rotateCooldown_[1], cooldown);
+    for (int i = 0; i < NUM_ROTATE_COOLDOWNS; ++i) {
+      rotateCooldown_[i] = std::max(rotateCooldown_[i], cooldown);
+    }
   }
 
   void setMoveCooldown(int cooldown) {
@@ -53,14 +53,21 @@ class MoveFinderState {
     }
   }
 
+  void setSidewaysMoveCooldown(int cooldown) {
+    static const int left = static_cast<int>(MoveDirection::LEFT);
+    static const int right = static_cast<int>(MoveDirection::RIGHT);
+    moveCooldown_[left] = std::max(moveCooldown_[left], cooldown);
+    moveCooldown_[right] = std::max(moveCooldown_[right], cooldown);
+  }
+
   void nextFrame() {
     frameEntered_++;
     dasRem_ = std::max(dasRem_-1, 0);
     dropRem_ = std::max(dropRem_-1, 0);
-    for (int i = 0; i < 3; ++i) {
+    for (int i = 0; i < NUM_MOVE_COOLDOWNS; ++i) {
       moveCooldown_[i] = std::max(moveCooldown_[i]-1, 0);
     }
-    for (int i = 0; i < 2; ++i) {
+    for (int i = 0; i < NUM_ROTATE_COOLDOWNS; ++i) {
       rotateCooldown_[i] = std::max(rotateCooldown_[i]-1, 0);
     }
     releaseCooldown_ = std::max(releaseCooldown_-1, 0);

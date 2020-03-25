@@ -1,10 +1,6 @@
 #pragma once
 #include "src/shared/MoveEvaluator/MoveEvaluatorGroup.hpp"
-#include "src/shared/MoveEvaluator/MoveEvaluator.hpp"
-#include "src/shared/MoveEvaluator/MoveEvaluatorAdapter.hpp"
-#include "src/shared/MoveEvaluator/MoveEvaluatorTetrisReady.hpp"
-#include "src/shared/MoveEvaluator/MoveEvaluatorBlockLinear.hpp"
-#include "src/shared/MoveEvaluator/MoveEvaluatorBurns.hpp"
+#include "src/shared/MoveEvaluator/Evaluators/AllMoveEvaluators.h"
 
 #include "src/shared/MoveEvaluator/MoveEvaluatorProperties.hpp"
 
@@ -13,30 +9,17 @@
 #define allFeatures(T) { std::make_shared<EvaluatorFactory<T>>(), MoveEvaluatorProperties<T>::getAllFeatures() }
 
 const std::string MOVE_EVALUATOR_GROUP_NORMAL = "Normal";
-const std::string MOVE_EVALUATOR_GROUP_BURNS = "Burns";
 const std::string MOVE_EVALUATOR_GROUP_LINEAR = "Linear";
+const std::string MOVE_EVALUATOR_GROUP_EDGE = "Edge";
+const std::string MOVE_EVALUATOR_GROUP_WELL_VERY_LEFT = "WellVeryLeft";
+const std::string MOVE_EVALUATOR_AUGMENTED = "Augmented";
+const std::string MOVE_EVALUATOR_AUGMENTED_LOC = "AugmentedLoc";
+const std::string MOVE_EVALUATOR_AUGMENTED_BOTTOM_LOC = "AugmentedBottomLoc";
+const std::string MOVE_EVALUATOR_GROUP_BOTH_LINEAR = "BothLinear";
+const std::string MOVE_EVALUATOR_GROUP_BOTH_LINEAR_ADV = "BothLinearAdv";
+const std::string MOVE_EVALUATOR_GROUP_BOTH_LINEAR_ADV_VAR = "BothLinearAdvVar";
+const std::string MOVE_EVALUATOR_GROUP_WELL_LOCATIONS = "WellLocations";
+const std::string MOVE_EVALUATOR_GROUP_WELL_LOCATIONS_NOT_BOTH = "WellLocationsNotBoth";
 
-std::map<std::string, MoveEvaluatorGroup> getMoveEvaluatorGroups() {
-  std::map<std::string, MoveEvaluatorGroup> res;
-  res.emplace(MOVE_EVALUATOR_GROUP_BURNS, MoveEvaluatorGroup {
-    {
-      allFeatures(MoveEvaluatorAdapter<MoveEvaluator>),
-      allFeatures(MoveEvaluatorTetrisReady),
-      allFeatures(MoveEvaluatorBurns)
-    }
-  });
-  res.emplace(MOVE_EVALUATOR_GROUP_LINEAR, MoveEvaluatorGroup {
-    {
-      allFeatures(MoveEvaluatorAdapter<MoveEvaluator>),
-      allFeatures(MoveEvaluatorTetrisReady),
-      allFeatures(MoveEvaluatorBlockLinear),
-    }
-  });
-  res.emplace(MOVE_EVALUATOR_GROUP_NORMAL, MoveEvaluatorGroup {
-    {
-      allFeatures(MoveEvaluatorAdapter<MoveEvaluator>)
-    }
-  });
-  return res;
-}
 
+std::map<std::string, MoveEvaluatorGroup> getMoveEvaluatorGroups();

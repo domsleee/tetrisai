@@ -7,6 +7,7 @@
 #include "src/shared/MoveFinder/MoveFinderFSM/MoveFinderState.hpp"
 #include <memory>
 
+#define MOVE_FINDER_FSM_PERFORMANCE 0
 #define RECORD_MOVEFINDER_EDGES 1
 
 
@@ -16,28 +17,29 @@ class MoveFinderFSM {
   int maxDropRem_ = 3;
   char firstMoveDirectionChar_ = '.';
   bool hasFirstMoveConstraint_ = false;
+
+
   void addEdge(const MoveFinderState &s1, const MoveFinderState &s2, Action action);
   void addEdge(const MoveFinderState &s1, const MoveFinderState &s2, MoveDirection md) {
-#ifdef RECORD_MOVEFINDER_EDGES
     addEdge(s1, s2, toAction(md));
-#else
-    return;
-#endif
   }
   void addEdge(const MoveFinderState &s1, const MoveFinderState &s2, RotateDirection rd) {
-#ifdef RECORD_MOVEFINDER_EDGES
     addEdge(s1, s2, toAction(rd));
-#else
-    return;
-#endif
   }
  public:
+  MoveFinderFSM() {};
+ 
   std::vector<BitPieceInfo> findAllMoves(const BitBoard& b, BlockType blockType);
   void setFirstMoveDirectionChar(char firstMoveDirectionChar) {
+    if (firstMoveDirectionChar == '.') {
+      hasFirstMoveConstraint_ = false;
+      return;
+    }
     hasFirstMoveConstraint_ = true;
     firstMoveDirectionChar_ = firstMoveDirectionChar;
   }
-  std::vector<std::string> getShortestPath(const BitPieceInfo piece) const;
+  std::vector<std::string> getShortestPath(const BitPieceInfo &piece) const;
+  std::vector<std::pair<int, Action>> getShortestPathActions(const BitPieceInfo &piece) const;
   void setMaxDropRem(int maxDropRem) { maxDropRem_ = maxDropRem; }
   void setRecordEdges(bool ok) {}
 };

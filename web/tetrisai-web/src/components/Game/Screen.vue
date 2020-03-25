@@ -12,6 +12,7 @@
 import Vue from 'vue';
 import { ICapturable } from './ICapturable';
 import { ScreenT } from '@/types';
+import { IScreen } from './IScreen';
 import Component from 'vue-class-component';
 
 const SCREEN_HEIGHT = 240;
@@ -22,7 +23,7 @@ export interface CaptureT {
 }
 
 @Component({ name: 'Screen' })
-export default class Screen extends Vue implements ICapturable<CaptureT> {
+export default class Screen extends Vue implements IScreen, ICapturable<CaptureT> {
   public screen: ScreenT;
   private canvas: Element | any = null;
   private context: any = null;

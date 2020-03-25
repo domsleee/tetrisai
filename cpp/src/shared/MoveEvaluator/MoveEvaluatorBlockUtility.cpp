@@ -8,11 +8,11 @@ static constexpr int MAX_CLEAR_HEIGHTS[NUM_COLUMNS] = {
   0, // unused
   8, // for 0
   11, // for 1
-  14, // for 2
+  15, // for 2
   17, // for 3
   17, // for 4/6
   17, // for 7
-  14, // for 8
+  15, // for 8
   11, // for 9
   0 // unused
 };
@@ -21,24 +21,45 @@ static constexpr int MAX_CLEAR_HEIGHTS18[NUM_COLUMNS] = {
   0, // unused
   12,
   14,
-  16,
+  17,
   17,
   17, // for 4/6
   17,
-  16,
+  17,
   14,
   0 // unused
 };
 
+static constexpr int MAX_CLEAR_HEIGHTS29[NUM_COLUMNS] = {
+  0, // unused
+  0, // for 0
+  4,
+  11,
+  16,
+  17, // for 4/6
+  16,
+  11,
+  4,
+  0 // unused
+};
+
+const int* getMaxClearHeights(int dropRem) {
+  switch(dropRem) {
+    case 3: return MAX_CLEAR_HEIGHTS18;
+    case 2: return MAX_CLEAR_HEIGHTS;
+    case 1: return MAX_CLEAR_HEIGHTS29;
+    default: throw std::runtime_error("unknown droprem");
+  }
+}
+
 // prototypes
 using PairT = std::pair<int, int>;
-int getMaxColHeightMinusColLimit(int *colHeights, int level, int bottomColumn);
-bool isColAccessible(int *colHeights, int level, int bottomColumn);
-bool isDeepWell(int smallestHeight, int secondSmallestHeight);
+int getMaxColHeightMinusColLimit(const int *colHeights, int dropRem, int bottomColumn);
+bool isBottomColAccessible(const int *colHeights, int dropRem, int bottomColumn);
 bool wellIsTooHigh(PairT lowestColumn);
 
 
-int getMinColumn(int *colHeights) {
+int getMinColumn(const int *colHeights) {
   int index = 0, value = colHeights[0];
   for (int c = 1; c < NUM_COLUMNS; ++c) {
     if (colHeights[c] < value) {
@@ -49,7 +70,7 @@ int getMinColumn(int *colHeights) {
   return index;
 }
 
-std::pair<int, int> getMinColumns(int *colHeights) {
+std::pair<int, int> getMinColumns(const int *colHeights) {
   std::priority_queue<PairT, std::vector<PairT>, std::greater<PairT>> pq;
   for (int c = 0; c < NUM_COLUMNS; ++c) {
     pq.push({colHeights[c], c});
@@ -60,7 +81,7 @@ std::pair<int, int> getMinColumns(int *colHeights) {
 }
 
 // todo: use std::array to enforce array size.
-std::pair<bool, int> getMinBlock(int *colHeights, int level) {
+std::pair<bool, int> getMinBlock(const int *colHeights, int level) {
   auto [bottomColumn, secondColumn] = getMinColumns(colHeights);
 
   auto bottomColumnHeight = colHeights[bottomColumn];
@@ -73,6 +94,45 @@ std::pair<bool, int> getMinBlock(int *colHeights, int level) {
   return {true, -getMaxColHeightMinusColLimit(colHeights, level, bottomColumn)};
 }
 
+int getMaxColHeightsMinusClearHeightsRange(const int *colHeights, int dropRem, int l, int r) {
+  int M = -20;
+  const int *maxClearHeights = getMaxClearHeights(dropRem);
+  for (int c = l; c <= r; ++c) {
+    M = std::max(M, colHeights[c] - maxClearHeights[c]);
+  }
+  return M;
+}
+
+std::array<bool, NUM_COLUMNS> getIsColAccessible(const int *colHeights, int dropRem) {
+  const int *maxClearHeights = getMaxClearHeights(dropRem);
+  std::array<bool, NUM_COLUMNS> res;
+  if (colHeights[5] > maxClearHeights[5]) {
+    for (int i = 0; i < NUM_COLUMNS; ++i) res[i] = false;
+    return res;
+  }
+  res[5] = true;
+  bool leftOk = true;
+  for (int c = 4; c >= 0; --c) {
+    if (colHeights[c] > maxClearHeights[c]) {
+      leftOk = false;
+    }
+    res[c] = leftOk;
+  }
+
+  bool rightOk = true;
+  for (int c = 6; c < NUM_COLUMNS; ++c) {
+    if (colHeights[c] > maxClearHeights[c]) {
+      rightOk = false;
+    }
+    res[c] = rightOk;
+  }
+  return res;
+}
+
+int getMaxColHeightsMinusClearHeightsAll(const int *colHeights, int dropRem) {
+  return getMaxColHeightsMinusClearHeightsRange(colHeights, dropRem, 1, NUM_COLUMNS-2);
+}
+
 bool isDeepWell(int smallestHeight, int secondSmallestHeight) {
   assert(smallestHeight <= secondSmallestHeight);
   return secondSmallestHeight - smallestHeight >= 3;
@@ -83,18 +143,29 @@ bool wellIsTooHigh(PairT lowestColumn) {
   return bottomColumnHeight > MAX_CLEAR_HEIGHTS[bottomColumn];
 }
 
-bool isColAccessible(int *colHeights, int level) {
+bool isBottomColAccessible(const int *colHeights, int dropRem) {
   auto bottomColumn = getMinColumn(colHeights);
-  return isColAccessible(colHeights, level, bottomColumn);
+  return isBottomColAccessible(colHeights, dropRem, bottomColumn);
 }
 
-bool isColAccessible(int *colHeights, int level, int bottomColumn) {
-  return getMaxColHeightMinusColLimit(colHeights, level, bottomColumn) <= 0;
+bool isBottomColAccessible(const int *colHeights, int dropRem, int bottomColumn) {
+  // printf("dropRem (isBottomColAccessible): %d (result: %d)\n", dropRem, getMaxColHeightMinusColLimit(colHeights, dropRem, bottomColumn));
+  if (bottomColumn == 5) {
+    for (int c = 3; c <= 6; ++c) {
+      //int fallDistBeforeRot = dropRem == 1 ? 3 : (dropRem == 2 ? 1 : 0);
+      int fallDistBeforeRot = 2;
+      int failHeight = 20 - fallDistBeforeRot;
+      if (colHeights[c] >= failHeight) return false;
+    }
+    return true;
+  }
+
+  return getMaxColHeightMinusColLimit(colHeights, dropRem, bottomColumn) <= 0;
 }
 
-int getMaxColHeightMinusColLimit(int *colHeights, int level, int bottomColumn) {
+int getMaxColHeightMinusColLimit(const int *colHeights, int dropRem, int bottomColumn) {
   bool isRight = bottomColumn > 5;
-  const int *maxClearHeights = level == 18 ? MAX_CLEAR_HEIGHTS18 : MAX_CLEAR_HEIGHTS;
+  const int *maxClearHeights = getMaxClearHeights(dropRem);
 
   int maxColAboveLimit = -20;
   if (isRight) {

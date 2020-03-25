@@ -3,8 +3,7 @@
 #include "src/common/BlockType.hpp"
 #include "src/common/common.hpp"
 #include "src/common/Weighting.hpp"
-#include "src/shared/MoveEvaluator/MoveEvaluator.hpp"
-#include "src/shared/MoveEvaluator/MoveEvaluatorPenalty.hpp"
+#include "src/shared/MoveEvaluator/Evaluators/AllMoveEvaluators.h"
 #include "src/shared/ScoreManager.hpp"
 #include <vector>
 #include <iostream>
@@ -12,12 +11,6 @@
 
 #define REQ_IND(w, wExp, ind) REQUIRE(w[ind] == wExp[ind])
 #define REQ_DELTA(a, b) REQUIRE_THAT(a, Catch::WithinAbs(b, 0.01f));
-
-#ifndef WORKSPACE_DIR
-#define WORKSPACE_DIR "NO_WORKSPACE_DIR"
-#endif
-
-const std::string TEST_FOLDER = std::string(WORKSPACE_DIR) + std::string("/src/shared/test/data");
 
 BitBoard readBoard(const std::string &filePath);
 
@@ -38,7 +31,7 @@ Weighting getWeightsTemp(const BitBoard &b, const BitPieceInfo &piece) {
     if (i > 0) w[i-1] = 0;
     w[i] = 1;
     MyMoveEvaluator me(w);
-    res[i] = me.evaluateMine(b, piece, EvaluatorInfo(19));
+    res[i] = me.evaluateMine(b, piece, EvaluatorInfo(b, piece, 19));
   }
   return res;
 }

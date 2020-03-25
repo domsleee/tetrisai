@@ -2,8 +2,9 @@
 #include "src/shared/get_moves_utils.hpp"
 #include "src/common/Weighting.hpp"
 #include "src/common/common.hpp"
-#include "src/pso/ClientApi.hpp"
 #include "src/shared/MoveFinder/MoveFinderFSM.h"
+#include "src/pso/defs.h"
+#include "src/pso/summary/SummaryApi.h"
 
 #include <iostream>
 #include <stdexcept>
@@ -21,6 +22,7 @@ const char INSTRUCTION_GET_NUM_LINES = 'L';
 void handleGetMove(int num_lines, bool givenFirstMoveDirection=false);
 void handleGetMoveGivenNextPiece(int num_lines);
 std::pair<int, std::string> getImmediateNeighbourStr(const BitPieceInfo &p1, const BitPieceInfo &p2, int frame);
+std::pair<MoveEvaluatorGroup, MoveEvaluatorGroup> getMePair();
 
 // notes
 // - does drop come before das?
@@ -63,14 +65,9 @@ void run() {
   }
 }
 
-auto getNextMoveHandlerFactory(int num_lines) {
-  auto [me, mf] = getMeMfPair(num_lines);
-  return NewGetNextMove(me, mf);
-}
-
-void handleGetMove(int num_lines, bool givenFirstMoveDirection) {
+void handleGetMove(int numLines, bool givenFirstMoveDirection) {
   int piece;
-  char firstMoveDirectionChar;
+  char firstMoveDirectionChar = '.';
   std::string boardStr;
 
   std::cin >> piece;
@@ -83,23 +80,26 @@ void handleGetMove(int num_lines, bool givenFirstMoveDirection) {
 
   BlockType blockType = static_cast<BlockType>(piece);
   auto board = BitBoard(boardStr);
-  auto [me, mf] = getMeMfPair(num_lines);
-  mf.setRecordEdges(true);
-  if (givenFirstMoveDirection) mf.setFirstMoveDirectionChar(firstMoveDirectionChar);
-  auto getNextMoveHandler = NewGetNextMove(me, mf);
+  auto [me1, me2] = getMePair();
+  auto zz = getMeMfPairProvider<MoveFinderFSM>(me1, me2);
+  auto getNextMoveHandler = NewGetNextMove(zz);
+
   if (board.hasNoMoves(blockType)) {
     std::cout << "result: no moves\n";
     return;
   }
   std::cout << "result: moves\n";
-  auto move = getNextMoveHandler.getNextMove(board, blockType, 18); // todo
+  ScoreManager sm;
+  sm.setLines(numLines);
+  auto pieceInfo = getNextMoveHandler.getNextMove(board, blockType, sm, firstMoveDirectionChar); // todo
   
   const auto oldBoard = board;
-  const auto lineClears = board.applyMove(move);
-  const auto &mf_ = getNextMoveHandler.getMoveFinder();
+  const auto lineClears = board.applyPieceInfo(pieceInfo);
 
-  const auto pieceInfo = oldBoard.getPiece(move);
-  auto shortestPathStrings = mf_.getShortestPath(pieceInfo);
+  auto mf2 = getNextMoveHandler.getMoveFinder(numLines);
+  mf2.setFirstMoveDirectionChar(firstMoveDirectionChar);
+  mf2.findAllMoves(oldBoard, blockType);
+  auto shortestPathStrings = mf2.getShortestPath(pieceInfo);
   auto ct = shortestPathStrings.size();
 
   std::cout << "num moves: " << ct << '\n';
@@ -115,7 +115,8 @@ std::pair<BitBoard, int> applyPieceInfo(const BitBoard &b, const BitPieceInfo &n
   return {nb, lineClears};
 }
 
-void handleGetMoveGivenNextPiece(int num_lines) {
+
+void handleGetMoveGivenNextPiece(int numLines) {
   int blockTypeInt1, blockTypeInt2;
   char firstMoveDirectionChar;
   std::string boardStr;
@@ -127,14 +128,19 @@ void handleGetMoveGivenNextPiece(int num_lines) {
   BlockType blockType1 = static_cast<BlockType>(blockTypeInt1);
   BlockType blockType2 = static_cast<BlockType>(blockTypeInt2);
 
-  auto [me, mf] = getMeMfPair(num_lines);
-  mf.setFirstMoveDirectionChar(firstMoveDirectionChar);
-
-  auto getNextMoveHandler = NewGetNextMove(me, mf);
+  auto [me1, me2] = getMePair();
+  auto v = getMeMfPairProvider<MoveFinderFSM>(me1, me2);
+  auto getNextMoveHandler = NewGetNextMove(v);
   
   const auto board = BitBoard(boardStr);
-  auto bestPieceInfo = getNextMoveHandler.getNextMove(board, blockType1, blockType2, num_lines);
-  auto shortestPathStrings = getNextMoveHandler.getMoveFinder().getShortestPath(bestPieceInfo);
+  ScoreManager sm;
+  sm.setLines(numLines);
+  auto bestPieceInfo = getNextMoveHandler.getNextMove(board, blockType1, blockType2, sm, firstMoveDirectionChar);
+  
+  auto mf = getNextMoveHandler.getMoveFinder(numLines);
+  mf.setFirstMoveDirectionChar(firstMoveDirectionChar);
+  mf.findAllMoves(board, blockType1);
+  auto shortestPathStrings = mf.getShortestPath(bestPieceInfo);
   auto ct = shortestPathStrings.size();
 
   auto [nxBoard, lineClears] = applyPieceInfo(board, bestPieceInfo);
@@ -145,4 +151,22 @@ void handleGetMoveGivenNextPiece(int num_lines) {
   std::cout << "board: " << nxBoard << '\n';
   std::cout << "line clears: " << lineClears << '\n';
   std::cout << "OK\n";
+}
+
+std::pair<MoveEvaluatorGroup, MoveEvaluatorGroup> getMePair() {
+  static std::map<bool, MoveEvaluatorGroup> cache;
+  if (cache.count(false) == 0) {
+    SummaryApi s(DATA_FOLDER);
+    const std::string h = "BothLinearAdvVarN"; // MoveEvaluatorBlockLinear50_fixed
+    auto summary1 = s.readLogFile("18_LinearN.log");
+    auto summary2 = s.readLogFile("19_BothLinearN.log");
+
+    auto me1 = getMoveEvaluatorGroups().at(summary1.group).setWeights(summary1.weights);
+    auto me2 = getMoveEvaluatorGroups().at(summary2.group).setWeights(summary2.weights);
+
+    cache.insert({false, me1});
+    cache.insert({true, me2});
+  }
+
+  return {cache.at(false), cache.at(true)};
 }

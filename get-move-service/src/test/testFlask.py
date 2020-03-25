@@ -5,6 +5,9 @@ from main import app
 import logging
 import json
 
+from testUtility.defs import FIRST_MOVE_FRAME
+
+
 class TestFlask(unittest.TestCase):
   def setUp(self):
     app.config['TESTING'] = True
@@ -23,7 +26,33 @@ class TestFlask(unittest.TestCase):
     resp = self.app.post('/get-moves-given-piece', json=payload)
     data = json.loads(resp.get_data(as_text=True))
     demo_entries = data['demo_entries']
-    self.assertEqual('1 RIGHT', demo_entries[0])
+    self.assertEqual(str(FIRST_MOVE_FRAME) + ' RIGHT', demo_entries[0])
+
+  def test_broken_payload2(self):
+    payload = {
+      'board': '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001100001101011000111111110011111111001111111110111111111011111111101111111110111111101111111110111111111011',
+      'piece': 'T_PIECE',
+      'next_piece': 'Z_PIECE',
+      'first_move_direction': 'LEFT',
+      'line_clears': 179
+    }
+    resp = self.app.post('/get-moves-given-piece', json=payload)
+    data = json.loads(resp.get_data(as_text=True))
+    demo_entries = data['demo_entries']
+    self.assertEqual(str(FIRST_MOVE_FRAME) + ' LEFT', demo_entries[0])
+
+  def test_broken_payload3(self):
+    payload = {
+      'board': '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000011011100001111111000111111110011111111001111111101111111',
+      'piece': 'T_PIECE',
+      'next_piece': 'J_PIECE',
+      'first_move_direction': 'LEFT',
+      'line_clears': 230
+    }
+    resp = self.app.post('/get-moves-given-piece', json=payload)
+    data = json.loads(resp.get_data(as_text=True))
+    demo_entries = data['demo_entries']
+    self.assertEqual('1 DOWN', demo_entries[0])
 
 
 if __name__ == '__main__':

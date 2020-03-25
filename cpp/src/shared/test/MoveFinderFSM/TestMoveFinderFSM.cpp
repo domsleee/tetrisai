@@ -94,7 +94,7 @@ SCENARIO("Demo Recording - prefer no quicktap (long)") {
         auto leftStrs = getLefts(strs);
 
         REQUIRE(5 == leftStrs.size());
-        REQUIRE("1 LEFT\n" == leftStrs[0]);
+        REQUIRE("2 LEFT\n" == leftStrs[0]);
         REQUIRE("7 LEFT\n" == leftStrs[1]);
         REQUIRE("13 LEFT\n" == leftStrs[2]);
         REQUIRE("19 LEFT\n" == leftStrs[3]);
@@ -119,11 +119,12 @@ SCENARIO("Demo Recording - prefer no quicktap (short)") {
         auto leftStrs = getLefts(strs);
 
         REQUIRE(1 == leftStrs.size());
-        REQUIRE("1 LEFT\n" == leftStrs[0]);
+        REQUIRE("2 LEFT\n" == leftStrs[0]);
       }
     }
   }
 }
+
 
 
 SCENARIO("Demo Recording - prefer early quicktap") {
@@ -141,7 +142,7 @@ SCENARIO("Demo Recording - prefer early quicktap") {
         auto strs = mf.getShortestPath(*it);
         auto leftStrs = getLefts(strs);
         REQUIRE(5 == leftStrs.size());
-        REQUIRE("1 LEFT\n" == leftStrs[0]);
+        REQUIRE("2 LEFT\n" == leftStrs[0]);
         REQUIRE("7 LEFT\n" == leftStrs[1]);
         REQUIRE("13 LEFT\n" == leftStrs[2]);
         REQUIRE("19 LEFT\n" == leftStrs[3]);
@@ -149,4 +150,13 @@ SCENARIO("Demo Recording - prefer early quicktap") {
       }
     }
   }
+}
+
+
+
+SCENARIO("reee") {
+  BitBoard b("00000000000000000000000001100000000100000001111000000011111011001111111111111110110111111011111111101111111110111111111011111111101111111110111111111011111111101111111110111111111011111111101111111110");
+  MoveFinderFSM mf;
+  auto moves = mf.findAllMoves(b, BlockType::Z_PIECE);
+  REQUIRE(moves.size() != 8);
 }

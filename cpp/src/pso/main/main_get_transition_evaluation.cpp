@@ -1,6 +1,8 @@
 
-#include "src/pso/ClientApi.hpp"
 #include "src/shared/get_moves_utils.hpp"
+#include "src/pso/SimpleApi.tpp"
+#include "src/shared/MoveFinder/MoveFinderRewrite.h"
+#include "src/shared/Config.hpp"
 #include <chrono>
 
 #define MY_FN getBestMoveEvaluatorLinear_50_fixed
@@ -30,7 +32,7 @@ int main(int argc, char *argv[]) {
   cfg.seed = 55;
   cfg.maxDropRem = 2;
   cfg.print(); 
-  auto sms = get_transition_evaluation(me2, me2, cfg);
+  auto sms = getEvaluateWeightings(me2, me2, cfg, 100).getSortedScoreManagers();
   auto endTime = std::chrono::system_clock::now();
 
   int numMaxouts = 0;

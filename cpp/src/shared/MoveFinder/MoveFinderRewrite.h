@@ -11,6 +11,7 @@ class MoveFinderRewrite {
  public:
   std::vector<BitPieceInfo> findAllMoves(const BitBoard& b, BlockType blockType) const;
   void setMaxDropRem(int v) { maxDropRem_ = v; }
+  void setFirstMoveDirectionChar(char c) {}
 
  private:
   int maxDropRem_ = DEFAULT_MAX_DROP_REM;

@@ -1,34 +1,30 @@
 #include <iostream>
 #include <stdlib.h>
 #include <string>
-#include "src/pso/ClientApi.hpp"
 #include "src/shared/Config.hpp"
 #include "src/shared/MoveEvaluator/MoveEvaluatorGroups.hpp"
+#include "src/pso/SimpleApi.tpp"
 
 
-#define NEW_METHOD 1
-const std::string moveEvaluatorGroup = MOVE_EVALUATOR_GROUP_LINEAR;
-
-// for old method
-//using MoveEvaluatorT = MoveEvaluatorBlockLinear;
+const std::string moveEvaluatorGroup = MOVE_EVALUATOR_GROUP_BOTH_LINEAR;
 
 void run(int argc, char ** argv, Config cfg);
 
 int main(int argc, char ** argv) {
   Config cfg;
-  cfg.numLines = 130;
-  cfg.startingLines = 0;
-  cfg.maxDropRem = 3;
-  cfg.startingLevel = 18;
+  cfg.numLines = 230;
+  cfg.startingLines = 130;
+  cfg.startingLevel = 19;
   cfg.averageAmount = 50;
+  cfg.numGames = 125;
 
   if (argc == 2 && strcmp(argv[1], "-c") == 0) {
     cfg.print();
-#ifdef NEW_METHOD
     std::cout << "MoveEvaluatorGroup used: " << moveEvaluatorGroup << '\n';
-#else
-    std::cout << "MoveEvaluator used: " << typeid(MoveEvaluatorT).name() << '\n';
-#endif
+    exit(0);
+  }
+  else if (argc == 2 && strcmp(argv[1], "-d") == 0) {
+    std::cout << getMoveEvaluatorGroups().at(moveEvaluatorGroup).NUM_FACTORS << '\n';
     exit(0);
   }
 
@@ -36,12 +32,8 @@ int main(int argc, char ** argv) {
 }
 
 void run(int argc, char ** argv, Config cfg) {
-#ifdef NEW_METHOD
   auto me = getMoveEvaluatorGroups().at(moveEvaluatorGroup);
   int numFactors = me.NUM_FACTORS;
-#else
-  int numFactors = MoveEvaluatorT::NUM_FACTORS;
-#endif
 
   if (argc != numFactors+1) {
     printf("Expected exactly %d arguments (i.e. %d factors), given %d\n", numFactors+1, numFactors, argc);
@@ -56,12 +48,8 @@ void run(int argc, char ** argv, Config cfg) {
     cfg.seed = atoi(argv[numFactors+1]);
   }
 
-#ifdef NEW_METHOD
   me.setWeights(weightings);
-#else
-  MoveEvaluatorT me(weightings);
-#endif
-  std::cout << get_score_regular(me, cfg) << '\n';
+  std::cout << getEvaluateWeightings(me, cfg).runAllPieceSets() << '\n';
 }
 
 

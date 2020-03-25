@@ -19,11 +19,11 @@ auto helper(int maxDropRem, int height, int c) {
   mf1.setMaxDropRem(maxDropRem);
   mf2.setMaxDropRem(maxDropRem);
   auto blockType = BlockType::I_PIECE;
-  auto moves1 = mf1.findAllMoves(b, blockType);
-  auto moves2 = mf2.findAllMoves(b, blockType);
-  std::sort(moves1.begin(), moves1.end());
-  std::sort(moves2.begin(), moves2.end());
-  return std::pair(moves1, moves2);
+  auto movesFSM = mf1.findAllMoves(b, blockType);
+  auto movesRewrite = mf2.findAllMoves(b, blockType);
+  std::sort(movesFSM.begin(), movesFSM.end());
+  std::sort(movesRewrite.begin(), movesRewrite.end());
+  return std::pair(movesFSM, movesRewrite);
 }
 
 
@@ -53,15 +53,15 @@ SCENARIO("I-PIECE has moves on empty board") {
   //return;
 
   auto [moves1, moves2] = helper(3, 12, 0);
-    REQUIRE_THAT(moves1, Catch::Matchers::Equals(moves2));
+  //REQUIRE_THAT(moves1, Catch::Matchers::Equals(moves2));
 
   
   for (int maxDropRem = 2; maxDropRem <= 3; ++maxDropRem) {
     for (int height = 0; height < 15; ++height) {
       for (int c = 0; c < NUM_COLUMNS; ++c) {
-        auto [moves1, moves2] = helper(maxDropRem, height, c);
-        // printf("maxDropRem: %d, height: %d, c: %d\n", maxDropRem, height, c);
-        REQUIRE_THAT(moves1, Catch::Matchers::Equals(moves2));
+        auto [movesFSM, movesRewrite] = helper(maxDropRem, height, c);
+        printf("maxDropRem: %d, height: %d, c: %d\n", maxDropRem, height, c);
+        REQUIRE_THAT(movesFSM, Catch::Matchers::Equals(movesRewrite));
       }
     }
   }

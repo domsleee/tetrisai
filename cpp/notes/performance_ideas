@@ -43,21 +43,26 @@ HOW TO PROGRESS
     [x] done most of it
 
   3. RERUN evaluations for 18 and 19
-    [ ] 18_MoveEvaluatorLinear50_again
+    [x] 18_MoveEvaluatorLinear50_again
     [x] 19_MoveEvaluatorLinear50_again
 
-  4. INCORPORATE LOOK-AHEAD IN SUMMARY DATA (convenience)
-    + get_transition_evaluation can use MoveFinderFSM with lookahead AS WELL
-    [ ] getTransitionEvaluationLookahead in ClientAPI
-      [ ] refactor Memf pair to newgetnextmove
-
-  5. getEvaluateResult(name)
-     getEvaluateResult(name1, name2, transitionLines)
-     getEvaluateResultFSM(name)
-     getEvaluateResultFSM(name1, name2, transitionLines)
-     getEvaluateResultLookahead(name1, name2)
-
-
+  5. Update summary api
+    getEvaluateResult(name)
+    getEvaluateResult(name1, name2, transitionLines)
+    getEvaluateResultFSM(name)
+    getEvaluateResultFSM(name1, name2, transitionLines)
+    getEvaluateResultLookahead(name1, name2)
+  
+  6. Remaining IDEAS
+    [x] edge well
+    [x] left/right well
+    [ ] well location (linear)
+    [ ] bottom column location
+  
+  7. New information
+    [ ] rerun block linear (again)
+    [ ] Block / Block Quadratic
+    [ ] Ex
 
 
 

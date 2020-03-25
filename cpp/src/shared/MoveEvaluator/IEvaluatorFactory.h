@@ -1,10 +1,13 @@
 #pragma once
 #include "src/board/bitboard/BitBoard.h"
 #include "src/shared/MoveEvaluator/IEvaluator.h"
+#include "src/shared/MoveEvaluator/Evaluators/MoveEvaluatorAdapter.hpp"
+#include "src/shared/MoveEvaluator/Evaluators/MoveEvaluator.hpp"
 
 
 class IEvaluatorFactory {
  public:
+  virtual ~IEvaluatorFactory() {}
   virtual std::unique_ptr<IEvaluator> createNew(const Weighting &w) = 0;
 };
 
@@ -24,4 +27,5 @@ class EvaluatorFactory<MoveEvaluatorAdapter<MoveEvaluator>>: public IEvaluatorFa
   }
 };
 
+// MoveEvaluatorAugmenter(MoveEvaluatorGroup, weights)
 

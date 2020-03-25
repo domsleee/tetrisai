@@ -1,5 +1,5 @@
 import { DemoButton } from "../IDemoPlayer";
-import { IEmulator } from './IEmulator';
+import { IEmulator, EmulatorCaptureLast } from './IEmulator';
 
 export class Emulator implements IEmulator {
   private nes: any;
@@ -31,6 +31,18 @@ export class Emulator implements IEmulator {
     this.nes.fromJSON(jsonStr);
     this.frameCt -= numFrames;
     console.log("GONE BACK. NEW FRAMECT", this.frameCt);
+  }
+
+  public captureLast(): EmulatorCaptureLast {
+    return {
+      nesJson: this.nes.toJSON(),
+      frameCt: this.frameCt
+    };
+  }
+
+  public restoreLast(a: EmulatorCaptureLast) {
+    this.nes.fromJSON(a.nesJson);
+    this.frameCt = a.frameCt;
   }
 
   public capture(): string {

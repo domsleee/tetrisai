@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <numeric>
 #include "src/common/common.hpp"
+#include "src/board/bitboard/BitBoardPre.h"
 #include "src/pso/PieceSetGetter.hpp"
 #include "src/shared/ScoreManager.hpp"
 #include <execution>
@@ -21,19 +22,22 @@ class NewEvaluateWeightings {
 
   double runAllPieceSets() const;
   std::vector<int> getSortedScoreInts() const;
+  std::vector<ScoreManager> getSortedScoreManagers() const;
   std::vector<ScoreManager> getScoreManagers() const;
   void setSeed(int seed);
   void setNumGames(int numGames);
   void setNumLines(int numLines);
   void setStartingLines(int startingLines);
   void setMaxDropRem(int dropRem);
+  void setLookahead(int lookahead) { lookahead_ = lookahead; }
   void setAverageAmount(int averageAmount) { averageAmount_ = averageAmount; }
   void setStartingLevel(int startingLevel) { runPieceSet_handler_->setStartingLevel(startingLevel); }
   std::unique_ptr<MyRunPieceSet> runPieceSet_handler_;
  private:
   PieceSetGetter ps_;
-  int num_games_ = NUM_GAMES;
+  int numGames_ = NUM_GAMES;
   int averageAmount_ = 30;
+  int lookahead_ = 0;
 };
 
 
@@ -41,37 +45,53 @@ template<typename MyRunPieceSet>
 double NewEvaluateWeightings<MyRunPieceSet>::runAllPieceSets() const {
   auto scoreInts = getSortedScoreInts();
   if (scoreInts.size() == 1) return scoreInts[0];
-  double score = average(scoreInts.cend()-averageAmount_, scoreInts.cend());
+  int amt = static_cast<int>(scoreInts.size()) * averageAmount_ / 100;
+  double score = average(scoreInts.cend()-amt, scoreInts.cend());
   return score;
 }
 
 template<typename MyRunPieceSet>
 std::vector<int> NewEvaluateWeightings<MyRunPieceSet>::getSortedScoreInts() const {
-  auto scores = getScoreManagers();
-  std::sort(scores.begin(), scores.end(), [](auto &s1, auto &s2) {
-    return s1.getScore() < s2.getScore();
-  });
+  auto scoreManagers = getSortedScoreManagers();
   std::vector<int> scoreInts;
-  for (auto sm: scores) scoreInts.push_back(sm.getScore());
+  for (auto sm: scoreManagers) scoreInts.push_back(sm.getScore());
   return scoreInts;
 }
 
 template<typename MyRunPieceSet>
+std::vector<ScoreManager> NewEvaluateWeightings<MyRunPieceSet>::getSortedScoreManagers() const {
+  auto scores = getScoreManagers();
+  std::sort(scores.begin(), scores.end(), [](auto &s1, auto &s2) {
+    return s1.getScore() < s2.getScore();
+  });
+  return scores;
+}
+
+template<typename MyRunPieceSet>
 std::vector<ScoreManager> NewEvaluateWeightings<MyRunPieceSet>::getScoreManagers() const {
-  auto pieceSets = ps_.getPieceSets(num_games_);
+  auto pieceSets = ps_.getPieceSets(numGames_);
   std::vector<ScoreManager> scores(pieceSets.size());
 
-  auto &runPieceSet = *runPieceSet_handler_;
+  MyRunPieceSet runPieceSet = *runPieceSet_handler_;
   BitBoardPre::precompute();
 
   auto fn = [runPieceSet](const std::vector<BlockType> &pieceSet) -> ScoreManager {
-    //BitBoardPre::precompute();
     return runPieceSet.runGame(pieceSet);
   };
-  
-  std::transform(std::execution::PARALLEL, // par, seq, par_unseq
+  auto fn2 = [runPieceSet](const std::vector<BlockType> &pieceSet) -> ScoreManager {
+    return runPieceSet.runGameWithLookahead(pieceSet);
+  };
+
+  if (lookahead_ > 0) {
+    std::transform(std::execution::PARALLEL, // par, seq, par_unseq
+               pieceSets.begin(), pieceSets.end(), 
+               scores.begin(), fn2);
+  } else {
+    std::transform(std::execution::PARALLEL, // par, seq, par_unseq
                pieceSets.begin(), pieceSets.end(), 
                scores.begin(), fn);
+  }
+
   return scores;
 }
 
@@ -81,8 +101,8 @@ void NewEvaluateWeightings<MyRunPieceSet>::setSeed(int seed) {
 }
 
 template<typename MyRunPieceSet>
-void NewEvaluateWeightings<MyRunPieceSet>::setNumGames(int num_games) {
-  num_games_ = num_games;
+void NewEvaluateWeightings<MyRunPieceSet>::setNumGames(int numGames) {
+  numGames_ = numGames;
 }
 
 template<typename MyRunPieceSet>

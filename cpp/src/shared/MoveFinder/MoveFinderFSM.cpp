@@ -1,5 +1,6 @@
 #include "src/shared/MoveFinder/MoveFinderFSM.h"
 #include "src/common/MoveDirection.hpp"
+#include "src/shared/MoveFinder/MoveFinderConstraints.h"
 #include <queue>
 #include <vector>
 #include <sstream>
@@ -30,6 +31,9 @@ const std::vector<RotateDirection> &getRotateDirections(const BitPieceInfo &p) {
 }
 
 std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockType blockType) {
+#if RECORD_MOVEFINDER_EDGES == 0
+  return findAllMovesConst(b, blockType);
+#endif
   pred_.clear();
   finalMoveToState_.clear();
   std::unordered_set<MoveFinderState> seen;
@@ -37,18 +41,27 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
   auto cmp = [](const PairT &l, const PairT &r) {
     return l.first >= r.first;
   };
+  
+#if MOVE_FINDER_FSM_PERFORMANCE == 1
+  std::queue<PairT> q;
+#else
   std::priority_queue<PairT, std::vector<PairT>, decltype(cmp)> q(cmp);
-  //std::queue<PairT> q;
+#endif
+  
 
   std::set<BitPieceInfo> moves;
 
   auto s1 = MoveFinderState(b.getPiece(blockType), true, maxDropRem_);
   auto s2 = MoveFinderState(b.getPiece(blockType), false, maxDropRem_);
-  s1.releaseCooldown_ = s2.releaseCooldown_ = 1;
+  s1.releaseCooldown_ = s2.releaseCooldown_ = 2;
+  s1.dasRem_ = s2.dasRem_ = 2;
+  s1.setRotateCooldown(2);
+  s2.setRotateCooldown(2);
   auto s3(s2);
   onEnterReleased(s3);
   s3.fsmState_ = FSMState::RELEASED;
-  s3.releaseCooldown_ = 0;
+  s3.setRotateCooldown(2);
+  s3.setSidewaysMoveCooldown(2);
 
   if (!hasFirstMoveConstraint_) {
     safeInsert(seen, b, q, s1);
@@ -56,9 +69,9 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
     safeInsert(seen, b, q, s3);
   } else {
     switch(firstMoveDirectionChar_) {
-      case 'L': { safeInsert(seen, b, q, s1); } break;
-      case 'R': { safeInsert(seen, b, q, s2); } break;
-      case 'N': { safeInsert(seen, b, q, s3); } break;
+      case FIRST_MOVE_DIRECTION_LEFT: { safeInsert(seen, b, q, s1); } break;
+      case FIRST_MOVE_DIRECTION_RIGHT: { safeInsert(seen, b, q, s2); } break;
+      case FIRST_MOVE_DIRECTION_NEITHER: { safeInsert(seen, b, q, s3); } break;
       default: throw std::runtime_error("Unknown firstMoveDirectionChar_");
     }
   }
@@ -69,7 +82,11 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
     const int SCORE_FRAME_ENTERED = 10000;
     const int SCORE_ROTATED = 100;
 
+#if MOVE_FINDER_FSM_PERFORMANCE == 1
+    const auto [topScore, top] = q.front(); q.pop();
+#else
     const auto [topScore, top] = q.top(); q.pop();
+#endif
     auto addNxFrame = [&, top=top, topScore=topScore]{
       auto nxFrame = top;
       nxFrame.nextFrame();
@@ -79,15 +96,14 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
       q.push({topScore, nxFrame});
     };
 
-    auto considerRotate = [&]() {
+    auto considerRotate = [&, top=top, topScore=topScore]() {
       for (auto rotateDirection: rotateDirections) {
         if (top.rotateCooldown_[rotateDirection] == 0 && top.piece_.canRotate(rotateDirection)) {
           auto nxRotate = top;
           nxRotate.piece_ = top.piece_.rotate(rotateDirection);
+          nxRotate.setRotateCooldown(1);
           nxRotate.rotateCooldown_[rotateDirection] = 2;
-          // move is processed before rotation.
-          // this means any move after the rotation MUST be at least on the frame after
-          nxRotate.setMoveCooldown(1);
+          nxRotate.setSidewaysMoveCooldown(1);
           if (seen.count(nxRotate)) continue;
           seen.insert(nxRotate);
           addEdge(top, nxRotate, rotateDirection);
@@ -96,7 +112,7 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
       }
     };
 
-    auto considerMovingDown = [&]() -> bool {
+    auto considerMovingDown = [&, top=top, topScore=topScore]() -> bool {
       // if drop rem is zero, you MUST move down
       if (top.dropRem_ == 0) {
         if (top.moveCooldown_[static_cast<int>(MoveDirection::DOWN)] != 0) return true; // cant proceed
@@ -105,6 +121,8 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
           nxMovedDown.piece_ = top.piece_.move(MoveDirection::DOWN);
           nxMovedDown.dropRem_ = maxDropRem_;
           nxMovedDown.setRotateCooldown(1);
+          nxMovedDown.setSidewaysMoveCooldown(1);
+          
           if (seen.count(nxMovedDown)) return true;
           seen.insert(nxMovedDown);
           addEdge(top, nxMovedDown, MoveDirection::DOWN);
@@ -142,8 +160,8 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
           if (top.piece_.canMove(moveDirection)) {
             auto nxMoved = top;
             nxMoved.piece_ = top.piece_.move(moveDirection);
-            nxMoved.dasRem_ = MAX_DAS_REM;
-            nxMoved.setRotateCooldown(1);
+            nxMoved.dasRem_ = MAX_DAS_REM - (nxMoved.frameEntered_ == 2);
+            //nxMoved.setRotateCooldown(1);
             if (seen.count(nxMoved)) continue;
             seen.insert(nxMoved);
             addEdge(top, nxMoved, moveDirection);
@@ -176,7 +194,8 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
             auto nxTapped = top;
             nxTapped.piece_ = top.piece_.move(moveDirection);
             nxTapped.fsmState_ = FSMState::TAPPED_ONCE;
-            nxTapped.setRotateCooldown(1);
+            //nxTapped.setRotateCooldown(1);
+            //nxTapped.moveCooldown_[static_cast<int>(MoveDirection::DOWN)] = 1;
             onEnterTapped(nxTapped);
             if (seen.count(nxTapped)) continue;
             seen.insert(nxTapped);
@@ -218,7 +237,7 @@ void onEnterTapped(MoveFinderState &s) {
 }
 
 
-std::vector<std::string> MoveFinderFSM::getShortestPath(const BitPieceInfo piece) const {
+std::vector<std::pair<int, Action>> MoveFinderFSM::getShortestPathActions(const BitPieceInfo &piece) const {
   assert(finalMoveToState_.count(piece));
   auto [state, numMoves] = finalMoveToState_.at(piece);
   std::vector<std::pair<MoveFinderState, Action>> backwards;
@@ -230,12 +249,23 @@ std::vector<std::string> MoveFinderFSM::getShortestPath(const BitPieceInfo piece
   auto forwards = backwards;
   std::reverse(forwards.begin(), forwards.end());
 
-  std::vector<std::string> result;
-  for (int i = 0; i < forwards.size(); ++i) {
+  std::vector<std::pair<int, Action>> result;
+  for (auto i = 0; i < static_cast<int>(forwards.size()); ++i) {
     const auto &[state, action] = forwards[i];
     std::stringstream ss;
     if (action == Action::NONE) continue;
-    ss << state.frameEntered_ << ' ' << toString(action) << '\n';
+    result.push_back({state.frameEntered_, action});
+  }
+  return result;
+}
+
+std::vector<std::string> MoveFinderFSM::getShortestPath(const BitPieceInfo &piece) const {
+  auto actionPairs = getShortestPathActions(piece);
+
+  std::vector<std::string> result;
+  for (const auto [frameEntered, action]: actionPairs) {
+    std::stringstream ss;
+    ss << frameEntered << ' ' << toString(action) << '\n';
     result.push_back(ss.str());
   }
   return result;

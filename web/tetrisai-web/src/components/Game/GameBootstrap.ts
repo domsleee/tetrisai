@@ -9,7 +9,7 @@ export class GameBootstrap {
     this.demoPlayer = demoPlayer;
   }
 
-  public async setupFromNewCanvas(frameAwaiter: IFrameAwaiter, is19: boolean = false) {
+  public async setupFromNewCanvas(frameAwaiter: IFrameAwaiter, startFrame: number, is19: boolean = false) {
     const buttonAdder = new ButtonAdder(this.demoPlayer);
 
     for (let i = 0; i < 3; ++i) {
@@ -24,7 +24,7 @@ export class GameBootstrap {
     // 2 - maxout
     // 12 - also good
     // 22 - 989k
-    const chosenFrame = 2;
+    const chosenFrame = startFrame;
     this.demoPlayer.addEvent(
       getDemoEntry(
         buttonAdder.frame + chosenFrame - 1,
