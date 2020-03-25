@@ -31,7 +31,7 @@ class MoveEvaluator {
 
   static const int NUM_FACTORS = 17;
 
-  double evaluate(const BitBoard& b, const BitPieceInfo& p, const Weighting &w) const {
+  double evaluate2(const BitBoard& b, const BitPieceInfo& p, const Weighting &w) const {
     auto nxBoard = b;
     auto deltaLines = nxBoard.applyPieceInfo(p);
     return myEvaluate(nxBoard, p, w, deltaLines);

@@ -45,7 +45,7 @@ template<typename MyRunPieceSet>
 double NewEvaluateWeightings<MyRunPieceSet>::runAllPieceSets() const {
   auto scoreInts = getSortedScoreInts();
   if (scoreInts.size() == 1) return scoreInts[0];
-  int amt = scoreInts.size() * averageAmount_ / 100;
+  int amt = static_cast<int>(scoreInts.size()) * averageAmount_ / 100;
   double score = average(scoreInts.cend()-amt, scoreInts.cend());
   return score;
 }

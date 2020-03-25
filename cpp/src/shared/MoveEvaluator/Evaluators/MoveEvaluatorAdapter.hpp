@@ -14,7 +14,7 @@ class MoveEvaluatorAdapter: public IEvaluator {
   static const int NUM_FACTORS = MyMoveEvaluator::NUM_FACTORS;
   MoveEvaluatorAdapter(const Weighting &w): w_(w) {}
   double evaluateMine(const BitBoard &b, const BitPieceInfo &p, const EvaluatorInfo &evaulatorInfo) const override {
-    return me_.evaluate(b, p, w_);
+    return me_.evaluate2(b, p, w_);
   }
 
  private:

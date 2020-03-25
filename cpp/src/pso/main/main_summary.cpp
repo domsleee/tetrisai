@@ -7,7 +7,8 @@
 #include "src/pso/defs.h"
 #include "src/pso/main/RowGenerator/RowGenerator.h"
 #include "src/pso/main/RowGenerator/rows/AllRows.h"
-
+#include <chrono>
+#include <ctime>
 
 fort::char_table getData(const SummaryApi &s, const std::vector<std::string> &names);
 fort::char_table getTransitionLinesComparison(const SummaryApi &s, const std::vector<std::string> &names);
@@ -15,15 +16,17 @@ fort::char_table getPairsData(const SummaryApi &s, const std::vector<std::string
 fort::char_table getLookaheadData(const SummaryApi &s, const std::vector<std::string> &names);
 
 int main() {
+  auto t = std::chrono::system_clock::now();
+  std::time_t tt = std::chrono::system_clock::to_time_t(t);
+  std::cout << "Current time: " << std::ctime(&tt);
+
   SummaryApi s(DATA_FOLDER);
   auto names = s.getAllNames();
-    printf("num_files: %lu\n", names.size());
+  printf("num_files: %lu\n", names.size());
   std::sort(names.begin(), names.end());
-
-  
   std::cout << getData(s, names).to_string() << '\n';
   // std::cout << getTransitionLinesComparison(s, names).to_string() << '\n';
-  std::cout << getPairsData(s, names).to_string() << '\n';
+  // std::cout << getPairsData(s, names).to_string() << '\n';
   std::cout << getLookaheadData(s, names).to_string() << '\n';  
 }
 

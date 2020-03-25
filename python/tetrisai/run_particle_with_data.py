@@ -4,7 +4,7 @@ import typing
 
 from tetrisai.interfaces.i_run_particle import IRunParticle
 from common.common import Particle
-import logging
+from tetrisai.log_wrapper import get_logger
 
 
 class RunParticleWithData(IRunParticle):
@@ -15,7 +15,7 @@ class RunParticleWithData(IRunParticle):
     self._binary = binary
     if not os.access(binary, os.X_OK):
       raise ValueError("Binary '%s' must be executable" % binary)
-    self._logger = logging.getLogger("run_particle_with_data")
+    self._logger = get_logger("run_particle_with_data")
   
   async def run(self, vs: Particle, seed: int = None):
     args = [self._binary] + [str(v) for v in vs]

@@ -7,8 +7,9 @@ from common.common import Particle
 
 
 class RunParticle(IRunParticle):
-  def __init__(self, binary: str):
+  def __init__(self, binary: str, quiet=False):
     self._binary = binary
+    self._quiet = quiet
     if not os.access(binary, os.X_OK):
       raise ValueError("Binary '%s' must be executable" % binary)
   
@@ -55,4 +56,6 @@ class RunParticle(IRunParticle):
     return asyncio.run(fn())
 
   def print_config(self):
+    if self._quiet:
+      return
     print(self.get_config())

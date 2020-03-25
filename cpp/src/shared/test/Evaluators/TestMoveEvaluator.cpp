@@ -81,5 +81,4 @@ SCENARIO("lock height") {
   // 6 ==> 13
   auto w = getWeightsTemp<MoveEvaluatorAdapter<MoveEvaluator>>(b, piece);
   REQUIRE(w[MoveEvaluator::TOTAL_LOCK_HEIGHT] == 13);
-
 }
