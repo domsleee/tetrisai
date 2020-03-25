@@ -15,6 +15,10 @@ struct EvaluatorInfo {
     return colHeights_.data();
   }
 
+  const std::array<int, NUM_COLUMNS>& getArrColHeights() const {
+    return colHeights_;
+  }
+
   int getLevel() const {
     return newSm_.getLevel();
   }

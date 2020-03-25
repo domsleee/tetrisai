@@ -9,6 +9,9 @@
 
 #include "src/shared/MoveEvaluator/IEvaluator.h"
 
+
+#define LOCK_HEIGHT(c) (NUM_ROWS - colHeights[c])
+
 class MoveEvaluator: public IEvaluator {
   const int INF = 30; // clearly not infinitely lmao
 
@@ -38,43 +41,25 @@ class MoveEvaluator: public IEvaluator {
   }
 
   double evaluateMine(const BitBoard &b, const BitPieceInfo &p, const EvaluatorInfo &evaluatorInfo) const override {
-    return myEvaluate(evaluatorInfo.getAppliedBoard(), p, w_, evaluatorInfo.getLineClears());
-  }
-
-  double evaluate2333(const BitBoard& b, const BitPieceInfo& p, const Weighting &w) const {
-    auto nxBoard = b;
-    auto deltaLines = nxBoard.applyPieceInfo(p);
-    return myEvaluate(nxBoard, p, w, deltaLines);
+    return myEvaluate(evaluatorInfo.getAppliedBoard(), p, w_, evaluatorInfo.getArrColHeights(), evaluatorInfo.getLineClears());
   }
   
-  double myEvaluate(const BitBoard &b, const BitPieceInfo& p, const Weighting &w, int deltaLines) const {
+  double myEvaluate(const BitBoard &b, const BitPieceInfo& p, const Weighting &w, const std::array<int, NUM_COLUMNS> &colHeights, int deltaLines) const {
     double offset = (deltaLines == 4) ? -1e9 : 0;
     double eval = offset;
     VacancyChecker vac(b);
     if (true || deltaLines != 4) eval += w[TOTAL_LINES_CLEARED] * deltaLines;
     eval += w[TOTAL_LOCK_HEIGHT] * (NUM_ROWS - p.getPosition().maxR - 1);
 
-    int lockHeights[NUM_COLUMNS];
-    int minR = NUM_ROWS;
-    for (int c = 0; c < NUM_COLUMNS; c++) {
-      lockHeights[c] = NUM_ROWS;
-      for (int r = 0; r < NUM_ROWS; r++) {
-        if (!vac.is_vacant({r, c})) {
-          lockHeights[c] = r;
-          minR = std::min(minR, r);
-          break;
-        }
-      }
-    }
-
+    int minR = NUM_ROWS - *std::max_element(colHeights.begin(), colHeights.end());
     int totalWellCells = 0, totalDeepWells = 0, totalWeightedColumnHoles = 0, totalColumnHeights = 0;
     for (int c = 0; c < NUM_COLUMNS; c++) {
-      int l = c == 0 ? INF : lockHeights[c]-lockHeights[c-1];
-      int r = c == NUM_COLUMNS-1 ? INF : lockHeights[c]-lockHeights[c+1];
+      int l = c == 0 ? INF : colHeights[c-1] - colHeights[c];
+      int r = c == NUM_COLUMNS-1 ? INF : colHeights[c+1] - colHeights[c];
       int wellCells = std::min(l, r);
       if (wellCells > 0) totalWellCells += wellCells;
       if (wellCells >= 3) totalDeepWells++;
-      totalColumnHeights += NUM_ROWS - lockHeights[c];
+      totalColumnHeights += colHeights[c];
     }
     eval += w[TOTAL_COLUMN_HEIGHTS] * totalColumnHeights;
     eval += w[TOTAL_WELL_CELLS] * totalWellCells;
@@ -89,12 +74,13 @@ class MoveEvaluator: public IEvaluator {
         if (r > 0 && takenUp && vac.is_vacant({r,c})) {
           totalColumnHoles++;
           totalWeightedColumnHoles += r+1;
-          int holeDepth = r - lockHeights[c];
+          // r - (NUM_COLUMNS - colHeights[c]) = colHeights[c] + r - NUM_COLUMNS
+          int holeDepth = r - LOCK_HEIGHT(c);
           totalColumnHolesDepth += holeDepth;
           minColumnHoleDepth = std::min(minColumnHoleDepth, holeDepth);
           maxColumnHoleDepth = std::max(maxColumnHoleDepth, holeDepth);
         }
-        if (r > 0 && r != lockHeights[c]) {
+        if (r > 0 && r != LOCK_HEIGHT(c)) {
           totalColumnTransitions += vac.is_vacant({r,c}) != vac.is_vacant({r-1,c});
         }
         if (!vac.is_vacant({r, c})) {
@@ -116,13 +102,13 @@ class MoveEvaluator: public IEvaluator {
     eval += w[TOTAL_WEIGHTED_SOLID_CELLS] * totalWeightedSolidCells;
 
     int columnHeightVariance = 0;
-    int mColumnHeight = lockHeights[0], MColumnHeight = lockHeights[0];
+    int mColumnHeight = LOCK_HEIGHT(0), MColumnHeight = LOCK_HEIGHT(0);
     for (int c = 0; c < NUM_COLUMNS; c++) {
       if (c < NUM_COLUMNS-1) {
-        columnHeightVariance += abs(lockHeights[c]-lockHeights[c+1]);
+        columnHeightVariance += abs(LOCK_HEIGHT(c)-LOCK_HEIGHT(c+1));
       }
-      mColumnHeight = std::min(mColumnHeight, lockHeights[c]);
-      MColumnHeight = std::max(MColumnHeight, lockHeights[c]);
+      mColumnHeight = std::min(mColumnHeight, LOCK_HEIGHT(c));
+      MColumnHeight = std::max(MColumnHeight, LOCK_HEIGHT(c));
     }
     int columnHeightSpread = MColumnHeight-mColumnHeight;
     int pileHeight = (NUM_ROWS - mColumnHeight);
