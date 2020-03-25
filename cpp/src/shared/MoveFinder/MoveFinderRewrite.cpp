@@ -5,6 +5,7 @@
 #include <iostream>
 #include <unordered_map>
 #include <unordered_set>
+#include <queue>
 
 const auto EDGE_HOLDING_TO_HOLDING = 0;
 const auto EDGE_RELEASED_TO_LAST_HIT_UNUSED = 1;
@@ -16,6 +17,7 @@ struct DoWork {
   std::vector<bool> releasedSeen_ = std::vector<bool>(BitBoardPre::NUM_INDEXES, false);
   std::unordered_set<BitPieceInfo> moveSet_ = {};
   std::vector<bool> tappedSeen_ = std::vector<bool>(BitBoardPre::NUM_INDEXES, false);
+  std::queue<BitPieceInfo> releasedTrueQ_;
   const int maxDropRem_;
 
   DoWork(int maxDropRem): maxDropRem_(maxDropRem) {}
@@ -29,6 +31,12 @@ struct DoWork {
     runHolding(pieceInfo, MoveDirection::LEFT);
     runHolding(pieceInfo, MoveDirection::RIGHT);
     runReleased(pieceInfo, false);
+    
+    while (!releasedTrueQ_.empty()) {
+      auto top = releasedTrueQ_.front();
+      releasedTrueQ_.pop();
+      runReleased(top, true);
+    }
 
     //printf("solution space: %lu\n", seen_.size());
     return {moveSet_.begin(), moveSet_.end()};
@@ -125,7 +133,7 @@ struct DoWork {
       for (const auto &nxPiece: closedRotN) {
         if (nxPiece.canMove(md)) {
           const auto &endPiece = nxPiece.move(md);
-          runReleased(endPiece, true);
+          releasedTrueQ_.push(endPiece);
           break;
         }
       }
