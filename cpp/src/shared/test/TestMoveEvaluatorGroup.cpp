@@ -21,7 +21,7 @@ SCENARIO("tetris ready when its ready") {
         std::make_shared<EvaluatorFactory<MoveEvaluatorTetrisReady>>(), { MoveEvaluatorTetrisReady::TETRIS_READY },
       },
       {
-        std::make_shared<EvaluatorFactory<MoveEvaluatorAdapter<MoveEvaluator>>>(), { MoveEvaluator::PILE_HEIGHT }
+        std::make_shared<EvaluatorFactory<MoveEvaluator>>(), { MoveEvaluator::PILE_HEIGHT }
       }
     }
   };

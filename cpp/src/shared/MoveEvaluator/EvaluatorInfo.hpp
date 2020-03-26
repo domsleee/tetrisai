@@ -1,6 +1,7 @@
 #pragma once
 #include "src/shared/ScoreManager.hpp"
 #include "src/shared/MoveEvaluator/MoveEvaluatorBlockUtility.hpp"
+#include "src/shared/MoveEvaluator/VacancyChecker.hpp"
 
 struct EvaluatorInfo {
   EvaluatorInfo(const BitBoard &b, const BitPieceInfo &p, const ScoreManager &sm);
@@ -15,6 +16,14 @@ struct EvaluatorInfo {
     return colHeights_.data();
   }
 
+  const VacancyChecker& getAppliedBoardVac() const {
+    return appliedBoardVac_;
+  }
+
+  const std::array<int, NUM_COLUMNS>& getArrColHeights() const {
+    return colHeights_;
+  }
+
   int getLevel() const {
     return newSm_.getLevel();
   }
@@ -27,6 +36,10 @@ struct EvaluatorInfo {
     return oldB_;
   }
 
+  int getLineClears() const {
+    return lineClears_;
+  }
+
  private:
   std::array<int, NUM_COLUMNS> colHeights_;
   const BitBoard oldB_;
@@ -35,5 +48,6 @@ struct EvaluatorInfo {
   ScoreManager newSm_;
   BitBoard newB_;
   int lineClears_;
+  VacancyChecker appliedBoardVac_;
 };
 

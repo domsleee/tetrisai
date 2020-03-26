@@ -22,12 +22,11 @@ class MoveEvaluatorTetrisReady: public IEvaluator {
   }
 
   double evaluateMine(const BitBoard &b, const BitPieceInfo &p, const EvaluatorInfo &evaluatorInfo) const override {
-    return evaluateMineGivenColHeights(evaluatorInfo.getAppliedBoard(), p, evaluatorInfo.getMyColHeights(), evaluatorInfo.getMaxDropRem());
+    return evaluateMineGivenColHeights(evaluatorInfo.getAppliedBoard(), p, evaluatorInfo.getMyColHeights(), evaluatorInfo.getMaxDropRem(), evaluatorInfo.getAppliedBoardVac());
   }
 
-  double evaluateMineGivenColHeights(const BitBoard b, const BitPieceInfo p, const int *colHeights, int dropRem) const {
+  double evaluateMineGivenColHeights(const BitBoard b, const BitPieceInfo p, const int *colHeights, int dropRem, const VacancyChecker &vac) const {
     double eval = 0;
-    VacancyChecker vac(b);
 
     int mc = 0;
     for (int c = 0; c < NUM_COLUMNS; ++c) {

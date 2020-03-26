@@ -35,15 +35,15 @@ const auto w2 = WeightingFn::readFromString(best19_block_linear);
 MoveEvaluatorGroup getBestMoveEvaluatorLinear_50_fixed(bool is19);
 
 
-MoveEvaluatorAdapter<MoveEvaluator> getBestMoveEvaluator(bool is19);
+MoveEvaluator getBestMoveEvaluator(bool is19);
 
-MoveEvaluatorAdapter<MoveEvaluator> getBestMoveEvaulator_pre(bool is19);
+MoveEvaluator getBestMoveEvaulator_pre(bool is19);
 
-MoveEvaluatorAdapter<MoveEvaluator> getBestMoveEvaluator_new(bool is19);
+MoveEvaluator getBestMoveEvaluator_new(bool is19);
 
-MoveEvaluatorAdapter<MoveEvaluator> getBestMoveEvaluator_new150(bool is19);
+MoveEvaluator getBestMoveEvaluator_new150(bool is19);
 
-MoveEvaluatorAdapter<MoveEvaluator> getBestMoveEvaluator_new150_2(bool is19);
+MoveEvaluator getBestMoveEvaluator_new150_2(bool is19);
 
 MoveEvaluatorGroup getBestMoveEvaluator50_pre(bool is19);
 

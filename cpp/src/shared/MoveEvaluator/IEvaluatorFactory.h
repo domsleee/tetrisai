@@ -7,23 +7,19 @@
 
 class IEvaluatorFactory {
  public:
+  virtual int getNumFactors() = 0;
   virtual ~IEvaluatorFactory() {}
-  virtual std::unique_ptr<IEvaluator> createNew(const Weighting &w) = 0;
+  virtual std::unique_ptr<IEvaluator> createNew(Weighting &w) = 0;
 };
 
 template <typename T>
 class EvaluatorFactory: public IEvaluatorFactory {
  public:
-  std::unique_ptr<IEvaluator> createNew(const Weighting &w) override {
+  std::unique_ptr<IEvaluator> createNew(Weighting &w) override {
     return std::make_unique<T>(w);
   }
-};
-
-template <>
-class EvaluatorFactory<MoveEvaluatorAdapter<MoveEvaluator>>: public IEvaluatorFactory {
- public:
-  std::unique_ptr<IEvaluator> createNew(const Weighting &w) override {
-    return std::make_unique<MoveEvaluatorAdapter<MoveEvaluator>>(w);
+  int getNumFactors() override {
+    return T::NUM_FACTORS;
   }
 };
 

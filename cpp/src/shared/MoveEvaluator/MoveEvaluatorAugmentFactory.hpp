@@ -9,13 +9,19 @@
 class MoveEvaluatorAugmentFactory: public IEvaluatorFactory {
  public:
   MoveEvaluatorAugmentFactory(MoveEvaluatorGroup me, const Weighting &w):
-    me_(me.setWeights(w))
+    me_(me.setWeights(w)),
+    numFactors_(me.NUM_FACTORS)
   {}
 
-  std::unique_ptr<IEvaluator> createNew(const Weighting &w) override {
+  int getNumFactors() override {
+    return numFactors_;
+  }
+
+  std::unique_ptr<IEvaluator> createNew(Weighting &w) override {
     return std::make_unique<MoveEvaluatorAugment>(me_);
   }
 
  private:
   const MoveEvaluatorGroup me_;
+  const int numFactors_;
 };

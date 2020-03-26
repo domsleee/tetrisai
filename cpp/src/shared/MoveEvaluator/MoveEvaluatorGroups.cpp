@@ -5,7 +5,7 @@ std::map<std::string, MoveEvaluatorGroup> getMoveEvaluatorGroups() {
   std::map<std::string, MoveEvaluatorGroup> res;
   res.emplace(MOVE_EVALUATOR_GROUP_LINEAR, MoveEvaluatorGroup {
     {
-      allFeatures(MoveEvaluatorAdapter<MoveEvaluator>),
+      allFeatures(MoveEvaluator),
       allFeatures(MoveEvaluatorTetrisReady),
       allFeatures(MoveEvaluatorBlockLinear),
     }
@@ -13,7 +13,7 @@ std::map<std::string, MoveEvaluatorGroup> getMoveEvaluatorGroups() {
 
   res.emplace(MOVE_EVALUATOR_GROUP_BOTH_LINEAR, MoveEvaluatorGroup {
     {
-      allFeatures(MoveEvaluatorAdapter<MoveEvaluator>),
+      allFeatures(MoveEvaluator),
       allFeatures(MoveEvaluatorTetrisReady),
       allFeatures(MoveEvaluatorBlockBothLinear),
     }
@@ -21,7 +21,7 @@ std::map<std::string, MoveEvaluatorGroup> getMoveEvaluatorGroups() {
 
   res.emplace(MOVE_EVALUATOR_GROUP_WELL_LOCATIONS, MoveEvaluatorGroup {
     {
-      allFeatures(MoveEvaluatorAdapter<MoveEvaluator>),
+      allFeatures(MoveEvaluator),
       allFeatures(MoveEvaluatorTetrisReady),
       allFeatures(MoveEvaluatorBlockBothLinear),
       allFeatures(MoveEvaluatorWellLocations)
@@ -30,7 +30,7 @@ std::map<std::string, MoveEvaluatorGroup> getMoveEvaluatorGroups() {
 
   res.emplace(MOVE_EVALUATOR_GROUP_WELL_LOCATIONS_NOT_BOTH, MoveEvaluatorGroup {
     {
-      allFeatures(MoveEvaluatorAdapter<MoveEvaluator>),
+      allFeatures(MoveEvaluator),
       allFeatures(MoveEvaluatorTetrisReady),
       allFeatures(MoveEvaluatorBlockLinear),
       allFeatures(MoveEvaluatorWellLocations)
@@ -39,7 +39,7 @@ std::map<std::string, MoveEvaluatorGroup> getMoveEvaluatorGroups() {
 
   res.emplace(MOVE_EVALUATOR_GROUP_BOTH_LINEAR_ADV, MoveEvaluatorGroup {
     {
-      allFeatures(MoveEvaluatorAdapter<MoveEvaluator>),
+      allFeatures(MoveEvaluator),
       allFeatures(MoveEvaluatorTetrisReady),
       allFeatures(MoveEvaluatorBlockBothAdvLinear),
     }
@@ -47,7 +47,7 @@ std::map<std::string, MoveEvaluatorGroup> getMoveEvaluatorGroups() {
 
   res.emplace(MOVE_EVALUATOR_GROUP_BOTH_LINEAR_ADV_VAR, MoveEvaluatorGroup {
     {
-      allFeatures(MoveEvaluatorAdapter<MoveEvaluator>),
+      allFeatures(MoveEvaluator),
       allFeatures(MoveEvaluatorTetrisReady),
       allFeatures(MoveEvaluatorBlockBothAdvLinearVar),
     }
@@ -55,7 +55,7 @@ std::map<std::string, MoveEvaluatorGroup> getMoveEvaluatorGroups() {
 
   res.emplace(MOVE_EVALUATOR_GROUP_EDGE, MoveEvaluatorGroup {
     {
-      allFeatures(MoveEvaluatorAdapter<MoveEvaluator>),
+      allFeatures(MoveEvaluator),
       allFeatures(MoveEvaluatorTetrisReady),
       allFeatures(MoveEvaluatorBlockLinear),
       allFeatures(MoveEvaluatorEdgeWell)
@@ -63,7 +63,7 @@ std::map<std::string, MoveEvaluatorGroup> getMoveEvaluatorGroups() {
   });
   res.emplace(MOVE_EVALUATOR_GROUP_WELL_VERY_LEFT, MoveEvaluatorGroup {
     {
-      allFeatures(MoveEvaluatorAdapter<MoveEvaluator>),
+      allFeatures(MoveEvaluator),
       allFeatures(MoveEvaluatorTetrisReady),
       allFeatures(MoveEvaluatorBlockLinear),
       allFeatures(MoveEvaluatorWellVeryLeft)
@@ -71,7 +71,7 @@ std::map<std::string, MoveEvaluatorGroup> getMoveEvaluatorGroups() {
   });
   res.emplace(MOVE_EVALUATOR_GROUP_NORMAL, MoveEvaluatorGroup {
     {
-      allFeatures(MoveEvaluatorAdapter<MoveEvaluator>)
+      allFeatures(MoveEvaluator)
     }
   });
 

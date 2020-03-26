@@ -5,6 +5,7 @@
 #include <iostream>
 #include <unordered_map>
 #include <unordered_set>
+#include <queue>
 
 const auto EDGE_HOLDING_TO_HOLDING = 0;
 const auto EDGE_RELEASED_TO_LAST_HIT_UNUSED = 1;
@@ -12,25 +13,28 @@ const auto EDGE_RELEASED_TO_LAST_HIT_USED = 2;
 const auto EDGE_RELEASED_NO_LAST_HIT = 3;
 
 struct DoWork {
-  std::unordered_map<int, bool> holdingSeen_[2];
-  std::unordered_map<int, bool> releasedSeen_ = {};
+  std::vector<bool> holdingSeen_[2] = {std::vector<bool>(BitBoardPre::NUM_INDEXES, false), std::vector<bool>(BitBoardPre::NUM_INDEXES, false)};
+  std::vector<bool> releasedSeen_ = std::vector<bool>(BitBoardPre::NUM_INDEXES, false);
   std::unordered_set<BitPieceInfo> moveSet_ = {};
-  std::unordered_map<int, bool> tappedSeen_ = {};
+  std::vector<bool> tappedSeen_ = std::vector<bool>(BitBoardPre::NUM_INDEXES, false);
+  std::queue<BitPieceInfo> releasedTrueQ_;
   const int maxDropRem_;
 
   DoWork(int maxDropRem): maxDropRem_(maxDropRem) {}
 
   std::vector<BitPieceInfo> findAllMoves(const BitBoard& b, BlockType blockType) {
-    holdingSeen_[MoveDirection::LEFT].clear();
-    holdingSeen_[MoveDirection::RIGHT].clear();
-    releasedSeen_.clear();
-    tappedSeen_.clear();
     moveSet_.clear();
     auto pieceInfo = b.getPiece(blockType);
 
     runHolding(pieceInfo, MoveDirection::LEFT);
     runHolding(pieceInfo, MoveDirection::RIGHT);
     runReleased(pieceInfo, false);
+    
+    while (!releasedTrueQ_.empty()) {
+      auto top = releasedTrueQ_.front();
+      releasedTrueQ_.pop();
+      runReleased(top, true);
+    }
 
     //printf("solution space: %lu\n", seen_.size());
     return {moveSet_.begin(), moveSet_.end()};
@@ -40,12 +44,18 @@ struct DoWork {
     runHolding(currentPiece, md, 1, maxDropRem_);
   }
 
-  void runHolding(const BitPieceInfo &currentPiece, MoveDirection md, int8_t dasRem, int8_t dropRem) {  
+  void runHolding(const BitPieceInfo &currentPiece, MoveDirection md, const int8_t dasRem, const int8_t dropRem) {  
     int8_t m = std::min(dasRem, dropRem);
     if (m > 0) {
+      // this is messy and confusing
+      // there is a two frame cooldown when you release
+      // if you are moving down within the next frame, you MUST move down before sideways
       if (dropRem <= 1) {
-        if (currentPiece.canMove(MoveDirection::DOWN)) {
-          runReleased(currentPiece.move(MoveDirection::DOWN), false);
+        for (const auto &nxPiece: currentPiece.getClosedRotN()) {
+          if (nxPiece.canMove(MoveDirection::DOWN)) {
+            runReleased(currentPiece.move(MoveDirection::DOWN), false);
+          }
+          break;
         }
       } else {
         runReleased(currentPiece, false);
@@ -55,8 +65,8 @@ struct DoWork {
     //printf("(dasRem: %d, dropRem: %d)\n", dasRem, dropRem);
     //printBoardWithPiece(currentPiece.getBoard(), currentPiece);
 
-    if (holdingSeen_[md].count(currentPiece.getRepId())) return;
-    holdingSeen_[md].insert({currentPiece.getRepId(), true});
+    if (holdingSeen_[md][currentPiece.getRepId()]) return;
+    holdingSeen_[md][currentPiece.getRepId()] = true;
 
     const auto &closedRotN = currentPiece.getClosedRotN();
 
@@ -83,27 +93,19 @@ struct DoWork {
         else { moveSet_.insert(nxPiece); }
       }
     }
-
-    if (dropRem <= 1) {
-      if (currentPiece.canMove(MoveDirection::DOWN)) {
-        runReleased(currentPiece.move(MoveDirection::DOWN), false);
-      }
-    } else {
-      runReleased(currentPiece, false);
-    }
   }
 
   void runReleased(const BitPieceInfo &currentPiece, bool lastHitUsed) {
     if (lastHitUsed) {
       auto myPiece = currentPiece;
       while (true) {
-        if (tappedSeen_.count(myPiece.getRepId()) || releasedSeen_.count(myPiece.getRepId())) return;
-        tappedSeen_.insert({myPiece.getRepId(), true});
+        if (tappedSeen_[myPiece.getRepId()] || releasedSeen_[myPiece.getRepId()]) return;
+        tappedSeen_[myPiece.getRepId()] =  true;
         bool canMove = false;
         auto movePiece = myPiece;
         for (const auto &nxPiece: myPiece.getClosedRotN()) {
           if (!nxPiece.canMove(MoveDirection::DOWN)) moveSet_.insert(nxPiece);
-          else if (!canMove) {canMove = true, movePiece = nxPiece.move(MoveDirection::DOWN); };
+          else if (!canMove) { canMove = true, movePiece = nxPiece.move(MoveDirection::DOWN); };
         }
         if (canMove) {
           myPiece = movePiece;
@@ -114,8 +116,8 @@ struct DoWork {
       return;
     }
 
-    if (releasedSeen_.count(currentPiece.getRepId())) return;
-    releasedSeen_.insert({currentPiece.getRepId(), true});
+    if (releasedSeen_[currentPiece.getRepId()]) return;
+    releasedSeen_[currentPiece.getRepId()] = true;
 
     const auto &closedRotN = currentPiece.getClosedRotN();
     for (const auto &nxPiece: closedRotN) {
@@ -129,7 +131,7 @@ struct DoWork {
       for (const auto &nxPiece: closedRotN) {
         if (nxPiece.canMove(md)) {
           const auto &endPiece = nxPiece.move(md);
-          runReleased(endPiece, true);
+          releasedTrueQ_.push(endPiece);
           break;
         }
       }
