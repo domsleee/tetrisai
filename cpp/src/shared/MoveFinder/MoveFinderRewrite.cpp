@@ -13,7 +13,7 @@ const auto EDGE_RELEASED_TO_LAST_HIT_USED = 2;
 const auto EDGE_RELEASED_NO_LAST_HIT = 3;
 
 struct DoWork {
-  std::unordered_map<int, bool> holdingSeen_[2];
+  std::vector<bool> holdingSeen_[2] = {std::vector<bool>(BitBoardPre::NUM_INDEXES, false), std::vector<bool>(BitBoardPre::NUM_INDEXES, false)};
   std::vector<bool> releasedSeen_ = std::vector<bool>(BitBoardPre::NUM_INDEXES, false);
   std::unordered_set<BitPieceInfo> moveSet_ = {};
   std::vector<bool> tappedSeen_ = std::vector<bool>(BitBoardPre::NUM_INDEXES, false);
@@ -23,8 +23,6 @@ struct DoWork {
   DoWork(int maxDropRem): maxDropRem_(maxDropRem) {}
 
   std::vector<BitPieceInfo> findAllMoves(const BitBoard& b, BlockType blockType) {
-    holdingSeen_[MoveDirection::LEFT].clear();
-    holdingSeen_[MoveDirection::RIGHT].clear();
     moveSet_.clear();
     auto pieceInfo = b.getPiece(blockType);
 
@@ -67,8 +65,8 @@ struct DoWork {
     //printf("(dasRem: %d, dropRem: %d)\n", dasRem, dropRem);
     //printBoardWithPiece(currentPiece.getBoard(), currentPiece);
 
-    if (holdingSeen_[md].count(currentPiece.getRepId())) return;
-    holdingSeen_[md].insert({currentPiece.getRepId(), true});
+    if (holdingSeen_[md][currentPiece.getRepId()]) return;
+    holdingSeen_[md][currentPiece.getRepId()] = true;
 
     const auto &closedRotN = currentPiece.getClosedRotN();
 
