@@ -22,12 +22,8 @@ struct BfsInfo {
 #endif
   }
   void qPop() { q.pop(); }
-  void qPush(const FSMTypes::PairT &v) {
-    q.push(v);
-  }
-  bool qEmpty() {
-    return q.empty();
-  }
+  void qPush(const FSMTypes::PairT &v) { q.push(v); }
+  bool qEmpty() { return q.empty(); }
  private:
    
   #if MOVE_FINDER_FSM_PERFORMANCE == 1
@@ -87,10 +83,10 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
 
   auto s1 = MoveFinderState(b.getPiece(blockType), true, maxDropRem_);
   auto s2 = MoveFinderState(b.getPiece(blockType), false, maxDropRem_);
-  for (auto s: {s1, s2}) {
-    s.setReleaseCooldown(2);
-    s.setDasRem(2);
-    s.setRotateCooldown(2);
+  for (auto s: {&s1, &s2}) {
+    s->setReleaseCooldown(2);
+    s->setDasRem(2);
+    s->setRotateCooldown(2);
   }
   auto s3(s2);
   onEnterReleased(s3);
