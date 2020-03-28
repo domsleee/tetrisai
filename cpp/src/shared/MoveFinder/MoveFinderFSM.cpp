@@ -13,7 +13,7 @@ void onEnterTapped(MoveFinderState &s);
 template <typename T>
 void safeInsert(std::unordered_set<MoveFinderState> &seen, const BitBoard &b, T& q, MoveFinderState state) {
   if (b.vacant(state.piece_)) {
-    seen.insert(state);
+    seen.emplace(state);
     q.push({0, state});
   }
 }
@@ -92,8 +92,8 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
     auto addNxFrame = [&, top=top, topScore=topScore]{
       auto nxFrame = top;
       nxFrame.nextFrame();
-      if (seen.count(nxFrame)) return;
-      seen.insert(nxFrame);
+      auto [ignore, inserted] = seen.emplace(nxFrame);
+      if (!inserted) return;
       addEdge(top, nxFrame, Action::NONE);
       q.push({topScore, nxFrame});
     };
@@ -199,8 +199,8 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
             //nxTapped.setRotateCooldown(1);
             //nxTapped.moveCooldown_[static_cast<int>(MoveDirection::DOWN)] = 1;
             onEnterTapped(nxTapped);
-            if (seen.count(nxTapped)) continue;
-            seen.insert(nxTapped);
+            auto [ignore, inserted] = seen.emplace(nxTapped);
+            if (!inserted) continue;
             addEdge(top, nxTapped, moveDirection);
             q.push({topScore + 1 + nxTapped.frameEntered_ * SCORE_FRAME_ENTERED, nxTapped});
           }
