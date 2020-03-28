@@ -1,7 +1,9 @@
 #pragma once
 #include <unordered_set>
+#include <set>
 #include <unordered_map>
 #include <vector>
+#include <queue>
 #include "src/common/Move.hpp"
 #include "src/board/bitboard/BitBoard.h"
 #include "src/shared/MoveFinder/MoveFinderFSM/MoveFinderState.hpp"
@@ -10,6 +12,12 @@
 #define MOVE_FINDER_FSM_PERFORMANCE 1
 #define RECORD_MOVEFINDER_EDGES 1
 
+
+namespace FSMTypes {
+  using SeenT = std::unordered_set<MoveFinderState>;
+  using MovesT = std::set<BitPieceInfo>;
+  using PairT = std::pair<int, MoveFinderState>;
+}
 
 class MoveFinderFSM {
   std::unordered_map<MoveFinderState, std::pair<MoveFinderState, Action>> pred_;
@@ -42,4 +50,5 @@ class MoveFinderFSM {
   std::vector<std::pair<int, Action>> getShortestPathActions(const BitPieceInfo &piece) const;
   void setMaxDropRem(int maxDropRem) { maxDropRem_ = maxDropRem; }
   void setRecordEdges(bool ok) {}
+  bool considerMovingDown(std::queue<FSMTypes::PairT> &q, double topScore, FSMTypes::SeenT &seen, FSMTypes::MovesT &moves, const BitPieceInfo &topPiece, const MoveFinderState &top);
 };

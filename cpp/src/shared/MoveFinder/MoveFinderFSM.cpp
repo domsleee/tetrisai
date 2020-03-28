@@ -8,6 +8,8 @@
 #define SEEN_EMPLACE(seen, v) seen.emplace(v);
 const int MAX_DAS_REM = 6;
 
+
+
 void onEnterReleased(MoveFinderState &s);
 void onEnterTapped(MoveFinderState &s);
 
@@ -39,15 +41,14 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
   finalMoveToState_.clear();
   std::unordered_set<MoveFinderState> seen;
   seen.reserve(1e5);
-  using PairT = std::pair<int, MoveFinderState>;
-  auto cmp = [](const PairT &l, const PairT &r) {
+  auto cmp = [](const FSMTypes::PairT &l, const FSMTypes::PairT &r) {
     return l.first >= r.first;
   };
   
 #if MOVE_FINDER_FSM_PERFORMANCE == 1
-  std::queue<PairT> q;
+  std::queue<FSMTypes::PairT> q;
 #else
-  std::priority_queue<PairT, std::vector<PairT>, decltype(cmp)> q(cmp);
+  std::priority_queue<FSMTypes::PairT, std::vector<FSMTypes::PairT>, decltype(cmp)> q(cmp);
 #endif
   
 
@@ -116,42 +117,6 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
         }
       }
     };
-
-    auto considerMovingDown = [&, top=top, topScore=topScore]() -> bool {
-      // if drop rem is zero, you MUST move down
-      if (top.getDropRem() == 0) {
-        if (top.getMoveCooldown(MoveDirection::DOWN) != 0) return true; // cant proceed
-        if (topPiece.canMove(MoveDirection::DOWN)) {
-          auto nxMovedDown = top;
-          nxMovedDown.setPiece(topPiece.move(MoveDirection::DOWN));
-          nxMovedDown.setDropRem(maxDropRem_);
-          nxMovedDown.setRotateCooldown(1);
-          nxMovedDown.setSidewaysMoveCooldown(1);
-          
-          auto [ignore, inserted] = seen.emplace(nxMovedDown);
-          if (!inserted) return true;
-          addEdge(top, nxMovedDown, MoveDirection::DOWN);
-          q.push({topScore, nxMovedDown});
-          return true;
-        } else {
-          // a final state
-          const auto &piece = topPiece;
-          if (finalMoveToState_.count(piece) == 0) {
-            finalMoveToState_.insert({piece, {top, topScore}});
-          } else {
-            auto [oldState, oldScore] = finalMoveToState_.at(piece);
-            if (topScore < oldScore) {
-              finalMoveToState_.insert({piece, {top, topScore}});
-            }
-          }
-          assert(pred_.count(top) == 1);
-          moves.insert(topPiece);
-          return true;
-        }
-      }
-      return false;
-    };
-
   
     switch(top.getFsmState()) {
       case FSMState::HOLDING: {
@@ -189,7 +154,7 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
           }
         }
         considerRotate();
-        if (considerMovingDown()) break;
+        if (considerMovingDown(q, topScore, seen, moves, topPiece, top)) break;
         addNxFrame();
       } break;
       case FSMState::RELEASED: {
@@ -209,13 +174,13 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
           }
         }
         considerRotate();
-        if (considerMovingDown()) break;
+        if (considerMovingDown(q, topScore, seen, moves, topPiece, top)) break;
         addNxFrame();
       } break;
       case FSMState::TAPPED_ONCE: {
         // nothing to do here, lol.
         considerRotate();
-        if (considerMovingDown()) break;
+        if (considerMovingDown(q, topScore, seen, moves, topPiece, top)) break;
         addNxFrame();
       } break;
     }
@@ -229,6 +194,42 @@ void MoveFinderFSM::addEdge(const MoveFinderState &s1, const MoveFinderState &s2
   assert(pred_.count(s2) == 0);
   pred_.insert({s2, {s1, action}});
 }
+
+
+bool MoveFinderFSM::considerMovingDown(std::queue<FSMTypes::PairT> &q, double topScore, FSMTypes::SeenT &seen, FSMTypes::MovesT &moves, const BitPieceInfo &topPiece, const MoveFinderState &top) {
+  // if drop rem is zero, you MUST move down
+  if (top.getDropRem() == 0) {
+    if (top.getMoveCooldown(MoveDirection::DOWN) != 0) return true; // cant proceed
+    if (topPiece.canMove(MoveDirection::DOWN)) {
+      auto nxMovedDown = top;
+      nxMovedDown.setPiece(topPiece.move(MoveDirection::DOWN));
+      nxMovedDown.setDropRem(maxDropRem_);
+      nxMovedDown.setRotateCooldown(1);
+      nxMovedDown.setSidewaysMoveCooldown(1);
+      
+      auto [ignore, inserted] = seen.emplace(nxMovedDown);
+      if (!inserted) return true;
+      addEdge(top, nxMovedDown, MoveDirection::DOWN);
+      q.push({topScore, nxMovedDown});
+      return true;
+    } else {
+      // a final state
+      const auto &piece = topPiece;
+      if (finalMoveToState_.count(piece) == 0) {
+        finalMoveToState_.insert({piece, {top, topScore}});
+      } else {
+        auto [oldState, oldScore] = finalMoveToState_.at(piece);
+        if (topScore < oldScore) {
+          finalMoveToState_.insert({piece, {top, topScore}});
+        }
+      }
+      assert(pred_.count(top) == 1);
+      moves.insert(topPiece);
+      return true;
+    }
+  }
+  return false;
+};
 
 
 //optimisations
