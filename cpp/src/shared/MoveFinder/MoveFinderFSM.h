@@ -19,7 +19,12 @@ namespace FSMTypes {
   using PairT = std::pair<int, MoveFinderState>;
 }
 
+class TopInfo;
+class BfsInfo;
+
 class MoveFinderFSM {
+  const int SCORE_FRAME_ENTERED = 10000;
+  const int SCORE_ROTATED = 100;
   std::unordered_map<MoveFinderState, std::pair<MoveFinderState, Action>> pred_;
   std::unordered_map<BitPieceInfo, std::pair<MoveFinderState, int>> finalMoveToState_;
   int maxDropRem_ = 3;
@@ -50,5 +55,7 @@ class MoveFinderFSM {
   std::vector<std::pair<int, Action>> getShortestPathActions(const BitPieceInfo &piece) const;
   void setMaxDropRem(int maxDropRem) { maxDropRem_ = maxDropRem; }
   void setRecordEdges(bool ok) {}
-  bool considerMovingDown(std::queue<FSMTypes::PairT> &q, double topScore, FSMTypes::SeenT &seen, FSMTypes::MovesT &moves, const BitPieceInfo &topPiece, const MoveFinderState &top);
+  void addNxFrame(const TopInfo&, BfsInfo&);
+  void considerRotate(const TopInfo& topInfo, BfsInfo& bfsInfo, const std::vector<RotateDirection>&);
+  bool considerMovingDown(const TopInfo&, BfsInfo&);
 };

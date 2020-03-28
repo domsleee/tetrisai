@@ -8,16 +8,60 @@
 #define SEEN_EMPLACE(seen, v) seen.emplace(v);
 const int MAX_DAS_REM = 6;
 
+struct BfsInfo {
+  FSMTypes::SeenT seen;
+  FSMTypes::MovesT moves;
+  BfsInfo() {
+    seen.reserve(1e5);
+  }
+  FSMTypes::PairT qTop() {
+#if MOVE_FINDER_FSM_PERFORMANCE == 1
+    return q.front();
+#else
+    return q.top();
+#endif
+  }
+  void qPop() { q.pop(); }
+  void qPush(const FSMTypes::PairT &v) {
+    q.push(v);
+  }
+  bool qEmpty() {
+    return q.empty();
+  }
+ private:
+   
+  #if MOVE_FINDER_FSM_PERFORMANCE == 1
+    std::queue<FSMTypes::PairT> q;
+  #else
+    struct Comp {
+      bool operator()(const FSMTypes::PairT &l, const FSMTypes::PairT &r) {
+        return l.first >= r.first;
+      };
+    };
+    std::priority_queue<FSMTypes::PairT, std::vector<FSMTypes::PairT>, Comp> q;
+  #endif
 
+};
+
+struct TopInfo {
+  TopInfo(double topScore, const MoveFinderState &top, const BitBoard &b):
+    top{top},
+    topScore{topScore},
+    topPiece{top.getPiece(b)}
+  {}
+  
+  const MoveFinderState top;
+  const double topScore;
+  const BitPieceInfo topPiece;
+};
 
 void onEnterReleased(MoveFinderState &s);
 void onEnterTapped(MoveFinderState &s);
 
-template <typename T>
-void safeInsert(std::unordered_set<MoveFinderState> &seen, const BitBoard &b, T& q, MoveFinderState state) {
+void safeInsert(BfsInfo &bfsInfo, const BitBoard &b, MoveFinderState state) {
   if (b.vacant(state.getPiece(b))) {
-    seen.emplace(state);
-    q.push({0, state});
+    bfsInfo.seen.emplace(state);
+    bfsInfo.qPush({0, state});
   }
 }
 
@@ -39,29 +83,15 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
 #endif
   pred_.clear();
   finalMoveToState_.clear();
-  std::unordered_set<MoveFinderState> seen;
-  seen.reserve(1e5);
-  auto cmp = [](const FSMTypes::PairT &l, const FSMTypes::PairT &r) {
-    return l.first >= r.first;
-  };
-  
-#if MOVE_FINDER_FSM_PERFORMANCE == 1
-  std::queue<FSMTypes::PairT> q;
-#else
-  std::priority_queue<FSMTypes::PairT, std::vector<FSMTypes::PairT>, decltype(cmp)> q(cmp);
-#endif
-  
-
-  std::set<BitPieceInfo> moves;
+  BfsInfo bfsInfo;
 
   auto s1 = MoveFinderState(b.getPiece(blockType), true, maxDropRem_);
   auto s2 = MoveFinderState(b.getPiece(blockType), false, maxDropRem_);
-  s1.setReleaseCooldown(2);
-  s1.setDasRem(2);
-  s1.setRotateCooldown(2);
-  s2.setDasRem(2);
-  s2.setReleaseCooldown(2);
-  s2.setRotateCooldown(2);
+  for (auto s: {s1, s2}) {
+    s.setReleaseCooldown(2);
+    s.setDasRem(2);
+    s.setRotateCooldown(2);
+  }
   auto s3(s2);
   onEnterReleased(s3);
   s3.setFsmState(FSMState::RELEASED);
@@ -69,54 +99,26 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
   s3.setSidewaysMoveCooldown(2);
 
   if (!hasFirstMoveConstraint_) {
-    safeInsert(seen, b, q, s1);
-    safeInsert(seen, b, q, s2);
-    safeInsert(seen, b, q, s3);
+    safeInsert(bfsInfo, b, s1);
+    safeInsert(bfsInfo, b, s2);
+    safeInsert(bfsInfo, b, s3);
   } else {
     switch(firstMoveDirectionChar_) {
-      case FIRST_MOVE_DIRECTION_LEFT: { safeInsert(seen, b, q, s1); } break;
-      case FIRST_MOVE_DIRECTION_RIGHT: { safeInsert(seen, b, q, s2); } break;
-      case FIRST_MOVE_DIRECTION_NEITHER: { safeInsert(seen, b, q, s3); } break;
+      case FIRST_MOVE_DIRECTION_LEFT: { safeInsert(bfsInfo, b, s1); } break;
+      case FIRST_MOVE_DIRECTION_RIGHT: { safeInsert(bfsInfo, b, s2); } break;
+      case FIRST_MOVE_DIRECTION_NEITHER: { safeInsert(bfsInfo, b, s3); } break;
       default: throw std::runtime_error("Unknown firstMoveDirectionChar_");
     }
   }
 
   auto rotateDirections = getRotateDirections(b.getPiece(blockType));
 
-  while (!q.empty()) {
-    const int SCORE_FRAME_ENTERED = 10000;
-    const int SCORE_ROTATED = 100;
+  while (!bfsInfo.qEmpty()) {
 
-#if MOVE_FINDER_FSM_PERFORMANCE == 1
-    const auto [topScore, top] = q.front(); q.pop();
-#else
-    const auto [topScore, top] = q.top(); q.pop();
-#endif
-    auto topPiece = top.getPiece(b);
-    auto addNxFrame = [&, top=top, topScore=topScore]{
-      auto nxFrame = top;
-      nxFrame.nextFrame();
-      auto [ignore, inserted] = seen.emplace(nxFrame);
-      if (!inserted) return;
-      addEdge(top, nxFrame, Action::NONE);
-      q.push({topScore, nxFrame});
-    };
-
-    auto considerRotate = [&, top=top, topScore=topScore]() {
-      for (auto rotateDirection: rotateDirections) {
-        if (top.getRotateCooldown(rotateDirection) == 0 && topPiece.canRotate(rotateDirection)) {
-          auto nxRotate = top;
-          nxRotate.setPiece(topPiece.rotate(rotateDirection));
-          nxRotate.setRotateCooldown(1);
-          nxRotate.setRotateCooldown(rotateDirection, 2);
-          nxRotate.setSidewaysMoveCooldown(1);
-          auto [ignore, inserted] = seen.emplace(nxRotate);
-          if (!inserted) continue;
-          addEdge(top, nxRotate, rotateDirection);
-          q.push({topScore+1 + SCORE_ROTATED * nxRotate.frameEntered_, nxRotate});
-        }
-      }
-    };
+    const auto [topScore, top] = bfsInfo.qTop();
+    bfsInfo.qPop();
+    TopInfo topInfo(topScore, top, b);
+    auto topPiece = topInfo.topPiece;
   
     switch(top.getFsmState()) {
       case FSMState::HOLDING: {
@@ -132,10 +134,10 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
             nxMoved.setPiece(topPiece.move(moveDirection));
             nxMoved.setDasRem(MAX_DAS_REM - (nxMoved.frameEntered_ == 2));
             //nxMoved.setRotateCooldown(1);
-            auto [ignore, inserted] = seen.emplace(nxMoved);
+            auto [ignore, inserted] = bfsInfo.seen.emplace(nxMoved);
             if (inserted == false) continue;
             addEdge(top, nxMoved, moveDirection);
-            q.push({topScore+1, nxMoved});
+            bfsInfo.qPush({topScore+1, nxMoved});
             continue;
           }
         }
@@ -147,15 +149,15 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
           nxReleased.setMoveCooldown(moveDirection, 1+1);
           nxReleased.setMoveCooldown(otherMoveDirection, 1); // must come after
           onEnterReleased(nxReleased);
-          auto [ignore, inserted] = seen.emplace(nxReleased);
+          auto [ignore, inserted] = bfsInfo.seen.emplace(nxReleased);
           if (inserted) {
             addEdge(top, nxReleased, Action::NONE);
-            q.push({topScore, nxReleased});
+            bfsInfo.qPush({topScore, nxReleased});
           }
         }
-        considerRotate();
-        if (considerMovingDown(q, topScore, seen, moves, topPiece, top)) break;
-        addNxFrame();
+        considerRotate(topInfo, bfsInfo, rotateDirections);
+        if (considerMovingDown(topInfo, bfsInfo)) break;
+        addNxFrame(topInfo, bfsInfo);
       } break;
       case FSMState::RELEASED: {
         for (auto moveDirection: sidewaysMoveDirections) {
@@ -167,27 +169,27 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
             //nxTapped.setRotateCooldown(1);
             //nxTapped.moveCooldown_[static_cast<int>(MoveDirection::DOWN)] = 1;
             onEnterTapped(nxTapped);
-            auto [ignore, inserted] = seen.emplace(nxTapped);
+            auto [ignore, inserted] = bfsInfo.seen.emplace(nxTapped);
             if (!inserted) continue;
             addEdge(top, nxTapped, moveDirection);
-            q.push({topScore + 1 + nxTapped.frameEntered_ * SCORE_FRAME_ENTERED, nxTapped});
+            bfsInfo.qPush({topScore + 1 + nxTapped.frameEntered_ * SCORE_FRAME_ENTERED, nxTapped});
           }
         }
-        considerRotate();
-        if (considerMovingDown(q, topScore, seen, moves, topPiece, top)) break;
-        addNxFrame();
+        considerRotate(topInfo, bfsInfo, rotateDirections);
+        if (considerMovingDown(topInfo, bfsInfo)) break;
+        addNxFrame(topInfo, bfsInfo);
       } break;
       case FSMState::TAPPED_ONCE: {
         // nothing to do here, lol.
-        considerRotate();
-        if (considerMovingDown(q, topScore, seen, moves, topPiece, top)) break;
-        addNxFrame();
+        considerRotate(topInfo, bfsInfo, rotateDirections);
+        if (considerMovingDown(topInfo, bfsInfo)) break;
+        addNxFrame(topInfo, bfsInfo);
       } break;
     }
     
   }
 
-  return {moves.begin(), moves.end()};  
+  return {bfsInfo.moves.begin(), bfsInfo.moves.end()};  
 }
 
 void MoveFinderFSM::addEdge(const MoveFinderState &s1, const MoveFinderState &s2, Action action) {
@@ -196,35 +198,60 @@ void MoveFinderFSM::addEdge(const MoveFinderState &s1, const MoveFinderState &s2
 }
 
 
-bool MoveFinderFSM::considerMovingDown(std::queue<FSMTypes::PairT> &q, double topScore, FSMTypes::SeenT &seen, FSMTypes::MovesT &moves, const BitPieceInfo &topPiece, const MoveFinderState &top) {
+void MoveFinderFSM::addNxFrame(const TopInfo& topInfo, BfsInfo& bfsInfo) {
+  auto nxFrame = topInfo.top;
+  nxFrame.nextFrame();
+  auto [ignore, inserted] = bfsInfo.seen.emplace(nxFrame);
+  if (!inserted) return;
+  addEdge(topInfo.top, nxFrame, Action::NONE);
+  bfsInfo.qPush({topInfo.topScore, nxFrame});
+}
+
+void MoveFinderFSM::considerRotate(const TopInfo& topInfo, BfsInfo& bfsInfo, const std::vector<RotateDirection>& rotateDirections) {
+  for (auto rotateDirection: rotateDirections) {
+    if (topInfo.top.getRotateCooldown(rotateDirection) == 0 && topInfo.topPiece.canRotate(rotateDirection)) {
+      auto nxRotate = topInfo.top;
+      nxRotate.setPiece(topInfo.topPiece.rotate(rotateDirection));
+      nxRotate.setRotateCooldown(1);
+      nxRotate.setRotateCooldown(rotateDirection, 2);
+      nxRotate.setSidewaysMoveCooldown(1);
+      auto [ignore, inserted] = bfsInfo.seen.emplace(nxRotate);
+      if (!inserted) continue;
+      addEdge(topInfo.top, nxRotate, rotateDirection);
+      bfsInfo.qPush({topInfo.topScore+1 + SCORE_ROTATED * nxRotate.frameEntered_, nxRotate});
+    }
+  }
+}
+
+bool MoveFinderFSM::considerMovingDown(const TopInfo& topInfo, BfsInfo& bfsInfo) {
   // if drop rem is zero, you MUST move down
-  if (top.getDropRem() == 0) {
-    if (top.getMoveCooldown(MoveDirection::DOWN) != 0) return true; // cant proceed
-    if (topPiece.canMove(MoveDirection::DOWN)) {
-      auto nxMovedDown = top;
-      nxMovedDown.setPiece(topPiece.move(MoveDirection::DOWN));
+  if (topInfo.top.getDropRem() == 0) {
+    if (topInfo.top.getMoveCooldown(MoveDirection::DOWN) != 0) return true; // cant proceed
+    if (topInfo.topPiece.canMove(MoveDirection::DOWN)) {
+      auto nxMovedDown = topInfo.top;
+      nxMovedDown.setPiece(topInfo.topPiece.move(MoveDirection::DOWN));
       nxMovedDown.setDropRem(maxDropRem_);
       nxMovedDown.setRotateCooldown(1);
       nxMovedDown.setSidewaysMoveCooldown(1);
       
-      auto [ignore, inserted] = seen.emplace(nxMovedDown);
+      auto [ignore, inserted] = bfsInfo.seen.emplace(nxMovedDown);
       if (!inserted) return true;
-      addEdge(top, nxMovedDown, MoveDirection::DOWN);
-      q.push({topScore, nxMovedDown});
+      addEdge(topInfo.top, nxMovedDown, MoveDirection::DOWN);
+      bfsInfo.qPush({topInfo.topScore, nxMovedDown});
       return true;
     } else {
       // a final state
-      const auto &piece = topPiece;
+      const auto &piece = topInfo.topPiece;
       if (finalMoveToState_.count(piece) == 0) {
-        finalMoveToState_.insert({piece, {top, topScore}});
+        finalMoveToState_.insert({piece, {topInfo.top, topInfo.topScore}});
       } else {
         auto [oldState, oldScore] = finalMoveToState_.at(piece);
-        if (topScore < oldScore) {
-          finalMoveToState_.insert({piece, {top, topScore}});
+        if (topInfo.topScore < oldScore) {
+          finalMoveToState_.insert({piece, {topInfo.top, topInfo.topScore}});
         }
       }
-      assert(pred_.count(top) == 1);
-      moves.insert(topPiece);
+      assert(pred_.count(topInfo.top) == 1);
+      bfsInfo.moves.insert(topInfo.topPiece);
       return true;
     }
   }
