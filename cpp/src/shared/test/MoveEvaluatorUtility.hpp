@@ -43,3 +43,6 @@ auto getWeightsFromEmptyPieceT(const BitBoard &b) {
   return getWeightsTemp<MyMoveEvaluator>(b, piece);
 }
 
+using BigFileT = std::unordered_map<BitBoard, std::pair<BlockType, std::vector<int>>>;
+BigFileT readFromBigFile(const std::string&);
+

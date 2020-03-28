@@ -17,22 +17,9 @@ struct std::hash<MoveFinderState> {
 
 class MoveFinderState {
  public:
-  FSMState fsmState_ = FSMState::HOLDING;
-  bool isLeftHolding_;
-
-  BitPieceInfo piece_;
-
-  static const int NUM_MOVE_COOLDOWNS = 3;
-  static const int NUM_ROTATE_COOLDOWNS = 2;
-  int rotateCooldown_[NUM_ROTATE_COOLDOWNS] = {0, 0};
-  int releaseCooldown_ = 0;
-  int moveCooldown_[NUM_MOVE_COOLDOWNS] = {0, 0, 0};
-  int dropRem_;
-  int maxDropRem_;
-  int dasRem_ = 1; // on zero, can use das (indicated by FSMState::HOLDING)
-
   // extra info for pathfinding
   int frameEntered_ = 0;
+  BitPieceInfo piece_;
 
   MoveFinderState(const BitPieceInfo &piece, bool isLeftHolding, int maxDropRem):
     isLeftHolding_(isLeftHolding),
@@ -41,16 +28,40 @@ class MoveFinderState {
     maxDropRem_(maxDropRem)
   {}
 
-  void setRotateCooldown(int cooldown) {
-    for (int i = 0; i < NUM_ROTATE_COOLDOWNS; ++i) {
-      rotateCooldown_[i] = std::max(rotateCooldown_[i], cooldown);
-    }
+  int getDasRem() const { return dasRem_; }
+  void setDasRem(int dasRem) { dasRem_ = dasRem; }
+
+  int getDropRem() const { return dropRem_; }
+  void setDropRem(int dropRem) { dropRem_ = dropRem; }
+
+ 
+
+  FSMState getFsmState() const { return fsmState_; }
+  void setFsmState(FSMState fsmState) {
+    fsmState_ = fsmState;
+  }
+  
+  bool getIsLeftHolding() const { return isLeftHolding_; }
+  void setIsLeftHolding(bool isLeftHolding) { isLeftHolding_ = isLeftHolding; }
+
+  // counters
+  int getReleaseCooldown() const { return releaseCooldown_; }
+  void setReleaseCooldown(int cooldown) {
+    releaseCooldown_ = std::max(releaseCooldown_, cooldown);
   }
 
+  int getRotateCooldown(RotateDirection rd) const { return rotateCooldown_[static_cast<int>(rd)]; }
+  void setRotateCooldown(int cooldown) {
+    for (auto rd: allRotateDirections) setRotateCooldown(rd, cooldown);
+  }
+  void setRotateCooldown(RotateDirection rd, int cooldown) {
+    rotateCooldown_[static_cast<int>(rd)] = std::max(rotateCooldown_[static_cast<int>(rd)], cooldown);
+  }
+
+  int getMoveCooldown(MoveDirection md) const { return moveCooldown_[static_cast<int>(md)]; }
+  void setMoveCooldown(MoveDirection md, int cooldown) { moveCooldown_[static_cast<int>(md)] = cooldown; }
   void setMoveCooldown(int cooldown) {
-    for (int i = 0; i < NUM_MOVE_COOLDOWNS; ++i) {
-      moveCooldown_[i] = std::max(moveCooldown_[i], cooldown);
-    }
+    for (auto md: cooldownMoveDirections) setMoveCooldown(md, cooldown);
   }
 
   void setSidewaysMoveCooldown(int cooldown) {
@@ -89,4 +100,18 @@ class MoveFinderState {
   }
 
   friend std::size_t std::hash<MoveFinderState>::operator()(const MoveFinderState&) const;
+
+ private:
+  static const int NUM_MOVE_COOLDOWNS = static_cast<int>(cooldownMoveDirections.size());
+  static const int NUM_ROTATE_COOLDOWNS = 2;
+
+  FSMState fsmState_ = FSMState::HOLDING;
+  bool isLeftHolding_;
+
+  int rotateCooldown_[NUM_ROTATE_COOLDOWNS] = {0, 0};
+  int releaseCooldown_ = 0;
+  int moveCooldown_[NUM_MOVE_COOLDOWNS] = {0, 0, 0};
+  int dropRem_;
+  int maxDropRem_;
+  int dasRem_ = 1; // on zero, can use das (indicated by FSMState::HOLDING)
 };

@@ -53,13 +53,15 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
 
   auto s1 = MoveFinderState(b.getPiece(blockType), true, maxDropRem_);
   auto s2 = MoveFinderState(b.getPiece(blockType), false, maxDropRem_);
-  s1.releaseCooldown_ = s2.releaseCooldown_ = 2;
-  s1.dasRem_ = s2.dasRem_ = 2;
+  s1.setReleaseCooldown(2);
+  s1.setDasRem(2);
   s1.setRotateCooldown(2);
+  s2.setDasRem(2);
+  s2.setReleaseCooldown(2);
   s2.setRotateCooldown(2);
   auto s3(s2);
   onEnterReleased(s3);
-  s3.fsmState_ = FSMState::RELEASED;
+  s3.setFsmState(FSMState::RELEASED);
   s3.setRotateCooldown(2);
   s3.setSidewaysMoveCooldown(2);
 
@@ -98,11 +100,11 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
 
     auto considerRotate = [&, top=top, topScore=topScore]() {
       for (auto rotateDirection: rotateDirections) {
-        if (top.rotateCooldown_[rotateDirection] == 0 && top.piece_.canRotate(rotateDirection)) {
+        if (top.getRotateCooldown(rotateDirection) == 0 && top.piece_.canRotate(rotateDirection)) {
           auto nxRotate = top;
           nxRotate.piece_ = top.piece_.rotate(rotateDirection);
           nxRotate.setRotateCooldown(1);
-          nxRotate.rotateCooldown_[rotateDirection] = 2;
+          nxRotate.setRotateCooldown(rotateDirection, 2);
           nxRotate.setSidewaysMoveCooldown(1);
           if (seen.count(nxRotate)) continue;
           seen.insert(nxRotate);
@@ -114,12 +116,12 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
 
     auto considerMovingDown = [&, top=top, topScore=topScore]() -> bool {
       // if drop rem is zero, you MUST move down
-      if (top.dropRem_ == 0) {
-        if (top.moveCooldown_[static_cast<int>(MoveDirection::DOWN)] != 0) return true; // cant proceed
+      if (top.getDropRem() == 0) {
+        if (top.getMoveCooldown(MoveDirection::DOWN) != 0) return true; // cant proceed
         if (top.piece_.canMove(MoveDirection::DOWN)) {
           auto nxMovedDown = top;
           nxMovedDown.piece_ = top.piece_.move(MoveDirection::DOWN);
-          nxMovedDown.dropRem_ = maxDropRem_;
+          nxMovedDown.setDropRem(maxDropRem_);
           nxMovedDown.setRotateCooldown(1);
           nxMovedDown.setSidewaysMoveCooldown(1);
           
@@ -148,19 +150,19 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
     };
 
   
-    switch(top.fsmState_) {
+    switch(top.getFsmState()) {
       case FSMState::HOLDING: {
         // either keep holding or release.
         // you MUST move across if dasRem is zero when you're holding
-        auto moveDirection = top.isLeftHolding_ ? MoveDirection::LEFT : MoveDirection::RIGHT;
+        auto moveDirection = top.getIsLeftHolding() ? MoveDirection::LEFT : MoveDirection::RIGHT;
         auto otherMoveDirection = moveDirection == MoveDirection::LEFT ? MoveDirection::RIGHT : MoveDirection::LEFT;
-        if (top.dasRem_ == 0) {
+        if (top.getDasRem() == 0) {
           //printf("dasRem_ 0 on frame: %d\n", top.frameEntered_);
-          if (top.moveCooldown_[static_cast<int>(moveDirection)] != 0) continue; // cant proceed
+          if (top.getMoveCooldown(moveDirection) != 0) continue; // cant proceed
           if (top.piece_.canMove(moveDirection)) {
             auto nxMoved = top;
             nxMoved.piece_ = top.piece_.move(moveDirection);
-            nxMoved.dasRem_ = MAX_DAS_REM - (nxMoved.frameEntered_ == 2);
+            nxMoved.setDasRem(MAX_DAS_REM - (nxMoved.frameEntered_ == 2));
             //nxMoved.setRotateCooldown(1);
             if (seen.count(nxMoved)) continue;
             seen.insert(nxMoved);
@@ -171,11 +173,11 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
         }
 
         // releasing...
-        if (top.releaseCooldown_ == 0) {
+        if (top.getReleaseCooldown() == 0) {
           auto nxReleased = top;
-          nxReleased.fsmState_ = FSMState::RELEASED;
-          nxReleased.moveCooldown_[static_cast<int>(moveDirection)] = 1+1;
-          nxReleased.moveCooldown_[static_cast<int>(otherMoveDirection)] = 1; // must come after
+          nxReleased.setFsmState(FSMState::RELEASED);
+          nxReleased.setMoveCooldown(moveDirection, 1+1);
+          nxReleased.setMoveCooldown(otherMoveDirection, 1); // must come after
           onEnterReleased(nxReleased);
           if (!seen.count(nxReleased)) {
             seen.insert(nxReleased);
@@ -189,11 +191,11 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
       } break;
       case FSMState::RELEASED: {
         for (auto moveDirection: sidewaysMoveDirections) {
-          if (top.moveCooldown_[static_cast<int>(moveDirection)] != 0) continue;
+          if (top.getMoveCooldown(moveDirection) != 0) continue;
           if (top.piece_.canMove(moveDirection)) {
             auto nxTapped = top;
             nxTapped.piece_ = top.piece_.move(moveDirection);
-            nxTapped.fsmState_ = FSMState::TAPPED_ONCE;
+            nxTapped.setFsmState(FSMState::TAPPED_ONCE);
             //nxTapped.setRotateCooldown(1);
             //nxTapped.moveCooldown_[static_cast<int>(MoveDirection::DOWN)] = 1;
             onEnterTapped(nxTapped);
@@ -228,8 +230,8 @@ void MoveFinderFSM::addEdge(const MoveFinderState &s1, const MoveFinderState &s2
 
 //optimisations
 void onEnterReleased(MoveFinderState &s) {
-  s.dasRem_ = 0;
-  s.isLeftHolding_ = false;
+  s.setDasRem(0);
+  s.setIsLeftHolding(false);
 }
 
 void onEnterTapped(MoveFinderState &s) {
