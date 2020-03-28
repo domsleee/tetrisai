@@ -10,7 +10,7 @@ const int MAX_DAS_REM = 6;
 
 struct BfsInfo {
   FSMTypes::SeenT seen;
-  FSMTypes::MovesT moves;
+  FSMTypes::MovesT moves = FSMTypes::MovesT(BitBoardPre::NUM_INDEXES, false);
   BfsInfo() {
     seen.reserve(1e5);
   }
@@ -189,7 +189,11 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
     
   }
 
-  return {bfsInfo.moves.begin(), bfsInfo.moves.end()};  
+  std::vector<BitPieceInfo> ret;
+  for (int i = 0; i < BitBoardPre::NUM_INDEXES; ++i) {
+    if (bfsInfo.moves[i]) ret.push_back(b.getPieceFromId(i));
+  }
+  return ret;
 }
 
 void MoveFinderFSM::addEdge(const MoveFinderState &s1, const MoveFinderState &s2, Action action) {
@@ -251,7 +255,7 @@ bool MoveFinderFSM::considerMovingDown(const TopInfo& topInfo, BfsInfo& bfsInfo)
         }
       }
       assert(pred_.count(topInfo.top) == 1);
-      bfsInfo.moves.insert(topInfo.topPiece);
+      bfsInfo.moves[topInfo.top.getPieceId()] = true;
       return true;
     }
   }

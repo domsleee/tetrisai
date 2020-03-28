@@ -15,7 +15,7 @@
 
 namespace FSMTypes {
   using SeenT = std::unordered_set<MoveFinderState>;
-  using MovesT = std::set<BitPieceInfo>;
+  using MovesT = std::vector<bool>;
   using PairT = std::pair<int, MoveFinderState>;
 }
 
