@@ -33,10 +33,9 @@ class MoveFinderState {
  public:
   // extra info for pathfinding
   int frameEntered_ = 0;
-  BitPieceInfo piece_;
 
   MoveFinderState(const BitPieceInfo &piece, bool isLeftHolding, int dropRem):
-    piece_(piece)
+    pieceId_(piece.getId())
   {
     setIsLeftHolding(isLeftHolding);
     setDropRem(dropRem);
@@ -45,6 +44,10 @@ class MoveFinderState {
   }
 
   std::string getBinRep() const { return binRep(counterRep_); }
+
+  BitPieceInfo getPiece(const BitBoard &b) const { return b.getPieceFromId(pieceId_); }
+  int getPieceId() const { return pieceId_; }
+  void setPiece(const BitPieceInfo &p) { pieceId_ = p.getId(); }
 
   int getDasRem() const { return getField(FSMStateFields::DAS_REM); }
   void setDasRem(int dasRem) { setField(FSMStateFields::DAS_REM, dasRem); }
@@ -94,7 +97,7 @@ class MoveFinderState {
   }
 
   friend bool operator==(const MoveFinderState &s1, const MoveFinderState &s2) {
-    return s1.piece_ == s2.piece_
+    return s1.pieceId_ == s2.pieceId_
     && s1.frameEntered_ == s2.frameEntered_ // you may not need this, however im leaving it in
     && s1.counterRep_ == s2.counterRep_;
   }
@@ -189,6 +192,7 @@ class MoveFinderState {
   }
 
   uint32_t counterRep_ = 0;
+  int pieceId_;
 
   // on zero, can use das (indicated by FSMState::HOLDING)
   // total: 28 bits

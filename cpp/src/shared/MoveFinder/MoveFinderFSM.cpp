@@ -5,6 +5,7 @@
 #include <vector>
 #include <sstream>
 
+#define SEEN_EMPLACE(seen, v) seen.emplace(v);
 const int MAX_DAS_REM = 6;
 
 void onEnterReleased(MoveFinderState &s);
@@ -12,7 +13,7 @@ void onEnterTapped(MoveFinderState &s);
 
 template <typename T>
 void safeInsert(std::unordered_set<MoveFinderState> &seen, const BitBoard &b, T& q, MoveFinderState state) {
-  if (b.vacant(state.piece_)) {
+  if (b.vacant(state.getPiece(b))) {
     seen.emplace(state);
     q.push({0, state});
   }
@@ -37,6 +38,7 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
   pred_.clear();
   finalMoveToState_.clear();
   std::unordered_set<MoveFinderState> seen;
+  seen.reserve(1e5);
   using PairT = std::pair<int, MoveFinderState>;
   auto cmp = [](const PairT &l, const PairT &r) {
     return l.first >= r.first;
@@ -89,6 +91,7 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
 #else
     const auto [topScore, top] = q.top(); q.pop();
 #endif
+    auto topPiece = top.getPiece(b);
     auto addNxFrame = [&, top=top, topScore=topScore]{
       auto nxFrame = top;
       nxFrame.nextFrame();
@@ -100,9 +103,9 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
 
     auto considerRotate = [&, top=top, topScore=topScore]() {
       for (auto rotateDirection: rotateDirections) {
-        if (top.getRotateCooldown(rotateDirection) == 0 && top.piece_.canRotate(rotateDirection)) {
+        if (top.getRotateCooldown(rotateDirection) == 0 && topPiece.canRotate(rotateDirection)) {
           auto nxRotate = top;
-          nxRotate.piece_ = top.piece_.rotate(rotateDirection);
+          nxRotate.setPiece(topPiece.rotate(rotateDirection));
           nxRotate.setRotateCooldown(1);
           nxRotate.setRotateCooldown(rotateDirection, 2);
           nxRotate.setSidewaysMoveCooldown(1);
@@ -118,9 +121,9 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
       // if drop rem is zero, you MUST move down
       if (top.getDropRem() == 0) {
         if (top.getMoveCooldown(MoveDirection::DOWN) != 0) return true; // cant proceed
-        if (top.piece_.canMove(MoveDirection::DOWN)) {
+        if (topPiece.canMove(MoveDirection::DOWN)) {
           auto nxMovedDown = top;
-          nxMovedDown.piece_ = top.piece_.move(MoveDirection::DOWN);
+          nxMovedDown.setPiece(topPiece.move(MoveDirection::DOWN));
           nxMovedDown.setDropRem(maxDropRem_);
           nxMovedDown.setRotateCooldown(1);
           nxMovedDown.setSidewaysMoveCooldown(1);
@@ -132,7 +135,7 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
           return true;
         } else {
           // a final state
-          const auto &piece = top.piece_;
+          const auto &piece = topPiece;
           if (finalMoveToState_.count(piece) == 0) {
             finalMoveToState_.insert({piece, {top, topScore}});
           } else {
@@ -142,7 +145,7 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
             }
           }
           assert(pred_.count(top) == 1);
-          moves.insert(top.piece_);
+          moves.insert(topPiece);
           return true;
         }
       }
@@ -159,9 +162,9 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
         if (top.getDasRem() == 0) {
           //printf("dasRem_ 0 on frame: %d\n", top.frameEntered_);
           if (top.getMoveCooldown(moveDirection) != 0) continue; // cant proceed
-          if (top.piece_.canMove(moveDirection)) {
+          if (topPiece.canMove(moveDirection)) {
             auto nxMoved = top;
-            nxMoved.piece_ = top.piece_.move(moveDirection);
+            nxMoved.setPiece(topPiece.move(moveDirection));
             nxMoved.setDasRem(MAX_DAS_REM - (nxMoved.frameEntered_ == 2));
             //nxMoved.setRotateCooldown(1);
             auto [ignore, inserted] = seen.emplace(nxMoved);
@@ -192,9 +195,9 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
       case FSMState::RELEASED: {
         for (auto moveDirection: sidewaysMoveDirections) {
           if (top.getMoveCooldown(moveDirection) != 0) continue;
-          if (top.piece_.canMove(moveDirection)) {
+          if (topPiece.canMove(moveDirection)) {
             auto nxTapped = top;
-            nxTapped.piece_ = top.piece_.move(moveDirection);
+            nxTapped.setPiece(topPiece.move(moveDirection));
             nxTapped.setFsmState(FSMState::TAPPED_ONCE);
             //nxTapped.setRotateCooldown(1);
             //nxTapped.moveCooldown_[static_cast<int>(MoveDirection::DOWN)] = 1;
