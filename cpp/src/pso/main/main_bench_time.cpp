@@ -13,11 +13,10 @@ int main(int argc, char ** argv) {
   auto startTime = std::chrono::system_clock::now();
   auto me = getBestMoveEvaluatorBlockLinear150_group(true);
   Config cfg;
-  cfg.startingLines = 0;
-  cfg.numLines = 130;
+  cfg.startingLines = 130;
+  cfg.numLines = 230;
   cfg.numGames = 100;
   cfg.seed = 55;
-  cfg.maxDropRem = 3;
   cfg.print();
   auto score = getEvaluateWeightings<MoveFinderFSM>(me, cfg).runAllPieceSets();
   auto endTime = std::chrono::system_clock::now();

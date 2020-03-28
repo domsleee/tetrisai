@@ -106,8 +106,8 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
           nxRotate.setRotateCooldown(1);
           nxRotate.setRotateCooldown(rotateDirection, 2);
           nxRotate.setSidewaysMoveCooldown(1);
-          if (seen.count(nxRotate)) continue;
-          seen.insert(nxRotate);
+          auto [ignore, inserted] = seen.emplace(nxRotate);
+          if (!inserted) continue;
           addEdge(top, nxRotate, rotateDirection);
           q.push({topScore+1 + SCORE_ROTATED * nxRotate.frameEntered_, nxRotate});
         }
@@ -125,8 +125,8 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
           nxMovedDown.setRotateCooldown(1);
           nxMovedDown.setSidewaysMoveCooldown(1);
           
-          if (seen.count(nxMovedDown)) return true;
-          seen.insert(nxMovedDown);
+          auto [ignore, inserted] = seen.emplace(nxMovedDown);
+          if (!inserted) return true;
           addEdge(top, nxMovedDown, MoveDirection::DOWN);
           q.push({topScore, nxMovedDown});
           return true;
@@ -164,8 +164,8 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
             nxMoved.piece_ = top.piece_.move(moveDirection);
             nxMoved.setDasRem(MAX_DAS_REM - (nxMoved.frameEntered_ == 2));
             //nxMoved.setRotateCooldown(1);
-            if (seen.count(nxMoved)) continue;
-            seen.insert(nxMoved);
+            auto [ignore, inserted] = seen.emplace(nxMoved);
+            if (inserted == false) continue;
             addEdge(top, nxMoved, moveDirection);
             q.push({topScore+1, nxMoved});
             continue;
@@ -179,8 +179,8 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
           nxReleased.setMoveCooldown(moveDirection, 1+1);
           nxReleased.setMoveCooldown(otherMoveDirection, 1); // must come after
           onEnterReleased(nxReleased);
-          if (!seen.count(nxReleased)) {
-            seen.insert(nxReleased);
+          auto [ignore, inserted] = seen.emplace(nxReleased);
+          if (inserted) {
             addEdge(top, nxReleased, Action::NONE);
             q.push({topScore, nxReleased});
           }

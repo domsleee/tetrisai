@@ -14,6 +14,20 @@ struct std::hash<MoveFinderState> {
   std::size_t operator()(const MoveFinderState&) const;
 };
 
+#define FieldForLoop(v) for (auto v = FSMStateFields::IS_LEFT_HOLDING; v < FSMStateFields::LAST; v = static_cast<FSMStateFields::Field>(static_cast<int>(v) + 1))
+namespace FSMStateFields {
+  enum Field {
+    IS_LEFT_HOLDING,
+    DROP_REM,
+    DAS_REM,
+    RELEASE_COOLDOWN,
+    ROTATE_COOLDOWN,
+    MOVE_COOLDOWN,
+    FSM_STATE,
+    LAST
+  };
+};
+
 
 class MoveFinderState {
  public:
@@ -21,82 +35,68 @@ class MoveFinderState {
   int frameEntered_ = 0;
   BitPieceInfo piece_;
 
-  MoveFinderState(const BitPieceInfo &piece, bool isLeftHolding, int maxDropRem):
-    isLeftHolding_(isLeftHolding),
-    piece_(piece),
-    dropRem_(maxDropRem),
-    maxDropRem_(maxDropRem)
-  {}
-
-  int getDasRem() const { return dasRem_; }
-  void setDasRem(int dasRem) { dasRem_ = dasRem; }
-
-  int getDropRem() const { return dropRem_; }
-  void setDropRem(int dropRem) { dropRem_ = dropRem; }
-
- 
-
-  FSMState getFsmState() const { return fsmState_; }
-  void setFsmState(FSMState fsmState) {
-    fsmState_ = fsmState;
+  MoveFinderState(const BitPieceInfo &piece, bool isLeftHolding, int dropRem):
+    piece_(piece)
+  {
+    setIsLeftHolding(isLeftHolding);
+    setDropRem(dropRem);
+    setDasRem(1);
+    setFsmState(FSMState::HOLDING);
   }
+
+  std::string getBinRep() const { return binRep(counterRep_); }
+
+  int getDasRem() const { return getField(FSMStateFields::DAS_REM); }
+  void setDasRem(int dasRem) { setField(FSMStateFields::DAS_REM, dasRem); }
+
+  int getDropRem() const { return getField(FSMStateFields::DROP_REM); }
+  void setDropRem(int dropRem) { setField(FSMStateFields::DROP_REM, dropRem); }
+
+  FSMState getFsmState() const { return static_cast<FSMState>(getField(FSMStateFields::FSM_STATE)); }
+  void setFsmState(FSMState fsmState) { setField(FSMStateFields::FSM_STATE, fsmState); }
   
-  bool getIsLeftHolding() const { return isLeftHolding_; }
-  void setIsLeftHolding(bool isLeftHolding) { isLeftHolding_ = isLeftHolding; }
+  bool getIsLeftHolding() const { return getField(FSMStateFields::IS_LEFT_HOLDING); }
+  void setIsLeftHolding(bool isLeftHolding) { setField(FSMStateFields::IS_LEFT_HOLDING, isLeftHolding); }
 
   // counters
-  int getReleaseCooldown() const { return releaseCooldown_; }
-  void setReleaseCooldown(int cooldown) {
-    releaseCooldown_ = std::max(releaseCooldown_, cooldown);
-  }
+  int getReleaseCooldown() const { return getField(FSMStateFields::RELEASE_COOLDOWN); }
+  void setReleaseCooldown(int cooldown) { setField(FSMStateFields::RELEASE_COOLDOWN, cooldown); }
 
-  int getRotateCooldown(RotateDirection rd) const { return rotateCooldown_[static_cast<int>(rd)]; }
+  int getRotateCooldown(RotateDirection rd) const { return getField(FSMStateFields::ROTATE_COOLDOWN, rd);}
   void setRotateCooldown(int cooldown) {
     for (auto rd: allRotateDirections) setRotateCooldown(rd, cooldown);
   }
-  void setRotateCooldown(RotateDirection rd, int cooldown) {
-    rotateCooldown_[static_cast<int>(rd)] = std::max(rotateCooldown_[static_cast<int>(rd)], cooldown);
-  }
+  void setRotateCooldown(RotateDirection rd, int cooldown) { setField(FSMStateFields::ROTATE_COOLDOWN, rd, cooldown); }
 
-  int getMoveCooldown(MoveDirection md) const { return moveCooldown_[static_cast<int>(md)]; }
-  void setMoveCooldown(MoveDirection md, int cooldown) { moveCooldown_[static_cast<int>(md)] = cooldown; }
+  int getMoveCooldown(MoveDirection md) const { return getField(FSMStateFields::MOVE_COOLDOWN, md); }
+  void setMoveCooldown(MoveDirection md, int cooldown) { setField(FSMStateFields::MOVE_COOLDOWN, md, cooldown); }
   void setMoveCooldown(int cooldown) {
     for (auto md: cooldownMoveDirections) setMoveCooldown(md, cooldown);
   }
 
   void setSidewaysMoveCooldown(int cooldown) {
-    static const int left = static_cast<int>(MoveDirection::LEFT);
-    static const int right = static_cast<int>(MoveDirection::RIGHT);
-    moveCooldown_[left] = std::max(moveCooldown_[left], cooldown);
-    moveCooldown_[right] = std::max(moveCooldown_[right], cooldown);
+    for (auto md: sidewaysMoveDirections) {
+      setMoveCooldown(md, std::max(getMoveCooldown(md), cooldown));
+    }
   }
 
   void nextFrame() {
     frameEntered_++;
-    dasRem_ = std::max(dasRem_-1, 0);
-    dropRem_ = std::max(dropRem_-1, 0);
-    for (int i = 0; i < NUM_MOVE_COOLDOWNS; ++i) {
-      moveCooldown_[i] = std::max(moveCooldown_[i]-1, 0);
+    setDasRem(std::max(getDasRem()-1, 0));
+    setDropRem(std::max(getDropRem()-1, 0));
+    for (auto md: validMoveDirections) {
+      setMoveCooldown(md, std::max(getMoveCooldown(md)-1, 0));
     }
-    for (int i = 0; i < NUM_ROTATE_COOLDOWNS; ++i) {
-      rotateCooldown_[i] = std::max(rotateCooldown_[i]-1, 0);
+    for (auto rd: allRotateDirections) {
+      setRotateCooldown(rd, std::max(getRotateCooldown(rd)-1, 0));
     }
-    releaseCooldown_ = std::max(releaseCooldown_-1, 0);
+    setReleaseCooldown(std::max(getReleaseCooldown()-1, 0));
   }
 
   friend bool operator==(const MoveFinderState &s1, const MoveFinderState &s2) {
-    return s1.fsmState_ == s2.fsmState_
-    && s1.isLeftHolding_ == s2.isLeftHolding_
-    && s1.piece_ == s2.piece_
-    && s1.rotateCooldown_[0] == s2.rotateCooldown_[0]
-    && s1.rotateCooldown_[1] == s2.rotateCooldown_[1]
-    && s1.moveCooldown_[0] == s2.moveCooldown_[0]
-    && s1.moveCooldown_[1] == s2.moveCooldown_[1]
-    && s1.moveCooldown_[2] == s2.moveCooldown_[2]
-    && s1.releaseCooldown_ == s2.releaseCooldown_
-    && s1.dropRem_ == s2.dropRem_
-    && s1.dasRem_ == s2.dasRem_
-    && s1.frameEntered_ == s2.frameEntered_; // you may not need this, however im leaving it in
+    return s1.piece_ == s2.piece_
+    && s1.frameEntered_ == s2.frameEntered_ // you may not need this, however im leaving it in
+    && s1.counterRep_ == s2.counterRep_;
   }
 
   friend std::size_t std::hash<MoveFinderState>::operator()(const MoveFinderState&) const;
@@ -105,13 +105,92 @@ class MoveFinderState {
   static const int NUM_MOVE_COOLDOWNS = static_cast<int>(cooldownMoveDirections.size());
   static const int NUM_ROTATE_COOLDOWNS = 2;
 
-  FSMState fsmState_ = FSMState::HOLDING;
-  bool isLeftHolding_;
+  std::string binRep(uint32_t v) const {
+    std::string res = "";
+    for (int i = 31; i >= 0; --i) res += (v & (1 << i) ? "1" : "0");
+    return res;
+  }
 
-  int rotateCooldown_[NUM_ROTATE_COOLDOWNS] = {0, 0};
-  int releaseCooldown_ = 0;
-  int moveCooldown_[NUM_MOVE_COOLDOWNS] = {0, 0, 0};
-  int dropRem_;
-  int maxDropRem_;
-  int dasRem_ = 1; // on zero, can use das (indicated by FSMState::HOLDING)
+  inline int getField(FSMStateFields::Field field, int offIndex) const {
+    assert(0 <= offIndex && offIndex < getFieldSize(field) / 2);
+    int offset = offIndex * 2;
+    int mask = 0b11 << offset;
+    return (getField(field) & mask) >> offset;
+  }
+
+  inline int getField(FSMStateFields::Field field) const {
+    //printf("counterRep_: %s\n", binRep(counterRep_).c_str());
+    return (counterRep_ & getMask(field)) >> getOffset(field);
+  }
+
+  inline void setField(FSMStateFields::Field field, int val) {
+    //printf("BEF counterRep_: %s\n", binRep(counterRep_).c_str());
+    assert(0 <= val && val <= getMaxFromField(field));
+    //printf("val: %d, offset: %d\n", val, getOffset(field));
+    counterRep_ = (counterRep_ & ~getMask(field)) | (val << getOffset(field));
+    //printf("AFT counterRep_: %s\n", binRep(counterRep_).c_str());
+  }
+
+  inline void setField(FSMStateFields::Field field, int offIndex, int val) {
+    assert(0 <= offIndex && offIndex < getFieldSize(field) / 2);
+    int offset = offIndex * 2;
+    int v = getField(field);
+    int mask = 0b11 << offset;
+    v = (v & (~mask)) + (val << offset);
+    setField(field, v);
+  }
+
+  static constexpr int getFieldSize(FSMStateFields::Field field) {
+    switch(field) {
+      case FSMStateFields::IS_LEFT_HOLDING: return 1;
+      case FSMStateFields::DAS_REM: return 3;
+      case FSMStateFields::DROP_REM: return 4;
+      case FSMStateFields::RELEASE_COOLDOWN: return 2;
+      case FSMStateFields::ROTATE_COOLDOWN: return 2*2;
+      case FSMStateFields::MOVE_COOLDOWN: return 3*2;
+      case FSMStateFields::FSM_STATE: return 2;
+      case FSMStateFields::LAST: constAssert(false);
+    }
+    throw std::runtime_error("fail");
+  }
+  static constexpr int getMaxFromField(FSMStateFields::Field field) {
+    return getMaxFromFieldSize(getFieldSize(field));
+  }
+  static constexpr int getMaxFromFieldSize(int size) {
+    return (1 << size) - 1; 
+  }
+  static constexpr auto constAssert(bool n) -> void {  
+    !n ? throw std::runtime_error("") : 0;
+  }
+
+  static constexpr int getOffset(FSMStateFields::Field field) noexcept {
+    int ct = 0;
+    FieldForLoop(f) {
+      int fSize = getFieldSize(f);
+      if (f == field) {
+        return ct;
+      }
+      ct += fSize;
+    }
+    constAssert(false);
+    return 0;
+  }
+
+  static constexpr int getMask(FSMStateFields::Field field) noexcept {
+    int offset = getOffset(field);
+    int r = offset + getFieldSize(field);
+    // [offset, r)
+    int ret = 0;
+    constAssert(r <= 31);
+    for (int l = offset; l < r; ++l) {
+      ret |= 1 << l;
+    }
+    return ret;
+  }
+
+  uint32_t counterRep_ = 0;
+
+  // on zero, can use das (indicated by FSMState::HOLDING)
+  // total: 28 bits
+
 };
