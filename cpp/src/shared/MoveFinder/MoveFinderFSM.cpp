@@ -112,9 +112,7 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
   }
 
   auto rotateDirections = getRotateDirections(b.getPiece(blockType));
-
   while (!bfsInfo.qEmpty()) {
-
     const auto [topScore, top] = bfsInfo.qTop();
     bfsInfo.qPop();
     TopInfo topInfo(topScore, top, b);
