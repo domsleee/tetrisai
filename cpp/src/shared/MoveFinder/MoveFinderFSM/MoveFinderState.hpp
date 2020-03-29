@@ -53,18 +53,30 @@ class MoveFinderState {
 
   int getAllRotateCooldowns() const { return counterVars_.getField<FSMStateFields::ROTATE_COOLDOWN>(); }
   int getRotateCooldown(RotateDirection rd) const { return counterVars_.getField<FSMStateFields::ROTATE_COOLDOWN>(rd);}
-  void setRotateCooldown(int cooldown) {
-    counterVars_.setFieldGroup<2, FSMStateFields::ROTATE_COOLDOWN>(cooldown);
+  void setRotateCooldown(RotateDirection rd, int cooldown) {
+    assert(cooldown >= getRotateCooldown(rd));
+    counterVars_.setField<FSMStateFields::ROTATE_COOLDOWN>(rd, cooldown);
   }
-  void setRotateCooldown(RotateDirection rd, int cooldown) { counterVars_.setField<FSMStateFields::ROTATE_COOLDOWN>(rd, cooldown); }
+  void decRotateCooldown(RotateDirection rd) {
+    counterVars_.setField<FSMStateFields::ROTATE_COOLDOWN>(rd, std::max(getRotateCooldown(rd)-1, 0));
+  }
+
+  void setRotateCooldown(int cooldown) {
+    for (auto rd: allRotateDirections) {
+      setRotateCooldown(rd, std::max(getRotateCooldown(rd), cooldown));
+    }
+    // counterVars_.setFieldGroup<2, FSMStateFields::ROTATE_COOLDOWN>(cooldown);
+  }
 
   int getAllMoveCooldowns() const { return counterVars_.getField<FSMStateFields::MOVE_COOLDOWN>(); }
   int getMoveCooldown(MoveDirection md) const { return counterVars_.getField<FSMStateFields::MOVE_COOLDOWN>(md); }
-  void setMoveCooldown(MoveDirection md, int cooldown) { counterVars_.setField<FSMStateFields::MOVE_COOLDOWN>(md, cooldown); }
-  void setMoveCooldown(int cooldown) {
-    counterVars_.setFieldGroup<3, FSMStateFields::MOVE_COOLDOWN>(cooldown);
+  void setMoveCooldown(MoveDirection md, int cooldown, bool skipAssert=false) {
+    assert(skipAssert || cooldown >= getMoveCooldown(md));
+    counterVars_.setField<FSMStateFields::MOVE_COOLDOWN>(md, cooldown);
   }
-
+  void decMoveCooldown(MoveDirection md) {
+    counterVars_.setField<FSMStateFields::MOVE_COOLDOWN>(md, std::max(getMoveCooldown(md)-1, 0));
+  }
   void setSidewaysMoveCooldown(int cooldown) {
     for (auto md: sidewaysMoveDirections) {
       setMoveCooldown(md, std::max(getMoveCooldown(md), cooldown));
@@ -76,10 +88,10 @@ class MoveFinderState {
     setDasRem(std::max(getDasRem()-1, 0));
     setDropRem(std::max(getDropRem()-1, 0));
     for (auto md: validMoveDirections) {
-      setMoveCooldown(md, std::max(getMoveCooldown(md)-1, 0));
+      decMoveCooldown(md);
     }
     for (auto rd: allRotateDirections) {
-      setRotateCooldown(rd, std::max(getRotateCooldown(rd)-1, 0));
+      decRotateCooldown(rd);
     }
     setReleaseCooldown(std::max(getReleaseCooldown()-1, 0));
   }

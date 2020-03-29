@@ -23,13 +23,13 @@ SCENARIO("fields work properly") {
   AND_GIVEN("multi-layer values") {
     auto v1 = GENERATE(0, 1, 2);
     auto v2 = GENERATE(0, 1, 2);
-    st.setMoveCooldown(MoveDirection::LEFT, v1);
-    st.setMoveCooldown(MoveDirection::RIGHT, v2);
+    st.setMoveCooldown(MoveDirection::LEFT, v1, true);
+    st.setMoveCooldown(MoveDirection::RIGHT, v2, true);
   
     REQUIRE(v1 == st.getMoveCooldown(MoveDirection::LEFT));
     REQUIRE(v2 == st.getMoveCooldown(MoveDirection::RIGHT));
-    st.setMoveCooldown(MoveDirection::RIGHT, v1);
-    st.setMoveCooldown(MoveDirection::LEFT, v2);
+    st.setMoveCooldown(MoveDirection::RIGHT, v1, true);
+    st.setMoveCooldown(MoveDirection::LEFT, v2, true);
     REQUIRE(v1 == st.getMoveCooldown(MoveDirection::RIGHT));
     REQUIRE(v2 == st.getMoveCooldown(MoveDirection::LEFT));
   }

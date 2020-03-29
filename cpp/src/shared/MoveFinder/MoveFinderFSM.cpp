@@ -12,6 +12,8 @@ void onEnterReleased(MoveFinderState &s);
 void onEnterTapped(MoveFinderState &s);
 
 
+using ReleasedSeenT = std::bitset<64>; // 2^(4+2)
+
 struct BfsInfo {
   BfsInfo(const std::vector<RotateDirection> &rds): rotateDirections{rds} {
     seen.reserve(2e5);
@@ -19,7 +21,7 @@ struct BfsInfo {
   std::vector<RotateDirection> rotateDirections;
   FSMTypes::SeenT seen;
   std::queue<FSMTypes::PairT> releasedQ;
-  std::vector<std::bitset<64>> releasedSeen = decltype(releasedSeen)(BitBoardPre::NUM_INDEXES);
+  std::vector<ReleasedSeenT> releasedSeen = decltype(releasedSeen)(BitBoardPre::NUM_INDEXES);
   std::vector<std::vector<bool>> tappedSeen = decltype(tappedSeen)(BitBoardPre::NUM_INDEXES, std::vector<bool>(5, false));
   FSMTypes::MovesT moves = FSMTypes::MovesT(BitBoardPre::NUM_INDEXES, false);
   FSMTypes::PairT qTop() {
@@ -160,7 +162,7 @@ std::vector<bool>::reference tappedSeenPtr(const TopInfo &topInfo, BfsInfo& bfsI
     int v = std::min(topInfo.top.getRotateCooldown(RotateDirection::ROTATE_AC), topInfo.top.getRotateCooldown(RotateDirection::ROTATE_C));
     return bfsInfo.tappedSeen[topInfo.top.getPieceId()].at(v);
   } else {
-    int v = std::min(topInfo.top.getRotateCooldown(RotateDirection::ROTATE_AC), topInfo.top.getRotateCooldown(RotateDirection::ROTATE_C));
+    int v = std::max(topInfo.top.getRotateCooldown(RotateDirection::ROTATE_AC), topInfo.top.getRotateCooldown(RotateDirection::ROTATE_C));
     return bfsInfo.tappedSeen[topInfo.top.getPieceId()].at(v+2);
   }
   throw std::runtime_error("what");
@@ -205,8 +207,19 @@ void MoveFinderFSM::runHolding(const TopInfo &topInfo, BfsInfo &bfsInfo) {
   addNxFrame(topInfo, bfsInfo);
 }
 
+int getRotRep(const TopInfo &topInfo, BfsInfo &bfsInfo) {
+  if (bfsInfo.rotateDirections.size() == 0) return 0;
+  else if (bfsInfo.rotateDirections.size() == 1) return std::min(topInfo.top.getRotateCooldown(RotateDirection::ROTATE_C), topInfo.top.getRotateCooldown(RotateDirection::ROTATE_AC));
+  else return topInfo.top.getAllRotateCooldowns();
+  throw std::runtime_error("what");
+}
+
+ReleasedSeenT::reference getReleasedSeenRef(const TopInfo &topInfo, BfsInfo &bfsInfo) {
+  return bfsInfo.releasedSeen[topInfo.topPiece.getId()][topInfo.top.getAllMoveCooldowns() + (getRotRep(topInfo, bfsInfo) << 4)];
+}
+
 void MoveFinderFSM::runReleased(const TopInfo &topInfo, BfsInfo &bfsInfo) {
-  int dropRem = topInfo.top.getDropRem();
+  const int dropRem = topInfo.top.getDropRem();
   if (topInfo.topPiece.getBlockType() == BlockType::O_PIECE && dropRem > 0) {
     addNxFrame(topInfo, bfsInfo, topInfo.top.getDropRem());
     return;
@@ -216,17 +229,17 @@ void MoveFinderFSM::runReleased(const TopInfo &topInfo, BfsInfo &bfsInfo) {
     return;
   }*/
 
-  if (topInfo.topPiece.getBlockType() == BlockType::O_PIECE) {
-    std::bitset<64>::reference v = bfsInfo.releasedSeen[topInfo.topPiece.getId()][topInfo.top.getAllMoveCooldowns()];
-    if (v) return;
-    v = 1;
-  }
+  auto v = getReleasedSeenRef(topInfo, bfsInfo);
+  if (v) return;
+  if (dropRem == 0) v = 1;
 
   tappedSeenPtr(topInfo, bfsInfo) = true;
 
-  if (topInfo.top.getDropRem() == 0) {
+  if (dropRem == 0) {
     for (auto moveDirection: sidewaysMoveDirections) {
       if (topInfo.top.getMoveCooldown(moveDirection) != 0) continue;
+      auto otherMd = moveDirection == MoveDirection::LEFT ? MoveDirection::RIGHT : MoveDirection::LEFT;
+      if (topInfo.top.getMoveCooldown(otherMd) == 2) continue;
       if (topInfo.topPiece.canMove(moveDirection)) {
         auto nxTapped = topInfo.top;
         nxTapped.setPiece(topInfo.topPiece.move(moveDirection));
@@ -241,8 +254,8 @@ void MoveFinderFSM::runReleased(const TopInfo &topInfo, BfsInfo &bfsInfo) {
       }
     }
   }
-  
-  considerRotate(topInfo, bfsInfo);
+  static std::array rotateRestrictions = {0, 1, 3};
+  considerRotate(topInfo, bfsInfo, rotateRestrictions[bfsInfo.rotateDirections.size()]);
   if (considerMovingDown(topInfo, bfsInfo)) return;
   addNxFrame(topInfo, bfsInfo);
 }
@@ -281,15 +294,17 @@ void MoveFinderFSM::addNxFrame(const TopInfo& topInfo, BfsInfo& bfsInfo, int fra
   bfsInfo.qPush({topInfo.topScore, nxFrame});
 }
 
-void MoveFinderFSM::considerRotate(const TopInfo& topInfo, BfsInfo& bfsInfo) {
+void MoveFinderFSM::considerRotate(const TopInfo& topInfo, BfsInfo& bfsInfo, int rotateRestrictionDropRem) {
+  if (topInfo.top.getDropRem() > rotateRestrictionDropRem) return;
   for (auto rotateDirection: bfsInfo.rotateDirections) {
+    auto otherRd = rotateDirection == RotateDirection::ROTATE_C ? RotateDirection::ROTATE_AC : RotateDirection::ROTATE_C;
+    if (topInfo.top.getRotateCooldown(otherRd) == 2) continue;
     if (topInfo.top.getRotateCooldown(rotateDirection) == 0 && topInfo.topPiece.canRotate(rotateDirection)) {
-      //auto otherRd = rotateDirection == RotateDirection::ROTATE_C ? RotateDirection::ROTATE_AC : RotateDirection::ROTATE_C;
-      //if (topInfo.top.getRotateCooldown(otherRd) == 2) continue;
-
       auto nxRotate = topInfo.top;
       nxRotate.setPiece(topInfo.topPiece.rotate(rotateDirection));
-      nxRotate.setRotateCooldown(1);
+      assert(nxRotate.getRotateCooldown(otherRd) <= 1);
+
+      nxRotate.setRotateCooldown(otherRd, 1); // implcitly set to 1
       nxRotate.setRotateCooldown(rotateDirection, 2);
       nxRotate.setSidewaysMoveCooldown(1);
       auto [ignore, inserted] = bfsInfo.seen.emplace(nxRotate);
@@ -304,7 +319,6 @@ void MoveFinderFSM::considerRotate(const TopInfo& topInfo, BfsInfo& bfsInfo) {
 bool MoveFinderFSM::considerMovingDown(const TopInfo& topInfo, BfsInfo& bfsInfo) {
   // if drop rem is zero, you MUST move down
   if (topInfo.top.getDropRem() == 0) {
-    if (topInfo.top.getMoveCooldown(MoveDirection::DOWN) != 0) return true; // cant proceed
     if (topInfo.topPiece.canMove(MoveDirection::DOWN)) {
       auto nxMovedDown = topInfo.top;
       nxMovedDown.setPiece(topInfo.topPiece.move(MoveDirection::DOWN));

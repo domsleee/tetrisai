@@ -65,6 +65,9 @@ class MoveFinderFSM {
   void addNxFrame(const TopInfo&, BfsInfo&);
   void addNxFrame(const TopInfo& topInfo, BfsInfo& bfsInfo, int frames);
   void addNxFrameIntoReleaseQ(const TopInfo& topInfo, BfsInfo& bfsInfo, int frames=1);
-  void considerRotate(const TopInfo& topInfo, BfsInfo& bfsInfo);
+  void considerRotate(const TopInfo& topInfo, BfsInfo& bfsInfo) {
+    return considerRotate(topInfo, bfsInfo, maxDropRem_ + 1);
+  }
+  void considerRotate(const TopInfo& topInfo, BfsInfo& bfsInfo, int rotateRestrictionDropRem);
   bool considerMovingDown(const TopInfo&, BfsInfo&);
 };
