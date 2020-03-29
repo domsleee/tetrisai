@@ -35,35 +35,34 @@ class MoveFinderState {
   int getPieceId() const { return pieceId_; }
   void setPiece(const BitPieceInfo &p) { pieceId_ = p.getId(); }
 
-  int getDasRem() const { return counterVars_.getField(FSMStateFields::DAS_REM); }
-  void setDasRem(int dasRem) { counterVars_.setField(FSMStateFields::DAS_REM, dasRem); }
+  int getDasRem() const { return counterVars_.getField<FSMStateFields::DAS_REM>(); }
+  void setDasRem(int dasRem) { counterVars_.setField<FSMStateFields::DAS_REM>(dasRem); }
 
-  int getDropRem() const { return counterVars_.getField(FSMStateFields::DROP_REM); }
-  void setDropRem(int dropRem) { counterVars_.setField(FSMStateFields::DROP_REM, dropRem); }
+  int getDropRem() const { return counterVars_.getField<FSMStateFields::DROP_REM>(); }
+  void setDropRem(int dropRem) { counterVars_.setField<FSMStateFields::DROP_REM>(dropRem); }
 
-  FSMState getFsmState() const { return static_cast<FSMState>(counterVars_.getField(FSMStateFields::FSM_STATE)); }
-  void setFsmState(FSMState fsmState) { counterVars_.setField(FSMStateFields::FSM_STATE, fsmState); }
+  FSMState getFsmState() const { return static_cast<FSMState>(counterVars_.getField<FSMStateFields::FSM_STATE>()); }
+  void setFsmState(FSMState fsmState) { counterVars_.setField<FSMStateFields::FSM_STATE>(fsmState); }
   
-  bool getIsLeftHolding() const { return counterVars_.getField(FSMStateFields::IS_LEFT_HOLDING); }
-  void setIsLeftHolding(bool isLeftHolding) { counterVars_.setField(FSMStateFields::IS_LEFT_HOLDING, isLeftHolding); }
+  bool getIsLeftHolding() const { return counterVars_.getField<FSMStateFields::IS_LEFT_HOLDING>(); }
+  void setIsLeftHolding(bool isLeftHolding) { counterVars_.setField<FSMStateFields::IS_LEFT_HOLDING>(isLeftHolding); }
 
   // counters
-  int getReleaseCooldown() const { return counterVars_.getField(FSMStateFields::RELEASE_COOLDOWN); }
-  void setReleaseCooldown(int cooldown) { counterVars_.setField(FSMStateFields::RELEASE_COOLDOWN, cooldown); }
+  int getReleaseCooldown() const { return counterVars_.getField<FSMStateFields::RELEASE_COOLDOWN>(); }
+  void setReleaseCooldown(int cooldown) { counterVars_.setField<FSMStateFields::RELEASE_COOLDOWN>(cooldown); }
 
-  int getAllRotateCooldowns() const { return counterVars_.getField(FSMStateFields::ROTATE_COOLDOWN); }
-  int getRotateCooldown(RotateDirection rd) const { return counterVars_.getField(FSMStateFields::ROTATE_COOLDOWN, rd);}
+  int getAllRotateCooldowns() const { return counterVars_.getField<FSMStateFields::ROTATE_COOLDOWN>(); }
+  int getRotateCooldown(RotateDirection rd) const { return counterVars_.getField<FSMStateFields::ROTATE_COOLDOWN>(rd);}
   void setRotateCooldown(int cooldown) {
-    counterVars_.setFieldGroup<2>(FSMStateFields::ROTATE_COOLDOWN, cooldown);
+    counterVars_.setFieldGroup<2, FSMStateFields::ROTATE_COOLDOWN>(cooldown);
   }
-  void setRotateCooldown(RotateDirection rd, int cooldown) { counterVars_.setField(FSMStateFields::ROTATE_COOLDOWN, rd, cooldown); }
+  void setRotateCooldown(RotateDirection rd, int cooldown) { counterVars_.setField<FSMStateFields::ROTATE_COOLDOWN>(rd, cooldown); }
 
-  int getAllMoveCooldowns() const { return counterVars_.getField(FSMStateFields::MOVE_COOLDOWN); }
-  int getMoveCooldown(MoveDirection md) const { return counterVars_.getField(FSMStateFields::MOVE_COOLDOWN, md); }
-  void setMoveCooldown(MoveDirection md, int cooldown) { counterVars_.setField(FSMStateFields::MOVE_COOLDOWN, md, cooldown); }
+  int getAllMoveCooldowns() const { return counterVars_.getField<FSMStateFields::MOVE_COOLDOWN>(); }
+  int getMoveCooldown(MoveDirection md) const { return counterVars_.getField<FSMStateFields::MOVE_COOLDOWN>(md); }
+  void setMoveCooldown(MoveDirection md, int cooldown) { counterVars_.setField<FSMStateFields::MOVE_COOLDOWN>(md, cooldown); }
   void setMoveCooldown(int cooldown) {
-    // todo: movefinder down isnt used
-    counterVars_.setFieldGroup<3>(FSMStateFields::MOVE_COOLDOWN, cooldown);
+    counterVars_.setFieldGroup<3, FSMStateFields::MOVE_COOLDOWN>(cooldown);
   }
 
   void setSidewaysMoveCooldown(int cooldown) {

@@ -37,19 +37,22 @@ class CounterBitsetRep {
  public:
   uint32_t getCounterRep() const { return counterRep_; }
 
-  int getField(FSMStateFields::Field field, int offIndex) const {
+  template<FSMStateFields::Field field>
+  int getField(int offIndex) const {
     assert(0 <= offIndex && offIndex < getFieldSize(field) / 2);
     int offset = offIndex * 2;
     int mask = 0b11 << offset;
-    return (getField(field) & mask) >> offset;
+    return (getField<field>() & mask) >> offset;
   }
 
-  int getField(FSMStateFields::Field field) const {
+  template<FSMStateFields::Field field>
+  int getField() const {
     //printf("counterRep_: %s\n", binRep(counterRep_).c_str());
     return (counterRep_ & getMask(field)) >> getOffset(field);
   }
 
-  void setField(FSMStateFields::Field field, int val) {
+  template<FSMStateFields::Field field>
+  void setField(int val) {
     //printf("BEF counterRep_: %s\n", binRep(counterRep_).c_str());
     assert(0 <= val && val <= getMaxFromField(field));
     //printf("val: %d, offset: %d\n", val, getOffset(field));
@@ -57,18 +60,19 @@ class CounterBitsetRep {
     //printf("AFT counterRep_: %s\n", binRep(counterRep_).c_str());
   }
 
-  template<int N>
-  void setFieldGroup(FSMStateFields::Field field, int val) {
-    setField(field, CooldownGroupLookup<N>::val(val));
-  }
-
-  inline void setField(FSMStateFields::Field field, int offIndex, int val) {
+  template<FSMStateFields::Field field>
+  inline void setField(int offIndex, int val) {
     assert(0 <= offIndex && offIndex < getFieldSize(field) / 2);
     int offset = offIndex * 2;
-    int v = getField(field);
+    int v = getField<field>();
     int mask = 0b11 << offset;
     v = (v & (~mask)) + (val << offset);
-    setField(field, v);
+    setField<field>(v);
+  }
+
+  template<int N, FSMStateFields::Field field>
+  void setFieldGroup(int val) {
+    setField<field>(CooldownGroupLookup<N>::val(val));
   }
 
   static constexpr int getFieldSize(FSMStateFields::Field field) {
