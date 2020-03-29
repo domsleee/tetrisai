@@ -16,6 +16,23 @@ namespace FSMStateFields {
   };
 };
 
+template<int N>
+struct CooldownGroupLookup {
+  static int val(int cooldown) {
+    switch(cooldown) {
+      case 0: return ct(0);
+      case 1: return ct(1);
+      case 2: return ct(2);
+    }
+    throw std::runtime_error("unknown cooldown");
+  }
+  static constexpr int ct(int v) {
+    int ret = 0;
+    for (int i = 0; i < N; ++i) ret |= (v << (2*i));
+    return ret;
+  }
+};
+
 class CounterBitsetRep {
  public:
   uint32_t getCounterRep() const { return counterRep_; }
@@ -38,6 +55,11 @@ class CounterBitsetRep {
     //printf("val: %d, offset: %d\n", val, getOffset(field));
     counterRep_ = (counterRep_ & ~getMask(field)) | (val << getOffset(field));
     //printf("AFT counterRep_: %s\n", binRep(counterRep_).c_str());
+  }
+
+  template<int N>
+  void setFieldGroup(FSMStateFields::Field field, int val) {
+    setField(field, CooldownGroupLookup<N>::val(val));
   }
 
   inline void setField(FSMStateFields::Field field, int offIndex, int val) {
@@ -95,6 +117,10 @@ class CounterBitsetRep {
       ret |= 1 << l;
     }
     return ret;
+  }
+
+  friend bool operator==(const CounterBitsetRep &lhs, const CounterBitsetRep &rhs) {
+    return lhs.counterRep_ == rhs.counterRep_;
   }
 
  private:

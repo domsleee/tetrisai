@@ -15,7 +15,6 @@ struct std::hash<MoveFinderState> {
   std::size_t operator()(const MoveFinderState&) const;
 };
 
-
 class MoveFinderState {
  public:
   // extra info for pathfinding
@@ -55,14 +54,16 @@ class MoveFinderState {
   int getAllRotateCooldowns() const { return counterVars_.getField(FSMStateFields::ROTATE_COOLDOWN); }
   int getRotateCooldown(RotateDirection rd) const { return counterVars_.getField(FSMStateFields::ROTATE_COOLDOWN, rd);}
   void setRotateCooldown(int cooldown) {
-    for (auto rd: allRotateDirections) setRotateCooldown(rd, cooldown);
+    counterVars_.setFieldGroup<2>(FSMStateFields::ROTATE_COOLDOWN, cooldown);
   }
   void setRotateCooldown(RotateDirection rd, int cooldown) { counterVars_.setField(FSMStateFields::ROTATE_COOLDOWN, rd, cooldown); }
 
+  int getAllMoveCooldowns() const { return counterVars_.getField(FSMStateFields::MOVE_COOLDOWN); }
   int getMoveCooldown(MoveDirection md) const { return counterVars_.getField(FSMStateFields::MOVE_COOLDOWN, md); }
   void setMoveCooldown(MoveDirection md, int cooldown) { counterVars_.setField(FSMStateFields::MOVE_COOLDOWN, md, cooldown); }
   void setMoveCooldown(int cooldown) {
-    for (auto md: cooldownMoveDirections) setMoveCooldown(md, cooldown);
+    // todo: movefinder down isnt used
+    counterVars_.setFieldGroup<3>(FSMStateFields::MOVE_COOLDOWN, cooldown);
   }
 
   void setSidewaysMoveCooldown(int cooldown) {
