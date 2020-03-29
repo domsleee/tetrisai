@@ -19,8 +19,8 @@ struct BfsInfo {
   std::vector<RotateDirection> rotateDirections;
   FSMTypes::SeenT seen;
   std::queue<FSMTypes::PairT> releasedQ;
-  //std::vector<std::vector<bool>> releasedSeen = std::vector<std::vector<bool>>(BitBoardPre::NUM_INDEXES, std::vector<bool>(11, false));
-  std::vector<std::vector<bool>> tappedSeen = std::vector<std::vector<bool>>(BitBoardPre::NUM_INDEXES, std::vector<bool>(5, false));
+  std::vector<std::bitset<64>> releasedSeen = decltype(releasedSeen)(BitBoardPre::NUM_INDEXES);
+  std::vector<std::vector<bool>> tappedSeen = decltype(tappedSeen)(BitBoardPre::NUM_INDEXES, std::vector<bool>(5, false));
   FSMTypes::MovesT moves = FSMTypes::MovesT(BitBoardPre::NUM_INDEXES, false);
   FSMTypes::PairT qTop() {
 #if MOVE_FINDER_FSM_PERFORMANCE == 1
@@ -207,18 +207,20 @@ void MoveFinderFSM::runHolding(const TopInfo &topInfo, BfsInfo &bfsInfo) {
 
 void MoveFinderFSM::runReleased(const TopInfo &topInfo, BfsInfo &bfsInfo) {
   int dropRem = topInfo.top.getDropRem();
-  /*if (topInfo.topPiece.getBlockType() == BlockType::O_PIECE && dropRem > 0) {
+  if (topInfo.topPiece.getBlockType() == BlockType::O_PIECE && dropRem > 0) {
     addNxFrame(topInfo, bfsInfo, topInfo.top.getDropRem());
     return;
-  } else if (bfsInfo.rotateDirections.size() <= 1 && dropRem > 1) {
+  }
+  /*else if (bfsInfo.rotateDirections.size() <= 1 && dropRem > 1) {
     addNxFrame(topInfo, bfsInfo, dropRem-1);
     return;
   }*/
 
-  /*if (topInfo.topPiece.getBlockType() == BlockType::O_PIECE) {
-    if (bfsInfo.releasedSeen[topInfo.topPiece.getId()][topInfo.top.getAllMoveCooldowns()]) return;
-    bfsInfo.releasedSeen[topInfo.topPiece.getId()][topInfo.top.getAllMoveCooldowns()] = true;
-  }*/
+  if (topInfo.topPiece.getBlockType() == BlockType::O_PIECE) {
+    std::bitset<64>::reference v = bfsInfo.releasedSeen[topInfo.topPiece.getId()][topInfo.top.getAllMoveCooldowns()];
+    if (v) return;
+    v = 1;
+  }
 
   tappedSeenPtr(topInfo, bfsInfo) = true;
 
@@ -252,7 +254,7 @@ void MoveFinderFSM::runTapped(const TopInfo &topInfo, BfsInfo &bfsInfo) {
   }
 
   if (tappedSeenPtr(topInfo, bfsInfo)) return;
-  if (bfsInfo.rotateDirections.size() <= 1) tappedSeenPtr(topInfo, bfsInfo) = true;
+  if (bfsInfo.rotateDirections.size() <= 1 || topInfo.top.getDropRem() == 0) tappedSeenPtr(topInfo, bfsInfo) = true;
 
   // nothing to do here, lol.
   considerRotate(topInfo, bfsInfo);
