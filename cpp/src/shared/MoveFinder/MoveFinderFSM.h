@@ -55,7 +55,10 @@ class MoveFinderFSM {
   std::vector<std::pair<int, Action>> getShortestPathActions(const BitPieceInfo &piece) const;
   void setMaxDropRem(int maxDropRem) { maxDropRem_ = maxDropRem; }
   void setRecordEdges(bool ok) {}
+  void runNode(const BitBoard &b, std::vector<RotateDirection> &rotateDirections, BfsInfo &bfsInfo);
   void addNxFrame(const TopInfo&, BfsInfo&);
+  void addNxFrame(const TopInfo& topInfo, BfsInfo& bfsInfo, int frames);
+  void addNxFrameLast(const TopInfo& topInfo, BfsInfo& bfsInfo, int frames=1);
   void considerRotate(const TopInfo& topInfo, BfsInfo& bfsInfo, const std::vector<RotateDirection>&);
   bool considerMovingDown(const TopInfo&, BfsInfo&);
 };

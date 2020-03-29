@@ -12,7 +12,7 @@ struct BfsInfo {
   FSMTypes::SeenT seen;
   FSMTypes::MovesT moves = FSMTypes::MovesT(BitBoardPre::NUM_INDEXES, false);
   BfsInfo() {
-    seen.reserve(1e5);
+    seen.reserve(2e5);
   }
   FSMTypes::PairT qTop() {
 #if MOVE_FINDER_FSM_PERFORMANCE == 1
@@ -78,6 +78,7 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
   return findAllMovesConst(b, blockType);
 #endif
   pred_.clear();
+  pred_.reserve(2e5);
   finalMoveToState_.clear();
   BfsInfo bfsInfo;
 
@@ -137,7 +138,7 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
         }
 
         // releasing...
-        if (top.getReleaseCooldown() == 0) {
+        if (top.getReleaseCooldown() == 0 && top.getDasRem() > 2) {
           auto nxReleased = top;
           nxReleased.setFsmState(FSMState::RELEASED);
           nxReleased.setMoveCooldown(moveDirection, 1+1);
@@ -154,6 +155,13 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
         addNxFrame(topInfo, bfsInfo);
       } break;
       case FSMState::RELEASED: {
+        int dropRem = topInfo.top.getDropRem();
+        if (blockType == BlockType::O_PIECE && dropRem > 0) {
+          addNxFrame(topInfo, bfsInfo, topInfo.top.getDropRem());
+          break;
+        } else if (rotateDirections.size() <= 1 && dropRem > 1) {
+          addNxFrame(topInfo, bfsInfo, dropRem-1);
+        }
         for (auto moveDirection: sidewaysMoveDirections) {
           if (top.getMoveCooldown(moveDirection) != 0) continue;
           if (topPiece.canMove(moveDirection)) {
@@ -177,16 +185,20 @@ std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockTy
         // nothing to do here, lol.
         considerRotate(topInfo, bfsInfo, rotateDirections);
         if (considerMovingDown(topInfo, bfsInfo)) break;
-        addNxFrame(topInfo, bfsInfo);
+        if (rotateDirections.size() <= 1 && topInfo.top.getDropRem() > 0) {
+          addNxFrame(topInfo, bfsInfo, topInfo.top.getDropRem());
+        } else {
+          addNxFrame(topInfo, bfsInfo);
+        }
       } break;
     }
-    
   }
 
   std::vector<BitPieceInfo> ret;
   for (int i = 0; i < BitBoardPre::NUM_INDEXES; ++i) {
     if (bfsInfo.moves[i]) ret.push_back(b.getPieceFromId(i));
   }
+  //printf("stateSpace: %lu\n", bfsInfo.seen.size());
   return ret;
 }
 
@@ -197,8 +209,12 @@ void MoveFinderFSM::addEdge(const MoveFinderState &s1, const MoveFinderState &s2
 
 
 void MoveFinderFSM::addNxFrame(const TopInfo& topInfo, BfsInfo& bfsInfo) {
+  addNxFrame(topInfo, bfsInfo, 1);
+}
+
+void MoveFinderFSM::addNxFrame(const TopInfo& topInfo, BfsInfo& bfsInfo, int frames) {
   auto nxFrame = topInfo.top;
-  nxFrame.nextFrame();
+  while (frames--) nxFrame.nextFrame();
   auto [ignore, inserted] = bfsInfo.seen.emplace(nxFrame);
   if (!inserted) return;
   addEdge(topInfo.top, nxFrame, Action::NONE);
@@ -264,7 +280,7 @@ void onEnterReleased(MoveFinderState &s) {
 }
 
 void onEnterTapped(MoveFinderState &s) {
-
+  s.setSidewaysMoveCooldown(0);
 }
 
 
