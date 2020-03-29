@@ -20,10 +20,10 @@ async function getResults(numGames: number) {
 }
 
 describe('Generate Report', async function() {
-  this.timeout(50 * 600 * 1000);
+  this.timeout(50 * 100 * 600 * 1000);
   it('adaptBasedOnNextPiece = true', async function() {
     Features.adaptBasedOnNextPiece = true;
-    const results = await getResults(25);
+    const results = await getResults(250);
     console.log(results);
   });
 

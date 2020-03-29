@@ -16,7 +16,7 @@ int main(int argc, char ** argv) {
   cfg.startingLines = 130;
   cfg.startingLevel = 19;
   cfg.averageAmount = 50;
-  cfg.numGames = 200;
+  cfg.numGames = 100;
 
   if (argc == 2 && strcmp(argv[1], "-c") == 0) {
     cfg.print();
@@ -49,7 +49,7 @@ void run(int argc, char ** argv, Config cfg) {
   }
 
   me.setWeights(weightings);
-  std::cout << getEvaluateWeightings(me, cfg).runAllPieceSets() << '\n';
+  std::cout << getEvaluateWeightings<MoveFinderFSM>(me, cfg).runAllPieceSets() << '\n';
 }
 
 

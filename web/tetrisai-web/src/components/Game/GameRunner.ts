@@ -232,7 +232,7 @@ export class GameRunner implements ICapturable<any> {
     );
     if (res.isGameOver) return true;
 
-    const clearAmount = firstMoveDirection !== 'NONE' ? 2 : 0;
+    const clearAmount = 0;//firstMoveDirection !== 'NONE' ? 2 : 0;
     let demoEntries = res.demoEntries;
 
     this.nextMoveBoard = res.board;

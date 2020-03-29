@@ -1,0 +1,97 @@
+Current time: Mon Mar 30 02:33:06 2020
+num_files: 11
+STRAIGHT DATA
+processing: 18_BothLinearN.log
+processing: 18_Linear125
+processing: 18_LinearN.log
+processing: 18_WellLocation.log
+processing: 18_WellLocationsNotBoth.log
+processing: 19_BothLinear125.log
+processing: 19_BothLinear200.log
+processing: 19_BothLinearN.log
+processing: 19_LinearN.log
+processing: 19_WellLocation.log
+processing: 19_WellLocationsNotBoth.log
++-----------------------------+----------------------+------+--------+----------+--------+--------+-------+---------+
+| name                        | group                | seed | nGames | top50avg | 70P    | 50P    | %clrd | time(s) |
++-----------------------------+----------------------+------+--------+----------+--------+--------+-------+---------+
+| 18_BothLinearN.log          | BothLinear           | 200  | 500    | 474731   | 459140 | 410060 | 52.8  | 0.6     |
+| 18_Linear125                | Linear               | 200  | 500    | 453165   | 444260 | 296020 | 35.6  | 0.5     |
+| 18_LinearN.log              | Linear               | 200  | 500    | 472761   | 462520 | 362580 | 42.4  | 0.5     |
+| 18_WellLocation.log         | WellLocations        | 200  | 500    | 477879   | 464040 | 410840 | 54.8  | 0.5     |
+| 18_WellLocationsNotBoth.log | WellLocationsNotBoth | 200  | 500    | 475938   | 466700 | 369800 | 40.6  | 0.5     |
+| 19_BothLinear125.log        | BothLinear           | 200  | 500    | 413435   | 398080 | 313480 | 47.2  | 0.4     |
+| 19_BothLinear200.log        | BothLinear           | 200  | 500    | 410229   | 388120 | 309300 | 43.4  | 0.4     |
+| 19_BothLinearN.log          | BothLinear           | 200  | 500    | 402852   | 388080 | 235260 | 32.4  | 0.4     |
+| 19_LinearN.log              | Linear               | 200  | 500    | 408182   | 391660 | 305000 | 43.2  | 0.4     |
+| 19_WellLocation.log         | WellLocations        | 200  | 500    | 397462   | 382420 | 294740 | 47.8  | 0.4     |
+| 19_WellLocationsNotBoth.log | WellLocationsNotBoth | 200  | 500    | 382415   | 361220 | 191020 | 30.0  | 0.3     |
++-----------------------------+----------------------+------+--------+----------+--------+--------+-------+---------+
+
+LOOKAHEAD DATA
+processing: 18_BothLinearN.log
+processing: 18_BothLinearN.log
+processing: 18_BothLinearN.log
+processing: 18_BothLinearN.log
+processing: 18_BothLinearN.log
+processing: 18_BothLinearN.log
+processing: 18_Linear125
+processing: 18_Linear125
+processing: 18_Linear125
+processing: 18_Linear125
+processing: 18_Linear125
+processing: 18_Linear125
+processing: 18_LinearN.log
+processing: 18_LinearN.log
+processing: 18_LinearN.log
+processing: 18_LinearN.log
+processing: 18_LinearN.log
+processing: 18_LinearN.log
+processing: 18_WellLocation.log
+processing: 18_WellLocation.log
+sprocessing: 18_WellLocation.log
+processing: 18_WellLocation.log
+processing: 18_WellLocation.log
+processing: 18_WellLocation.log
+processing: 18_WellLocationsNotBoth.log
+processing: 18_WellLocationsNotBoth.log
+processing: 18_WellLocationsNotBoth.log
+processing: 18_WellLocationsNotBoth.log
+processing: 18_WellLocationsNotBoth.log
+processing: 18_WellLocationsNotBoth.log
++-------------------------------------------------------------------+-------------------------------------------+------+--------+----------+---------+--------+-----------+-----------+---------+---------+
+| name                                                              | group                                     | seed | nGames | top50avg | 70P     | 50P    | %clrd_130 | %clrd_230 | maxout% | time(s) |
++-------------------------------------------------------------------+-------------------------------------------+------+--------+----------+---------+--------+-----------+-----------+---------+---------+
+| 18_BothLinearN.log_19_BothLinear125.log_Lookahead                 | BothLinear_BothLinear                     | 203  | 150    | 958411   | 938240  | 877740 | 82.0      | 55.3      | 10.0    | 172.7   |
+| 18_BothLinearN.log_19_BothLinear200.log_Lookahead                 | BothLinear_BothLinear                     | 203  | 150    | 997306   | 983620  | 915840 | 82.0      | 67.3      | 20.7    | 179.0   |
+| 18_BothLinearN.log_19_BothLinearN.log_Lookahead                   | BothLinear_BothLinear                     | 203  | 150    | 988924   | 971100  | 878060 | 82.0      | 53.3      | 22.7    | 171.0   |
+| 18_BothLinearN.log_19_LinearN.log_Lookahead                       | BothLinear_Linear                         | 203  | 150    | 929796   | 910900  | 852640 | 73.3      | 60.7      | 4.7     | 169.8   |
+| 18_BothLinearN.log_19_WellLocation.log_Lookahead                  | BothLinear_WellLocations                  | 203  | 150    | 1002162  | 982200  | 937240 | 82.7      | 70.0      | 21.3    | 181.8   |
+| 18_BothLinearN.log_19_WellLocationsNotBoth.log_Lookahead          | BothLinear_WellLocationsNotBoth           | 203  | 150    | 959219   | 957880  | 743500 | 73.3      | 36.0      | 20.7    | 158.8   |
+| 18_Linear125_19_BothLinear125.log_Lookahead                       | Linear_BothLinear                         | 203  | 150    | 975742   | 947840  | 886560 | 78.0      | 59.3      | 16.0    | 179.3   |
+| 18_Linear125_19_BothLinear200.log_Lookahead                       | Linear_BothLinear                         | 203  | 150    | 998839   | 975900  | 916480 | 78.0      | 62.7      | 24.0    | 181.3   |
+| 18_Linear125_19_BothLinearN.log_Lookahead                         | Linear_BothLinear                         | 203  | 150    | 996099   | 980560  | 881100 | 80.0      | 53.3      | 24.7    | 177.5   |
+| 18_Linear125_19_LinearN.log_Lookahead                             | Linear_Linear                             | 203  | 150    | 928650   | 913720  | 846360 | 74.7      | 58.7      | 3.3     | 179.1   |
+| 18_Linear125_19_WellLocation.log_Lookahead                        | Linear_WellLocations                      | 203  | 150    | 1009950  | 982660  | 942360 | 80.0      | 74.0      | 24.0    | 188.9   |
+| 18_Linear125_19_WellLocationsNotBoth.log_Lookahead                | Linear_WellLocationsNotBoth               | 203  | 150    | 1001289  | 965920  | 836080 | 75.3      | 45.3      | 24.7    | 169.0   |
+| 18_LinearN.log_19_BothLinear125.log_Lookahead                     | Linear_BothLinear                         | 203  | 150    | 972103   | 956560  | 890560 | 82.0      | 56.0      | 13.3    | 178.7   |
+| 18_LinearN.log_19_BothLinear200.log_Lookahead                     | Linear_BothLinear                         | 203  | 150    | 1020226  | 995460  | 940940 | 80.0      | 68.0      | 29.3    | 185.2   |
+| 18_LinearN.log_19_BothLinearN.log_Lookahead                       | Linear_BothLinear                         | 203  | 150    | 962633   | 943100  | 838500 | 80.7      | 46.0      | 14.0    | 171.0   |
+| 18_LinearN.log_19_LinearN.log_Lookahead                           | Linear_Linear                             | 203  | 150    | 928015   | 907020  | 830500 | 69.3      | 51.3      | 5.3     | 168.3   |
+| 18_LinearN.log_19_WellLocation.log_Lookahead                      | Linear_WellLocations                      | 203  | 150    | 1004313  | 995140  | 917960 | 80.0      | 68.0      | 28.0    | 185.8   |
+| 18_LinearN.log_19_WellLocationsNotBoth.log_Lookahead              | Linear_WellLocationsNotBoth               | 203  | 150    | 1029487  | 1003400 | 881640 | 73.3      | 48.7      | 31.3    | 169.5   |
+| 18_WellLocation.log_19_BothLinear125.log_Lookahead                | WellLocations_BothLinear                  | 203  | 150    | 978282   | 960940  | 895280 | 91.3      | 69.3      | 16.7    | 201.5   |
+| 18_WellLocation.log_19_BothLinear200.log_Lookahead                | WellLocations_BothLinear                  | 203  | 150    | 992319   | 968180  | 923960 | 90.0      | 76.7      | 20.0    | 204.0   |
+| 18_WellLocation.log_19_BothLinearN.log_Lookahead                  | WellLocations_BothLinear                  | 203  | 150    | 973052   | 948400  | 888980 | 90.7      | 54.0      | 14.7    | 185.4   |
+| 18_WellLocation.log_19_LinearN.log_Lookahead                      | WellLocations_Linear                      | 203  | 150    | 934685   | 912640  | 874140 | 88.7      | 72.0      | 4.0     | 189.1   |
+| 18_WellLocation.log_19_WellLocation.log_Lookahead                 | WellLocations_WellLocations               | 203  | 150    | 997877   | 974660  | 932660 | 92.0      | 81.3      | 20.7    | 194.2   |
+| 18_WellLocation.log_19_WellLocationsNotBoth.log_Lookahead         | WellLocations_WellLocationsNotBoth        | 203  | 150    | 990710   | 971720  | 859600 | 88.7      | 47.3      | 23.3    | 175.6   |
+| 18_WellLocationsNotBoth.log_19_BothLinear125.log_Lookahead        | WellLocationsNotBoth_BothLinear           | 203  | 150    | 946651   | 915280  | 855140 | 71.3      | 53.3      | 10.0    | 157.3   |
+| 18_WellLocationsNotBoth.log_19_BothLinear200.log_Lookahead        | WellLocationsNotBoth_BothLinear           | 203  | 150    | 964536   | 944660  | 869720 | 72.0      | 54.7      | 14.0    | 158.7   |
+| 18_WellLocationsNotBoth.log_19_BothLinearN.log_Lookahead          | WellLocationsNotBoth_BothLinear           | 203  | 150    | 948211   | 925440  | 774660 | 72.0      | 43.3      | 14.7    | 151.2   |
+| 18_WellLocationsNotBoth.log_19_LinearN.log_Lookahead              | WellLocationsNotBoth_Linear               | 203  | 150    | 903718   | 886260  | 809560 | 66.0      | 55.3      | 1.3     | 154.6   |
+| 18_WellLocationsNotBoth.log_19_WellLocation.log_Lookahead         | WellLocationsNotBoth_WellLocations        | 203  | 150    | 977480   | 958980  | 903640 | 72.0      | 64.0      | 11.3    | 168.8   |
+| 18_WellLocationsNotBoth.log_19_WellLocationsNotBoth.log_Lookahead | WellLocationsNotBoth_WellLocationsNotBoth | 203  | 150    | 947665   | 954240  | 701720 | 68.0      | 38.7      | 14.7    | 146.4   |
++-------------------------------------------------------------------+-------------------------------------------+------+--------+----------+---------+--------+-----------+-----------+---------+---------+
+
+Time taken: 5258.6
