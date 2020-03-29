@@ -77,6 +77,9 @@ class MoveFinderState {
   void decMoveCooldown(MoveDirection md) {
     counterVars_.setField<FSMStateFields::MOVE_COOLDOWN>(md, std::max(getMoveCooldown(md)-1, 0));
   }
+  void setMoveCooldown(int cooldown) {
+    counterVars_.setFieldGroup<2, FSMStateFields::MOVE_COOLDOWN>(0);
+  }
   void setSidewaysMoveCooldown(int cooldown) {
     for (auto md: sidewaysMoveDirections) {
       setMoveCooldown(md, std::max(getMoveCooldown(md), cooldown));

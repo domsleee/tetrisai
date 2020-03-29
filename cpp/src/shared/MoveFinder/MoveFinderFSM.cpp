@@ -82,9 +82,6 @@ const std::vector<RotateDirection> &getRotateDirections(const BitPieceInfo &p) {
 }
 
 std::vector<BitPieceInfo> MoveFinderFSM::findAllMoves(const BitBoard& b, BlockType blockType) {
-#if RECORD_MOVEFINDER_EDGES == 0
-  return findAllMovesConst(b, blockType);
-#endif
   pred_.clear();
   pred_.reserve(2e5);
   finalMoveToState_.clear();
@@ -162,7 +159,10 @@ std::vector<bool>::reference tappedSeenPtr(const TopInfo &topInfo, BfsInfo& bfsI
     int v = std::min(topInfo.top.getRotateCooldown(RotateDirection::ROTATE_AC), topInfo.top.getRotateCooldown(RotateDirection::ROTATE_C));
     return bfsInfo.tappedSeen[topInfo.top.getPieceId()].at(v);
   } else {
-    int v = std::max(topInfo.top.getRotateCooldown(RotateDirection::ROTATE_AC), topInfo.top.getRotateCooldown(RotateDirection::ROTATE_C));
+    // you can rotate around the other way in min+2
+    // what if you can't rotate the other way & the cooldown is 1 (which can happen)?
+    // ANS: you will be able to rotate the frame after (because there is at least 1 frame until drop, and rotate is before drop)
+    int v = std::min(topInfo.top.getRotateCooldown(RotateDirection::ROTATE_AC), topInfo.top.getRotateCooldown(RotateDirection::ROTATE_C));
     return bfsInfo.tappedSeen[topInfo.top.getPieceId()].at(v+2);
   }
   throw std::runtime_error("what");
@@ -358,7 +358,7 @@ void onEnterReleased(MoveFinderState &s) {
 }
 
 void onEnterTapped(MoveFinderState &s) {
-  s.setSidewaysMoveCooldown(0);
+  s.setMoveCooldown(0);
 }
 
 
