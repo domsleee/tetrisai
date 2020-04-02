@@ -55,19 +55,9 @@ BitPieceInfo NewGetNextMove<MyMoveFinder>::getNextMove(const BitBoard &board, co
 
 template<typename MyMoveFinder>
 BitPieceInfo NewGetNextMove<MyMoveFinder>::getNextMove(const BitBoard &board, const BlockType blockType1, const BlockType blockType2, const ScoreManager &sm, char firstMoveChar) const {
-  using SetT = std::tuple<double, BitPieceInfo, BitPieceInfo>;
-  struct SetComp {
-    bool operator()(const SetT t1, const SetT t2) const {
-      if (std::get<0>(t1) != std::get<0>(t2)) {
-        return std::get<0>(t1) < std::get<0>(t2);
-      }
-      return std::get<2>(t1) < std::get<2>(t2);
-    }
-  };
-  
-  std::set<SetT, SetComp> scores;
+  using SetT = std::tuple<double, BitPieceInfo, BitPieceInfo>;  
+  std::set<SetT> scores;
   auto [me, mf] = meMfPairProvider_->getMeMfPair(sm.getTotalLines());
-  if (firstMoveChar != NO_CONSTRAINT) mf.setFirstMoveDirectionChar(firstMoveChar);
 
   // when the piece appears, the person has already chosen a move (pieceInfo)
   // the person can change this move, but they must preserve the constraint (firstMoveDirection)
@@ -93,7 +83,6 @@ BitPieceInfo NewGetNextMove<MyMoveFinder>::getNextMove(const BitBoard &board, co
 
     auto innerFn = [&](const auto nxPiece2) -> SetT {
       auto score = me2.evaluate(nxBoard, nxPiece2, sm2);
-      // printf("scoreOffset: %0.2f, eval: %0.2f\n", scoreOffset, score);
       return {score + scoreOffset, nxPiece, nxPiece2};
     };
     std::vector<SetT> innerScores(innerMoves.size(), {0, board.getEmptyPiece(), board.getEmptyPiece()});

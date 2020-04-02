@@ -27,6 +27,7 @@ export interface GameRunnerResult {
   lineClears: number;
   level: number;
   score: number;
+  pieces: Array<Piece>;
 };
 
 export class GameRunner implements ICapturable<any> {
@@ -47,6 +48,8 @@ export class GameRunner implements ICapturable<any> {
   private tableBoard: any = null;
   private currentPiece: Piece;
   private currentBoard: IBoard;
+
+  public pieces: Array<Piece> = [];
 
   public constructor(
     demoPlayer: IDemoPlayer,
@@ -91,7 +94,8 @@ export class GameRunner implements ICapturable<any> {
     return {
       lineClears: this.totalLineClears,
       score: this.scoreManager.getScore(),
-      level: this.scoreManager.getLevel()
+      level: this.scoreManager.getLevel(),
+      pieces: this.pieces
     };
   }
 
@@ -100,11 +104,8 @@ export class GameRunner implements ICapturable<any> {
   }
 
   public async onFirstPieceAppear() {
+    this.demoPlayer.timer.stop();
     const currFrame = this.demoPlayer.getFrame();
-    this.demoPlayer.addEvents([
-      getDemoEntryWithStartFrame(currFrame + 1, 0, DemoButton.BUTTON_LEFT, true),
-      getDemoEntryWithStartFrame(currFrame + 2, 1, DemoButton.BUTTON_LEFT, false)
-    ]);
     log.debug("onFirstPieceAppear", currFrame + 2);
 
     const currPiece = this.readCurrentPieceHandler.getPieceFromEmulator();
@@ -124,16 +125,31 @@ export class GameRunner implements ICapturable<any> {
     );
 
     this.addLineClears(this.extraInformation.lineClears);
-    this.addRawDemoEventsToDemoPlayer(moveEntries);
-
+    //this.addRawDemoEventsToDemoPlayer(moveEntries);
+    this.addPiece(currPiece);
     const nextPiece = this.readNextPieceHandler.getCurrentPieceFromEmulator();
+    this.addPiece(nextPiece);
     if (this.tableBoard) {
       this.tableBoard['board'] = this.nextMoveBoard;
     }
+
+    await this.adaptBasedOnNextPieceAndUpdateExtraInformation(
+      new Board(),
+      currPiece,
+      nextPiece,
+      0
+    );
+
     this.currentBoard = this.nextMoveBoard;
-    await this.prepareNextMoveDataAndExtraInformationForNextPieceAppear(nextPiece);
+    // await this.prepareNextMoveDataAndExtraInformationForNextPieceAppear(nextPiece);
     this.expFrame = currFrame + (this.extraInformation.lastFrame || 0);
     this.currentPiece = nextPiece;
+    this.demoPlayer.timer.resume();
+  }
+
+  private addPiece(piece: Piece) {
+    this.pieces.push(piece);
+    this.debug['numPieces']++;
   }
 
   /**
@@ -152,6 +168,7 @@ export class GameRunner implements ICapturable<any> {
     );
     if (this.tableBoard) this.tableBoard['board'] = this.nextMoveBoard;
     const nextPiece = this.readNextPieceHandler.getCurrentPieceFromEmulator();
+    this.addPiece(nextPiece);
     this.debug['currentPiece'] = this.currentPiece;
     this.debug['nextPiece'] = nextPiece;
 

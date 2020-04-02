@@ -1,7 +1,9 @@
-import { IDemoPlayer } from './IDemoPlayer';
+import { IDemoPlayer, DemoButton } from './IDemoPlayer';
+import { getDemoEntry } from './DemoEntryHelpers';
 
 export interface IFrameAwaiter {
   awaitFrame(frame: number): Promise<void>;
+  awaitFrameForced(frame: number): Promise<void>;
 }
 
 export class FrameAwaiter implements IFrameAwaiter {
@@ -20,6 +22,17 @@ export class FrameAwaiter implements IFrameAwaiter {
       }
       this.demoPlayer.addFrameListener(fn);
     });
+  }
 
+  public async awaitFrameForced(frame: number): Promise<void> {
+    const pr = this.awaitFrame(frame);
+    this.demoPlayer.addEvent(
+      getDemoEntry(
+        frame-1,
+        DemoButton.BUTTON_SELECT,
+        false
+      )
+    );
+    return await pr;
   }
 }
