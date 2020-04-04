@@ -75,6 +75,7 @@ export class GameLogic implements ICapturable<string> {
       await this.doPlayback(get19_9HighRight());
       return;
     }
+    this.debug['numPieces'] = 0;
 
     const bs = new GameBootstrap(this.demoPlayer);
     await bs.setupFromNewCanvas(this.frameAwaiter, startFrame);
@@ -88,6 +89,8 @@ export class GameLogic implements ICapturable<string> {
       return;
     }
 
+    // await this.pa.awaitPiece();
+    await this.frameAwaiter.awaitFrameForced(this.demoPlayer.getFrame() + 5);
     await this.gr.onFirstPieceAppear();
 
     while (true) {

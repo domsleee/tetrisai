@@ -13,4 +13,9 @@ struct NewEvaluateWeightingsFactory {
     auto getNextMove = NewGetNextMove(meMfPairProvider);
     return NewEvaluateWeightings(RunPieceSet(getNextMove));
   }
+
+  static auto getInstance(const MeMfPairProvider<MyMoveFinder> &meMfPairProvider, std::shared_ptr<IPieceSetGetter> ps) {
+    auto getNextMove = NewGetNextMove(meMfPairProvider);
+    return NewEvaluateWeightings(RunPieceSet(getNextMove), ps);
+  }
 };

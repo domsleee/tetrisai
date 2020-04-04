@@ -8,28 +8,11 @@
 #include <iostream>
 #include <algorithm>
 
-/**
-
-state
-$33 = (std::tuple_element<1, std::pair<int, MoveFinderState> const>::type &) @0x7fffffffe108: {fsmState_ = RELEASED, isLeftHolding_ = false, piece_ = {id_ = 250, b_ = 0x7fffffffe3a0}, rotateCooldown_ = {0, 0},
-  moveCooldown_ = 0, dropRem_ = 0, maxDropRem_ = 3, dasRem_ = 0, frameEntered_ = 54, numMoves_ = 0}
-
-{fsmState_ = RELEASED, isLeftHolding_ = false, piece_ = {id_ = 250, b_ = 0x7fffffffe3a0}, rotateCooldown_ = {0, 0},
-  moveCooldown_ = 0, dropRem_ = 0, maxDropRem_ = 3, dasRem_ = 0, frameEntered_ = 54, numMoves_ = 0}
-
-unordered map
-{fsmState_ = RELEASED, isLeftHolding_ = false, piece_ = {id_ = 250, b_ = 0x7fffffffe3a0}, rotateCooldown_ = {0, 0},
-  moveCooldown_ = 0, dropRem_ = 0, maxDropRem_ = 3, dasRem_ = 0, frameEntered_ = 54, numMoves_ = 0}
-
-{fsmState_ = RELEASED, isLeftHolding_ = false, piece_ = {id_ = 250, b_ = 0x7fffffffe3a0}, rotateCooldown_ = {0, 0}, moveCooldown_ = 0, dropRem_ = 0,
-      maxDropRem_ = 3, dasRem_ = 0, frameEntered_ = 54, numMoves_ = 0}
-*/
-
 MoveFinderState setupSample() {
   BitBoard b;
   auto piece = b.getPiece(BlockType::I_PIECE);
   auto state = MoveFinderState(piece, false, 0);
-  state.fsmState_ = FSMState::RELEASED;
+  state.setFsmState(FSMState::RELEASED);
   state.frameEntered_ = 54;
   return state;
 }

@@ -47,7 +47,7 @@ SummaryResult SummaryApi::getSummaryLookahead(const std::string &name1, const st
   auto config = info1.config;
   config.setupForLongPlay();
   config.numGames = 150;
-  config.seed = 202;
+  config.seed = 203;
   auto me1 = getMoveEvaluatorGroups().at(info1.group).setWeights(info1.weights);
   auto me2 = getMoveEvaluatorGroups().at(info2.group).setWeights(info2.weights);
   auto scoreManagers = getScoresLookahead(config, me1, me2, transitionLines);

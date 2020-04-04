@@ -71,11 +71,11 @@ class GetMoves(IGetMoves):
     self._logger.debug("num_moves: %d" % num_moves)
     return demo_entries
 
-  def get_moves_given_piece(self, board: str, piece: int, nextPiece: int, firstMoveDirection: str) -> GetMovesResult:
+  def get_moves_given_piece(self, board: str, piece: int, nextPiece: int) -> GetMovesResult:
     self._send_str(b'p\n')
     self._send_str((str(piece) + '\n').encode('utf-8'))
     self._send_str((str(nextPiece) + '\n').encode('utf-8'))
-    self._send_str((firstMoveDirection[0] + '\n').encode('utf-8'))
+    self._send_str(('.\n').encode('utf-8'))
     self._send_str((board + '\n').encode('utf-8'))
 
     result = self._process_line(self._process.read_line(), "result")

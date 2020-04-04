@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include "src/pso/summary/SummaryResult.hpp"
+#include "src/pso/defs.h"
 
 struct LogFileResult {
   Config config;
@@ -10,7 +11,7 @@ struct LogFileResult {
 
 class SummaryApi {
  public:
-  SummaryApi(std::string logFolder): 
+  SummaryApi(const std::string &logFolder=DATA_FOLDER): 
     logFolder_{logFolder}
   {}
   std::vector<std::string> getAllNames() const;
@@ -29,7 +30,7 @@ class SummaryApi {
   template<typename MyMoveFinder>
   SummaryResult getSummaryHelper(const std::string &name1, const std::string &name2, int transitionLines) const;
 
-  std::string logFolder_;
+  const std::string logFolder_;
 };
 
 #include "src/pso/summary/SummaryApi.tpp"

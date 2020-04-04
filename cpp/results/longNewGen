@@ -1,0 +1,45 @@
+Current time: Fri Apr  3 14:43:31 2020
+num_files: 6
+STRAIGHT DATA
+processing: 18_LinearGen.log
+processing: 18_LinearGenFin.log
+processing: 18_WellLocationsNotBothGen.log
+processing: 19_BothLinearGen.log
+processing: 19_WellLocationsGen.log
+processing: 19_WellLocationsNotBothGen.log
++--------------------------------+----------------------+------+--------+----------+--------+--------+-------+---------+
+| name                           | group                | seed | nGames | top50avg | 70P    | 50P    | %clrd | time(s) |
++--------------------------------+----------------------+------+--------+----------+--------+--------+-------+---------+
+| 18_LinearGen.log               | Linear               | 200  | 500    | 473917   | 456060 | 382960 | 47.0  | 0.6     |
+| 18_LinearGenFin.log            | Linear               | 200  | 500    | 480323   | 467460 | 406320 | 53.0  | 0.6     |
+| 18_WellLocationsNotBothGen.log | WellLocationsNotBoth | 200  | 500    | 453002   | 436280 | 366320 | 49.2  | 0.5     |
+| 19_BothLinearGen.log           | BothLinear           | 200  | 500    | 402598   | 382540 | 275680 | 40.2  | 0.4     |
+| 19_WellLocationsGen.log        | WellLocations        | 200  | 500    | 400182   | 380820 | 293220 | 45.0  | 0.4     |
+| 19_WellLocationsNotBothGen.log | WellLocationsNotBoth | 200  | 500    | 404223   | 386340 | 270440 | 40.8  | 0.4     |
++--------------------------------+----------------------+------+--------+----------+--------+--------+-------+---------+
+
+LOOKAHEAD DATA
+processing: 18_LinearGen.log
+processing: 18_LinearGen.log
+processing: 18_LinearGen.log
+processing: 18_LinearGenFin.log
+processing: 18_LinearGenFin.log
+processing: 18_LinearGenFin.log
+processing: 18_WellLocationsNotBothGen.log
+processing: 18_WellLocationsNotBothGen.log
+processing: 18_WellLocationsNotBothGen.log
++-------------------------------------------------------------------------+-------------------------------------------+------+--------+----------+--------+--------+-----------+-----------+---------+---------+
+| name                                                                    | group                                     | seed | nGames | top50avg | 70P    | 50P    | %clrd_130 | %clrd_230 | maxout% | time(s) |
++-------------------------------------------------------------------------+-------------------------------------------+------+--------+----------+--------+--------+-----------+-----------+---------+---------+
+| 18_LinearGen.log_19_BothLinearGen.log_Lookahead                         | Linear_BothLinear                         | 203  | 150    | 979420   | 956140 | 884120 | 78.0      | 59.3      | 17.3    | 172.0   |
+| 18_LinearGen.log_19_WellLocationsGen.log_Lookahead                      | Linear_WellLocations                      | 203  | 150    | 936386   | 915700 | 857520 | 77.3      | 62.7      | 6.0     | 173.5   |
+| 18_LinearGen.log_19_WellLocationsNotBothGen.log_Lookahead               | Linear_WellLocationsNotBoth               | 203  | 150    | 935764   | 919900 | 833500 | 79.3      | 53.3      | 4.7     | 163.6   |
+| 18_LinearGenFin.log_19_BothLinearGen.log_Lookahead                      | Linear_BothLinear                         | 203  | 150    | 997144   | 977760 | 927720 | 82.7      | 69.3      | 19.3    | 176.2   |
+| 18_LinearGenFin.log_19_WellLocationsGen.log_Lookahead                   | Linear_WellLocations                      | 203  | 150    | 956867   | 939600 | 876500 | 82.7      | 60.0      | 10.0    | 171.7   |
+| 18_LinearGenFin.log_19_WellLocationsNotBothGen.log_Lookahead            | Linear_WellLocationsNotBoth               | 203  | 150    | 929209   | 911500 | 822980 | 82.0      | 54.7      | 5.3     | 167.4   |
+| 18_WellLocationsNotBothGen.log_19_BothLinearGen.log_Lookahead           | WellLocationsNotBoth_BothLinear           | 203  | 150    | 978125   | 965720 | 867520 | 79.3      | 57.3      | 14.7    | 168.4   |
+| 18_WellLocationsNotBothGen.log_19_WellLocationsGen.log_Lookahead        | WellLocationsNotBoth_WellLocations        | 203  | 150    | 950794   | 925640 | 856380 | 78.7      | 62.0      | 10.7    | 168.3   |
+| 18_WellLocationsNotBothGen.log_19_WellLocationsNotBothGen.log_Lookahead | WellLocationsNotBoth_WellLocationsNotBoth | 203  | 150    | 946816   | 929180 | 873060 | 80.7      | 64.7      | 4.0     | 170.5   |
++-------------------------------------------------------------------------+-------------------------------------------+------+--------+----------+--------+--------+-----------+-----------+---------+---------+
+
+Time taken: 1534.5

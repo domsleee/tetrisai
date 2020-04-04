@@ -47,7 +47,7 @@ ScoreManager RunPieceSet<MyGetNextMove>::runGame(const std::vector<BlockType> &p
     if (b.hasNoMoves(blockType)) {
       break;
     };
-    auto pieceInfo = getNextMoveHandler.getNextMove(b, blockType, sm);
+    auto pieceInfo = getNextMoveHandler.getNextMovePredict(b, blockType, sm);
     int lineClears = b.applyPieceInfo(pieceInfo);
     sm.addLineClears(lineClears);
     moves++;

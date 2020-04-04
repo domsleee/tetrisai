@@ -133,12 +133,16 @@ void handleGetMoveGivenNextPiece(int numLines) {
   auto getNextMoveHandler = NewGetNextMove(v);
   
   const auto board = BitBoard(boardStr);
+  if (board.hasNoMoves(blockType1)) {
+    std::cout << "result: no moves\n";
+    return;
+  }
   ScoreManager sm;
   sm.setLines(numLines);
-  auto bestPieceInfo = getNextMoveHandler.getNextMove(board, blockType1, blockType2, sm, firstMoveDirectionChar);
+  auto bestPieceInfo = getNextMoveHandler.getNextMove(board, blockType1, blockType2, sm);
   
   auto mf = getNextMoveHandler.getMoveFinder(numLines);
-  mf.setFirstMoveDirectionChar(firstMoveDirectionChar);
+  //mf.setFirstMoveDirectionChar(firstMoveDirectionChar);
   mf.findAllMoves(board, blockType1);
   auto shortestPathStrings = mf.getShortestPath(bestPieceInfo);
   auto ct = shortestPathStrings.size();
@@ -158,8 +162,10 @@ std::pair<MoveEvaluatorGroup, MoveEvaluatorGroup> getMePair() {
   if (cache.count(false) == 0) {
     SummaryApi s(DATA_FOLDER);
     const std::string h = "BothLinearAdvVarN"; // MoveEvaluatorBlockLinear50_fixed
-    auto summary1 = s.readLogFile("18_LinearN.log");
-    auto summary2 = s.readLogFile("19_BothLinearN.log");
+    //auto summary1 = s.readLogFile("18_LinearN.log");
+    //auto summary2 = s.readLogFile("19_BothLinearN.log");
+    auto summary1 = s.readLogFile("18_LinearGenFin.log");
+    auto summary2 = s.readLogFile("19_BothLinearGen.log");
 
     auto me1 = getMoveEvaluatorGroups().at(summary1.group).setWeights(summary1.weights);
     auto me2 = getMoveEvaluatorGroups().at(summary2.group).setWeights(summary2.weights);

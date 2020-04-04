@@ -29,7 +29,6 @@ interface GetMovesGivenPieceRequestT {
   board: string;
   piece: string;
   next_piece: string;
-  first_move_direction: FirstMoveDirectionT;
   line_clears: number;
 }
 
@@ -87,13 +86,11 @@ export class GetNextMove implements IGetNextMove {
     piece: Piece,
     nextPiece: Piece,
     totalLineClears: number,
-    firstMoveDirection: FirstMoveDirectionT
   ): Promise<NextTwoPiecesReturnT> {
     const req: GetMovesGivenPieceRequestT = {
       board: board.getBitstring(),
       piece: piece.toString(),
       next_piece: nextPiece.toString(),
-      first_move_direction: firstMoveDirection,
       line_clears: totalLineClears
     };
     const resp: AxiosResponse<GetMovesGivenPieceResponseT> = await axios.post(

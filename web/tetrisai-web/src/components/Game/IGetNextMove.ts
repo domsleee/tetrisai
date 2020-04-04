@@ -27,6 +27,5 @@ export interface IGetNextMove {
     piece: Piece,
     nextPiece: Piece,
     totalLineClears: number,
-    firstMoveDirection: FirstMoveDirectionT
   ): Promise<NextTwoPiecesReturnT>;
 }

@@ -5,6 +5,7 @@
 #include <numeric>
 #include "src/common/common.hpp"
 #include "src/board/bitboard/BitBoardPre.h"
+#include "src/pso/IPieceSetGetter.h"
 #include "src/pso/PieceSetGetter.hpp"
 #include "src/shared/ScoreManager.hpp"
 #include <execution>
@@ -16,8 +17,9 @@
 template<typename MyRunPieceSet>
 class NewEvaluateWeightings {
  public:
-  NewEvaluateWeightings(const MyRunPieceSet &runPieceSet_handler):
-    runPieceSet_handler_(std::make_unique<MyRunPieceSet>(runPieceSet_handler))
+  NewEvaluateWeightings(const MyRunPieceSet &runPieceSet_handler, std::shared_ptr<IPieceSetGetter> ps=std::make_shared<PieceSetGetter>()):
+    runPieceSet_handler_(std::make_unique<MyRunPieceSet>(runPieceSet_handler)),
+    ps_{ps}
     {}
 
   double runAllPieceSets() const;
@@ -34,7 +36,7 @@ class NewEvaluateWeightings {
   void setStartingLevel(int startingLevel) { runPieceSet_handler_->setStartingLevel(startingLevel); }
   std::unique_ptr<MyRunPieceSet> runPieceSet_handler_;
  private:
-  PieceSetGetter ps_;
+  std::shared_ptr<IPieceSetGetter> ps_;
   int numGames_ = NUM_GAMES;
   int averageAmount_ = 30;
   int lookahead_ = 0;
@@ -69,7 +71,7 @@ std::vector<ScoreManager> NewEvaluateWeightings<MyRunPieceSet>::getSortedScoreMa
 
 template<typename MyRunPieceSet>
 std::vector<ScoreManager> NewEvaluateWeightings<MyRunPieceSet>::getScoreManagers() const {
-  auto pieceSets = ps_.getPieceSets(numGames_);
+  auto pieceSets = ps_->getPieceSets(numGames_);
   std::vector<ScoreManager> scores(pieceSets.size());
 
   MyRunPieceSet runPieceSet = *runPieceSet_handler_;
@@ -97,7 +99,7 @@ std::vector<ScoreManager> NewEvaluateWeightings<MyRunPieceSet>::getScoreManagers
 
 template<typename MyRunPieceSet>
 void NewEvaluateWeightings<MyRunPieceSet>::setSeed(int seed) {
-  ps_.setSeed(seed);
+  ps_->setSeed(seed);
 }
 
 template<typename MyRunPieceSet>

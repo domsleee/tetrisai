@@ -8,6 +8,8 @@
 #include "src/shared/MoveEvaluator/MoveEvaluatorGroup.hpp"
 #include "src/shared/MeMfPairProvider.h"
 #include "src/shared/MoveFinder/MoveFinderConstraints.h"
+#include "src/shared/BranchSearcher/BranchSearcher.tpp"
+#include "src/shared/BranchSearcher/defs.h"
 
 #define LOOKAHEAD_PARALLEL par_unseq
 
@@ -22,6 +24,8 @@ class NewGetNextMove {
 
   BitPieceInfo getNextMove(const BitBoard& board, BlockType blockType, const ScoreManager &sm, char firstMoveChar='.') const;
   BitPieceInfo getNextMove(const BitBoard &board, const BlockType blockType1, const BlockType blockType2, const ScoreManager &sm, char firstMoveChar=NO_CONSTRAINT) const;
+  
+  BitPieceInfo getNextMovePredict(const BitBoard &board, const BlockType blockType, const ScoreManager &sm) const;
 
   MyMoveFinder getMoveFinder(int numLines) {
     return meMfPairProvider_->getMeMfPair(numLines).second;
@@ -54,20 +58,31 @@ BitPieceInfo NewGetNextMove<MyMoveFinder>::getNextMove(const BitBoard &board, co
 }
 
 template<typename MyMoveFinder>
+BitPieceInfo NewGetNextMove<MyMoveFinder>::getNextMovePredict(const BitBoard &board, const BlockType blockType, const ScoreManager &sm) const {
+  //return getNextMove(board, blockType, sm);
+  BranchSearcher<MyMoveFinder> bs(*meMfPairProvider_);
+
+  auto topMoves = bs.getTopN(board, blockType, sm, BranchSearcherDefs::TOP_N_BLOCKS);
+  assert(topMoves.size() > 0);
+  double bestScore = 5e9;
+  auto bestPiece = topMoves[0].second.p;
+  for (auto [unusedScore, node]: topMoves) {
+    double score = bs.evalBoard(node, BranchSearcherDefs::DEPTH, blockType);
+    if (unusedScore < -1e8) return node.p;
+    if (score < bestScore || (score == bestScore && node.p < bestPiece)) {
+      bestPiece = node.p;
+      bestScore = score;
+    } 
+  }
+
+  return bestPiece;
+}
+
+template<typename MyMoveFinder>
 BitPieceInfo NewGetNextMove<MyMoveFinder>::getNextMove(const BitBoard &board, const BlockType blockType1, const BlockType blockType2, const ScoreManager &sm, char firstMoveChar) const {
-  using SetT = std::tuple<double, BitPieceInfo, BitPieceInfo>;
-  struct SetComp {
-    bool operator()(const SetT t1, const SetT t2) const {
-      if (std::get<0>(t1) != std::get<0>(t2)) {
-        return std::get<0>(t1) < std::get<0>(t2);
-      }
-      return std::get<2>(t1) < std::get<2>(t2);
-    }
-  };
-  
-  std::set<SetT, SetComp> scores;
+  using SetT = std::tuple<double, BitPieceInfo, BitPieceInfo>;  
+  std::set<SetT> scores;
   auto [me, mf] = meMfPairProvider_->getMeMfPair(sm.getTotalLines());
-  if (firstMoveChar != NO_CONSTRAINT) mf.setFirstMoveDirectionChar(firstMoveChar);
 
   // when the piece appears, the person has already chosen a move (pieceInfo)
   // the person can change this move, but they must preserve the constraint (firstMoveDirection)
@@ -93,7 +108,6 @@ BitPieceInfo NewGetNextMove<MyMoveFinder>::getNextMove(const BitBoard &board, co
 
     auto innerFn = [&](const auto nxPiece2) -> SetT {
       auto score = me2.evaluate(nxBoard, nxPiece2, sm2);
-      // printf("scoreOffset: %0.2f, eval: %0.2f\n", scoreOffset, score);
       return {score + scoreOffset, nxPiece, nxPiece2};
     };
     std::vector<SetT> innerScores(innerMoves.size(), {0, board.getEmptyPiece(), board.getEmptyPiece()});

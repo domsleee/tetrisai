@@ -1,6 +1,6 @@
 #include "src/shared/MoveRecorder/MoveRecorder.h"
 
-// wtf
+// static vars
 std::ofstream MoveRecorder::fout_;
 
 void MoveRecorder::recordMoves(const BitBoard &board, const BlockType blockType, const std::vector<BitPieceInfo> &allMoves) {

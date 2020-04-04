@@ -59,3 +59,34 @@ std::vector<std::vector<int>> getWell(int height, int column) {
 std::vector<std::vector<int>> leftWell(int height) {
   return getWell(height, 0);
 }
+
+
+BigFileT readFromBigFile(const std::string& filename) {
+  std::ifstream fin(filename);
+  char boardStr[205];
+  boardStr[201] = '\0';
+  std::string line;
+  BigFileT res;
+  while (std::getline(fin, line)) {
+    std::stringstream ss(line);
+    ss.read(boardStr, 200);
+    int piece;
+    char sep;
+
+    // ,3,
+    ss >> sep;
+    assert(sep == ',');
+    ss >> piece >> sep;
+    assert(sep == ',');
+    BitBoard b(boardStr);
+    BlockType blockType = static_cast<BlockType>(piece);
+    std::vector<int> expMoveInts;
+    while (ss >> sep && sep != ']') {
+      int id;
+      ss >> id;
+      expMoveInts.push_back(id);
+    }
+    res.insert({b, {blockType, expMoveInts}});
+  }
+  return res;
+}

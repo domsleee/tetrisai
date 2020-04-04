@@ -47,7 +47,7 @@ class MoveEvaluator: public IEvaluator {
   double myEvaluate(const BitBoard &b, const BitPieceInfo& p, const Weighting &w, const std::array<int, NUM_COLUMNS> &colHeights, int deltaLines, const VacancyChecker &vac) const {
     double offset = (deltaLines == 4) ? -1e9 : 0;
     double eval = offset;
-    if (true || deltaLines != 4) eval += w[TOTAL_LINES_CLEARED] * deltaLines;
+    if (deltaLines != 4) eval += w[TOTAL_LINES_CLEARED] * deltaLines;
     eval += w[TOTAL_LOCK_HEIGHT] * (NUM_ROWS - p.getPosition().maxR - 1);
 
     auto [it1, it2] = std::minmax_element(colHeights.begin(), colHeights.end());

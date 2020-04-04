@@ -115,16 +115,7 @@ export class PieceAwaiter implements ICapturable<CaptureT> {
         log.debug('diff!', diff);
         break;
       }
-      if (this.demoPlayer.isEmpty()) {
-        this.demoPlayer.addEvent(
-          getDemoEntry(
-            this.demoPlayer.getFrame(),
-            DemoButton.BUTTON_SELECT,
-            false
-          )
-        );
-      }
-      await this.frameAwaiter.awaitFrame(frame + 1);
+      await this.frameAwaiter.awaitFrameForced(frame + 1);
       frame++;
     }
   }

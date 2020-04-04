@@ -41,3 +41,11 @@ cc_binary(
     copts = EXEC_COPTS
 )
 
+
+cc_binary(
+    name = "run_pieceset",
+    srcs = ["main_run_pieceset.cpp"],
+    deps = ["//src:pso"],
+    copts = EXEC_COPTS
+)
+

@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <string>
 
 enum BlockType {
   I_PIECE=0,
@@ -20,6 +21,8 @@ static const std::vector<BlockType> allBlockTypes = {
   BlockType::S_PIECE,
   BlockType::O_PIECE
 };
+
+BlockType fromString(const std::string &blockStr);
 
 // todo
 static const int NUM_BLOCK_TYPES = 7;

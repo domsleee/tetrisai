@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <array>
 
 enum MoveDirection {
   LEFT=0,
@@ -17,6 +18,12 @@ static std::vector<MoveDirection> allMoveDirections = {
 };
 
 static std::vector<MoveDirection> validMoveDirections = {
+  MoveDirection::DOWN,
+  MoveDirection::LEFT,
+  MoveDirection::RIGHT
+};
+
+static constexpr std::array cooldownMoveDirections = {
   MoveDirection::DOWN,
   MoveDirection::LEFT,
   MoveDirection::RIGHT

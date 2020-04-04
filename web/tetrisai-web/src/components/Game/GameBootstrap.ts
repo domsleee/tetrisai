@@ -51,7 +51,7 @@ export class GameBootstrap {
       getDemoEntry(buttonAdder.frame + dF, DemoButton.BUTTON_SELECT, false)
     );
 
-    await frameAwaiter.awaitFrame(buttonAdder.frame + dF);
+    await frameAwaiter.awaitFrame(buttonAdder.frame + dF + 1);
   }
 
   public setupFromGameover() {
