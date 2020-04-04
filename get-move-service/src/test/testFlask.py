@@ -20,20 +20,17 @@ class TestFlask(unittest.TestCase):
       "board": "00000000000000000000000000000000000000100000000011000000001100000000111000000001110000001111110000111111110011111111001111111100111111100111101111011111111000111111111011111111101111111110111111111011",
       "piece":"Z_PIECE",
       "next_piece":"J_PIECE",
-      "first_move_direction":"RIGHT",
       "line_clears":4
     }
     resp = self.app.post('/get-moves-given-piece', json=payload)
     data = json.loads(resp.get_data(as_text=True))
     demo_entries = data['demo_entries']
-    self.assertEqual(str(FIRST_MOVE_FRAME) + ' RIGHT', demo_entries[0])
 
   def test_broken_payload2(self):
     payload = {
       'board': '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001100001101011000111111110011111111001111111110111111111011111111101111111110111111101111111110111111111011',
       'piece': 'T_PIECE',
       'next_piece': 'Z_PIECE',
-      'first_move_direction': 'LEFT',
       'line_clears': 179
     }
     resp = self.app.post('/get-moves-given-piece', json=payload)
@@ -46,13 +43,23 @@ class TestFlask(unittest.TestCase):
       'board': '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000011011100001111111000111111110011111111001111111101111111',
       'piece': 'T_PIECE',
       'next_piece': 'J_PIECE',
-      'first_move_direction': 'LEFT',
       'line_clears': 230
     }
     resp = self.app.post('/get-moves-given-piece', json=payload)
     data = json.loads(resp.get_data(as_text=True))
     demo_entries = data['demo_entries']
     self.assertEqual('1 DOWN', demo_entries[0])
+
+  def test_broken_payload4(self):
+    payload = {
+      'board': '00000110000000110000000111100000001010000000111000000111110000001111000000111000000011100000001110000000110000000011000000001111000000111100000011110110001111111000111111100011111110011111111101111111',
+      'piece': 'O_PIECE',
+      'next_piece': 'I_PIECE',
+      'line_clears': 231
+    }
+    resp = self.app.post('/get-moves-given-piece', json=payload)
+    data = json.loads(resp.get_data(as_text=True))
+    self.assertEqual(0, len(data.keys()))
 
 
 if __name__ == '__main__':

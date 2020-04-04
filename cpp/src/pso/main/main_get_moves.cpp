@@ -133,6 +133,10 @@ void handleGetMoveGivenNextPiece(int numLines) {
   auto getNextMoveHandler = NewGetNextMove(v);
   
   const auto board = BitBoard(boardStr);
+  if (board.hasNoMoves(blockType1)) {
+    std::cout << "result: no moves\n";
+    return;
+  }
   ScoreManager sm;
   sm.setLines(numLines);
   auto bestPieceInfo = getNextMoveHandler.getNextMove(board, blockType1, blockType2, sm);

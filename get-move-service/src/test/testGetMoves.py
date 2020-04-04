@@ -77,11 +77,10 @@ class TestGetMoves(unittest.TestCase):
       + ["1111111110" for _ in range(4)])
     exp_nx_board = BitBoard.fromBoard([self.EMPTY_ROW for _ in range(20)])
     piece = piece_to_int("I_PIECE")
-    result = self.gm.get_moves_given_piece(board, piece, piece, "RIGHT")
+    result = self.gm.get_moves_given_piece(board, piece, piece)
     self.assertEqual(exp_nx_board, result.nx_board)
     self.assertGreater(len(result.demo_entries), 0)
     self.assertEqual(FIRST_MOVE_FRAME, result.demo_entries[0].frame)
-    self.assertEqual("RIGHT", result.demo_entries[0].action)
   
   def test_given_next_piece_into_tetris(self):
     board = BitBoard.fromBoard(
@@ -93,21 +92,10 @@ class TestGetMoves(unittest.TestCase):
       + ["1111111110" for _ in range(4)])
     piece1 = piece_to_int("O_PIECE")
     piece2 = piece_to_int("I_PIECE")
-    first_move_direction = 'RIGHT'
-    result = self.gm.get_moves_given_piece(board, piece1, piece2, first_move_direction)
+    result = self.gm.get_moves_given_piece(board, piece1, piece2)
     self.assertEqual(exp_nx_board, result.nx_board)
     self.assertGreater(len(result.demo_entries), 0)
     self.assertEqual(FIRST_MOVE_FRAME, result.demo_entries[0].frame)
-    self.assertEqual(first_move_direction, result.demo_entries[0].action)
-
-  def test_get_moves_given_piece_broken_case(self):
-    board = '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000010010000001111100000'
-    piece1 = piece_to_int('T_PIECE')
-    piece2 = piece_to_int('O_PIECE')
-    first_move_direction = 'LEFT'
-    result = self.gm.get_moves_given_piece(board, piece1, piece2, first_move_direction)
-    self.assertEqual(FIRST_MOVE_FRAME, result.demo_entries[0].frame)
-    self.assertEqual(first_move_direction, result.demo_entries[0].action)
 
 
 if __name__ == '__main__':
