@@ -8,6 +8,8 @@
 #include "src/shared/MoveEvaluator/MoveEvaluatorGroup.hpp"
 #include "src/shared/MeMfPairProvider.h"
 #include "src/shared/MoveFinder/MoveFinderConstraints.h"
+#include "src/shared/BranchSearcher/BranchSearcher.tpp"
+#include "src/shared/BranchSearcher/defs.h"
 
 #define LOOKAHEAD_PARALLEL par_unseq
 
@@ -22,6 +24,8 @@ class NewGetNextMove {
 
   BitPieceInfo getNextMove(const BitBoard& board, BlockType blockType, const ScoreManager &sm, char firstMoveChar='.') const;
   BitPieceInfo getNextMove(const BitBoard &board, const BlockType blockType1, const BlockType blockType2, const ScoreManager &sm, char firstMoveChar=NO_CONSTRAINT) const;
+  
+  BitPieceInfo getNextMovePredict(const BitBoard &board, const BlockType blockType, const ScoreManager &sm) const;
 
   MyMoveFinder getMoveFinder(int numLines) {
     return meMfPairProvider_->getMeMfPair(numLines).second;
@@ -50,6 +54,27 @@ BitPieceInfo NewGetNextMove<MyMoveFinder>::getNextMove(const BitBoard &board, co
       bestScore = score;
     }
   }
+  return bestPiece;
+}
+
+template<typename MyMoveFinder>
+BitPieceInfo NewGetNextMove<MyMoveFinder>::getNextMovePredict(const BitBoard &board, const BlockType blockType, const ScoreManager &sm) const {
+  //return getNextMove(board, blockType, sm);
+  BranchSearcher<MyMoveFinder> bs(*meMfPairProvider_);
+
+  auto topMoves = bs.getTopN(board, blockType, sm, BranchSearcherDefs::TOP_N_BLOCKS);
+  assert(topMoves.size() > 0);
+  double bestScore = 5e9;
+  auto bestPiece = topMoves[0].second.p;
+  for (auto [unusedScore, node]: topMoves) {
+    double score = bs.evalBoard(node, BranchSearcherDefs::DEPTH, blockType);
+    if (unusedScore < -1e8) return node.p;
+    if (score < bestScore || (score == bestScore && node.p < bestPiece)) {
+      bestPiece = node.p;
+      bestScore = score;
+    } 
+  }
+
   return bestPiece;
 }
 

@@ -9,6 +9,24 @@ import * as fs from 'fs-extra';
 import { GameRunnerResult } from '@/components/Game/GameRunner';
 
 
+
+describe('Generate Report', async function() {
+  this.timeout(50 * 100 * 600 * 1000);
+  it('adaptBasedOnNextPiece = true', async function() {
+    return;
+    Features.adaptBasedOnNextPiece = true;
+    const results = await getResults(250, 'adapt');
+    console.log(results);
+  });
+
+  it('adaptBasedOnNextPiece = false', async function() {
+    Features.adaptBasedOnNextPiece = false;
+    const results = await getResults(25, 'dont');
+    console.log(results);
+  });
+});
+
+
 async function getResults(numGames: number, filename: string) {
   let results = [];
   const csvFd = await fs.open(filename+'.unsorted', 'a');
@@ -46,18 +64,3 @@ async function getResults(numGames: number, filename: string) {
 
   return results;
 }
-
-describe('Generate Report', async function() {
-  this.timeout(50 * 100 * 600 * 1000);
-  it('adaptBasedOnNextPiece = true', async function() {
-    Features.adaptBasedOnNextPiece = true;
-    const results = await getResults(250, 'adapt');
-    console.log(results);
-  });
-
-  it('adaptBasedOnNextPiece = false', async function() {
-    Features.adaptBasedOnNextPiece = false;
-    const results = await getResults(25, 'dont');
-    console.log(results);
-  });
-});

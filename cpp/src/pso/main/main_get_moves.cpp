@@ -160,8 +160,8 @@ std::pair<MoveEvaluatorGroup, MoveEvaluatorGroup> getMePair() {
     const std::string h = "BothLinearAdvVarN"; // MoveEvaluatorBlockLinear50_fixed
     //auto summary1 = s.readLogFile("18_LinearN.log");
     //auto summary2 = s.readLogFile("19_BothLinearN.log");
-    auto summary1 = s.readLogFile("18_LinearN.log");
-    auto summary2 = s.readLogFile("19_WellLocationsNotBoth.log");
+    auto summary1 = s.readLogFile("18_LinearGenFin.log");
+    auto summary2 = s.readLogFile("19_BothLinearGen.log");
 
     auto me1 = getMoveEvaluatorGroups().at(summary1.group).setWeights(summary1.weights);
     auto me2 = getMoveEvaluatorGroups().at(summary2.group).setWeights(summary2.weights);

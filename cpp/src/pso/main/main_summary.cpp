@@ -50,6 +50,7 @@ fort::char_table getData(const SummaryApi &s, const std::vector<std::string> &na
   r.applyHeader();
 
   for (auto name: names) {
+    if (strcmp(name.c_str(), "18_LinearGen.log") != 0) continue;
     eprintf("processing: %s\n", name.c_str());
     r.setFn([&]{ return s.getSummary(name); });
     r.calculateAndApplyFeatures();
@@ -157,7 +158,7 @@ fort::char_table getLookaheadData(const SummaryApi &s, const std::vector<std::st
     for (auto name2: names) {
       if (name1 == name2) continue;
       if (name1[1] == '8' && name2[1] == '9') {
-        if (strcmp("18_LinearN.log", name1.c_str()) != 0) continue;
+        //if (strcmp("18_LinearN.log", name1.c_str()) != 0) continue;
         eprintf("processing: %s\n", name1.c_str());
         r.setFns({
           [&]() { return s.getSummaryLookahead(name1, name2, 90); },

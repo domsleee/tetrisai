@@ -119,29 +119,33 @@ export class GameRunner implements ICapturable<any> {
       new Board(),
       currPiece,
       {
-        firstMoveDirection: 'LEFT',
-        totalLineClears: this.totalLineClears
+        totalLineClears: 0
       }
     );
 
     this.addLineClears(this.extraInformation.lineClears);
-    //this.addRawDemoEventsToDemoPlayer(moveEntries);
-    this.addPiece(currPiece);
+    this.addRawDemoEventsToDemoPlayer(moveEntries);
     const nextPiece = this.readNextPieceHandler.getCurrentPieceFromEmulator();
+    this.addPiece(currPiece);
     this.addPiece(nextPiece);
     if (this.tableBoard) {
       this.tableBoard['board'] = this.nextMoveBoard;
     }
 
-    await this.adaptBasedOnNextPieceAndUpdateExtraInformation(
-      new Board(),
-      currPiece,
-      nextPiece,
-      0
-    );
+    if (Features.adaptBasedOnNextPiece) {
+      await this.adaptBasedOnNextPieceAndUpdateExtraInformation(
+        new Board(),
+        currPiece,
+        nextPiece,
+        0
+      );
+      this.currentBoard = this.nextMoveBoard;
+    } else {
+      this.currentBoard = this.nextMoveBoard;
+      //await this.prepareNextMoveDataAndExtraInformationForNextPieceAppear(nextPiece);
 
-    this.currentBoard = this.nextMoveBoard;
-    // await this.prepareNextMoveDataAndExtraInformationForNextPieceAppear(nextPiece);
+    }
+
     this.expFrame = currFrame + (this.extraInformation.lastFrame || 0);
     this.currentPiece = nextPiece;
     this.demoPlayer.timer.resume();
