@@ -2,10 +2,10 @@
 #include "src/pso/summary/SummaryApi.h"
 #include "src/common/common.hpp"
 
-const std::string DATA_FOLDER = WORKSPACE_DIR + std::string("/src/pso/test/data");
+const std::string TEST_DATA_FOLDER = WORKSPACE_DIR + std::string("/src/pso/test/data");
 
 SCENARIO("readLogFile") {
-  SummaryApi s(DATA_FOLDER);
+  SummaryApi s(TEST_DATA_FOLDER);
   auto res = s.readLogFile("log");
   auto expGroup = "Linear";
   Config expConfig;
@@ -21,7 +21,7 @@ SCENARIO("readLogFile") {
 }
 
 SCENARIO("getAllNames") {
-  SummaryApi s(DATA_FOLDER);
+  SummaryApi s(TEST_DATA_FOLDER);
   auto res = s.getAllNames();
   REQUIRE(1 == res.size());
   REQUIRE("log" == res[0]);
