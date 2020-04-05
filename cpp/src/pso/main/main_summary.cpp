@@ -24,7 +24,7 @@ int main() {
   auto names = s.getAllNames();
   printf("num_files: %lu\n", names.size());
   std::sort(names.begin(), names.end());
-  std::cout << getData(s, names).to_string() << '\n';
+  // std::cout << getData(s, names).to_string() << '\n';
   // std::cout << getTransitionLinesComparison(s, names).to_string() << '\n';
   // std::cout << getPairsData(s, names).to_string() << '\n';
   std::cout << getLookaheadData(s, names).to_string() << '\n';  
@@ -50,7 +50,7 @@ fort::char_table getData(const SummaryApi &s, const std::vector<std::string> &na
   r.applyHeader();
 
   for (auto name: names) {
-    if (strcmp(name.c_str(), "18_LinearGen.log") != 0) continue;
+    //if (strcmp(name.c_str(), "19_BothLinearGen.log") != 0) continue;
     eprintf("processing: %s\n", name.c_str());
     r.setFn([&]{ return s.getSummary(name); });
     r.calculateAndApplyFeatures();
@@ -158,7 +158,8 @@ fort::char_table getLookaheadData(const SummaryApi &s, const std::vector<std::st
     for (auto name2: names) {
       if (name1 == name2) continue;
       if (name1[1] == '8' && name2[1] == '9') {
-        //if (strcmp("18_LinearN.log", name1.c_str()) != 0) continue;
+        if (strcmp("18_LinearGen.log", name1.c_str()) != 0) continue;
+        if (strcmp("19_BothLinearGen.log", name2.c_str()) != 0) continue;
         eprintf("processing: %s\n", name1.c_str());
         r.setFns({
           [&]() { return s.getSummaryLookahead(name1, name2, 90); },

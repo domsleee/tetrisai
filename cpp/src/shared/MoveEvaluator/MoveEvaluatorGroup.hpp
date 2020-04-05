@@ -24,6 +24,7 @@ class MoveEvaluatorGroup: public IEvaluator {
 
 
   MoveEvaluatorGroup& setWeights(const Weighting &w) {
+    w_ = w;
     setWeightsCalled_ = true;
     if (static_cast<int>(w.size()) != NUM_FACTORS) {
       printf("Given %lu, expected %d\n", w.size(), NUM_FACTORS);
@@ -54,6 +55,8 @@ class MoveEvaluatorGroup: public IEvaluator {
     }
     return res;
   }
+
+  Weighting w_;
 
 private:
   bool setWeightsCalled_ = false;

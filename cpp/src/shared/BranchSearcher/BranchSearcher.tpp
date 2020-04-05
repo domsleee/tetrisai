@@ -10,7 +10,7 @@
 
 struct Node {
   Node(): p(BitBoard().getEmptyPiece()), sm({}) {}
-  Node(BitPieceInfo _p, ScoreManager _sm): p(_p), sm(_sm) {}
+  Node(BitPieceInfo _p, ScoreManager _sm, int lineClears): p(_p), sm(_sm), lineClears_(lineClears) {}
   BitPieceInfo p;
   ScoreManager sm;
   friend bool operator<(const Node &n1, const Node &n2) {
@@ -18,6 +18,11 @@ struct Node {
     assert(false);
     return false;
   }
+  int getLineClears() {
+    return lineClears_;
+  }
+ private:
+  int lineClears_ = 0;
 };
 
 template<typename MyMoveFinder>
@@ -39,7 +44,7 @@ struct BranchSearcher {
       auto sm2 = sm;
       auto [b2, lineClears] = board.applyPieceInfoCopy(move);
       sm2.addLineClears(lineClears);
-      return PairTT(score, Node(move, sm2));
+      return PairTT(score, Node(move, sm2, lineClears));
     };
 
     std::transform(std::execution::BRANCH_SEARCHER_PARALLEL, allMoves.begin(), allMoves.end(), 
@@ -74,13 +79,26 @@ struct BranchSearcher {
 
   double evalBlockType(const BitBoard &b, const ScoreManager &sm, BlockType blockType, int depth, int tetrises) {
     auto topN = getTopN(b, blockType, sm, BranchSearcherDefs::TOP_N_BLOCKS);
+
     if (topN.size() == 0) return 1e9; // bad
-    if (depth == 0) return topN[0].first + tetrises * -1e9;
+    if (depth == 0) {
+      double offset = 0;
+      auto lineClears = topN[0].second.getLineClears();
+      if (lineClears == 4) {
+        offset = 1e9;
+      } else {
+        auto [me, mf] = meMfPairProvider_->getMeMfPair(sm.getTotalLines());
+        //offset = -me.w_[MoveEvaluator::TOTAL_LINES_CLEARED] * topN[0].second.getLineClears();
+      }
+      //printf("tetrises: %d\n", tetrises);
+      return topN[0].first + offset + tetrises * -1e9;
+    }
       
     std::vector<double> results;
     for (auto [score, node]: topN) {
-      int wasTetris = 0; //score < -1e8;
+      int wasTetris = node.getLineClears() == 4;
       results.push_back(evalBoard(node, depth-1, blockType, tetrises + wasTetris));
+      if (wasTetris) break;
     }
     return *std::min_element(results.begin(), results.end());
   }

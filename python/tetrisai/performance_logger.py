@@ -7,15 +7,22 @@ import os
 import tetrisai.log_wrapper as log_wrapper
 
 class PerformanceLogger:
-  def __init__(self, run_particle: IRunParticle):
+  def __init__(self, run_particle: IRunParticle, filename: str=None):
     self._run_particle = run_particle
     self._logger = log_wrapper.getLogger('performance_logger')
 
     now = datetime.datetime.now()
-    filename = now.strftime("%Y-%m-%d-%H-%M-%S-performance.log")
-    filename = os.path.join("log", filename)
+    if not filename:
+      filename = now.strftime("%Y-%m-%d-%H-%M-%S-performance.log")
+    filename = os.path.join("named_logs", filename)
     if not os.path.isdir(os.path.dirname(filename)):
       os.mkdir(os.path.dirname(filename))
+    
+    inc = 0
+    new_filename = filename
+    while os.path.isfile(new_filename):
+      new_filename = filename.split('.log')[0] + str(inc) + '.log'
+    filename = new_filename
 
     fh = logging.FileHandler(filename)
     formatter = logging.Formatter("%(message)s")

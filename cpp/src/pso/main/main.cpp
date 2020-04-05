@@ -15,7 +15,7 @@ int main(int argc, char ** argv) {
   cfg.numLines = 130;
   cfg.startingLines = 0;
   cfg.startingLevel = 18;
-  cfg.averageAmount = 50;
+  cfg.averageAmount = 100;
   cfg.numGames = 100;
 
   if (argc == 2 && strcmp(argv[1], "-c") == 0) {
