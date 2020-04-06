@@ -139,7 +139,7 @@ void handleGetMoveGivenNextPiece(int numLines) {
   }
   ScoreManager sm;
   sm.setLines(numLines);
-  auto bestPieceInfo = getNextMoveHandler.getNextMove(board, blockType1, blockType2, sm);
+  auto bestPieceInfo = getNextMoveHandler.getNextMovePredict(board, blockType1, blockType2, sm);
   
   auto mf = getNextMoveHandler.getMoveFinder(numLines);
   //mf.setFirstMoveDirectionChar(firstMoveDirectionChar);

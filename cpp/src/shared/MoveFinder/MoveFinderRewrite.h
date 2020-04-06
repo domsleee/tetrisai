@@ -9,6 +9,11 @@ const int DEFAULT_MAX_DROP_REM = 3; // 19 ==> 2
 
 class MoveFinderRewrite {
  public:
+  MoveFinderRewrite() {}
+  MoveFinderRewrite(int level) {
+    maxDropRem_ = level >= 19 ? 2 : 3;
+  }
+
   std::vector<BitPieceInfo> findAllMoves(const BitBoard& b, BlockType blockType) const;
   void setMaxDropRem(int v) { maxDropRem_ = v; }
   void setFirstMoveDirectionChar(char c) {}

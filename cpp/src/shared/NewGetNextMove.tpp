@@ -26,11 +26,13 @@ class NewGetNextMove {
   BitPieceInfo getNextMove(const BitBoard &board, const BlockType blockType1, const BlockType blockType2, const ScoreManager &sm, char firstMoveChar=NO_CONSTRAINT) const;
   
   BitPieceInfo getNextMovePredict(const BitBoard &board, const BlockType blockType, const ScoreManager &sm) const;
+  BitPieceInfo getNextMovePredict(const BitBoard &board, const BlockType blockType1, const BlockType blockType2, const ScoreManager &sm) const;
 
   MyMoveFinder getMoveFinder(int numLines) {
     return meMfPairProvider_->getMeMfPair(numLines).second;
   }
  private:
+  BitPieceInfo selectBestOrTetris(const std::vector<BranchSearcherNs::NodePair> &topMoves, BlockType nextBlockType) const;
   std::unique_ptr<MeMfPairProvider<MyMoveFinder>> meMfPairProvider_;
 };
 
@@ -57,26 +59,6 @@ BitPieceInfo NewGetNextMove<MyMoveFinder>::getNextMove(const BitBoard &board, co
   return bestPiece;
 }
 
-template<typename MyMoveFinder>
-BitPieceInfo NewGetNextMove<MyMoveFinder>::getNextMovePredict(const BitBoard &board, const BlockType blockType, const ScoreManager &sm) const {
-  //return getNextMove(board, blockType, sm);
-  BranchSearcher<MyMoveFinder> bs(*meMfPairProvider_);
-
-  auto topMoves = bs.getTopN(board, blockType, sm, BranchSearcherDefs::INIT_TOP_N_BLOCKS);
-  assert(topMoves.size() > 0);
-  double bestScore = 5e9;
-  auto bestPiece = topMoves[0].second.p;
-  for (auto [unusedScore, node]: topMoves) {
-    double score = bs.evalBoard(node, BranchSearcherDefs::DEPTH, blockType);
-    if (node.getLineClears() == 4) return node.p;
-    if (score < bestScore || (score == bestScore && node.p < bestPiece)) {
-      bestPiece = node.p;
-      bestScore = score;
-    } 
-  }
-
-  return bestPiece;
-}
 
 template<typename MyMoveFinder>
 BitPieceInfo NewGetNextMove<MyMoveFinder>::getNextMove(const BitBoard &board, const BlockType blockType1, const BlockType blockType2, const ScoreManager &sm, char firstMoveChar) const {
@@ -131,3 +113,48 @@ BitPieceInfo NewGetNextMove<MyMoveFinder>::getNextMove(const BitBoard &board, co
   return std::get<1>(*scores.begin());
 }
 
+
+template<typename MyMoveFinder>
+BitPieceInfo NewGetNextMove<MyMoveFinder>::getNextMovePredict(const BitBoard &board, const BlockType blockType, const ScoreManager &sm) const {
+  //return getNextMove(board, blockType, sm);
+  BranchSearcher<MyMoveFinder> bs(*meMfPairProvider_);
+
+  auto [me, mf] = meMfPairProvider_->getMeMfPair(sm.getTotalLines());
+  const auto moves = mf.findAllMoves(board, blockType);
+  auto topMoves = bs.getTopN(board, moves, sm, BranchSearcherDefs::INIT_TOP_N_BLOCKS);
+  assert(topMoves.size() > 0);
+  double bestScore = 5e9;
+  auto bestPiece = topMoves[0].second.p;
+  for (auto [unusedScore, node]: topMoves) {
+    if (node.getLineClears() == 4) return node.p;
+    double score = bs.evalBoardWithPrev(node, blockType, BranchSearcherDefs::DEPTH);
+    if (score < bestScore || (score == bestScore && node.p < bestPiece)) {
+      bestPiece = node.p;
+      bestScore = score;
+    } 
+  }
+
+  return bestPiece;
+}
+
+template<typename MyMoveFinder>
+BitPieceInfo NewGetNextMove<MyMoveFinder>::getNextMovePredict(const BitBoard &board, const BlockType blockType1, const BlockType blockType2, const ScoreManager &sm) const {
+  //return getNextMovePredict(board, blockType1, sm);
+  BranchSearcher<MyMoveFinder> bs(*meMfPairProvider_);
+
+  auto [me, mf] = meMfPairProvider_->getMeMfPair(sm.getTotalLines());
+  const auto moves = mf.findAllMoves(board, blockType1);
+  auto topMoves = bs.getTopN(board, moves, sm, BranchSearcherDefs::INIT_TOP_N_BLOCKS);
+  assert(topMoves.size() > 0);
+  double bestScore = 5e9;
+  auto bestPiece = topMoves[0].second.p;
+  for (auto [unusedScore, node]: topMoves) {
+    if (node.getLineClears() == 4) return node.p;
+    double score = bs.evalBoardWithNext(node, blockType2, BranchSearcherDefs::DEPTH_WITH_KNOWN_BLOCK);
+    if (score < bestScore || (score == bestScore && node.p < bestPiece)) {
+      bestPiece = node.p;
+      bestScore = score;
+    } 
+  }
+  return bestPiece;
+}

@@ -25,20 +25,34 @@ struct Node {
   int lineClears_ = 0;
 };
 
+namespace BranchSearcherNs {
+  using NodePair = std::pair<double, Node>;
+}
+
+
 template<typename MyMoveFinder>
 struct BranchSearcher {
   BranchSearcher(const MeMfPairProvider<MyMoveFinder> &meMfPairProvider):
     meMfPairProvider_{std::make_unique<MeMfPairProvider<MyMoveFinder>>(meMfPairProvider)}
     {}
 
+  MoveFinderRewrite getMf(const ScoreManager &sm) {
+    return MoveFinderRewrite(sm.getLevel());
+  }
+
   std::vector<std::pair<double, Node>> getTopN(const BitBoard &board, BlockType blockType, const ScoreManager &sm, int num) {
-    auto [me, mf] = meMfPairProvider_->getMeMfPair(sm.getTotalLines());
+    auto mf = getMf(sm);
     if (board.hasNoMoves(blockType)) return {};
     auto allMoves = mf.findAllMoves(board, blockType);
+    return getTopN(board, allMoves, sm, num);
+  }
+
+  std::vector<BranchSearcherNs::NodePair> getTopN(const BitBoard &board, const std::vector<BitPieceInfo> &allMoves, const ScoreManager &sm, int num) {
     using PairTT = std::pair<double, Node>;
     std::vector<PairTT> tempVec(allMoves.size(), {0, {}});
     std::priority_queue<PairTT, std::vector<PairTT>, std::greater<PairTT>> pq;
     
+    auto [me, unused] = meMfPairProvider_->getMeMfPair(sm.getTotalLines());
     auto fn = [&, this](const BitPieceInfo &move) -> PairTT {
       double score = me.evaluate(board, move, sm);
       auto sm2 = sm;
@@ -50,7 +64,7 @@ struct BranchSearcher {
     std::transform(std::execution::BRANCH_SEARCHER_PARALLEL, allMoves.begin(), allMoves.end(), 
                   tempVec.begin(), fn);
     for (const auto &t: tempVec) pq.push(t);
-    std::vector<std::pair<double, Node>> res;
+    std::vector<BranchSearcherNs::NodePair> res;
     while (num-- && !pq.empty()) {
       res.push_back(pq.top());
       pq.pop();
@@ -58,10 +72,15 @@ struct BranchSearcher {
     return res;
   }
 
-  double evalBoard(const Node &n, int depth, BlockType prevBlockType) {
+  double evalBoardWithPrev(const Node &n, BlockType prevBlockType, int depth) {
     return evalBoard(n, depth, prevBlockType, 0);
   }
 
+  double evalBoardWithNext(const Node &n, BlockType nextBlockType, int depth) {
+    BitBoard b = n.p.getBoard();
+    b.applyPieceInfo(n.p);
+    return evalBlockType(b, n.sm, nextBlockType, depth, 0);
+  }
 
  private:
   double evalBoard(const Node &n, int depth, BlockType prevBlockType, int tetrises) {
