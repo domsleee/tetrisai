@@ -13,13 +13,13 @@ import { GameRunnerResult } from '@/components/Game/GameRunner';
 describe('Generate Report', async function() {
   this.timeout(50 * 100 * 600 * 1000);
   it('adaptBasedOnNextPiece = true', async function() {
-    return;
     Features.adaptBasedOnNextPiece = true;
     const results = await getResults(250, 'adapt');
     console.log(results);
   });
 
   it('adaptBasedOnNextPiece = false', async function() {
+    return;
     Features.adaptBasedOnNextPiece = false;
     const results = await getResults(25, 'dont');
     console.log(results);
