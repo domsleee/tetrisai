@@ -66,10 +66,8 @@ BitPieceInfo BitBoard::getPiece(BlockType blockType) const {
 
 bool BitBoard::vacant(const BitPieceInfo& p) const {
   if (p.id_ == -1) return false;
-  const auto& pieceBitset = BitBoardPre::idToBitset(p.id_);
-  return (bitset_ & pieceBitset).none();
+  return vacant(p.id_);
 }
-
 
 // slower checks
 bool BitBoard::vacant(const Move& move) const {
@@ -79,8 +77,14 @@ bool BitBoard::vacant(const Move& move) const {
   }
   return true;
 }
+
 bool BitBoard::vacant(const Coord& coord) const {
   return !bitset_.test(coord.r*NUM_COLUMNS+coord.c);
+}
+
+bool BitBoard::vacant(int id) const {
+  const auto& pieceBitset = BitBoardPre::idToBitset(id);
+  return (bitset_ & pieceBitset).none();
 }
 
 int BitBoard::applyMove(const Move& move) {
@@ -172,6 +176,15 @@ BitPieceInfo BitPieceInfo::doAction(Action action) const {
   }
   throw std::runtime_error("suppress compiler");
 }
+
+std::pair<bool, BitPieceInfo> BitPieceInfo::doActionCopy(Action action) const {
+  int id = BitBoardPre::doActionOnEmptyBoard(getId(), action);
+  if (id == -1) return {false, *this};
+  auto copy = *this;
+  copy.doAction(action);
+  return {true, copy};
+}
+
 
 Move BitPieceInfo::getPosition() const {
   return BitBoardPre::idToMove(id_);

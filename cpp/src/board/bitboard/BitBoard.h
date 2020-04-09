@@ -54,6 +54,7 @@ class BitBoard {
   bool vacant(const Move&) const;
   bool vacant(const Coord&) const;
   bool vacant(int id) const;
+  
   friend bool operator==(const BitBoard &b1, const BitBoard &b2) {
     return b1.bitset_ == b2.bitset_;
   }
@@ -97,6 +98,9 @@ class BitPieceInfo {
   int getId() const { return id_; }
   int getRepId() const { return BitBoardPre::getRepIdFromId(id_); }
   const BitBoard& getBoard() const { return b_; };
+
+
+  std::pair<bool, BitPieceInfo> doActionCopy(Action) const;
 
   std::vector<BitPieceInfo> getClosedRotN() const {
     switch(getBlockType()) {

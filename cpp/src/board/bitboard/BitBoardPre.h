@@ -39,4 +39,6 @@ namespace BitBoardPre {
   extern std::unordered_map<Move, int> moveToId_;
 
   BlockType getBlockTypeFromId(int id);
+
+  int doActionOnEmptyBoard(int id, Action action);
 }

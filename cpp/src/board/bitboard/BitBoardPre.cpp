@@ -16,6 +16,7 @@ namespace BitBoardPre {
   const int NUM_BLOCKS = 8;
   const int NUM_MOVES = 4;
   const int NUM_ROTATIONS = 2;
+  const int NUM_ACTIONS = NUM_MOVES + NUM_ROTATIONS + 1;
   const int UNDEFINED = -1;
   
   void bfs(const SimplePieceInfo &p);
@@ -34,6 +35,7 @@ namespace BitBoardPre {
 
   int rotateIndex_[MAX_IND][NUM_ROTATIONS];
   int moveIndex_[MAX_IND][NUM_MOVES];
+  std::array<std::array<int, 7>, MAX_IND> actionIndex_;
   int startingPieceId_[NUM_BLOCKS];
   std::vector<Move> idToMove_(MAX_IND);
   std::vector<int> idToHeight_(MAX_IND);
@@ -56,6 +58,9 @@ namespace BitBoardPre {
       }
       for (int j = 0; j < NUM_MOVES; j++) {
         moveIndex_[i][j] = UNDEFINED;
+      }
+      for (int j = 0; j < NUM_ACTIONS; j++) {
+        actionIndex_[i][j] = UNDEFINED;
       }
     }
     SimpleBoard b;
@@ -137,10 +142,13 @@ namespace BitBoardPre {
 
   inline void addRotate(int id, int nxId, RotateDirection rotateDirection) {
     rotateIndex_[id][rotateDirection] = nxId;
+    actionIndex_[id][static_cast<int>(toAction(rotateDirection))] = nxId;
+
   }
 
   inline void addMove(int id, int nxId, MoveDirection moveDirection) {
     moveIndex_[id][moveDirection] = nxId;
+    actionIndex_[id][static_cast<int>(toAction(moveDirection))] = nxId;
   }
 
   int getStartingPieceId(BlockType blockType) {
@@ -265,6 +273,10 @@ namespace BitBoardPre {
 
       idToRep_[i] = repIdOverride != UNDEFINED ? repIdOverride : i;
     }
+  }
+
+  int doActionOnEmptyBoard(int id, Action action) {
+    return actionIndex_[id][static_cast<int>(action)];
   }
 }
 
