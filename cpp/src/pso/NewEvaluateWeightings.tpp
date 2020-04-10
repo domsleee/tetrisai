@@ -11,7 +11,7 @@
 #include <execution>
 
 #ifndef PARALLEL
-#define PARALLEL par_unseq
+#define PARALLEL seq
 #endif
 
 template<typename MyRunPieceSet>
@@ -85,11 +85,11 @@ std::vector<ScoreManager> NewEvaluateWeightings<MyRunPieceSet>::getScoreManagers
   };
 
   if (lookahead_ > 0) {
-    std::transform(std::execution::PARALLEL, // par, seq, par_unseq
+    std::transform(std::execution::PARALLEL,
                pieceSets.begin(), pieceSets.end(), 
                scores.begin(), fn2);
   } else {
-    std::transform(std::execution::PARALLEL, // par, seq, par_unseq
+    std::transform(std::execution::PARALLEL,
                pieceSets.begin(), pieceSets.end(), 
                scores.begin(), fn);
   }

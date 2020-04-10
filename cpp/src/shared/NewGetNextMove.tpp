@@ -11,7 +11,7 @@
 #include "src/shared/BranchSearcher/BranchSearcher.tpp"
 #include "src/shared/BranchSearcher/defs.h"
 
-#define LOOKAHEAD_PARALLEL par_unseq
+#define LOOKAHEAD_PARALLEL seq
 
 template<typename MyMoveFinder>
 class NewGetNextMove {

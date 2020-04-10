@@ -26,6 +26,17 @@ SCENARIO("I-PIECE has moves on empty board") {
         REQUIRE(path.size() > 0);
         REQUIRE("2 LEFT\n" == path[0]);
       }
+      AND_WHEN("we look at the path") {
+        auto exp = b.getPiece(BlockType::I_PIECE, {{{16, 0}, {17, 0}, {18, 0}, {19, 0}}});
+        auto path = mf.getShortestPathActions(exp);
+        auto iPiece = b.getPiece(BlockType::I_PIECE);
+        for (auto [frame, action]: path) {
+          //printBoardWithPiece(b, iPiece);
+          //printf("frame: %d, nextAction: %s\n", frame, toString(action).c_str());
+          iPiece = iPiece.doAction(action);
+        }
+        REQUIRE(exp == iPiece);
+      }
     }
   }
 }

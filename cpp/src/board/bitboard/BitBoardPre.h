@@ -41,4 +41,10 @@ namespace BitBoardPre {
   BlockType getBlockTypeFromId(int id);
 
   int doActionOnEmptyBoard(int id, Action action);
+
+
+  const std::vector<std::pair<std::vector<Action>, int>> &getActions(bool includeDown);
+  const std::vector<Action> &bitfieldToActions(int bitfield);
+
+
 }

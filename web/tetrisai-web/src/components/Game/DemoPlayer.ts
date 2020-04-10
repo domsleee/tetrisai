@@ -7,6 +7,7 @@ import { IDemoPlayerObserver } from './IDemoPlayerObserver';
 import { default as loglevel } from 'loglevel';
 
 const log = loglevel.getLogger('DemoPlayer');
+log.setLevel('info');
 /*
 const log = {
   info: (...args: any[]) => {
@@ -78,7 +79,6 @@ export class DemoPlayer implements IDemoPlayer {
   }
 
   public addEvents(entries: DemoEntry[]): void {
-    log.info('Adding entries', entries.length, entries);
     for (const event of entries) {
       this.addEvent(event);
     }
@@ -280,6 +280,6 @@ export class DemoPlayer implements IDemoPlayer {
   private printEvents() {
     const arr = [];
     for (const event of this.events) arr.push(event);
-    log.info('printEvents', arr);
+    log.info('addingEvents', arr);
   }
 }

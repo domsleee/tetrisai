@@ -14,26 +14,28 @@ namespace MoveFinderAllNs {
     int getId() const { return id_; }
     void setId(int id) { id_ = id; }
     int getCooldownBitField() const { return cooldownBitField_; }
-    void setCooldownBitField(int v) { cooldownBitField_ = v; }
+    void setCooldownBitField(int v) { assert(v <= 0b1111); cooldownBitField_ = v; }
     int getDropRem() const { return dropRem_; }
-    void setDropRem(int v) { dropRem_ = v; }
+    void setDropRem(int v) { assert(v <= 0b111); dropRem_ = v; }
     void decDropRem(int maxDropRem) {
-      if (dropRem_ == 0) dropRem_ = maxDropRem;
-      else --dropRem_;
+      if (--dropRem_ == 0) dropRem_ = maxDropRem;
     }
     void doAction(Action action) {
       id_ = BitBoardPre::doActionOnEmptyBoard(id_, action);
     }
-    Node(const BitPieceInfo &p, int cooldownBitfield): Node(p.getId(), cooldownBitfield) {}
+    Node(const BitPieceInfo &p, int cooldownBitfield, int dropRem): Node(p.getId(), cooldownBitfield, dropRem) {}
     Node(const int v) {
       id_ = v >> 7;
       cooldownBitField_ = (v >> 3) & 0b1111;
       dropRem_ = v & 0b111;
     }
-    Node(int id, int cooldownBitField): id_{id}, cooldownBitField_{cooldownBitField} {}
+    Node(int id, int cooldownBitField, int dropRem):
+      id_{id},
+      cooldownBitField_{cooldownBitField},
+      dropRem_{dropRem} {}
 
     int toInt() const {
-      return (id_ << 7) + (cooldownBitField_ << 3) + dropRem_;;
+      return (id_ << 7) + (cooldownBitField_ << 3) + dropRem_;
     }
    private:
     int id_;
@@ -45,7 +47,7 @@ namespace MoveFinderAllNs {
 
 class MoveFinderAll {
   std::array<bool, BitBoardPre::NUM_INDEXES> isFinalState_;
-  std::vector<int> pred_ = std::vector<int>(BitBoardPre::NUM_INDEXES << (4 + 3), -1);
+  std::vector<int> pred_ = std::vector<int>(BitBoardPre::NUM_INDEXES << (4 + 3 + 1), -1);
 
   int maxDropRem_ = 3;
  public:
@@ -64,13 +66,16 @@ class MoveFinderAll {
   BitBoard b_;
   std::vector<int> lastToNode_ = std::vector<int>(BitBoardPre::NUM_INDEXES, -1);
 
-  void applyTransition(std::queue<MoveFinderAllNs::Node> &q, MoveFinderAllNs::Node n, const std::vector<Action> &actions);
+  void applyTransition(std::queue<MoveFinderAllNs::Node> &q, MoveFinderAllNs::Node n, const std::pair<std::vector<Action>, int> &actionPairs);
   bool isSeen(const MoveFinderAllNs::Node &n) {
     // todo.
     return pred_[n.toInt()] != -1;
   }
   void addPred(const MoveFinderAllNs::Node &n1, const MoveFinderAllNs::Node &n2) {
     pred_[n2.toInt()] = n1.toInt();
+    if (n2.toInt() == 321024 && n1.toInt() == 321025) {
+      throw std::runtime_error("sdlfkj");
+    }
     //pred_[n2.toInt()] = n1.toInt();
   }
   

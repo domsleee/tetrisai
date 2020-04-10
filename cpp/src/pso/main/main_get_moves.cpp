@@ -3,6 +3,7 @@
 #include "src/common/Weighting.hpp"
 #include "src/common/common.hpp"
 #include "src/shared/MoveFinder/MoveFinderFSM.h"
+#include "src/shared/MoveFinder/MoveFinderAll.h"
 #include "src/pso/defs.h"
 #include "src/pso/summary/SummaryApi.h"
 
@@ -81,7 +82,7 @@ void handleGetMove(int numLines, bool givenFirstMoveDirection) {
   BlockType blockType = static_cast<BlockType>(piece);
   auto board = BitBoard(boardStr);
   auto [me1, me2] = getMePair();
-  auto zz = getMeMfPairProvider<MoveFinderFSM>(me1, me2);
+  auto zz = getMeMfPairProvider<MoveFinderAll>(me1, me2);
   auto getNextMoveHandler = NewGetNextMove(zz);
 
   if (board.hasNoMoves(blockType)) {
@@ -129,7 +130,7 @@ void handleGetMoveGivenNextPiece(int numLines) {
   BlockType blockType2 = static_cast<BlockType>(blockTypeInt2);
 
   auto [me1, me2] = getMePair();
-  auto v = getMeMfPairProvider<MoveFinderFSM>(me1, me2);
+  auto v = getMeMfPairProvider<MoveFinderAll>(me1, me2);
   auto getNextMoveHandler = NewGetNextMove(v);
   
   const auto board = BitBoard(boardStr);

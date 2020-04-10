@@ -47,7 +47,7 @@ ScoreManager RunPieceSet<MyGetNextMove>::runGame(const std::vector<BlockType> &p
     if (b.hasNoMoves(blockType)) {
       break;
     };
-    auto pieceInfo = getNextMoveHandler.getNextMovePredict(b, blockType, sm);
+    auto pieceInfo = getNextMoveHandler.getNextMove(b, blockType, sm);
     int lineClears = b.applyPieceInfo(pieceInfo);
     sm.addLineClears(lineClears);
     moves++;
@@ -71,7 +71,7 @@ ScoreManager RunPieceSet<MyGetNextMove>::runGameWithLookahead(const std::vector<
     if (b.hasNoMoves(blockType1)) {
       break;
     };
-    auto pieceInfo = getNextMoveHandler.getNextMovePredict(b, blockType1, blockType2, sm);
+    auto pieceInfo = getNextMoveHandler.getNextMove(b, blockType1, blockType2, sm);
     int lineClears = b.applyPieceInfo(pieceInfo);
     sm.addLineClears(lineClears);
     moves++;
