@@ -9,11 +9,14 @@
 #include "src/pso/main/RowGenerator/rows/AllRows.h"
 #include <chrono>
 #include <ctime>
+#include <fstream>
 
 fort::char_table getData(const SummaryApi &s, const std::vector<std::string> &names);
 fort::char_table getTransitionLinesComparison(const SummaryApi &s, const std::vector<std::string> &names);
 fort::char_table getPairsData(const SummaryApi &s, const std::vector<std::string> &names);
 fort::char_table getLookaheadData(const SummaryApi &s, const std::vector<std::string> &names);
+fort::char_table getBfsData(const SummaryApi &s, const std::vector<std::string> &names);
+
 
 int main() {
   auto t = std::chrono::system_clock::now();
@@ -27,7 +30,8 @@ int main() {
   // std::cout << getData(s, names).to_string() << '\n';
   // std::cout << getTransitionLinesComparison(s, names).to_string() << '\n';
   // std::cout << getPairsData(s, names).to_string() << '\n';
-  std::cout << getLookaheadData(s, names).to_string() << '\n';  
+  // std::cout << getLookaheadData(s, names).to_string() << '\n';  
+  std::cout << getBfsData(s, names).to_string() << '\n';
   auto endTime = std::chrono::system_clock::now();
 
   std::cout << "Time taken: " << toFixed((double)getMs(endTime-t)/1000, 1) << '\n';
@@ -43,8 +47,8 @@ fort::char_table getData(const SummaryApi &s, const std::vector<std::string> &na
     std::make_shared<Seed>(),
     std::make_shared<NumGames>(),
     std::make_shared<TopAverage>(50),
-    std::make_shared<PercentileRow>(70),
     std::make_shared<PercentileRow>(50),
+    std::make_shared<PercentileRow>(70),
     std::make_shared<PercGamesCleared>()
   });
   r.applyHeader();
@@ -68,8 +72,8 @@ fort::char_table getPairsData(const SummaryApi &s, const std::vector<std::string
     std::make_shared<Seed>(),
     std::make_shared<NumGames>(),
     std::make_shared<TopAverage>(50),
-    std::make_shared<PercentileRow>(70),
     std::make_shared<PercentileRow>(50),
+    std::make_shared<PercentileRow>(70),
     std::make_shared<MaxoutRate>()
   });
   r.applyHeader();
@@ -101,8 +105,8 @@ fort::char_table getTransitionLinesComparison(const SummaryApi &s, const std::ve
     std::make_shared<Seed>(),
     std::make_shared<NumGames>(),
     std::make_shared<TopAverage>(50),
-    std::make_shared<PercentileRow>(70),
     std::make_shared<PercentileRow>(50),
+    std::make_shared<PercentileRow>(70),
     std::make_shared<MaxoutRate>()
   });
   r.applyHeader();
@@ -133,27 +137,14 @@ fort::char_table getLookaheadData(const SummaryApi &s, const std::vector<std::st
     std::make_shared<Seed>(),
     std::make_shared<NumGames>(),
     std::make_shared<TopAverage>(50),
-    std::make_shared<PercentileRow>(70),
     std::make_shared<PercentileRow>(50),
+    std::make_shared<PercentileRow>(70),
     std::make_shared<PercGamesCleared>(130),
     std::make_shared<PercGamesCleared>(230),
     std::make_shared<MaxoutRate>()
   });
   r.applyHeader();
 
-  /*for (auto name: names) {
-    if (name[1] == '8') {
-      auto otherName = name;
-      otherName[1] = '9';
-      if (std::find(names.begin(), names.end(), otherName) != names.end()) {
-        eprintf("processing: %s\n", name.c_str());
-        r.setFns({
-          [&]() { return s.getSummaryLookahead(name, otherName, 90); },
-        });
-        r.calculateAndApplyFeatures();
-      }
-    }
-  }*/
   for (auto name1: names) {
     for (auto name2: names) {
       if (name1 == name2) continue;
@@ -170,3 +161,40 @@ fort::char_table getLookaheadData(const SummaryApi &s, const std::vector<std::st
   }
   return r.getTable();
 }
+
+
+fort::char_table getBfsData(const SummaryApi &s, const std::vector<std::string> &names) {
+  std::cout << "BFS DATA\n";
+  fort::char_table table;
+  auto r = RowGenerator(table, {
+    std::make_shared<Name>(),
+    std::make_shared<Group>(),
+    std::make_shared<Seed>(),
+    std::make_shared<NumGames>(),
+    std::make_shared<TopAverage>(50),
+    std::make_shared<PercentileRow>(50),
+    std::make_shared<PercentileRow>(70),
+    std::make_shared<PercGamesCleared>(130),
+    std::make_shared<PercGamesCleared>(230),
+    std::make_shared<MaxoutRate>()
+  });
+  r.applyHeader();
+
+  for (auto name1: names) {
+    if (strcmp("19_Bfs.log", name1.c_str()) != 0) continue;
+    eprintf("processing: %s\n", name1.c_str());
+    r.setFns({
+      [&]() { return s.getSummaryLookahead(name1, name1, 90); },
+    });
+    auto results = r.calculateAndApplyFeatures();
+    auto result = results[0];
+    std::ofstream fout{name1};
+    fout << "score,level,totalLines\n";
+    for (auto score: result.getScoreManagers()) {
+      fout << score.getScore() << ',' << score.getLevel() << ',' << score.getTotalLines() << '\n';
+    }
+    result.getScoreManagers();
+  }
+  return r.getTable();
+}
+

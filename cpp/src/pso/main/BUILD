@@ -28,6 +28,14 @@ cc_binary(
 )
 
 cc_binary(
+    name = "max_score",
+    srcs = ["main_max_score.cpp"],
+    deps = ["//src:pso"],
+    copts = EXEC_COPTS
+)
+
+
+cc_binary(
     name = "bench_time",
     srcs = ["main_bench_time.cpp"],
     deps = ["//src:pso"],

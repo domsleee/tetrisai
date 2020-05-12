@@ -5,6 +5,8 @@
 #include "src/shared/Config.hpp"
 #include "src/pso/SimpleApi.tpp"
 #include "src/shared/MoveFinder/MoveFinderAll.h"
+#include "src/shared/MoveFinder/MoveFinderBfs.tpp"
+
 #include <chrono>
 
 
@@ -19,7 +21,7 @@ int main(int argc, char ** argv) {
   cfg.numGames = 100;
   cfg.seed = 55;
   cfg.print();
-  auto score = getEvaluateWeightings<MoveFinderAll>(me, cfg).runAllPieceSets();
+  auto score = getEvaluateWeightings<MoveFinderBfs>(me, cfg).runAllPieceSets();
   auto endTime = std::chrono::system_clock::now();
   printf("evaluate time: %ldms (%0.2f)\n", getMs(endTime-startTime), score);
 }

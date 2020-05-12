@@ -18,6 +18,9 @@ class RunnerSettings:
   velocity_clamp: typing.Tuple[float, float] = VELOCITY_CLAMP
   optimizer_options: dict = dataclasses.field(default_factory=dict)
 
+  def __post_init__(self):
+    self.get_optimizer_options()
+
   def get_optimizer_options(self):
     if self.local:
       options = {'c1': 2, 'c2': 2, 'w': 0.728}

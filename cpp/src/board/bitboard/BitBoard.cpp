@@ -180,9 +180,15 @@ BitPieceInfo BitPieceInfo::doAction(Action action) const {
 std::pair<bool, BitPieceInfo> BitPieceInfo::doActionCopy(Action action) const {
   int id = BitBoardPre::doActionOnEmptyBoard(getId(), action);
   if (id == -1) return {false, *this};
-  auto copy = *this;
-  copy.doAction(action);
-  return {true, copy};
+  if (!b_.vacant(id)) return {false, *this};
+  return {true, {b_.getPieceFromId(id)}};
+}
+
+std::pair<bool, int> BitPieceInfo::doActionCopyId(Action action) const {
+  int id = BitBoardPre::doActionOnEmptyBoard(getId(), action);
+  if (id == -1) return {false, -1};
+  if (!b_.vacant(id)) return {false, -1};
+  return {true, id};
 }
 
 

@@ -26,8 +26,8 @@ std::vector<ScoreManager> getScoresTransition(const Weighting &w1, const Weighti
 
 template<typename MyMoveFinder=MoveFinderFSM>
 std::vector<ScoreManager> getScoresLookahead(const Config &config, MoveEvaluatorGroup me1, MoveEvaluatorGroup me2, int transitionLines) {
-  MeMfPairProvider<MyMoveFinder> meMfPairProvider = getMeMfPairProvider<MyMoveFinder>(me1, me2, transitionLines);
-  auto ew = NewEvaluateWeightingsFactory<MyMoveFinder>::getInstance(meMfPairProvider);
+  auto meMfPairProvider = getMeMfPairProvider<MyMoveFinder>(me1, me2, transitionLines);
+  auto ew = NewEvaluateWeightingsFactory<MyMoveFinder, true>::getInstance(meMfPairProvider);
   // applyConfig
   config.applyConfig(ew);
   ew.setLookahead(1);

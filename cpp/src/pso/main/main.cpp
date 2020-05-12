@@ -6,16 +6,16 @@
 #include "src/pso/SimpleApi.tpp"
 
 
-const std::string moveEvaluatorGroup = MOVE_EVALUATOR_GROUP_LINEAR;
+const std::string moveEvaluatorGroup = MOVE_EVALUATOR_GROUP_NORMAL;
 
 void run(int argc, char ** argv, Config cfg);
 
 int main(int argc, char ** argv) {
   Config cfg;
-  cfg.numLines = 130;
+  cfg.numLines = 230;
   cfg.startingLines = 0;
-  cfg.startingLevel = 18;
-  cfg.averageAmount = 100;
+  cfg.startingLevel = 19;
+  cfg.averageAmount = 33;
   cfg.numGames = 100;
 
   if (argc == 2 && strcmp(argv[1], "-c") == 0) {
@@ -49,7 +49,7 @@ void run(int argc, char ** argv, Config cfg) {
   }
 
   me.setWeights(weightings);
-  std::cout << getEvaluateWeightings(me, cfg).runAllPieceSets() << '\n';
+  std::cout << getEvaluateWeightings<MoveFinderBfs>(me, cfg).runAllPieceSets() << '\n';
 }
 
 

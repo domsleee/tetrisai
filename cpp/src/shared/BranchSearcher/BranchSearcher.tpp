@@ -30,14 +30,14 @@ namespace BranchSearcherNs {
 }
 
 
-template<typename MyMoveFinder>
+template<typename MyMoveFinder, typename BranchMoveFinder>
 struct BranchSearcher {
   BranchSearcher(const MeMfPairProvider<MyMoveFinder> &meMfPairProvider):
     meMfPairProvider_{std::make_unique<MeMfPairProvider<MyMoveFinder>>(meMfPairProvider)}
     {}
 
-  MoveFinderRewrite getMf(const ScoreManager &sm) {
-    return MoveFinderRewrite(sm.getLevel());
+  BranchMoveFinder getMf(const ScoreManager &sm) {
+    return BranchMoveFinder(sm.getLevel());
   }
 
   std::vector<std::pair<double, Node>> getTopN(const BitBoard &board, BlockType blockType, const ScoreManager &sm, int num) {

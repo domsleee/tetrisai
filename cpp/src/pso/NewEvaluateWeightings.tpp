@@ -11,7 +11,7 @@
 #include <execution>
 
 #ifndef PARALLEL
-#define PARALLEL seq
+#define PARALLEL par_unseq
 #endif
 
 template<typename MyRunPieceSet>
@@ -30,7 +30,6 @@ class NewEvaluateWeightings {
   void setNumGames(int numGames);
   void setNumLines(int numLines);
   void setStartingLines(int startingLines);
-  void setMaxDropRem(int dropRem);
   void setLookahead(int lookahead) { lookahead_ = lookahead; }
   void setAverageAmount(int averageAmount) { averageAmount_ = averageAmount; }
   void setStartingLevel(int startingLevel) { runPieceSet_handler_->setStartingLevel(startingLevel); }
@@ -117,10 +116,3 @@ template<typename MyRunPieceSet>
 void NewEvaluateWeightings<MyRunPieceSet>::setStartingLines(int startingLines) {
   runPieceSet_handler_->setStartingLines(startingLines);
 }
-
-
-template<typename MyRunPieceSet>
-void NewEvaluateWeightings<MyRunPieceSet>::setMaxDropRem(int maxDropRem) {
-  runPieceSet_handler_->setMaxDropRem(maxDropRem);
-}
-

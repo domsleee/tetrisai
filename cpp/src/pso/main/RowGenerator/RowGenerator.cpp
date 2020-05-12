@@ -10,15 +10,17 @@ void RowGenerator::applyHeader() {
   table_ << "time(s)" << fort::endr;
 }
 
-void RowGenerator::calculateAndApplyFeatures() {
+std::vector<SummaryResult> RowGenerator::calculateAndApplyFeatures() {
   if (fns_.size() == 0) {
     throw std::runtime_error("no fns");
   }
   std::vector<std::string> results;
+  std::vector<SummaryResult> ret;
   for (auto fn: fns_) {
     auto startTime = std::chrono::system_clock::now();
     auto summaryResult = fn();
     auto endTime = std::chrono::system_clock::now();
+    ret.push_back(summaryResult);
     bool firstSummaryResult = results.empty();
 
     for (int i = 0; i < static_cast<int>(features_.size()); ++i) {
@@ -42,4 +44,5 @@ void RowGenerator::calculateAndApplyFeatures() {
     table_ << str;
   }
   table_ << fort::endr;
+  return ret;
 }

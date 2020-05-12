@@ -6,6 +6,7 @@
 #include "src/common/Weighting.hpp"
 #include "src/shared/MoveFinder/MoveFinderRewrite.h"
 #include "src/shared/MoveFinder/MoveFinderFSM.h"
+#include "src/shared/MoveFinder/MoveFinderBfs.tpp"
 #include "src/shared/MoveEvaluator/MoveEvaluatorGroups.hpp"
 #include "src/pso/summary/SummaryApiUtility.tpp"
 #include <filesystem>
@@ -46,11 +47,13 @@ SummaryResult SummaryApi::getSummaryLookahead(const std::string &name1, const st
   auto info2 = readLogFile(name2);
   auto config = info1.config;
   config.setupForLongPlay();
-  config.numGames = 48;
-  config.seed = 203;
+  config.numGames = 12;
+  config.seed = 205;
+  config.numLines = 230;
+  config.startingLevel = 19;
   auto me1 = getMoveEvaluatorGroups().at(info1.group).setWeights(info1.weights);
   auto me2 = getMoveEvaluatorGroups().at(info2.group).setWeights(info2.weights);
-  auto scoreManagers = getScoresLookahead(config, me1, me2, transitionLines);
+  auto scoreManagers = getScoresLookahead<MoveFinderBfs>(config, me1, me2, transitionLines);
   return {
     name1 + "_" + name2 + "_Lookahead",
     info1.group + "_" + info2.group,

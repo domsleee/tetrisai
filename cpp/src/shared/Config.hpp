@@ -4,10 +4,6 @@
 #include <vector>
 
 
-#define MY_IF(x) if (key == #x) {\
-    x = std::stoi(val); \
-  }
-
 #define PAIR(x) { #x, x }
 #define SET(x) x = m.at(#x)
 
@@ -76,7 +72,7 @@ struct Config {
     if (numGames != Config::UNDEF) ew.setNumGames(numGames);
     if (numLines != Config::UNDEF) ew.setNumLines(numLines);
     if (startingLines != Config::UNDEF) ew.setStartingLines(startingLines);
-    if (maxDropRem != Config::UNDEF) ew.setMaxDropRem(maxDropRem);
+    // if (maxDropRem != Config::UNDEF) {};
     if (startingLevel != Config::UNDEF) ew.setStartingLevel(startingLevel);
     if (averageAmount != Config::UNDEF) ew.setAverageAmount(averageAmount);
   }

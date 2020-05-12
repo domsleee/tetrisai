@@ -122,7 +122,7 @@ std::vector<std::pair<int, Action>> MoveFinderAll::getShortestPathActions(const 
   addActionsToRet(n);
   numFrames++;
   while (pred_[n] != -1) {
-    auto node = MoveFinderAllNs::Node(n);
+    //auto node = MoveFinderAllNs::Node(n);
     //printf("%d --> %d (id: %d, dropRem: %d, bf: %d)\n", n, pred_[n], node.getId(), node.getDropRem(), node.getCooldownBitField());
     n = pred_[n];
     addActionsToRet(MoveFinderAllNs::Node(n));

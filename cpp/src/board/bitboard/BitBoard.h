@@ -101,6 +101,7 @@ class BitPieceInfo {
 
 
   std::pair<bool, BitPieceInfo> doActionCopy(Action) const;
+  std::pair<bool, int> doActionCopyId(Action action) const;
 
   std::vector<BitPieceInfo> getClosedRotN() const {
     switch(getBlockType()) {
