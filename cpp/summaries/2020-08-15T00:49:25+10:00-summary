@@ -1,0 +1,28 @@
+Loading: 
+Loading: 0 packages loaded
+Analyzing: target //src/pso/main:summary (0 packages loaded, 0 targets configured)
+INFO: Analyzed target //src/pso/main:summary (0 packages loaded, 0 targets configured).
+INFO: Found 1 target...
+[0 / 3] [Prepa] BazelWorkspaceStatusAction stable-status.txt
+[21 / 24] Compiling src/pso/summary/SummaryApi.cpp; 1s linux-sandbox ... (2 actions running)
+[22 / 24] Compiling src/pso/summary/SummaryApi.cpp; 3s linux-sandbox
+[23 / 24] [Prepa] Linking src/pso/main/summary
+ERROR: /home/dom/tetrisai/cpp/src/pso/main/BUILD:37:1: Linking of rule '//src/pso/main:summary' failed (Exit 1) gcc failed: error executing command /usr/bin/gcc @bazel-out/k8-fastbuild/bin/src/pso/main/summary-2.params
+
+Use --sandbox_debug to see verbose messages from the sandbox
+/usr/bin/ld.gold: error: bazel-out/k8-fastbuild/bin/src/_objs/pso/SummaryApi.pic.o: multiple definition of 'BranchSearcherDefs::TOP_N_BLOCKS'
+/usr/bin/ld.gold: bazel-out/k8-fastbuild/bin/src/pso/main/_objs/summary/main_summary.pic.o: previous definition here
+/usr/bin/ld.gold: error: bazel-out/k8-fastbuild/bin/src/_objs/pso/SummaryApi.pic.o: multiple definition of 'BranchSearcherDefs::INIT_TOP_N_BLOCKS'
+/usr/bin/ld.gold: bazel-out/k8-fastbuild/bin/src/pso/main/_objs/summary/main_summary.pic.o: previous definition here
+/usr/bin/ld.gold: error: bazel-out/k8-fastbuild/bin/src/_objs/pso/SummaryApi.pic.o: multiple definition of 'BranchSearcherDefs::DEPTH_WITH_KNOWN_BLOCK'
+/usr/bin/ld.gold: bazel-out/k8-fastbuild/bin/src/pso/main/_objs/summary/main_summary.pic.o: previous definition here
+/usr/bin/ld.gold: error: bazel-out/k8-fastbuild/bin/src/_objs/pso/SummaryApi.pic.o: multiple definition of 'BranchSearcherDefs::DEPTH'
+/usr/bin/ld.gold: bazel-out/k8-fastbuild/bin/src/pso/main/_objs/summary/main_summary.pic.o: previous definition here
+collect2: error: ld returned 1 exit status
+Target //src/pso/main:summary failed to build
+Use --verbose_failures to see the command lines of failed build steps.
+INFO: Elapsed time: 6.704s, Critical Path: 6.62s
+INFO: 3 processes: 3 linux-sandbox.
+FAILED: Build did NOT complete successfully
+ERROR: Build failed. Not running target
+FAILED: Build did NOT complete successfully

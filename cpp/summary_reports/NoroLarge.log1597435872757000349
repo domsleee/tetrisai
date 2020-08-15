@@ -1,0 +1,58 @@
+
+BranchSearchDefs:
+--------
+TOP_N_BLOCKS: 4
+INIT_TOP_N_BLOCKS: 3
+DEPTH: 1
+DEPTH_WITH_KNOWN_BLOCK: 4
+
+score, level, totalLines
+NEW RES
+7
+9
+9
+10
+10
+10
+10
+11
+11
+11
+12
+12
+12
+12
+12
+12
+12
+13
+13
+13
+14
+14
+14
+14
+15
+15
+15
+15
+15
+16
+16
+16
+16
+16
+16
+17
+18
+18
+19
+20
+22
+24
+25
+25
+25
+32
+32
+33

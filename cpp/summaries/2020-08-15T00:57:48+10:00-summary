@@ -1,0 +1,50 @@
+Loading: 
+Loading: 0 packages loaded
+Analyzing: target //src/pso/main:summary (0 packages loaded, 0 targets configured)
+INFO: Analyzed target //src/pso/main:summary (0 packages loaded, 0 targets configured).
+INFO: Found 1 target...
+[0 / 3] [Prepa] BazelWorkspaceStatusAction stable-status.txt
+[1 / 4] Compiling src/pso/main/main_summary.cpp; 1s linux-sandbox
+Target //src/pso/main:summary up-to-date:
+  bazel-bin/src/pso/main/summary
+INFO: Elapsed time: 2.622s, Critical Path: 2.54s
+INFO: 2 processes: 2 linux-sandbox.
+INFO: Build completed successfully, 3 total actions
+INFO: Running command line: bazel-bin/src/pso/main/summary
+INFO: Build completed successfully, 3 total actions
+processing: NoroAllMoveFinder.log
+processing: NoroLarge.log
+processing: NoroNormal.log
+Current time: Sat Aug 15 00:57:51 2020
+num_files: 3
+Noro DATA
++-----------------------+--------+------+--------+----------+-----+-----+-------+---------+
+| name                  | group  | seed | nGames | top50avg | 70P | 50P | %clrd | time(s) |
++-----------------------+--------+------+--------+----------+-----+-----+-------+---------+
+| NoroAllMoveFinder.log | Linear | 200  | 96     | 10       | 8   | 6   | 0.0   | 0.0     |
+| NoroLarge.log         | Linear | 200  | 96     | 9        | 8   | 6   | 0.0   | 0.0     |
+| NoroNormal.log        | Linear | 200  | 96     | 9        | 8   | 6   | 0.0   | 0.0     |
++-----------------------+--------+------+--------+----------+-----+-----+-------+---------+
+
+processing: NoroAllMoveFinder.log
+processing: NoroLarge.log
+processing: NoroNormal.log
+Noro lookahead DATA
+
+BranchSearchDefs:
+--------
+TOP_N_BLOCKS: 4
+INIT_TOP_N_BLOCKS: 3
+DEPTH: 1
+DEPTH_WITH_KNOWN_BLOCK: 1
+
+OUTPUTTING RESULTS to name1597417071427336946...
++--------------------------------------+--------+------+--------+----------+-----+-----+-------+---------+
+| name                                 | group  | seed | nGames | top50avg | 70P | 50P | %clrd | time(s) |
++--------------------------------------+--------+------+--------+----------+-----+-----+-------+---------+
+| NoroAllMoveFinder.log_noro_Lookahead | Linear | 203  | 1      | -nan     | -1  | -1  | 0.0   | 0.0     |
+| NoroLarge.log_noro_Lookahead         | Linear | 203  | 1      | -nan     | -1  | -1  | 0.0   | 0.0     |
+| NoroNormal.log_noro_Lookahead        | Linear | 203  | 1      | -nan     | -1  | -1  | 0.0   | 0.0     |
++--------------------------------------+--------+------+--------+----------+-----+-----+-------+---------+
+
+Time taken: 0.1

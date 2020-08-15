@@ -20,9 +20,11 @@ class RowGenerator {
     fns_ = fns;
   }
   fort::char_table getTable() { return table_; }
+  std::vector<SummaryResult> getResult() { return result_; }
 
  private:
   fort::char_table table_;
+  std::vector<SummaryResult> result_;
   std::vector<std::function<SummaryResult()>> fns_;
   std::vector<std::shared_ptr<IRow>> features_;
 };

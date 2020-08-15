@@ -19,6 +19,8 @@ class SummaryApi {
   SummaryResult getSummary(const std::string &name1, const std::string &name2, int transitionLines) const;
   SummaryResult getSummaryFSM(const std::string &name) const;
   SummaryResult getSummaryFSM(const std::string &name1, const std::string &name2, int transitionLines) const;
+  SummaryResult getSummaryAllMoveFinder(const std::string &name) const;
+  SummaryResult getSummaryAllMoveFinderLookahead(const std::string &name) const;
   SummaryResult getSummaryLookahead(const std::string &name1, const std::string &name2, int transitionLines) const;
 
   // exposed for testing

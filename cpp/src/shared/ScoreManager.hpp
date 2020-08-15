@@ -19,7 +19,7 @@ struct ScoreManager {
     }
   }
   int getScore() const {
-    return score_;
+    return totalLines_;
   }
   int getLevel() const {
     return level_;

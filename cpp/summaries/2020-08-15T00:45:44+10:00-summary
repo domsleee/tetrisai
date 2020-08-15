@@ -1,0 +1,20 @@
+Loading: 
+Loading: 0 packages loaded
+Analyzing: target //src/pso/main:summary (0 packages loaded, 0 targets configured)
+INFO: Analyzed target //src/pso/main:summary (0 packages loaded, 0 targets configured).
+INFO: Found 1 target...
+[0 / 3] [Prepa] BazelWorkspaceStatusAction stable-status.txt
+ERROR: /home/dom/tetrisai/cpp/src/pso/main/BUILD:37:1: C++ compilation of rule '//src/pso/main:summary' failed (Exit 1) gcc failed: error executing command /usr/bin/gcc -U_FORTIFY_SOURCE -fstack-protector -Wall -Wunused-but-set-parameter -Wno-free-nonheap-object -fno-omit-frame-pointer '-std=c++0x' -MD -MF ... (remaining 332 argument(s) skipped)
+
+Use --sandbox_debug to see verbose messages from the sandbox
+src/pso/main/main_summary.cpp: In function 'fort::char_table getNoroLookaheadData(const SummaryApi&, const std::vector<std::__cxx11::basic_string<char> >&)':
+src/pso/main/main_summary.cpp:93:21: error: expected primary-expression before '.' token
+   93 |   BranchSearcherDefs.DEPTH_WITH_KNOWN_BLOCK = 1;
+      |                     ^
+Target //src/pso/main:summary failed to build
+Use --verbose_failures to see the command lines of failed build steps.
+INFO: Elapsed time: 1.327s, Critical Path: 1.25s
+INFO: 0 processes.
+FAILED: Build did NOT complete successfully
+ERROR: Build failed. Not running target
+FAILED: Build did NOT complete successfully

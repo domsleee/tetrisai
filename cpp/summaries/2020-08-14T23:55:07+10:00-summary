@@ -1,0 +1,58 @@
+Loading: 
+Loading: 0 packages loaded
+INFO: Build option --copt has changed, discarding analysis cache.
+Analyzing: target //src/pso/main:summary (0 packages loaded, 0 targets configured)
+INFO: Analyzed target //src/pso/main:summary (0 packages loaded, 6577 targets configured).
+INFO: Found 1 target...
+[0 / 5] [Prepa] BazelWorkspaceStatusAction stable-status.txt
+[20 / 102] Compiling src/board/SimpleBoard.cpp; 1s linux-sandbox ... (24 actions, 23 running)
+[26 / 102] Compiling external/boost/libs/regex/src/wide_posix_api.cpp; 2s linux-sandbox ... (24 actions, 23 running)
+[28 / 102] Compiling external/boost/libs/regex/src/wide_posix_api.cpp; 3s linux-sandbox ... (24 actions, 23 running)
+[39 / 102] Compiling external/boost/libs/regex/src/winstances.cpp; 4s linux-sandbox ... (24 actions, 23 running)
+[49 / 102] Compiling external/boost/libs/regex/src/winstances.cpp; 5s linux-sandbox ... (23 actions, 22 running)
+[62 / 102] Compiling src/pso/summary/SummaryApi.cpp; 6s linux-sandbox ... (24 actions running)
+[69 / 102] Compiling src/pso/summary/SummaryApi.cpp; 7s linux-sandbox ... (24 actions running)
+[87 / 102] Compiling src/pso/summary/SummaryApi.cpp; 9s linux-sandbox ... (14 actions running)
+[100 / 102] Compiling src/pso/summary/SummaryApi.cpp; 10s linux-sandbox
+Target //src/pso/main:summary up-to-date:
+  bazel-bin/src/pso/main/summary
+INFO: Elapsed time: 11.997s, Critical Path: 11.32s
+INFO: 96 processes: 96 linux-sandbox.
+INFO: Build completed successfully, 97 total actions
+INFO: Running command line: bazel-bin/src/pso/main/summary
+INFO: Build completed successfully, 97 total actions
+processing: NoroAllMoveFinder.log
+processing: NoroLarge.log
+processing: NoroNormal.log
+processing: NoroAllMoveFinder.log
+processing: NoroLarge.log
+processing: NoroNormal.log
+Current time: Fri Aug 14 23:55:19 2020
+num_files: 3
+Noro DATA
++-----------------------+--------+------+--------+----------+-----+-----+-------+---------+
+| name                  | group  | seed | nGames | top50avg | 70P | 50P | %clrd | time(s) |
++-----------------------+--------+------+--------+----------+-----+-----+-------+---------+
+| NoroAllMoveFinder.log | Linear | 200  | 96     | 10       | 8   | 6   | 0.0   | 0.0     |
+| NoroLarge.log         | Linear | 200  | 96     | 9        | 8   | 6   | 0.0   | 0.0     |
+| NoroNormal.log        | Linear | 200  | 96     | 9        | 8   | 6   | 0.0   | 0.0     |
++-----------------------+--------+------+--------+----------+-----+-----+-------+---------+
+
+Noro lookahead DATA
+
+BranchSearchDefs:
+--------
+TOP_N_BLOCKS: 3
+INIT_TOP_N_BLOCKS: 3
+DEPTH: 1
+DEPTH_WITH_KNOWN_BLOCK: 3
+
++--------------------------------------+--------+------+--------+----------+-----+-----+-------+---------+
+| name                                 | group  | seed | nGames | top50avg | 70P | 50P | %clrd | time(s) |
++--------------------------------------+--------+------+--------+----------+-----+-----+-------+---------+
+| NoroAllMoveFinder.log_noro_Lookahead | Linear | 203  | 12     | 18       | 16  | 15  | 0.0   | 37.4    |
+| NoroLarge.log_noro_Lookahead         | Linear | 203  | 12     | 20       | 15  | 14  | 0.0   | 38.4    |
+| NoroNormal.log_noro_Lookahead        | Linear | 203  | 12     | 20       | 19  | 16  | 0.0   | 39.1    |
++--------------------------------------+--------+------+--------+----------+-----+-----+-------+---------+
+
+Time taken: 115.0

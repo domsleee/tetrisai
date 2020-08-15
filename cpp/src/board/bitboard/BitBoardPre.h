@@ -11,7 +11,7 @@
 class BitPieceInfo;
 
 namespace BitBoardPre {
-  const int MAX_IND = 2994; // NUM_BLOCKS * NUM_ROWS * NUM_COLUMNS * NUM_ROTATIONS
+  const int MAX_IND = 1072; // NUM_BLOCKS * NUM_ROWS * NUM_COLUMNS * NUM_ROTATIONS
   const int NUM_INDEXES = MAX_IND;  
 
   void precompute();

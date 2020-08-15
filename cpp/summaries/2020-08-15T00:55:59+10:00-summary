@@ -1,0 +1,35 @@
+Loading: 
+Loading: 0 packages loaded
+Analyzing: target //src/pso/main:summary (0 packages loaded, 0 targets configured)
+INFO: Analyzed target //src/pso/main:summary (1 packages loaded, 111 targets configured).
+INFO: Found 1 target...
+[0 / 2] [Prepa] BazelWorkspaceStatusAction stable-status.txt
+ERROR: /home/dom/tetrisai/cpp/src/BUILD:7:1: C++ compilation of rule '//src:shared' failed (Exit 1) gcc failed: error executing command /usr/bin/gcc -U_FORTIFY_SOURCE -fstack-protector -Wall -Wunused-but-set-parameter -Wno-free-nonheap-object -fno-omit-frame-pointer '-std=c++0x' -MD -MF ... (remaining 27 argument(s) skipped)
+
+Use --sandbox_debug to see verbose messages from the sandbox
+In file included from src/shared/BranchSearcher/defs.cpp:1:
+./src/shared/BranchSearcher/defs.h:5:14: error: ISO C++ forbids in-class initialization of non-const static member 'BranchSearcherDefs::INIT_TOP_N_BLOCKS'
+    5 |   static int INIT_TOP_N_BLOCKS = 3;
+      |              ^~~~~~~~~~~~~~~~~
+./src/shared/BranchSearcher/defs.h:6:14: error: ISO C++ forbids in-class initialization of non-const static member 'BranchSearcherDefs::DEPTH'
+    6 |   static int DEPTH = 1;
+      |              ^~~~~
+./src/shared/BranchSearcher/defs.h:7:14: error: ISO C++ forbids in-class initialization of non-const static member 'BranchSearcherDefs::DEPTH_WITH_KNOWN_BLOCK'
+    7 |   static int DEPTH_WITH_KNOWN_BLOCK = 1;
+      |              ^~~~~~~~~~~~~~~~~~~~~~
+src/shared/BranchSearcher/defs.cpp:4:25: error: duplicate initialization of 'BranchSearcherDefs::INIT_TOP_N_BLOCKS'
+    4 | int BranchSearcherDefs::INIT_TOP_N_BLOCKS = 3;
+      |                         ^~~~~~~~~~~~~~~~~
+src/shared/BranchSearcher/defs.cpp:5:25: error: duplicate initialization of 'BranchSearcherDefs::DEPTH'
+    5 | int BranchSearcherDefs::DEPTH = 1;
+      |                         ^~~~~
+src/shared/BranchSearcher/defs.cpp:6:25: error: duplicate initialization of 'BranchSearcherDefs::DEPTH_WITH_KNOWN_BLOCK'
+    6 | int BranchSearcherDefs::DEPTH_WITH_KNOWN_BLOCK = 1;
+      |                         ^~~~~~~~~~~~~~~~~~~~~~
+Target //src/pso/main:summary failed to build
+Use --verbose_failures to see the command lines of failed build steps.
+INFO: Elapsed time: 0.818s, Critical Path: 0.70s
+INFO: 1 process: 1 linux-sandbox.
+FAILED: Build did NOT complete successfully
+ERROR: Build failed. Not running target
+FAILED: Build did NOT complete successfully

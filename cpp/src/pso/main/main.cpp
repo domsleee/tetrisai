@@ -4,7 +4,7 @@
 #include "src/shared/Config.hpp"
 #include "src/shared/MoveEvaluator/MoveEvaluatorGroups.hpp"
 #include "src/pso/SimpleApi.tpp"
-
+#include "src/shared/MoveFinder/AllMoveFinder.tpp"
 
 const std::string moveEvaluatorGroup = MOVE_EVALUATOR_GROUP_LINEAR;
 
@@ -16,7 +16,7 @@ int main(int argc, char ** argv) {
   cfg.startingLines = 0;
   cfg.startingLevel = 18;
   cfg.averageAmount = 100;
-  cfg.numGames = 100;
+  cfg.numGames = 200;
 
   if (argc == 2 && strcmp(argv[1], "-c") == 0) {
     cfg.print();
@@ -49,7 +49,7 @@ void run(int argc, char ** argv, Config cfg) {
   }
 
   me.setWeights(weightings);
-  std::cout << getEvaluateWeightings(me, cfg).runAllPieceSets() << '\n';
+  std::cout << getEvaluateWeightings<AllMoveFinder<BitBoard, BitPieceInfo>>(me, cfg).runAllPieceSets() << '\n';
 }
 
 

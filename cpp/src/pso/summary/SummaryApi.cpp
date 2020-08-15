@@ -8,6 +8,7 @@
 #include "src/shared/MoveFinder/MoveFinderFSM.h"
 #include "src/shared/MoveEvaluator/MoveEvaluatorGroups.hpp"
 #include "src/pso/summary/SummaryApiUtility.tpp"
+#include "src/shared/MoveFinder/AllMoveFinder.tpp"
 #include <filesystem>
 namespace fs = std::filesystem;
 
@@ -31,6 +32,25 @@ SummaryResult SummaryApi::getSummaryFSM(const std::string &name) const {
   return getSummaryHelper<MoveFinderFSM>(name);
 }
 
+SummaryResult SummaryApi::getSummaryAllMoveFinder(const std::string &name) const {
+  return getSummaryHelper<AllMoveFinder<BitBoard, BitPieceInfo>>(name);
+}
+
+SummaryResult SummaryApi::getSummaryAllMoveFinderLookahead(const std::string &name) const {
+  auto info1 = readLogFile(name);
+  auto config = info1.config;
+  config.setupForLongPlay();
+  config.numGames = 48;
+  config.seed = 203;
+  auto me1 = getMoveEvaluatorGroups().at(info1.group).setWeights(info1.weights);
+  auto scoreManagers = getScoresLookahead<AllMoveFinder<BitBoard, BitPieceInfo>>(config, me1, me1, 50000);
+  return {
+    name + "_noro_Lookahead",
+    info1.group,
+    scoreManagers,
+    config
+  };
+}
 
 SummaryResult SummaryApi::getSummary(const std::string &name1, const std::string &name2, int transitionLines) const {
   return getSummaryHelper<MoveFinderRewrite>(name1, name2, transitionLines);

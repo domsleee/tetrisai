@@ -11,6 +11,7 @@ void RowGenerator::applyHeader() {
 }
 
 void RowGenerator::calculateAndApplyFeatures() {
+  result_ = {};
   if (fns_.size() == 0) {
     throw std::runtime_error("no fns");
   }
@@ -18,6 +19,7 @@ void RowGenerator::calculateAndApplyFeatures() {
   for (auto fn: fns_) {
     auto startTime = std::chrono::system_clock::now();
     auto summaryResult = fn();
+    result_.push_back(summaryResult);
     auto endTime = std::chrono::system_clock::now();
     bool firstSummaryResult = results.empty();
 

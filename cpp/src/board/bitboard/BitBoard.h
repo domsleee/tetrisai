@@ -99,6 +99,7 @@ class BitPieceInfo {
   const BitBoard& getBoard() const { return b_; };
 
   std::vector<BitPieceInfo> getClosedRotN() const {
+    return {*this};
     switch(getBlockType()) {
       case BlockType::O_PIECE: return {*this};
       case BlockType::I_PIECE:

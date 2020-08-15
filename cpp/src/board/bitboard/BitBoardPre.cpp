@@ -83,16 +83,16 @@ namespace BitBoardPre {
       const auto tp = q.front();
       int id = pieceInfoToId(tp);
       q.pop();      
-      for (auto rotateDirection: allRotateDirections) {
-        if (!tp.canRotate(rotateDirection)) continue;
-        const auto &nxP = tp.rotate(rotateDirection);
-        int nxId = pieceInfoToId(nxP);
-        addRotate(id, nxId, rotateDirection);
-        if (!seen.count(nxId)) {
-          seen.insert(nxId);
-          q.push(nxP);
-        }
-      }
+      // for (auto rotateDirection: allRotateDirections) {
+      //   if (!tp.canRotate(rotateDirection)) continue;
+      //   const auto &nxP = tp.rotate(rotateDirection);
+      //   int nxId = pieceInfoToId(nxP);
+      //   addRotate(id, nxId, rotateDirection);
+      //   if (!seen.count(nxId)) {
+      //     seen.insert(nxId);
+      //     q.push(nxP);
+      //   }
+      // }
       for (auto moveDirection: validMoveDirections) {
         if (!tp.canMove(moveDirection)) continue;
         const auto &nxP = tp.move(moveDirection);
@@ -132,6 +132,7 @@ namespace BitBoardPre {
     idToBitset_[newId] = moveToBitset(move);
     idToMove_[newId] = move;
     moveToId_[move] = newId;
+    //printf("newId: %d\n", newId);
     return newId;
   }
 
