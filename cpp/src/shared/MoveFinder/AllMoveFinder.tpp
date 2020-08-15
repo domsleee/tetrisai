@@ -14,14 +14,13 @@ class AllMoveFinder {
 
   void setMaxDropRem(int v) {}
   void setFirstMoveDirectionChar(char c) {}
+  void setOffsetHeight(int offsetHeight) { offsetHeight_ = offsetHeight; }
 
-  std::vector<BitPieceInfo> findAllMoves(const MyBoard& board, BlockType blockType) {  
+  std::vector<BitPieceInfo> findAllMoves(const MyBoard& board, BlockType blockType) {
+    moves_.clear();
     auto pieceInfo = board.getPiece(blockType);
     auto height = board.getPileHeight();
-    //printf("finding all moves... (%d)\n", height);
-    //board.print();
-    int canMoveDown = NUM_ROWS - height - 3;
-    //printf("canMoveDown: %d\n", canMoveDown);
+    int canMoveDown = NUM_ROWS - height - offsetHeight_; // needs to be 3
     while (canMoveDown > 0) {
       pieceInfo = pieceInfo.move(MoveDirection::DOWN);
       canMoveDown--;
@@ -57,6 +56,7 @@ class AllMoveFinder {
     }
   }
  private:
+  int offsetHeight_ = 3;
   std::vector<bool> seen_;
   std::unordered_set<MyBoardPieceInfo> moves_;
 };

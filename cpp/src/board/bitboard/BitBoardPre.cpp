@@ -132,7 +132,6 @@ namespace BitBoardPre {
     idToBitset_[newId] = moveToBitset(move);
     idToMove_[newId] = move;
     moveToId_[move] = newId;
-    //printf("newId: %d\n", newId);
     return newId;
   }
 

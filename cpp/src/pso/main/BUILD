@@ -49,3 +49,10 @@ cc_binary(
     copts = EXEC_COPTS
 )
 
+cc_binary(
+    name = "explore_states",
+    srcs = ["main_explore_states.cpp"],
+    deps = ["//src:pso"],
+    copts = EXEC_COPTS
+)
+

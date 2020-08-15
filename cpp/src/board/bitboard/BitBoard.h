@@ -68,6 +68,8 @@ class BitBoard {
   BitPieceInfo getEmptyPiece() const;
   int getPileHeight() const;
 
+  B getBitSet() const { return bitset_; }
+
   friend size_t std::hash<BitBoard>::operator ()(const BitBoard&) const;
 
 
