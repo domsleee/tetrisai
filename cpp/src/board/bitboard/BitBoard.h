@@ -31,11 +31,17 @@ class BitBoard {
 
   // whoever thought this was a good idea should be shot
   int applyPieceInfo(const BitPieceInfo&);
+  int applyPieceInfoMaxRow(const BitPieceInfo& p);
   
   std::pair<BitBoard, int> applyPieceInfoCopy(const BitPieceInfo &nxPiece) const {
     BitBoard nb = *this;
     int lineClears = nb.applyPieceInfo(nxPiece);
     return {nb, lineClears};
+  }
+  std::pair<BitBoard, int> applyPieceInfoMaxRowCopy(const BitPieceInfo &nxPiece) const {
+    BitBoard nb = *this;
+    int maxRow = nb.applyPieceInfoMaxRow(nxPiece);
+    return {nb, maxRow};
   }
   BitPieceInfo getPiece(BlockType blockType) const;
   bool vacant(const BitPieceInfo&) const;
@@ -62,6 +68,12 @@ class BitBoard {
     std::reverse(s.begin(), s.end());
     os << s;
     return os;
+  }
+
+  std::string toString() const {
+    auto s = bitset_.to_string();
+    std::reverse(s.begin(), s.end());
+    return s;
   }
 
   // hmmm.
