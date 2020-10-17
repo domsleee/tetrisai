@@ -23,7 +23,7 @@ class MoveEvaluatorBlockQuadratic {
 
   MoveEvaluatorBlockQuadratic(const Weighting &w): w_{w} {
     if (w.size() < NUM_FACTORS) {
-      printf("Bad weight vector size. Needed at least %d, got %lu", NUM_FACTORS, w.size());
+      printf("Bad weight vector size. Needed at least %d, got %zu", NUM_FACTORS, w.size());
       throw std::runtime_error("bad weight vector size");
     }
   }

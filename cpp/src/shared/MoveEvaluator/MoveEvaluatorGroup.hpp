@@ -17,7 +17,7 @@ class MoveEvaluatorGroup: public IEvaluator {
   
   MoveEvaluatorGroup(std::vector<MoveEvaluatorGroupNs::FeatureGroupT> features):
     NUM_FACTORS(std::accumulate(features.begin(), features.end(), 0, [](const int a, const MoveEvaluatorGroupNs::FeatureGroupT &feature) {
-      return a + feature.second.size();
+      return a + static_cast<int>(feature.second.size());
     })),
     features_(features)
       {}
@@ -27,7 +27,7 @@ class MoveEvaluatorGroup: public IEvaluator {
     w_ = w;
     setWeightsCalled_ = true;
     if (static_cast<int>(w.size()) != NUM_FACTORS) {
-      printf("Given %lu, expected %d\n", w.size(), NUM_FACTORS);
+      printf("Given %zu, expected %d\n", w.size(), NUM_FACTORS);
       throw std::runtime_error("Unexpected weight size");
     }
     evaluators_.clear();
