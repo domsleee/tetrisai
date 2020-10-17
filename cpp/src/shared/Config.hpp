@@ -2,6 +2,7 @@
 #include <iostream>
 #include <map>
 #include <vector>
+#define _GLIBCXX_USE_C99 1
 
 
 #define MY_IF(x) if (key == #x) {\
@@ -59,7 +60,7 @@ struct Config {
 
   void setField(std::string key, std::string val) {
     auto m = toMap();
-    m.at(key) = std::stoi(val);
+    m.at(key) = atoi(val.c_str());
     fromMap(m);
   }
 

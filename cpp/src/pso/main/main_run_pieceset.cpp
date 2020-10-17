@@ -23,7 +23,7 @@ struct MyPieceSetGetter: public IPieceSetGetter {
   MyPieceSetGetter(const PieceSetReadResult &pieceSetReadResult): pieceSetReadResult_{pieceSetReadResult} {}
   void setSeed(int seed) override {}
   std::vector<std::vector<BlockType>> getPieceSets(int numGames) const override {
-    return {numGames, pieceSetReadResult_.pieces};
+    return std::vector<std::vector<BlockType>>(numGames, pieceSetReadResult_.pieces);
   }
  private:
   const PieceSetReadResult pieceSetReadResult_;

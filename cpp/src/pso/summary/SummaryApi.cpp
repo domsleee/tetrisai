@@ -13,9 +13,9 @@ namespace fs = std::filesystem;
 
 std::vector<std::string> SummaryApi::getAllNames() const {
   std::vector<std::string> res;
-  for (const auto & entry : fs::directory_iterator(logFolder_)) {
+  for (const auto &entry : fs::directory_iterator(logFolder_)) {
     if (!entry.is_regular_file()) continue;
-    std::string path = entry.path();
+    std::string path = entry.path().string();
     std::vector<std::string> spl;
     boost::split(spl, path, boost::is_any_of("/"));
     res.push_back(spl.back());

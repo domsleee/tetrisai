@@ -10094,7 +10094,7 @@ namespace {
 
 #elif defined( CATCH_CONFIG_COLOUR_ANSI ) //////////////////////////////////////
 
-#include <unistd.h>
+#include <io.h>
 
 namespace Catch {
 namespace {
@@ -10143,7 +10143,7 @@ namespace {
 #if defined(CATCH_PLATFORM_MAC) || defined(CATCH_PLATFORM_IPHONE)
             !isDebuggerActive() &&
 #endif
-#if !(defined(__DJGPP__) && defined(__STRICT_ANSI__))
+#if !(defined(__DJGPP__) && defined(__STRICT_ANSI__)) && false
             isatty(STDOUT_FILENO)
 #else
             false
@@ -11347,7 +11347,11 @@ namespace Catch {
 // end catch_to_string.hpp
 #include <algorithm>
 #include <cmath>
-#include <cstdlib>
+namespace std
+{
+    #include <cstdlib>
+};
+
 #include <cstdint>
 #include <cstring>
 #include <sstream>

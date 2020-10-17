@@ -1,5 +1,7 @@
 #include "src/common/BlockType.hpp"
 #include <unordered_map>
+#include <exception>
+#include <stdexcept>
 
 BlockType fromString(const std::string &blockStr) {
   static const std::unordered_map<std::string, BlockType> m{{

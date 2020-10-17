@@ -45,7 +45,7 @@ cc_binary(
 cc_binary(
     name = "run_pieceset",
     srcs = ["main_run_pieceset.cpp"],
-    deps = ["//src:pso"],
+    deps = ["//src:pso", "@boost//:algorithm"],
     copts = EXEC_COPTS
 )
 

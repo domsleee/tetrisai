@@ -12,7 +12,7 @@ def shared_library(name, deps = []):
     name=name,
     srcs=get_src_list(name),
     hdrs=get_hdr_list(name),
-    deps=deps,
+    deps=["@boost//:algorithm", "@boost//:regex"] + [x for x in deps if x != "@boost//:algorithm"],
     visibility=["//visibility:public"],
     copts=EXEC_COPTS
   )
