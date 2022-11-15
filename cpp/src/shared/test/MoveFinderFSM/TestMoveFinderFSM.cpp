@@ -72,7 +72,7 @@ SCENARIO("I-PIECE can't clear 9 high") {
 
 std::vector<std::string> getLefts(std::vector<std::string> &vs) {
   std::vector<std::string> lefts;
-  for (const auto str: vs) {
+  for (const auto &str: vs) {
     if (str.size() > 3 && str[str.size()-3] == 'F') lefts.push_back(str);
   }
   return lefts;
