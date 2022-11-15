@@ -1,4 +1,4 @@
 build --cxxopt='-std=c++17' --cxxopt='-fpermissive' \
        --cxxopt='-Wno-unused-variable' \
-       --cxxopt='-I/usr/local/include' --cxxopt='-ltbb'\
+       --cxxopt='-I/usr/local/include' --cxxopt='-ltbb' --linkopt='-ltbb'\
        --linkopt='-L /usr/local/include/tbb_build'

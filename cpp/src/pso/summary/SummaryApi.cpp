@@ -47,7 +47,7 @@ SummaryResult SummaryApi::getSummaryLookahead(const std::string &name1, const st
   auto info2 = readLogFile(name2);
   auto config = info1.config;
   config.setupForLongPlay();
-  config.numGames = 12;
+  config.numGames = 150;
   config.seed = 205;
   config.numLines = 230;
   config.startingLevel = 19;
