@@ -3,7 +3,7 @@ jobs:
   build:
     docker:
       # ?
-      - image: domslee/bazel:tbb
+      - image: domslee/bazel:tbb22
     steps:
       - checkout
       - run: >
@@ -40,7 +40,7 @@ jobs:
           python3.7 -m pipenv run sh -c "cd tetrisai/test; python -m unittest";
   cppTest:
     docker:
-      - image: domslee/bazel:tbb
+      - image: domslee/bazel:tbb22
     steps:
       - checkout
       - run: >
