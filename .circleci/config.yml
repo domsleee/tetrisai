@@ -2,6 +2,7 @@ version: 2
 jobs:
   build:
     docker:
+      # ?
       - image: domslee/bazel:tbb2
     steps:
       - checkout
