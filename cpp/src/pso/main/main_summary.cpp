@@ -27,7 +27,7 @@ int main() {
   auto names = s.getAllNames();
   printf("num_files: %lu\n", names.size());
   std::sort(names.begin(), names.end());
-  // std::cout << getData(s, names).to_string() << '\n';
+  std::cout << getData(s, names).to_string() << '\n';
   // std::cout << getTransitionLinesComparison(s, names).to_string() << '\n';
   // std::cout << getPairsData(s, names).to_string() << '\n';
   // std::cout << getLookaheadData(s, names).to_string() << '\n';  
