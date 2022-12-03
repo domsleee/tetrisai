@@ -64,12 +64,12 @@ workflows:
   build_and_test:
     jobs:
       - build
-      - pythonTest
+      - pythonTest:
+          requires:
+            - build
       - getMoveServiceTest:
           requires:
             - build
-      - cppTest:
-          requires:
-            - build
+      - cppTest
       - webTest
 
