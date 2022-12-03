@@ -9,7 +9,7 @@ jobs:
       - run: >
           cd cpp;
           ./scripts/setup.sh;
-          bazel build //src/pso/main:get_moves --jobs=16;
+          bazel build //src/pso/main:get_moves --jobs=20;
           mkdir persist;
           cp -r bazel-bin/src persist/src;
       - persist_to_workspace:
@@ -49,8 +49,8 @@ jobs:
           cd cpp;
           export LD_LIBRARY_PATH=/usr/local/include/tbb_build;
           ./scripts/setup.sh;
-          bazel query //... | xargs bazel build --jobs=16;
-          bazel query //... | xargs bazel test --local_test_jobs=4;
+          bazel query //... | xargs bazel build --jobs=20;
+          bazel query //... | xargs bazel test;
   webTest:
     docker:
       - image: circleci/node:10.16.3
