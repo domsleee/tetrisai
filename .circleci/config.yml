@@ -3,6 +3,7 @@ jobs:
   build:
     docker:
       - image: domslee/bazel:tbb22
+    resource_class: large
     steps:
       - checkout
       - run: >
