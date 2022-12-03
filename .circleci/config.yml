@@ -49,7 +49,7 @@ jobs:
           cd cpp;
           export LD_LIBRARY_PATH=/usr/local/include/tbb_build;
           ./scripts/setup.sh;
-          bazel query //... | xargs bazel --host_jvm_args=-Xmx6g test;
+          bazel query //... | xargs bazel --host_jvm_args=-Xmx4g test;
   webTest:
     docker:
       - image: circleci/node:10.16.3
