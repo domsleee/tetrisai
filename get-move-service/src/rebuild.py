@@ -14,13 +14,13 @@ def main():
   os.chdir(WORKSPACE_DIR)
   print(WORKSPACE_DIR)
   subprocess.check_call(["bazel", "build", "//src/pso/main:get_moves", "--cxxopt", "-O3", "--cxxopt", "-DNDEBUG", "--copt", "-O3", "--copt", "-DNDEBUG"], cwd=WORKSPACE_DIR)
-  my_bin = os.path.join(WORKSPACE_DIR, "bazel-bin", "src", "pso", "main", "get_moves")
-  out_bin = os.path.join(DIR, "external_bin", "get_moves")
-  try:
-    os.remove(out_bin)
-  except Exception as e:
-    pass
-  shutil.copy(my_bin, out_bin)
+  #my_bin = os.path.join(WORKSPACE_DIR, "bazel-bin", "src", "pso", "main", "get_moves")
+  #out_bin = os.path.join(DIR, "external_bin", "get_moves")
+  #try:
+  #  os.remove(out_bin)
+  #except Exception as e:
+  #  pass
+  #shutil.copy(my_bin, out_bin)
 
 if __name__ == '__main__':
   main()
