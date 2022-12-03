@@ -50,7 +50,7 @@ jobs:
           export LD_LIBRARY_PATH=/usr/local/include/tbb_build;
           ./scripts/setup.sh;
           bazel query //... | xargs bazel --host_jvm_args=-Xmx7g build --jobs=16 --experimental_local_memory_estimate=True;
-          bazel query //... | xargs bazel --host_jvm_args=-Xmx7g test --experimental_local_memory_estimate=True;
+          bazel query //... | xargs bazel --host_jvm_args=-Xmx7g test  --jobs=16 --experimental_local_memory_estimate=True;
   webTest:
     docker:
       - image: circleci/node:10.16.3
