@@ -42,14 +42,14 @@ jobs:
   cppTest:
     docker:
       - image: domslee/bazel:tbb22
-    resource_class: large
+    resource_class: xlarge
     steps:
       - checkout
       - run: >
           cd cpp;
           export LD_LIBRARY_PATH=/usr/local/include/tbb_build;
           ./scripts/setup.sh;
-          bazel query //... | xargs bazel test --local_ram_resources=8000;
+          bazel query //... | xargs bazel test --local_ram_resources=15000;
   webTest:
     docker:
       - image: circleci/node:10.16.3
