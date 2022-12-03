@@ -28,6 +28,7 @@ jobs:
       - run: >
           cd get-move-service;
           python3.7 -m pipenv install;
+          python3.7 -m pipenv run sh -c "cd src; ./rebuild.py";
           python3.7 -m pipenv run sh -c "cd src/test; python -m unittest";
   pythonTest:
     docker:
