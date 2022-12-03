@@ -2,7 +2,6 @@ version: 2
 jobs:
   build:
     docker:
-      # ?
       - image: domslee/bazel:tbb22
     steps:
       - checkout
@@ -18,7 +17,7 @@ jobs:
             - src
   getMoveServiceTest:
     docker:
-      - image: domslee/bazel:tbb-pipenv
+      - image: domslee/bazel:tbb22-python3.10 # the OS must be the same as `build`
     steps:
       - checkout
       - attach_workspace:
@@ -27,18 +26,17 @@ jobs:
           cp /tmp/persist/src/pso/main/get_moves get-move-service/src/external_bin/
       - run: >
           cd get-move-service;
-          python3.7 -m pipenv install;
-          python3.7 -m pipenv run sh -c "cd src; ./rebuild.py";
-          python3.7 -m pipenv run sh -c "cd src/test; python -m unittest";
+          python -m pipenv install;
+          python -m pipenv run sh -c "cd src/test; DEFAULT_BINARY=/tmp/persist/src/pso/main/get_moves python -m unittest";
   pythonTest:
     docker:
-      - image: domslee/bazel:tbb-pipenv
+      - image: domslee/bazel:tbb22-python3.10
     steps:
       - checkout
       - run: >
           cd python;
-          python3.7 -m pipenv install;
-          python3.7 -m pipenv run sh -c "cd tetrisai/test; python -m unittest";
+          python -m pipenv install;
+          python -m pipenv run sh -c "cd tetrisai/test; DEFAULT_BINARY=/tmp/persist/src/pso/main/get_moves python -m unittest";
   cppTest:
     docker:
       - image: domslee/bazel:tbb22

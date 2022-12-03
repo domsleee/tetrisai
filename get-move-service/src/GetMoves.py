@@ -7,7 +7,9 @@ import asyncio
 import dataclasses
 
 DIR = os.path.dirname(os.path.realpath(__file__))
-DEFAULT_BINARY = os.path.join(DIR, "external_bin", "get_moves")
+BAZEL_BIN_DIR = os.path.join(DIR, '..', '..', 'cpp', 'bazel-bin')
+BAZEL_BINARY = os.path.join(BAZEL_BIN_DIR, "src", "pso", "main", "get_moves")
+DEFAULT_BINARY = os.environ.get("DEFAULT_BINARY", BAZEL_BINARY)# os.path.join(DIR, "external_bin", "get_moves")
 
 class GetMoves(IGetMoves):
   DEFAULT_TIMEOUT = 1.0
