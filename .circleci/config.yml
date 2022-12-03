@@ -18,6 +18,7 @@ jobs:
   getMoveServiceTest:
     docker:
       - image: domslee/bazel:tbb22-python3.10 # the OS must be the same as `build`
+    resource_class: large
     steps:
       - checkout
       - attach_workspace:
@@ -40,6 +41,7 @@ jobs:
   cppTest:
     docker:
       - image: domslee/bazel:tbb22
+    resource_class: large
     steps:
       - checkout
       - run: >
