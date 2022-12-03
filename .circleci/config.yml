@@ -9,7 +9,7 @@ jobs:
       - run: >
           cd cpp;
           ./scripts/setup.sh;
-          bazel build //src/pso/main:ew_get_moves;
+          bazel build //src/pso/main:get_moves;
           mkdir persist;
           cp -r bazel-bin/src persist/src;
       - persist_to_workspace:
@@ -24,7 +24,7 @@ jobs:
       - attach_workspace:
           at: /tmp/persist
       - run: >
-          cp /tmp/persist/src/pso/main/ew_get_moves get-move-service/src/external_bin/
+          cp /tmp/persist/src/pso/main/get_moves get-move-service/src/external_bin/
       - run: >
           cd get-move-service;
           python3.7 -m pipenv install;

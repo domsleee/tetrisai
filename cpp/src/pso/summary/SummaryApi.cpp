@@ -100,13 +100,13 @@ LogFileResult SummaryApi::readLogFile(const std::string &name) const {
   }
 
   if (config.numLines == Config::UNDEF) {
-    throw std::runtime_error("error parsing config (numLines)");
+    throw std::runtime_error("error parsing config (numLines): " + filepath);
   }
   if (group == "") {
-    throw std::runtime_error("error parsing group");
+    throw std::runtime_error("error parsing group: " + filepath);
   }
   if (weights == "") {
-    throw std::runtime_error("error parsing weights");
+    throw std::runtime_error("error parsing weights: " + filepath);
   }
 
   Weighting w = WeightingFn::readFromString(weights);

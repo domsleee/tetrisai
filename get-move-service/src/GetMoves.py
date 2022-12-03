@@ -7,7 +7,7 @@ import asyncio
 import dataclasses
 
 DIR = os.path.dirname(os.path.realpath(__file__))
-DEFAULT_BINARY = os.path.join(DIR, "external_bin", "ew_get_moves")
+DEFAULT_BINARY = os.path.join(DIR, "external_bin", "get_moves")
 
 class GetMoves(IGetMoves):
   DEFAULT_TIMEOUT = 1.0
