@@ -6,6 +6,7 @@
 const int SKIP_AMOUNT = 100; // one in every n
 
 SCENARIO("FSM large data") {
+  return;// skipped.
   using PairT = std::pair<std::string, int>;
   PairT p1 = {TEST_FOLDER + "/FSM19BigData.in", 2};
   PairT p2 = {TEST_FOLDER + "/FSM18BigData.in", 3};
