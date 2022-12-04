@@ -30,7 +30,6 @@ class NewEvaluateWeightings {
   void setNumGames(int numGames);
   void setNumLines(int numLines);
   void setStartingLines(int startingLines);
-  void setMaxDropRem(int dropRem);
   void setLookahead(int lookahead) { lookahead_ = lookahead; }
   void setAverageAmount(int averageAmount) { averageAmount_ = averageAmount; }
   void setStartingLevel(int startingLevel) { runPieceSet_handler_->setStartingLevel(startingLevel); }
@@ -85,11 +84,11 @@ std::vector<ScoreManager> NewEvaluateWeightings<MyRunPieceSet>::getScoreManagers
   };
 
   if (lookahead_ > 0) {
-    std::transform(std::execution::PARALLEL, // par, seq, par_unseq
+    std::transform(std::execution::PARALLEL,
                pieceSets.begin(), pieceSets.end(), 
                scores.begin(), fn2);
   } else {
-    std::transform(std::execution::PARALLEL, // par, seq, par_unseq
+    std::transform(std::execution::PARALLEL,
                pieceSets.begin(), pieceSets.end(), 
                scores.begin(), fn);
   }
@@ -117,10 +116,3 @@ template<typename MyRunPieceSet>
 void NewEvaluateWeightings<MyRunPieceSet>::setStartingLines(int startingLines) {
   runPieceSet_handler_->setStartingLines(startingLines);
 }
-
-
-template<typename MyRunPieceSet>
-void NewEvaluateWeightings<MyRunPieceSet>::setMaxDropRem(int maxDropRem) {
-  runPieceSet_handler_->setMaxDropRem(maxDropRem);
-}
-

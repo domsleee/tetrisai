@@ -1,4 +1,12 @@
 import threading
+from flask_caching import Cache
+from dataclasses import dataclass
+
+@dataclass
+class FlaskVars:
+  cache: Cache = None
+
+flaskVars = FlaskVars()
 
 def piece_to_int(piece: str) -> int:
   ind = [

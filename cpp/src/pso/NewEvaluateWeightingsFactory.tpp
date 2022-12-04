@@ -7,15 +7,15 @@
 #include "src/shared/MeMfPairProvider.h"
 
 
-template<typename MyMoveFinder>
+template<typename MyMoveFinder, bool useBranching=false>
 struct NewEvaluateWeightingsFactory {
   static auto getInstance(const MeMfPairProvider<MyMoveFinder> &meMfPairProvider) {
     auto getNextMove = NewGetNextMove(meMfPairProvider);
-    return NewEvaluateWeightings(RunPieceSet(getNextMove));
+    return NewEvaluateWeightings(RunPieceSet<decltype(getNextMove), useBranching>(getNextMove));
   }
 
   static auto getInstance(const MeMfPairProvider<MyMoveFinder> &meMfPairProvider, std::shared_ptr<IPieceSetGetter> ps) {
     auto getNextMove = NewGetNextMove(meMfPairProvider);
-    return NewEvaluateWeightings(RunPieceSet(getNextMove), ps);
+    return NewEvaluateWeightings(RunPieceSet<decltype(getNextMove), useBranching>(getNextMove), ps);
   }
 };

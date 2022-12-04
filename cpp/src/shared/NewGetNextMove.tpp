@@ -10,6 +10,7 @@
 #include "src/shared/MoveFinder/MoveFinderConstraints.h"
 #include "src/shared/BranchSearcher/BranchSearcher.tpp"
 #include "src/shared/BranchSearcher/defs.h"
+#include "src/shared/MoveFinder/MoveFinderBfs.tpp"
 
 #define LOOKAHEAD_PARALLEL par_unseq
 
@@ -85,7 +86,6 @@ BitPieceInfo NewGetNextMove<MyMoveFinder>::getNextMove(const BitBoard &board, co
     if (nxBoard.hasNoMoves(blockType2)) {
       return {{1e9, nxPiece, nxBoard.getEmptyPiece()}};
     }
-    assert(!nxBoard.hasNoMoves(blockType2));
     auto innerMoves = mf2.findAllMoves(nxBoard, blockType2);
 
     auto innerFn = [&](const auto nxPiece2) -> SetT {
@@ -117,7 +117,7 @@ BitPieceInfo NewGetNextMove<MyMoveFinder>::getNextMove(const BitBoard &board, co
 template<typename MyMoveFinder>
 BitPieceInfo NewGetNextMove<MyMoveFinder>::getNextMovePredict(const BitBoard &board, const BlockType blockType, const ScoreManager &sm) const {
   //return getNextMove(board, blockType, sm);
-  BranchSearcher<MyMoveFinder> bs(*meMfPairProvider_);
+  BranchSearcher<MyMoveFinder, MoveFinderBfs> bs(*meMfPairProvider_);
 
   auto [me, mf] = meMfPairProvider_->getMeMfPair(sm.getTotalLines());
   const auto moves = mf.findAllMoves(board, blockType);
@@ -140,7 +140,7 @@ BitPieceInfo NewGetNextMove<MyMoveFinder>::getNextMovePredict(const BitBoard &bo
 template<typename MyMoveFinder>
 BitPieceInfo NewGetNextMove<MyMoveFinder>::getNextMovePredict(const BitBoard &board, const BlockType blockType1, const BlockType blockType2, const ScoreManager &sm) const {
   //return getNextMovePredict(board, blockType1, sm);
-  BranchSearcher<MyMoveFinder> bs(*meMfPairProvider_);
+  BranchSearcher<MyMoveFinder, MoveFinderBfs> bs(*meMfPairProvider_);
 
   auto [me, mf] = meMfPairProvider_->getMeMfPair(sm.getTotalLines());
   const auto moves = mf.findAllMoves(board, blockType1);

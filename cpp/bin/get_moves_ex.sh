@@ -1,0 +1,1 @@
+bazel run //src:get_moves 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1

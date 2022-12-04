@@ -12,7 +12,7 @@ class RowGenerator {
     table_{table},
     features_{features} {}
   void applyHeader();
-  void calculateAndApplyFeatures();
+  std::vector<SummaryResult> calculateAndApplyFeatures();
   void setFn(const std::function<SummaryResult()> &fn) {
     setFns({fn});
   }

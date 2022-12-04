@@ -5,16 +5,8 @@ shared_library(
     deps = ["//src:pso", "//src:shared", "//src:common", "//third_party:libfort"]
 )
 
-
 cc_binary(
-    name = "ew",
-    srcs = ["main.cpp"],
-    deps = ["//src:pso"],
-    copts = EXEC_COPTS
-)
-
-cc_binary(
-    name = "ew_get_moves",
+    name = "get_moves",
     srcs = ["main_get_moves.cpp"],
     deps = ["//src:pso"],
     copts = EXEC_COPTS
@@ -26,6 +18,14 @@ cc_binary(
     deps = ["//src:pso"],
     copts = EXEC_COPTS
 )
+
+cc_binary(
+    name = "max_score",
+    srcs = ["main_max_score.cpp"],
+    deps = ["//src:pso"],
+    copts = EXEC_COPTS
+)
+
 
 cc_binary(
     name = "bench_time",

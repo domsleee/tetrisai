@@ -2,13 +2,14 @@ version: 2
 jobs:
   build:
     docker:
-      - image: domslee/bazel:tbb2
+      - image: domslee/bazel:tbb22
+    resource_class: large
     steps:
       - checkout
       - run: >
           cd cpp;
           ./scripts/setup.sh;
-          bazel build //src/pso/main:ew_get_moves --local_resources=2360,1.0,1.0;
+          bazel build //src/pso/main:get_moves --jobs=20;
           mkdir persist;
           cp -r bazel-bin/src persist/src;
       - persist_to_workspace:
@@ -17,39 +18,45 @@ jobs:
             - src
   getMoveServiceTest:
     docker:
-      - image: domslee/bazel:tbb-pipenv
+      - image: domslee/bazel:tbb22-python3.10 # the OS must be the same as `build`
+    resource_class: small
     steps:
       - checkout
       - attach_workspace:
           at: /tmp/persist
       - run: >
-          cp /tmp/persist/src/pso/main/ew_get_moves get-move-service/src/external_bin/
-      - run: >
           cd get-move-service;
-          python3.7 -m pipenv install;
-          python3.7 -m pipenv run sh -c "cd src/test; python -m unittest";
+          python -m pipenv install;
+          python -m pipenv run sh -c "cd src/test; DEFAULT_BINARY=/tmp/persist/src/pso/main/get_moves python -m unittest";
   pythonTest:
     docker:
-      - image: domslee/bazel:tbb-pipenv
+      - image: domslee/bazel:tbb22-python3.10
+    resource_class: small
     steps:
       - checkout
+      - attach_workspace:
+          at: /tmp/persist
       - run: >
           cd python;
-          python3.7 -m pipenv install;
-          python3.7 -m pipenv run sh -c "cd tetrisai/test; python -m unittest";
+          python -m pipenv install;
+          python -m pipenv run sh -c "cd tetrisai/test; DEFAULT_BINARY=/tmp/persist/src/pso/main/get_moves python -m unittest";
   cppTest:
     docker:
-      - image: domslee/bazel:tbb2
+      - image: domslee/bazel:tbb22
+    resource_class: large
     steps:
       - checkout
+      # https://docs.bazel.build/versions/4.2.1/memory-saving-mode.html
       - run: >
           cd cpp;
           export LD_LIBRARY_PATH=/usr/local/include/tbb_build;
           ./scripts/setup.sh;
-          bazel query //... | xargs bazel test --local_resources=2360,1.0,1.0;
+          bazel query //... | xargs bazel --host_jvm_args=-Xmx512m build --jobs=16 --experimental_local_memory_estimate=True --discard_analysis_cache --notrack_incremental_state --nokeep_state_after_build;
+          bazel query //... | xargs bazel --host_jvm_args=-Xmx512m test  --jobs=16 --experimental_local_memory_estimate=True --discard_analysis_cache --notrack_incremental_state --nokeep_state_after_build;
   webTest:
     docker:
       - image: circleci/node:10.16.3
+    resource_class: small
     steps:
       - checkout
       - run: >
@@ -61,12 +68,12 @@ workflows:
   build_and_test:
     jobs:
       - build
-      - pythonTest
+      - pythonTest:
+          requires:
+            - build
       - getMoveServiceTest:
           requires:
             - build
-      - cppTest:
-          requires:
-            - build
+      - cppTest
       - webTest
 

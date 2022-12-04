@@ -16,8 +16,8 @@ import { default as loglevel } from 'loglevel';
 import { ScoreManager } from './ScoreManager';
 
 const log = loglevel.getLogger('GameRunner');
-loglevel.setDefaultLevel('warn');
-log.setLevel('warn');
+loglevel.setDefaultLevel('info');
+log.setLevel('info');
 
 function sleep(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));

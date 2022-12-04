@@ -4,10 +4,40 @@
 #include <memory>
 #include <map>
 #include <functional>
+#include <type_traits>
+#include <typeinfo>
 
 const int MAX_LINES = 230;
 
-template <typename MyGetNextMove>
+template<typename MyGetNextMove>
+struct HandlerBranching {
+  static auto getNextMove(MyGetNextMove &getNextmoveHandler, const BitBoard &b, BlockType blockType, ScoreManager sm) {
+    return getNextmoveHandler.getNextMovePredict(b, blockType, sm);
+  }
+  static auto getNextMove(MyGetNextMove &getNextmoveHandler, const BitBoard &b, BlockType blockType1, BlockType blockType2, ScoreManager sm) {
+    return getNextmoveHandler.getNextMovePredict(b, blockType1, blockType2, sm);
+  }
+};
+
+template<typename MyGetNextMove>
+struct HandlerNoBranching {
+  static auto getNextMove(MyGetNextMove &getNextmoveHandler, const BitBoard &b, BlockType blockType, ScoreManager sm) {
+    return getNextmoveHandler.getNextMove(b, blockType, sm);
+  }
+  static auto getNextMove(MyGetNextMove &getNextmoveHandler, const BitBoard &b, BlockType blockType1, BlockType blockType2, ScoreManager sm) {
+    return getNextmoveHandler.getNextMove(b, blockType1, blockType2, sm);
+  }
+};
+
+
+
+template <typename MyGetNextMove, bool useBranching=false,
+          typename GetNextMoveHandler=typename std::conditional<
+            useBranching, 
+            HandlerBranching<MyGetNextMove>,
+            HandlerNoBranching<MyGetNextMove>
+          >::type
+         >
 class RunPieceSet {
  public:
   RunPieceSet(const MyGetNextMove &getNextMoveHandler): getNextMoveHandler_(getNextMoveHandler) {}
@@ -20,13 +50,10 @@ class RunPieceSet {
   void setStartingLines(int startingLines) {
     startingLines_ = startingLines;
   }
-  void setMaxDropRem(int maxDropRem) {
-    // todo: delete
-    //getNextMoveHandler_.setMaxDropRem(maxDropRem);
-  }
   void setStartingLevel(int startingLevel) {
     startingLevel_ = startingLevel;
   }
+
   MyGetNextMove getNextMoveHandler_;
 
  private:
@@ -35,8 +62,8 @@ class RunPieceSet {
   int startingLines_ = 0;
 };
 
-template <typename MyGetNextMove>
-ScoreManager RunPieceSet<MyGetNextMove>::runGame(const std::vector<BlockType> &pieceSet) const {
+template <typename MyGetNextMove, bool useBranching, typename GetNextMoveHandler>
+ScoreManager RunPieceSet<MyGetNextMove, useBranching, GetNextMoveHandler>::runGame(const std::vector<BlockType> &pieceSet) const {
   ScoreManager sm{startingLevel_};
   sm.setLines(startingLines_);
   BitBoard b;
@@ -57,8 +84,8 @@ ScoreManager RunPieceSet<MyGetNextMove>::runGame(const std::vector<BlockType> &p
 };
 
 
-template <typename MyGetNextMove>
-ScoreManager RunPieceSet<MyGetNextMove>::runGameWithLookahead(const std::vector<BlockType> &pieceSet) const {
+template <typename MyGetNextMove, bool useBranching, typename GetNextMoveHandler>
+ScoreManager RunPieceSet<MyGetNextMove, useBranching, GetNextMoveHandler>::runGameWithLookahead(const std::vector<BlockType> &pieceSet) const {
   ScoreManager sm{startingLevel_};
   sm.setLines(startingLines_);
   BitBoard b;
@@ -71,7 +98,7 @@ ScoreManager RunPieceSet<MyGetNextMove>::runGameWithLookahead(const std::vector<
     if (b.hasNoMoves(blockType1)) {
       break;
     };
-    auto pieceInfo = getNextMoveHandler.getNextMovePredict(b, blockType1, blockType2, sm);
+    auto pieceInfo = GetNextMoveHandler::getNextMove(getNextMoveHandler, b, blockType1, blockType2, sm);
     int lineClears = b.applyPieceInfo(pieceInfo);
     sm.addLineClears(lineClears);
     moves++;

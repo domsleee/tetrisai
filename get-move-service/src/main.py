@@ -2,7 +2,6 @@
 
 from flask import Flask, abort, request, jsonify
 import threading
-from routes.get_moves_given_piece import get_moves_given_piece_page
 from GetMoves import GetMoves
 from common import piece_to_int
 import asyncio
@@ -14,28 +13,32 @@ from common import sem
 from GetMovesService import get_moves_service
 
 from flask_cors import CORS, cross_origin
-
+from flask_caching import Cache
+from common import flaskVars
 app = Flask(__name__)
-cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
+app.config['CACHE_TYPE'] = 'SimpleCache'
+#app.config['DEBUG'] = True
+flaskVars.cache = Cache(app)
+cors = CORS(app)
 loop = asyncio.get_event_loop()
 DIR = os.path.dirname(os.path.realpath(__file__))
 
 logging.basicConfig(level=logging.DEBUG)
 
+from routes.get_moves_given_piece import get_moves_given_piece_page
 app.register_blueprint(get_moves_given_piece_page)
 
 
 @app.route('/')
-@cross_origin()
 def hello():
     return "Hello World!"
 
 
 @app.route('/get-moves', methods=['POST'])
-@cross_origin()
 def get_move_handler():
   payload = request.json
+  
   try:
     sem.acquire(timeout=30)
   except Exception:
@@ -68,12 +71,12 @@ def get_move_handler():
       'line_clears': result.line_clears
     }
     print(ret)
-    return json.dumps(ret)
+    cache[payload] = json.dumps(ret)
+    return cache[payload]
   finally:
     sem.release()
 
 @app.route('/get-file', methods=['POST'])
-@cross_origin()
 def get_file_handler():
   payload = request.json
   file = payload['file']

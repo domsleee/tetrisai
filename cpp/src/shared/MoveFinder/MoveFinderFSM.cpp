@@ -388,7 +388,7 @@ std::vector<std::string> MoveFinderFSM::getShortestPath(const BitPieceInfo &piec
   auto actionPairs = getShortestPathActions(piece);
 
   std::vector<std::string> result;
-  for (const auto [frameEntered, action]: actionPairs) {
+  for (const auto &[frameEntered, action]: actionPairs) {
     std::stringstream ss;
     ss << frameEntered << ' ' << toString(action) << '\n';
     result.push_back(ss.str());

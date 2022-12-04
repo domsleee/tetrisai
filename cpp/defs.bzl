@@ -5,7 +5,7 @@ WORKSPACE_DIR_DEF = "-DWORKSPACE_DIR='\"" + WORKSPACE_DIR + "\"'"
 
 EXEC_COPTS = [WORKSPACE_DIR_DEF]
 TEST_COPTS = [WORKSPACE_DIR_DEF]
-EW_MOVE_FINDER_CACHE_COPTS = ["-O3", "-DMOVE_FINDER_CACHE"]
+MOVE_FINDER_CACHE_COPTS = ["-O3", "-DMOVE_FINDER_CACHE"]
 
 def shared_library(name, deps = []):
   return native.cc_library(

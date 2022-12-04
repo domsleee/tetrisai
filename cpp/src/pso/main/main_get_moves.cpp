@@ -3,6 +3,7 @@
 #include "src/common/Weighting.hpp"
 #include "src/common/common.hpp"
 #include "src/shared/MoveFinder/MoveFinderFSM.h"
+#include "src/shared/MoveFinder/MoveFinderAll.h"
 #include "src/pso/defs.h"
 #include "src/pso/summary/SummaryApi.h"
 
@@ -18,9 +19,10 @@ const char INSTRUCTION_QUIT = 'q';
 
 const char INSTRUCTION_SET_NUM_LINES = 'l';
 const char INSTRUCTION_GET_NUM_LINES = 'L';
+const char INSTRUCTION_SET_START_LEVEL = 'x';
 
-void handleGetMove(int num_lines, bool givenFirstMoveDirection=false);
-void handleGetMoveGivenNextPiece(int num_lines);
+void handleGetMove(int start_level, int num_lines, bool givenFirstMoveDirection=false);
+void handleGetMoveGivenNextPiece(int start_level, int num_lines);
 std::pair<int, std::string> getImmediateNeighbourStr(const BitPieceInfo &p1, const BitPieceInfo &p2, int frame);
 std::pair<MoveEvaluatorGroup, MoveEvaluatorGroup> getMePair();
 
@@ -38,18 +40,28 @@ int main() {
   }
 }
 
+int levelToMaxDropRem(int level) {
+  if (level >= 29) return 1;
+  if (level >= 19) return 2;
+  return 3;
+}
+
 void run() {
   char instruction;
   int num_lines = 0;
+  int start_level = 18;
   while(std::cin >> instruction) {
     //dprintf("instruction: %c\n", instruction);
     switch(instruction) {
       case(INSTRUCTION_HEALTH): {
         std::cout << "OK\n";
       } break;
-      case(INSTRUCTION_GET_MOVE): handleGetMove(num_lines); break;
-      case(INSTRUCTION_GET_MOVE_GIVEN_FIRST_DIRECTION): handleGetMove(num_lines, true); break;
-      case(INSTRUCTION_GET_MOVE_GIVEN_FIRST_DIRECTION_AND_NEXT_PIECE): handleGetMoveGivenNextPiece(num_lines); break;
+      case(INSTRUCTION_SET_START_LEVEL): {
+        std::cin >> start_level;
+      } break;
+      case(INSTRUCTION_GET_MOVE): handleGetMove(start_level, num_lines); break;
+      case(INSTRUCTION_GET_MOVE_GIVEN_FIRST_DIRECTION): handleGetMove(start_level, num_lines, true); break;
+      case(INSTRUCTION_GET_MOVE_GIVEN_FIRST_DIRECTION_AND_NEXT_PIECE): handleGetMoveGivenNextPiece(start_level, num_lines); break;
       case(INSTRUCTION_SET_NUM_LINES): {
         std::cin >> num_lines;
       } break;
@@ -65,7 +77,7 @@ void run() {
   }
 }
 
-void handleGetMove(int numLines, bool givenFirstMoveDirection) {
+void handleGetMove(int start_level, int numLines, bool givenFirstMoveDirection) {
   int piece;
   char firstMoveDirectionChar = '.';
   std::string boardStr;
@@ -81,7 +93,7 @@ void handleGetMove(int numLines, bool givenFirstMoveDirection) {
   BlockType blockType = static_cast<BlockType>(piece);
   auto board = BitBoard(boardStr);
   auto [me1, me2] = getMePair();
-  auto zz = getMeMfPairProvider<MoveFinderFSM>(me1, me2);
+  auto zz = getMeMfPairProvider<MoveFinderAll>(me1, me2);
   auto getNextMoveHandler = NewGetNextMove(zz);
 
   if (board.hasNoMoves(blockType)) {
@@ -89,7 +101,7 @@ void handleGetMove(int numLines, bool givenFirstMoveDirection) {
     return;
   }
   std::cout << "result: moves\n";
-  ScoreManager sm;
+  ScoreManager sm(start_level);
   sm.setLines(numLines);
   auto pieceInfo = getNextMoveHandler.getNextMove(board, blockType, sm, firstMoveDirectionChar); // todo
   
@@ -97,6 +109,7 @@ void handleGetMove(int numLines, bool givenFirstMoveDirection) {
   const auto lineClears = board.applyPieceInfo(pieceInfo);
 
   auto mf2 = getNextMoveHandler.getMoveFinder(numLines);
+  mf2.setMaxDropRem(levelToMaxDropRem(sm.getLevel()));
   mf2.setFirstMoveDirectionChar(firstMoveDirectionChar);
   mf2.findAllMoves(oldBoard, blockType);
   auto shortestPathStrings = mf2.getShortestPath(pieceInfo);
@@ -116,7 +129,7 @@ std::pair<BitBoard, int> applyPieceInfo(const BitBoard &b, const BitPieceInfo &n
 }
 
 
-void handleGetMoveGivenNextPiece(int numLines) {
+void handleGetMoveGivenNextPiece(int start_level, int numLines) {
   int blockTypeInt1, blockTypeInt2;
   char firstMoveDirectionChar;
   std::string boardStr;
@@ -129,7 +142,7 @@ void handleGetMoveGivenNextPiece(int numLines) {
   BlockType blockType2 = static_cast<BlockType>(blockTypeInt2);
 
   auto [me1, me2] = getMePair();
-  auto v = getMeMfPairProvider<MoveFinderFSM>(me1, me2);
+  auto v = getMeMfPairProvider<MoveFinderAll>(me1, me2);
   auto getNextMoveHandler = NewGetNextMove(v);
   
   const auto board = BitBoard(boardStr);
@@ -137,11 +150,12 @@ void handleGetMoveGivenNextPiece(int numLines) {
     std::cout << "result: no moves\n";
     return;
   }
-  ScoreManager sm;
+  ScoreManager sm(start_level);
   sm.setLines(numLines);
   auto bestPieceInfo = getNextMoveHandler.getNextMovePredict(board, blockType1, blockType2, sm);
   
   auto mf = getNextMoveHandler.getMoveFinder(numLines);
+  mf.setMaxDropRem(levelToMaxDropRem(sm.getLevel()));
   //mf.setFirstMoveDirectionChar(firstMoveDirectionChar);
   mf.findAllMoves(board, blockType1);
   auto shortestPathStrings = mf.getShortestPath(bestPieceInfo);
@@ -164,8 +178,8 @@ std::pair<MoveEvaluatorGroup, MoveEvaluatorGroup> getMePair() {
     const std::string h = "BothLinearAdvVarN"; // MoveEvaluatorBlockLinear50_fixed
     //auto summary1 = s.readLogFile("18_LinearN.log");
     //auto summary2 = s.readLogFile("19_BothLinearN.log");
-    auto summary1 = s.readLogFile("18_LinearGenFin.log");
-    auto summary2 = s.readLogFile("19_BothLinearGen.log");
+    auto summary1 = s.readLogFile("18_LinearGen.log");
+    auto summary2 = s.readLogFile("19_Bfs.log");
 
     auto me1 = getMoveEvaluatorGroups().at(summary1.group).setWeights(summary1.weights);
     auto me2 = getMoveEvaluatorGroups().at(summary2.group).setWeights(summary2.weights);

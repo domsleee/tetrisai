@@ -16,6 +16,7 @@ namespace BitBoardPre {
   const int NUM_BLOCKS = 8;
   const int NUM_MOVES = 4;
   const int NUM_ROTATIONS = 2;
+  const int NUM_ACTIONS = NUM_MOVES + NUM_ROTATIONS + 1;
   const int UNDEFINED = -1;
   
   void bfs(const SimplePieceInfo &p);
@@ -30,10 +31,12 @@ namespace BitBoardPre {
   void setupHeights();
   void setupRepIds(const std::vector<std::vector<int>> &idToOpenRotN);
   void setupOpenRotN();
+  void precomputeActions();
   bool isValidId(int id);
 
   int rotateIndex_[MAX_IND][NUM_ROTATIONS];
   int moveIndex_[MAX_IND][NUM_MOVES];
+  std::array<std::array<int, 7>, MAX_IND> actionIndex_;
   int startingPieceId_[NUM_BLOCKS];
   std::vector<Move> idToMove_(MAX_IND);
   std::vector<int> idToHeight_(MAX_IND);
@@ -57,6 +60,9 @@ namespace BitBoardPre {
       for (int j = 0; j < NUM_MOVES; j++) {
         moveIndex_[i][j] = UNDEFINED;
       }
+      for (int j = 0; j < NUM_ACTIONS; j++) {
+        actionIndex_[i][j] = UNDEFINED;
+      }
     }
     SimpleBoard b;
     for (const auto &blockType: allBlockTypes) {
@@ -68,6 +74,7 @@ namespace BitBoardPre {
     setupHeights();
     setupOpenRotN();
     setupRepIds(idToOpenRotN_);
+    precomputeActions();
   }
 
   void bfs(const SimplePieceInfo &p) {
@@ -137,10 +144,13 @@ namespace BitBoardPre {
 
   inline void addRotate(int id, int nxId, RotateDirection rotateDirection) {
     rotateIndex_[id][rotateDirection] = nxId;
+    actionIndex_[id][static_cast<int>(toAction(rotateDirection))] = nxId;
+
   }
 
   inline void addMove(int id, int nxId, MoveDirection moveDirection) {
     moveIndex_[id][moveDirection] = nxId;
+    actionIndex_[id][static_cast<int>(toAction(moveDirection))] = nxId;
   }
 
   int getStartingPieceId(BlockType blockType) {
@@ -265,6 +275,80 @@ namespace BitBoardPre {
 
       idToRep_[i] = repIdOverride != UNDEFINED ? repIdOverride : i;
     }
+  }
+
+  static std::vector<std::vector<std::pair<std::vector<Action>, int>>> actions_ = std::vector<std::vector<std::pair<std::vector<Action>, int>>>(2);
+
+  int doActionOnEmptyBoard(int id, Action action) {
+    return actionIndex_[id][static_cast<int>(action)];
+  }
+
+  void precomputeBitfieldToActions();
+  std::vector<std::pair<std::vector<Action>, int>> precomputeActions(bool includeDown);
+
+  void precomputeActions() {
+    actions_[true] = precomputeActions(true);
+    actions_[false] = precomputeActions(false);
+    precomputeBitfieldToActions();
+  }
+  const std::vector<std::pair<std::vector<Action>, int>> &getActions(bool includeDown) {
+    return actions_[includeDown];
+  }
+
+  int actionsToBitfield(const std::vector<Action> &actions);
+  std::vector<std::pair<std::vector<Action>, int>> precomputeActions(bool includeDown) {
+    std::vector<std::pair<std::vector<Action>, int>> res;
+    constexpr std::array choices1 = {Action::NONE, Action::LEFT, Action::RIGHT};
+    constexpr std::array choices2 = {Action::NONE, Action::ROTATE_C, Action::ROTATE_AC};
+    std::array choices3 = {Action::DOWN};
+    if (!includeDown) choices3[0] = Action::NONE;
+    for (auto a1: choices1) {
+      for (auto a2: choices2) {
+        for (auto a3: choices3) {
+          std::vector<Action> n;
+          for (auto a: {a1, a2, a3}) {
+            if (a != Action::NONE) n.push_back(a);
+          }
+          res.push_back({n, actionsToBitfield(n)});
+        }
+      }
+    }
+    return res;
+  }
+  int actionsToBitfield(const std::vector<Action> &actions) {
+    int ret = 0;
+    for (auto action: actions) {
+      switch(action) {
+        case Action::LEFT: ret |= 1; break;
+        case Action::RIGHT: ret |= 1 << 1; break;
+        case Action::ROTATE_C: ret |= 1 << 2; break;
+        case Action::ROTATE_AC: ret |= 1 << 3; break;
+        case Action::DOWN: ret |= 1 << 4; break;
+        default: throw std::runtime_error("what");
+      }
+    }
+    return ret;
+  }
+    
+
+  static std::array<std::vector<Action>, (1<<5)+1> bitfieldToActionsCache_;
+  std::vector<Action> precomputeBitfieldToActions(int bitfield);
+  const std::vector<Action> &bitfieldToActions(int bitfield) {
+    return bitfieldToActionsCache_[bitfield];
+  }
+  void precomputeBitfieldToActions() {
+    for (int i = 0; i < (1<<5)+1; ++i) {
+      bitfieldToActionsCache_[i] = precomputeBitfieldToActions(i);
+    }
+  }
+  std::vector<Action> precomputeBitfieldToActions(int bitfield) {
+    std::vector<Action> ret;
+    if (bitfield & 1) ret.push_back(Action::LEFT);
+    if (bitfield & (1 << 1)) ret.push_back(Action::RIGHT);
+    if (bitfield & (1 << 2)) ret.push_back(Action::ROTATE_C);
+    if (bitfield & (1 << 3)) ret.push_back(Action::ROTATE_AC);
+    if (bitfield & (1 << 4)) ret.push_back(Action::DOWN);
+    return ret;
   }
 }
 

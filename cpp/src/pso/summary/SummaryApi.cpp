@@ -6,6 +6,7 @@
 #include "src/common/Weighting.hpp"
 #include "src/shared/MoveFinder/MoveFinderRewrite.h"
 #include "src/shared/MoveFinder/MoveFinderFSM.h"
+#include "src/shared/MoveFinder/MoveFinderBfs.tpp"
 #include "src/shared/MoveEvaluator/MoveEvaluatorGroups.hpp"
 #include "src/pso/summary/SummaryApiUtility.tpp"
 #include <filesystem>
@@ -46,11 +47,13 @@ SummaryResult SummaryApi::getSummaryLookahead(const std::string &name1, const st
   auto info2 = readLogFile(name2);
   auto config = info1.config;
   config.setupForLongPlay();
-  config.numGames = 48;
-  config.seed = 203;
+  config.numGames = 150;
+  config.seed = 205;
+  config.numLines = 230;
+  config.startingLevel = 19;
   auto me1 = getMoveEvaluatorGroups().at(info1.group).setWeights(info1.weights);
   auto me2 = getMoveEvaluatorGroups().at(info2.group).setWeights(info2.weights);
-  auto scoreManagers = getScoresLookahead(config, me1, me2, transitionLines);
+  auto scoreManagers = getScoresLookahead<MoveFinderBfs>(config, me1, me2, transitionLines);
   return {
     name1 + "_" + name2 + "_Lookahead",
     info1.group + "_" + info2.group,
@@ -97,13 +100,13 @@ LogFileResult SummaryApi::readLogFile(const std::string &name) const {
   }
 
   if (config.numLines == Config::UNDEF) {
-    throw std::runtime_error("error parsing config (numLines)");
+    throw std::runtime_error("error parsing config (numLines): " + filepath);
   }
   if (group == "") {
-    throw std::runtime_error("error parsing group");
+    throw std::runtime_error("error parsing group: " + filepath);
   }
   if (weights == "") {
-    throw std::runtime_error("error parsing weights");
+    throw std::runtime_error("error parsing weights: " + filepath);
   }
 
   Weighting w = WeightingFn::readFromString(weights);
