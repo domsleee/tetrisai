@@ -25,6 +25,6 @@ The docker images are maintained at [domsleee/bazel-docker](https://github.com/d
 
 ## Limitations
 
-* The demo playback uses an emulator, meaning it can only tap the same key once every two frames
+* The demo playback uses an emulator, meaning it can only tap the same key once every two frames (especially a problem for level 19, where the piece moves down every two frames)
 * Rotations where the piece is off the top of the board aren't included in path finding
 * The implementation is a mess
