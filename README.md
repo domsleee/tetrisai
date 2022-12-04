@@ -1,3 +1,5 @@
+[See related blog post](https://domslee.com/2020/04/12/high-score-tetrisai-improved.html).
+
 ## USAGE
 
 ## Usage method 1 - natively
