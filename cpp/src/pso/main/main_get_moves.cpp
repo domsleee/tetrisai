@@ -40,6 +40,12 @@ int main() {
   }
 }
 
+int levelToMaxDropRem(int level) {
+  if (level >= 29) return 1;
+  if (level >= 19) return 2;
+  return 3;
+}
+
 void run() {
   char instruction;
   int num_lines = 0;
@@ -103,7 +109,7 @@ void handleGetMove(int start_level, int numLines, bool givenFirstMoveDirection) 
   const auto lineClears = board.applyPieceInfo(pieceInfo);
 
   auto mf2 = getNextMoveHandler.getMoveFinder(numLines);
-  mf2.setMaxDropRem(sm.getLevel() == 18 ? 3 : 2);
+  mf2.setMaxDropRem(levelToMaxDropRem(sm.getLevel()));
   mf2.setFirstMoveDirectionChar(firstMoveDirectionChar);
   mf2.findAllMoves(oldBoard, blockType);
   auto shortestPathStrings = mf2.getShortestPath(pieceInfo);
@@ -149,7 +155,7 @@ void handleGetMoveGivenNextPiece(int start_level, int numLines) {
   auto bestPieceInfo = getNextMoveHandler.getNextMovePredict(board, blockType1, blockType2, sm);
   
   auto mf = getNextMoveHandler.getMoveFinder(numLines);
-  mf.setMaxDropRem(sm.getLevel() == 18 ? 3 : 2);
+  mf.setMaxDropRem(levelToMaxDropRem(sm.getLevel()));
   //mf.setFirstMoveDirectionChar(firstMoveDirectionChar);
   mf.findAllMoves(board, blockType1);
   auto shortestPathStrings = mf.getShortestPath(bestPieceInfo);
