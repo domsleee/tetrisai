@@ -21,3 +21,10 @@ The docker images are maintained at [domsleee/bazel-docker](https://github.com/d
 * `python/` contains the PSO logic used to generate the models
 * `get-move-service/` an endpoint that is used by `web/` to play a game using the ai
 * `web/` contains a way of running the generated models online
+
+
+## Limitations
+
+* The demo playback uses an emulator, meaning it can only tap the same key once every two frames
+* Rotations where the piece is off the top of the board aren't included in path finding
+* The implementation is a mess

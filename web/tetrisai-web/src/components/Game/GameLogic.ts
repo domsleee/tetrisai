@@ -78,7 +78,7 @@ export class GameLogic implements ICapturable<string> {
     this.debug['numPieces'] = 0;
 
     const bs = new GameBootstrap(this.demoPlayer);
-    await bs.setupFromNewCanvas(this.frameAwaiter, startFrame);
+    await bs.setupFromNewCanvas(this.frameAwaiter, startFrame, true);
 
     this.demoPlayer.timer.setFps(2000);
     this.pa.init();

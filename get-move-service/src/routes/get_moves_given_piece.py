@@ -1,15 +1,14 @@
 from flask import Blueprint, request, abort
-from common import sem, piece_to_int
+from common import sem, piece_to_int, flaskVars
 from GetMovesService import get_moves_service
 from flask_cors import CORS, cross_origin
 import json
 
 get_moves_given_piece_page = Blueprint('get-moves-given-piece', __name__, template_folder='templates')
 
+d = {}
 @get_moves_given_piece_page.route('/get-moves-given-piece', methods=['POST'])
-@cross_origin()
 def get_moves_given_piece():
-  print(request)
   payload = request.json
   try:
     sem.acquire(timeout=30)
@@ -18,6 +17,9 @@ def get_moves_given_piece():
 
   try:
     print(payload)
+    cachedVal = d.get(str(payload))
+    if cachedVal:
+      return cachedVal
     board = payload['board']
     piece = piece_to_int(payload['piece'])
     next_piece = piece_to_int(payload['next_piece'])
@@ -34,7 +36,9 @@ def get_moves_given_piece():
       'line_clears': result.line_clears
     }
     print(ret)
-    return json.dumps(ret)
+    r = json.dumps(ret)
+    d[str(payload)] = json.dumps(ret)
+    return r
   finally:
     sem.release()
 

@@ -13,7 +13,7 @@ WORKSPACE_DIR = os.path.join(DIR, '..', '..', 'cpp')
 def main():
   os.chdir(WORKSPACE_DIR)
   print(WORKSPACE_DIR)
-  subprocess.check_call(["bazel", "build", "//src/pso/main:get_moves", "--cxxopt", "-O3", "--cxxopt", "-DNDEBUG", "--copt", "-O3", "--copt", "-DNDEBUG"], cwd=WORKSPACE_DIR)
+  subprocess.check_call(["bazel", "build", "//src/pso/main:get_moves", "--cxxopt", "-O3", "--cxxopt", "-DNDEBUG", "--copt", "-O3", "--copt", "-DNDEBUG", "--cxxopt", "-DMOVE_FINDER_CACHE"], cwd=WORKSPACE_DIR)
   #my_bin = os.path.join(WORKSPACE_DIR, "bazel-bin", "src", "pso", "main", "get_moves")
   #out_bin = os.path.join(DIR, "external_bin", "get_moves")
   #try:
