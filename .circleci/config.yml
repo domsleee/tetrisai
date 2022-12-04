@@ -45,12 +45,13 @@ jobs:
     resource_class: large
     steps:
       - checkout
+      # https://docs.bazel.build/versions/4.2.1/memory-saving-mode.html
       - run: >
           cd cpp;
           export LD_LIBRARY_PATH=/usr/local/include/tbb_build;
           ./scripts/setup.sh;
-          bazel query //... | xargs bazel --host_jvm_args=-Xmx512k build --jobs=16 --experimental_local_memory_estimate=True --local_ram_resources=HOST_RAM*.1;
-          bazel query //... | xargs bazel --host_jvm_args=-Xmx512k test  --jobs=16 --experimental_local_memory_estimate=True --local_ram_resources=HOST_RAM*.1;
+          bazel query //... | xargs bazel --host_jvm_args=-Xmx512m build --jobs=16 --experimental_local_memory_estimate=True --discard_analysis_cache --notrack_incremental_state --nokeep_state_after_build;
+          bazel query //... | xargs bazel --host_jvm_args=-Xmx512m test  --jobs=16 --experimental_local_memory_estimate=True --discard_analysis_cache --notrack_incremental_state --nokeep_state_after_build;
   webTest:
     docker:
       - image: circleci/node:10.16.3
