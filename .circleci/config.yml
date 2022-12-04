@@ -51,8 +51,8 @@ jobs:
           cd cpp;
           export LD_LIBRARY_PATH=/usr/local/include/tbb_build;
           ./scripts/setup.sh;
-          bazel query //... | xargs bazel --host_jvm_args=-Xmx512m build --jobs=16 --experimental_local_memory_estimate=True --discard_analysis_cache --notrack_incremental_state --nokeep_state_after_build -c fastbuild;
-          bazel query //... | xargs bazel --host_jvm_args=-Xmx512m test  --jobs=16 --experimental_local_memory_estimate=True --discard_analysis_cache --notrack_incremental_state --nokeep_state_after_build;
+          bazel query //... | xargs bazel build --jobs=16 --experimental_local_memory_estimate=True --discard_analysis_cache --notrack_incremental_state --nokeep_state_after_build -c fastbuild;
+          bazel query //... | xargs bazel test  --jobs=16 --experimental_local_memory_estimate=True --discard_analysis_cache --notrack_incremental_state --nokeep_state_after_build -c fastbuild;
   webTest:
     docker:
       - image: circleci/node:10.16.3
