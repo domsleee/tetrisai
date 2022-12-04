@@ -1,6 +1,6 @@
 import typing
 
-NUM_ROWS = 20
+NUM_ROWS = 22
 NUM_COLUMNS = 10
 
 class BitBoard:
