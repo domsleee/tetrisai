@@ -151,16 +151,21 @@ SCENARIO("TetrisReady matches MoveFinderFSM opinion") {
   //REQUIRE(isColAccessible(colHeights, 19) == false);
   for (int level = 18; level <= 19; ++level) {
     for (int c = 0; c < NUM_COLUMNS; ++c) {
-      auto move = Move({{16, c}, {17, c}, {18, c}, {19, c}});
+      auto move = Move({{R(3), c}, {R(2), c}, {R(1), c}, {R(0), c}});
       auto piece = BitBoard().getPiece(move);
-      for (int height = 4; height < NUM_ROWS; ++height) {
+      for (int height = 4; height < NUM_ROWS-2; ++height) {
         BitBoard b = {getWell(height, c)};
         auto tetrisReady = MoveEvaluatorTetrisReady({1}).EVAL(b, b.getEmptyPiece(), level);
         MoveFinderFSM mf;
         mf.setMaxDropRem(level == 19 ? 2 : 3);
         auto moves = mf.findAllMoves(b, BlockType::I_PIECE);
         auto moveFinder = std::find(moves.begin(), moves.end(), piece) != moves.end() ? 1.0 : 0.0;
-        // printf("level: %d, c: %d, height: %d\n", level, c, height);
+        // printf("level: %d, c: %d, height: %d, tetrisReady: %d, moveFinder: %d\n", level, c, height, tetrisReady, moveFinder);
+        if (fabs(tetrisReady - moveFinder) > 0.01f) {
+          printf("level: %d\n", level);
+          printBoard(b);
+          assert(false);
+        }
         REQ_DELTA(tetrisReady, moveFinder);
       }
     }
@@ -170,7 +175,7 @@ SCENARIO("TetrisReady matches MoveFinderFSM opinion") {
 SCENARIO("TetrisReady works AFTER the piece is applied") {
   GIVEN("a clearing piece") {
     BitBoard b = {getWell(4, 0)};
-    auto p = b.getPiece(Move({{16, 0}, {17, 0}, {18, 0}, {19, 0}}));
+    auto p = b.getPiece(Move({{R(3), 0}, {R(2), 0}, {R(1), 0}, {R(0), 0}}));
     WHEN("the board is cleared") {
       auto clearBoard = MoveEvaluatorTetrisReady({1}).EVAL(b, p, 19);
       auto tetrisReadyBoard = MoveEvaluatorTetrisReady({1}).EVAL(b, b.getEmptyPiece(), 19);
@@ -180,11 +185,11 @@ SCENARIO("TetrisReady works AFTER the piece is applied") {
   }
   AND_GIVEN("a piece that makes the board tetris ready") {
     std::vector<std::vector<int>> vs(NUM_ROWS, std::vector<int>(NUM_COLUMNS, 0));
-    for (int r = 16; r <= 19; ++r) {
+    for (int r = R(3); r <= R(0); ++r) {
       for (int c = 2; c < NUM_COLUMNS; ++c) vs[r][c] = 1;
     }
     BitBoard b = {vs};
-    auto p = b.getPiece(Move({{16, 1}, {17, 1}, {18, 1}, {19, 1}}));
+    auto p = b.getPiece(Move({{R(3), 1}, {R(2), 1}, {R(1), 1}, {R(0), 1}}));
     WHEN("the piece is applied") {
       auto notTetrisREady = MoveEvaluatorTetrisReady({1}).EVAL(b, b.getEmptyPiece(), 19);
       auto tetrisReadyBoard = MoveEvaluatorTetrisReady({1}).EVAL(b, p, 19);

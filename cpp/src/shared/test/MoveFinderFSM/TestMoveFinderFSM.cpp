@@ -37,7 +37,7 @@ SCENARIO("I-PIECE can clear 8 high") {
         MoveFinderFSM mf;
         mf.setMaxDropRem(2);
         auto moves = mf.findAllMoves(b, BlockType::I_PIECE);
-        auto exp = b.getPiece(BlockType::I_PIECE, {{{16, 0}, {17, 0}, {18, 0}, {19, 0}}});
+        auto exp = b.getPiece(BlockType::I_PIECE, {{{R(3), 0}, {R(2), 0}, {R(1), 0}, {R(0), 0}}});
         auto it = std::find(moves.begin(), moves.end(), exp);
         REQUIRE(it != moves.end());
         auto strs = mf.getShortestPath(*it);
@@ -60,7 +60,7 @@ SCENARIO("I-PIECE can't clear 9 high") {
         MoveFinderFSM mf;
         mf.setMaxDropRem(2);
         auto moves = mf.findAllMoves(b, BlockType::I_PIECE);
-        auto exp = b.getPiece(BlockType::I_PIECE, {{{16, 0}, {17, 0}, {18, 0}, {19, 0}}});
+        auto exp = b.getPiece(BlockType::I_PIECE, {{{R(3), 0}, {R(2), 0}, {R(1), 0}, {R(0), 0}}});
         auto it = std::find(moves.begin(), moves.end(), exp);
         REQUIRE(it == moves.end());
         //auto strs = mf.getShortestPath(*it);
@@ -87,7 +87,7 @@ SCENARIO("Demo Recording - prefer no quicktap (long)") {
         MoveFinderFSM mf;
         mf.setMaxDropRem(2);
         auto moves = mf.findAllMoves(b, BlockType::I_PIECE);
-        auto exp = b.getPiece(BlockType::I_PIECE, {{{16, 0}, {17, 0}, {18, 0}, {19, 0}}});
+        auto exp = b.getPiece(BlockType::I_PIECE, {{{R(3), 0}, {R(2), 0}, {R(1), 0}, {R(0), 0}}});
         auto it = std::find(moves.begin(), moves.end(), exp);
         REQUIRE(it != moves.end());
         auto strs = mf.getShortestPath(*it);
@@ -112,7 +112,7 @@ SCENARIO("Demo Recording - prefer no quicktap (short)") {
         MoveFinderFSM mf;
         mf.setMaxDropRem(2);
         auto moves = mf.findAllMoves(b, BlockType::I_PIECE);
-        auto exp = b.getPiece(BlockType::I_PIECE, {{{19, 2}, {19, 3}, {19, 4}, {19, 5}}});
+        auto exp = b.getPiece(BlockType::I_PIECE, {{{R(0), 2}, {R(0), 3}, {R(0), 4}, {R(0), 5}}});
         auto it = std::find(moves.begin(), moves.end(), exp);
         REQUIRE(it != moves.end());
         auto strs = mf.getShortestPath(*it);
@@ -136,7 +136,7 @@ SCENARIO("Demo Recording - prefer early quicktap") {
         MoveFinderFSM mf;
         mf.setMaxDropRem(2);
         auto moves = mf.findAllMoves(b, BlockType::I_PIECE);
-        auto exp = b.getPiece(BlockType::I_PIECE, {{{16, 0}, {17, 0}, {18, 0}, {19, 0}}});
+        auto exp = b.getPiece(BlockType::I_PIECE, {{{R(3), 0}, {R(2), 0}, {R(1), 0}, {R(0), 0}}});
         auto it = std::find(moves.begin(), moves.end(), exp);
         REQUIRE(it != moves.end());
         auto strs = mf.getShortestPath(*it);
@@ -154,9 +154,10 @@ SCENARIO("Demo Recording - prefer early quicktap") {
 
 
 
-SCENARIO("reee") {
-  BitBoard b("00000000000000000000000001100000000100000001111000000011111011001111111111111110110111111011111111101111111110111111111011111111101111111110111111111011111111101111111110111111111011111111101111111110");
+SCENARIO("?? not sure what this is") {
+  BitBoard b("0000000000000000000000000000000000000000000001100000000100000001111000000011111011001111111111111110110111111011111111101111111110111111111011111111101111111110111111111011111111101111111110111111111011111111101111111110");
+  //printBoard(b);
   MoveFinderFSM mf;
   auto moves = mf.findAllMoves(b, BlockType::Z_PIECE);
-  REQUIRE(moves.size() != 8);
+  REQUIRE(moves.size() == 8);
 }

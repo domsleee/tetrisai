@@ -116,13 +116,13 @@ void MoveFinderFSM::setupInitialStates(BfsInfo &bfsInfo, const BitBoard &b, Bloc
   for (auto s: {&s1, &s2}) {
     s->setReleaseCooldown(2);
     s->setDasRem(2);
-    s->setRotateCooldown(2);
+    s->setRotateCooldown(0);
   }
   auto s3(s2);
   onEnterReleased(s3);
   s3.setFsmState(FSMState::RELEASED);
-  s3.setRotateCooldown(2);
-  s3.setSidewaysMoveCooldown(2);
+  s3.setRotateCooldown(1);
+  s3.setSidewaysMoveCooldown(0);
 
   if (!hasFirstMoveConstraint_) {
     safeInsert(bfsInfo, b, s1);

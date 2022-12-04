@@ -20,7 +20,7 @@ const std::string TEST_FOLDER = std::string(WORKSPACE_DIR) + std::string("/src/s
 // todo: get rid of this
 #define DEFAULT_LEVEL 19
 
-const int NUM_ROWS = 20;
+const int NUM_ROWS = 22;
 const int NUM_COLUMNS = 10;
 
 const int NUM_GAMES = 100;
@@ -31,5 +31,7 @@ const std::string basic_weighting_best = "[-1.2423329732739021 9.882528354462208
 // average
 template<typename T>
 double average(T it1, T it2);
+
+static inline int R(int r) { return NUM_ROWS - r - 1; }
 
 #include "src/common/common.tpp"

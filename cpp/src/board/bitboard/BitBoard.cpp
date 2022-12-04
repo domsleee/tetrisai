@@ -44,14 +44,14 @@ int BitBoard::applyPieceInfo(const BitPieceInfo& p) {
   assert(vacant(p));
   bitset_ |= pieceBitset;
   static const int maskInt = (2 << (NUM_COLUMNS-1))-1;
-  std::bitset<200> b(maskInt); // 1111111111
-  std::bitset<200> mask; // covers everything AFTER (below) b
+  std::bitset<NUM_ROWS * NUM_COLUMNS> b(maskInt); // 1111111111
+  std::bitset<NUM_ROWS * NUM_COLUMNS> mask; // covers everything AFTER (below) b
   mask.flip();
   int lineClears = 0;
   for (int r = 0; r < NUM_ROWS; r++) {
     mask <<= NUM_COLUMNS;
     if ((b & bitset_) == b) {
-      std::bitset<200> myLowerMask = (~mask) >> NUM_COLUMNS;
+      std::bitset<NUM_ROWS * NUM_COLUMNS> myLowerMask = (~mask) >> NUM_COLUMNS;
       bitset_ = (mask & bitset_) | ((myLowerMask & bitset_) << NUM_COLUMNS);
       lineClears++;
     }

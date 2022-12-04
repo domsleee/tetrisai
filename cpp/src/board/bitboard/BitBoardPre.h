@@ -4,6 +4,7 @@
 #include "src/common/BlockType.hpp"
 #include "src/common/Move.hpp"
 #include "src/common/Action.h"
+#include "src/common/common.hpp"
 #include <bitset>
 #include <unordered_map>
 
@@ -11,7 +12,7 @@
 class BitPieceInfo;
 
 namespace BitBoardPre {
-  const int MAX_IND = 2994; // NUM_BLOCKS * NUM_ROWS * NUM_COLUMNS * NUM_ROTATIONS
+  const int MAX_IND = 5000; // NUM_BLOCKS * NUM_ROWS * NUM_COLUMNS * NUM_ROTATIONS
   const int NUM_INDEXES = MAX_IND;  
 
   void precompute();
@@ -22,7 +23,7 @@ namespace BitBoardPre {
 
   int getMove(int id, MoveDirection moveDirection);
 
-  const std::bitset<200>& idToBitset(int id);
+  const std::bitset<NUM_ROWS * NUM_COLUMNS>& idToBitset(int id);
 
   const Move& idToMove(int id);
 

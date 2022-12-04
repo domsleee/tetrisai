@@ -4,14 +4,14 @@
 #include "src/common/common.hpp"
 #include "src/board/bitboard/BitBoard.h"
 
-static constexpr int MAX_CLEAR_HEIGHTS[NUM_COLUMNS] = {
+static constexpr int MAX_CLEAR_HEIGHTS19[NUM_COLUMNS] = {
   0, // unused
   8, // for 0
   11, // for 1
   15, // for 2
-  17, // for 3
-  17, // for 4/6
-  17, // for 7
+  18, // for 3
+  19, // for 4/6
+  18, // for 7
   15, // for 8
   11, // for 9
   0 // unused
@@ -22,9 +22,9 @@ static constexpr int MAX_CLEAR_HEIGHTS18[NUM_COLUMNS] = {
   12,
   14,
   17,
-  17,
-  17, // for 4/6
-  17,
+  18,
+  19, // for 4/6
+  18,
   17,
   14,
   0 // unused
@@ -36,7 +36,7 @@ static constexpr int MAX_CLEAR_HEIGHTS29[NUM_COLUMNS] = {
   4,
   11,
   16,
-  17, // for 4/6
+  19, // for 4/6
   16,
   11,
   4,
@@ -46,7 +46,7 @@ static constexpr int MAX_CLEAR_HEIGHTS29[NUM_COLUMNS] = {
 const int* getMaxClearHeights(int dropRem) {
   switch(dropRem) {
     case 3: return MAX_CLEAR_HEIGHTS18;
-    case 2: return MAX_CLEAR_HEIGHTS;
+    case 2: return MAX_CLEAR_HEIGHTS19;
     case 1: return MAX_CLEAR_HEIGHTS29;
     default: throw std::runtime_error("unknown droprem");
   }
@@ -150,7 +150,7 @@ bool isDeepWell(int smallestHeight, int secondSmallestHeight) {
 
 bool wellIsTooHigh(PairT lowestColumn) {
   auto [bottomColumnHeight, bottomColumn] = lowestColumn;
-  return bottomColumnHeight > MAX_CLEAR_HEIGHTS[bottomColumn];
+  return bottomColumnHeight > MAX_CLEAR_HEIGHTS19[bottomColumn];
 }
 
 bool isBottomColAccessible(const int *colHeights, int dropRem) {
@@ -164,7 +164,7 @@ bool isBottomColAccessible(const int *colHeights, int dropRem, int bottomColumn)
     for (int c = 3; c <= 6; ++c) {
       //int fallDistBeforeRot = dropRem == 1 ? 3 : (dropRem == 2 ? 1 : 0);
       int fallDistBeforeRot = 2;
-      int failHeight = 20 - fallDistBeforeRot;
+      int failHeight = NUM_ROWS - fallDistBeforeRot;
       if (colHeights[c] >= failHeight) return false;
     }
     return true;
@@ -177,7 +177,7 @@ int getMaxColHeightMinusColLimit(const int *colHeights, int dropRem, int bottomC
   bool isRight = bottomColumn > 5;
   const int *maxClearHeights = getMaxClearHeights(dropRem);
 
-  int maxColAboveLimit = -20;
+  int maxColAboveLimit = -1e9;
   if (isRight) {
     for (int c = 5; c < bottomColumn; ++c) {
       maxColAboveLimit = std::max(maxColAboveLimit, colHeights[c] - maxClearHeights[c]);
