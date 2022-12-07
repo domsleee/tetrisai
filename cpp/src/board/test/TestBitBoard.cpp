@@ -21,7 +21,7 @@ SCENARIO("vacancy check") {
   }
   AND_WHEN("we try moving the piece down out of bounds") {
     BitBoard b;
-    Move m1 = {{{19,0}, {19,1}, {19,2}, {19,3}}};
+    Move m1 = {{{R(0),0}, {R(0),1}, {R(0),2}, {R(0),3}}};
     auto p = b.getPiece(BlockType::I_PIECE, m1);
     THEN("we cant") {
       REQUIRE(!p.canMove(MoveDirection::DOWN));
@@ -104,36 +104,36 @@ SCENARIO("friends check") {
 
 SCENARIO("line clears... top 4 rows") {
   GIVEN("there are lines to be cleared") {
-    std::vector<std::vector<int>> vs(20, std::vector<int>(10, 0));
-    for (int r = 1; r < 5; r++) {
+    std::vector<std::vector<int>> vs(NUM_ROWS, std::vector<int>(10, 0));
+    for (int r = 3; r < 7; r++) {
       for (int c = 0; c < 9; c++) {
         vs[r][c] = 1;
       }
     }
-    Move m1 = {{{1, 9}, {2, 9}, {3, 9}, {4, 9}}};
-    Move m2 = {{{0,0}, {0,1}, {0,2}, {0,3}}};
-    Move m3 = {{{15,0}, {15,1}, {15,2}, {15,3}}};
+    Move m1 = {{{3, 9}, {4, 9}, {5, 9}, {6, 9}}};
+    Move m2 = {{{2,0}, {2,1}, {2,2}, {2,3}}};
+    Move m3 = {{{17,0}, {17,1}, {17,2}, {17,3}}};
     BitBoard b(vs);
     b.applyMove(m2);
     b.applyMove(m3);
 
     WHEN("we apply some line clear") {
       THEN("we get the correct number") {
-        REQUIRE(!b.vacant(Coord(1,0)));
-        REQUIRE(!b.vacant(Coord(1,8)));
+        REQUIRE(!b.vacant(Coord(3,0)));
+        REQUIRE(!b.vacant(Coord(3,8)));
         int lineClears = b.applyMove(m1);
         REQUIRE(lineClears == 4);
-        REQUIRE(b.vacant(Coord(0,0)));
-        REQUIRE(b.vacant(Coord(1,0)));
         REQUIRE(b.vacant(Coord(2,0)));
         REQUIRE(b.vacant(Coord(3,0)));
-        REQUIRE(b.vacant(Coord(0,9)));
-        REQUIRE(b.vacant(Coord(1,9)));
+        REQUIRE(b.vacant(Coord(4,0)));
+        REQUIRE(b.vacant(Coord(5,0)));
         REQUIRE(b.vacant(Coord(2,9)));
         REQUIRE(b.vacant(Coord(3,9)));
+        REQUIRE(b.vacant(Coord(4,9)));
+        REQUIRE(b.vacant(Coord(5,9)));
 
 
-        Move exp1 = {{{4,0}, {4,1}, {4,2}, {4,3}}};
+        Move exp1 = {{{6,0}, {6,1}, {6,2}, {6,3}}};
         Move exp2 = m3;
         BitBoard b2;
         b2.applyMove(exp1);
@@ -146,9 +146,9 @@ SCENARIO("line clears... top 4 rows") {
 }
 
 SCENARIO("Getting height") {
-  std::vector<std::vector<int>> vs(20, std::vector<int>(10, 0));
+  std::vector<std::vector<int>> vs(NUM_ROWS, std::vector<int>(10, 0));
   GIVEN("the bottom row only") {
-    vs[19][0] = 1;
+    vs[21][0] = 1;
     BitBoard b(vs);
     THEN("the pile height is 1") {
       REQUIRE(b.getPileHeight() == 1);
@@ -163,8 +163,8 @@ SCENARIO("Getting height") {
     }
   }
   AND_GIVEN("a board") {
-    vs[5][0] = 1;
-    vs[8][0] = 1;
+    vs[7][0] = 1;
+    vs[10][0] = 1;
     BitBoard b(vs);
     WHEN("we check the height") {
       THEN("it is correct") {
@@ -173,8 +173,8 @@ SCENARIO("Getting height") {
     }
   }
   AND_GIVEN("a different board") {
-    vs[9][0] = 1;
-    vs[12][0] = 1;
+    vs[11][0] = 1;
+    vs[14][0] = 1;
     BitBoard b(vs);
     WHEN("we check the height") {
       THEN("it is correct" ){

@@ -3,7 +3,7 @@ import { IReadBoard } from '@/components/GameRunner/ReadBoard';
 import { Coord } from '@/components/GameRunner/PieceCoords';
 
 export const NUM_COLUMNS = 10;
-export const NUM_ROWS = 20;
+export const NUM_ROWS = 22;
 
 export interface IBoard {
   vacant(r: number, c: number): boolean;
@@ -23,11 +23,13 @@ export class Board implements IBoard {
   public static fromBoardReaderMinusCoords(boardReader: IReadBoard, coords: Coord[]): Board {
     let str = "";
     let ignore: Record<number, Set<number>> = {};
+    console.log(coords);
     for (let coord of coords) {
-      if (!(coord.r in ignore)) {
-        ignore[coord.r] = new Set();
+      const actR = coord.r - 2;
+      if (!(actR in ignore)) {
+        ignore[actR] = new Set();
       }
-      ignore[coord.r].add(coord.c);
+      ignore[actR].add(coord.c);
     }
 
     for (let r = 0; r < NUM_ROWS; r++) {
@@ -37,20 +39,20 @@ export class Board implements IBoard {
         } else str += boardReader.vacant(r, c) ? "0" : "1";
       }
     }
-    return new Board(str);
+    return new Board(str.slice(-20) + str.slice(0, -20));
   }
 
-  private b: BitSet = new BitSet(200);
-  private originalString: string = "0".repeat(200);
+  private b: BitSet = new BitSet(NUM_ROWS * NUM_COLUMNS);
+  private originalString: string = "0".repeat(NUM_ROWS * NUM_COLUMNS);
 
   public constructor(bitstring?: string) {
     if (!bitstring) {
       return;
     }
-    if (bitstring.length !== 200) {
-      throw new Error('bitstring must be of length 200');
+    if (bitstring.length !== NUM_ROWS * NUM_COLUMNS) {
+      throw new Error(`bitstring must be of length ${NUM_ROWS * NUM_COLUMNS}`);
     }
-    for (let i = 0; i < 200; ++i) {
+    for (let i = 0; i < NUM_ROWS * NUM_COLUMNS; ++i) {
       this.b.set(i, bitstring[i] === '1' ? 1 : 0);
     }
     this.originalString = bitstring;

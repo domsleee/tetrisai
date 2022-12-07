@@ -86,5 +86,8 @@
     "numbers": "cpp",
     "semaphore": "cpp",
     "stop_token": "cpp"
+  },
+  "files.exclude": {
+    "**/bazel-*": true
   }
 }

@@ -1,1 +1,0 @@
-bazel build //src:get_transition_evaluation --compilation_mode=dbg -s --spawn_strategy=standalone

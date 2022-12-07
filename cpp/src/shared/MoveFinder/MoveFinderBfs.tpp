@@ -17,7 +17,7 @@ class MoveFinderBfs {
     std::fill(moves_.begin(), moves_.end(), false);
     auto pieceInfo = board.getPiece(blockType);
     auto height = board.getPileHeight();
-    int canMoveDown = NUM_ROWS - height - 3;
+    int canMoveDown = NUM_ROWS - height - 4;
     while (canMoveDown > 0) {
       pieceInfo = pieceInfo.move(MoveDirection::DOWN);
       canMoveDown--;

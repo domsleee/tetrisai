@@ -95,4 +95,4 @@ def healthcheck():
 
 if __name__ == '__main__':
   #init_get_moves_service(loop)
-  app.run()
+  app.run(host='0.0.0.0')

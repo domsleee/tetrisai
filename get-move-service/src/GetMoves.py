@@ -43,8 +43,8 @@ class GetMoves(IGetMoves):
     self._send_str((str(piece) + '\n').encode('utf-8'))
     if firstMoveDirection:
       self._send_str((firstMoveDirection[0] + '\n').encode('utf-8'))
-    if len(board) != 200:
-      raise ValueError("Board string '%s' incorrect length (expect 200)" % board)
+    if len(board) != 220:
+      raise ValueError("Board string '%s' incorrect length (expect 220)" % board)
     self._send_str((board + '\n').encode('utf-8'))
 
     result = self._process_line(self._process.read_line(), "result")

@@ -7,37 +7,37 @@ struct PositionPieceGetter {
     switch (blockType) {
       case BlockType::I_PIECE: {
         return {{
-          {0, 3}, {0, 4}, {0, 5}, {0, 6}
+          {2, 3}, {2, 4}, {2, 5}, {2, 6}
         }};
       }
       case BlockType::S_PIECE: {
         return {{
-          {0, 5}, {0, 6}, {1, 4}, {1, 5}
+          {2, 5}, {2, 6}, {3, 4}, {3, 5}
         }};
       }
       case BlockType::Z_PIECE: {
         return {{
-          {0, 4}, {0, 5}, {1, 5}, {1, 6}
+          {2, 4}, {2, 5}, {3, 5}, {3, 6}
         }};
       }
       case BlockType::O_PIECE: {
         return {{
-          {0, 4}, {0, 5}, {1, 4}, {1, 5}
+          {2, 4}, {2, 5}, {3, 4}, {3, 5}
         }};
       }
       case BlockType::T_PIECE: {
         return {{
-          {0, 4}, {0, 5}, {0, 6}, {1, 5}
+          {2, 4}, {2, 5}, {2, 6}, {3, 5}
         }};
       }
       case BlockType::J_PIECE: {
         return {{
-          {0, 4}, {0, 5}, {0, 6}, {1, 6}
+          {2, 4}, {2, 5}, {2, 6}, {3, 6}
         }};
       }
       case BlockType::L_PIECE: {
         return {{
-          {0, 4}, {0, 5}, {0, 6}, {1, 4}
+          {2, 4}, {2, 5}, {2, 6}, {3, 4}
         }};
       }
       default: throw std::runtime_error{"should never happen"};

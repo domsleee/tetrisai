@@ -5,7 +5,7 @@ class SimpleProcess:
   def __init__(self, args: list, loop: any=asyncio.get_event_loop()):
     self._args = args
     self._process = None
-    self._timeout = 15.0
+    self._timeout = 30.0
     self._loop = loop
   
   async def init(self):

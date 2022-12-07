@@ -4,6 +4,6 @@ gen_test_rules(
     deps = [
         "//src:board",
         "//:catch",
-        "//src:common"
+        "//src:common",
     ]
 )

@@ -3,6 +3,7 @@
 #include "src/board/bitboard/BitBoard.h"
 #include "src/common/BlockType.hpp"
 #include "src/shared/MoveFinder/AllMoveFinder.tpp"
+#include "src/shared/test/MoveEvaluatorUtility.hpp"
 #include <vector>
 #include <iostream>
 #include <algorithm>
@@ -10,7 +11,7 @@
 SCENARIO("I-PIECE all the way to the end baby") {
   GIVEN("a board with a slightly open left side") {
     std::vector<std::vector<int>> vs;
-    for (int i = 0; i < 16; i++) {
+    for (int i = 0; i < 18; i++) {
       vs.push_back(std::vector<int>(10, 0));
     }
     std::vector<int> leftFree = std::vector<int>(10, 1);
@@ -26,7 +27,7 @@ SCENARIO("I-PIECE all the way to the end baby") {
         auto moves = mf.findAllMoves(b, BlockType::I_PIECE);
         printf("num moves: %lu\n", moves.size());
 
-        auto exp = b.getPiece(BlockType::O_PIECE, {{{16, 0}, {17, 0}, {18, 0}, {19, 0}}});
+        auto exp = b.getPiece(BlockType::O_PIECE, {{{R(3), 0}, {R(2), 0}, {R(1), 0}, {R(0), 0}}});
         for (auto move: moves) {
           move.print();
         }

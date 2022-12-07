@@ -48,30 +48,30 @@ SCENARIO("simple rotation tests") {
 
 SCENARIO("line clears... top 4 rows") {
   GIVEN("there are lines to be cleared") {
-    std::vector<std::vector<int>> vs(20, std::vector<int>(10, 0));
-    for (int r = 0; r < 4; r++) {
+    std::vector<std::vector<int>> vs(NUM_ROWS, std::vector<int>(10, 0));
+    for (int r = 2; r < 6; r++) {
       for (int c = 0; c < 9; c++) {
         vs[r][c] = 1;
       }
     }
-    Move m1 = {{{0, 9}, {1, 9}, {2, 9}, {3, 9}}};
+    Move m1 = {{{2, 9}, {3, 9}, {4, 9}, {5, 9}}};
     SimpleBoard b{vs};
     WHEN("we apply some line clear") {
       THEN("we get the correct number") {
-        REQUIRE(!b.vacant({0,0}));
-        REQUIRE(!b.vacant({1,0}));
-        REQUIRE(!b.vacant({0,8}));
-        REQUIRE(!b.vacant({1,8}));
+        REQUIRE(!b.vacant({2,0}));
+        REQUIRE(!b.vacant({3,0}));
+        REQUIRE(!b.vacant({2,8}));
+        REQUIRE(!b.vacant({3,8}));
         int lineClears = b.applyMove(m1);
         REQUIRE(lineClears == 4);
-        REQUIRE(b.vacant({0,0}));
-        REQUIRE(b.vacant({1,0}));
         REQUIRE(b.vacant({2,0}));
         REQUIRE(b.vacant({3,0}));
-        REQUIRE(b.vacant({0,9}));
-        REQUIRE(b.vacant({1,9}));
+        REQUIRE(b.vacant({4,0}));
+        REQUIRE(b.vacant({5,0}));
         REQUIRE(b.vacant({2,9}));
         REQUIRE(b.vacant({3,9}));
+        REQUIRE(b.vacant({4,9}));
+        REQUIRE(b.vacant({5,9}));
       }
     }
 

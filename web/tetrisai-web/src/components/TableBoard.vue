@@ -23,7 +23,7 @@ export default Vue.extend({
   data(): Data {
     return {
       board: null,
-      rows: [...Array(20).keys()],
+      rows: [...Array(22).keys()],
       columns: [...Array(10).keys()]
     };
   },

@@ -63,13 +63,13 @@ std::vector<std::vector<int>> leftWell(int height) {
 
 BigFileT readFromBigFile(const std::string& filename) {
   std::ifstream fin(filename);
-  char boardStr[205];
-  boardStr[201] = '\0';
+  char boardStr[NUM_ROWS * NUM_COLUMNS + 5];
+  boardStr[NUM_ROWS * NUM_COLUMNS + 1] = '\0';
   std::string line;
   BigFileT res;
   while (std::getline(fin, line)) {
     std::stringstream ss(line);
-    ss.read(boardStr, 200);
+    ss.read(boardStr, NUM_ROWS * NUM_COLUMNS);
     int piece;
     char sep;
 

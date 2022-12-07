@@ -48,7 +48,7 @@ class MoveEvaluator: public IEvaluator {
     double offset = (deltaLines == 4) ? -1e9 : 0;
     double eval = offset;
     if (deltaLines != 4) eval += w[TOTAL_LINES_CLEARED] * deltaLines;
-    eval += w[TOTAL_LOCK_HEIGHT] * (NUM_ROWS - p.getPosition().maxR - 1);
+    eval += w[TOTAL_LOCK_HEIGHT] * (NUM_ROWS - p.getPosition().maxR - 1 - 2);
 
     auto [it1, it2] = std::minmax_element(colHeights.begin(), colHeights.end());
     int mColHeight = *it1;
@@ -75,7 +75,7 @@ class MoveEvaluator: public IEvaluator {
         bool takenUp = r == 0 || !vac.is_vacant({r-1, c});
         if (r > 0 && takenUp && vac.is_vacant({r,c})) {
           totalColumnHoles++;
-          totalWeightedColumnHoles += r+1;
+          totalWeightedColumnHoles += r-1;
           int holeDepth = r - LOCK_HEIGHT(c);
           totalColumnHolesDepth += holeDepth;
           minColumnHoleDepth = std::min(minColumnHoleDepth, holeDepth);

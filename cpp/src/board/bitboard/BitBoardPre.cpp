@@ -23,8 +23,8 @@ namespace BitBoardPre {
   inline int pieceInfoToId(const SimplePieceInfo &p);
   inline void addRotate(int id, int nxId, RotateDirection rotateDirection);
   inline void addMove(int id, int nxId, MoveDirection moveDirection);
-  std::bitset<200> pieceInfoToBitset(const SimplePieceInfo &p);
-  std::bitset<200> moveToBitset(const Move &move);
+  std::bitset<NUM_ROWS * NUM_COLUMNS> pieceInfoToBitset(const SimplePieceInfo &p);
+  std::bitset<NUM_ROWS * NUM_COLUMNS> moveToBitset(const Move &move);
   void addEmptyPiece();
   inline int moveToId(const Move& move);
   void fixMoves();
@@ -43,7 +43,7 @@ namespace BitBoardPre {
   std::vector<BlockType> idToBlockType_(MAX_IND, BlockType::I_PIECE);
   std::vector<int> idToRep_(MAX_IND, UNDEFINED);
   std::unordered_map<Move, int> moveToId_;
-  std::bitset<200> idToBitset_[MAX_IND];
+  std::bitset<NUM_ROWS * NUM_COLUMNS> idToBitset_[MAX_IND];
   std::vector<std::vector<int>> idToOpenRotN_(MAX_IND);
   std::unordered_map<BitPieceInfo, std::unordered_map<BitPieceInfo, std::vector<Action>>> shortestPathVec_;
   int emptyMoveId_ = -1;
@@ -169,7 +169,7 @@ namespace BitBoardPre {
     return emptyMoveId_;
   }
 
-  const std::bitset<200>& idToBitset(int id) {
+  const std::bitset<NUM_ROWS * NUM_COLUMNS>& idToBitset(int id) {
     return idToBitset_[id];
   }
 
@@ -197,8 +197,8 @@ namespace BitBoardPre {
     return id >= 0 && id < static_cast<int>(moveToId_.size());
   }
 
-  std::bitset<200> moveToBitset(const Move &move) {
-    std::bitset<200> b;
+  std::bitset<NUM_ROWS * NUM_COLUMNS> moveToBitset(const Move &move) {
+    std::bitset<NUM_ROWS * NUM_COLUMNS> b;
     for (const auto &coord: move.coords_) {
       b.set(coord.r*NUM_COLUMNS+coord.c);
     }

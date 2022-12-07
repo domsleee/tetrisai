@@ -18,7 +18,7 @@ SCENARIO("I-PIECE can clear 6 high") {
       THEN("the LHS move is available") {
         MoveFinderRewrite mf;
         auto moves = mf.findAllMoves(b, BlockType::I_PIECE);
-        auto exp = b.getPiece(BlockType::I_PIECE, {{{16, 0}, {17, 0}, {18, 0}, {19, 0}}});
+        auto exp = b.getPiece(BlockType::I_PIECE, {{{R(3), 0}, {R(2), 0}, {R(1), 0}, {R(0), 0}}});
         REQUIRE(std::find(moves.begin(), moves.end(), exp) != moves.end());
       }
     }
@@ -34,7 +34,7 @@ SCENARIO("I-PIECE can clear 7 high") {
         //printBoard(b);
         MoveFinderRewrite mf;
         auto moves = mf.findAllMoves(b, BlockType::I_PIECE);
-        auto exp = b.getPiece(BlockType::I_PIECE, {{{16, 0}, {17, 0}, {18, 0}, {19, 0}}});
+        auto exp = b.getPiece(BlockType::I_PIECE, {{{R(3), 0}, {R(2), 0}, {R(1), 0}, {R(0), 0}}});
         REQUIRE(std::find(moves.begin(), moves.end(), exp) != moves.end());
       }
     }
@@ -44,16 +44,16 @@ SCENARIO("I-PIECE can clear 7 high") {
 SCENARIO("O_PIECE location") {
   GIVEN("a board with an O_PIECE on it") {
     std::vector<std::vector<int>> vs(NUM_ROWS, std::vector<int>(NUM_COLUMNS, 0));
-    vs[18][8] = vs[18][9] = vs[19][8] = vs[19][9] = 1;
+    vs[R(1)][8] = vs[R(1)][9] = vs[R(0)][8] = vs[R(0)][9] = 1;
     BitBoard b(vs);
     WHEN("we search for moves") {
       THEN("a move that covers the covered squares isn't in the list") {
         MoveFinderRewrite mf;
         auto moves = mf.findAllMoves(b, BlockType::O_PIECE);
-        auto check = b.getPiece(BlockType::O_PIECE, {{{18, 8}, {18, 9}, {19,8}, {19,9}}});
+        auto check = b.getPiece(BlockType::O_PIECE, {{{R(1), 8}, {R(1), 9}, {R(0),8}, {R(0),9}}});
         REQUIRE(std::find(moves.begin(), moves.end(), check) == moves.end());
 
-        auto check2 = b.getPiece(BlockType::O_PIECE, {{{18,3}, {18,4}, {19,3}, {19,4}}});
+        auto check2 = b.getPiece(BlockType::O_PIECE, {{{R(1),3}, {R(1),4}, {R(0),3}, {R(0),4}}});
         REQUIRE(std::find(moves.begin(), moves.end(), check2) != moves.end());
 
       }

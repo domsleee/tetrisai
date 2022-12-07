@@ -17,7 +17,7 @@ export class ReadCurrentPiece implements IReadCurrentPiece {
     for (const piece of ALL_PIECE_VALUES) {
       const coords = PieceCoords.getStartingCoords(piece);
       const coordOk = (coord: Coord) =>
-        !this.readBoardHandler.vacant(coord.r, coord.c);
+        !this.readBoardHandler.vacant(coord.r - 2, coord.c);
       if (coords.every(coordOk)) {
         return piece;
       }

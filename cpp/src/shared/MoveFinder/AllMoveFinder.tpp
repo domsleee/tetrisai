@@ -14,7 +14,7 @@ class AllMoveFinder {
     auto height = board.getPileHeight();
     //printf("finding all moves... (%d)\n", height);
     //board.print();
-    int canMoveDown = NUM_ROWS - height - 3;
+    int canMoveDown = NUM_ROWS - height - 4;
     //printf("canMoveDown: %d\n", canMoveDown);
     while (canMoveDown > 0) {
       pieceInfo = pieceInfo.move(MoveDirection::DOWN);
