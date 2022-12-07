@@ -188,12 +188,13 @@ fort::char_table getBfsData(const SummaryApi &s, const std::vector<std::string> 
     });
     auto results = r.calculateAndApplyFeatures();
     auto result = results[0];
-    std::ofstream fout{name1};
+    std::ofstream fout{"/tmp/" + name1 + ".csv"};
     fout << "score,level,totalLines\n";
     for (auto score: result.getScoreManagers()) {
       fout << score.getScore() << ',' << score.getLevel() << ',' << score.getTotalLines() << '\n';
     }
     result.getScoreManagers();
+    fout.close();
   }
   return r.getTable();
 }
